@@ -1,0 +1,281 @@
+:root {
+    --bgColor: #f0f2f5;
+    --box-shadow-light: 0px 0px 12px rgba(0, 0, 0, .12);
+    --primary-color: #1890ff;
+    --fontSize-default: 1.3rem;
+}
+
+:root {
+    --ba-main-space: 16px;
+    --ba-color-primary-light: #3f6ad8;
+    --ba-bg-color: #f5f5f5;
+    --ba-bg-color-overlay: #ffffff;
+    --ba-border-color: #f6f6f6;
+}
+
+html,
+body,
+#app {
+    width: 100%;
+    height: 100%;
+    background-color: var(--bgColor) !important;
+    font-size: 14px;
+    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
+    /* background-color: #f5f5f5; */
+}
+
+
+/*里面的代码可以根据自己需求去进行更改*/
+
+
+/* 设置滚动条的样式 */
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+
+/* 滚动槽 */
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset006pxrgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+
+/* 滚动条滑块 */
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+
+/* ::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(255, 0, 0, 0.4);
+} */
+
+#app {
+    /* overflow: hidden; */
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/* 超出一行显示省略号 */
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* 常用定位 */
+
+.p-re {
+    position: relative;
+}
+
+
+/* 常用display */
+
+.d-flex-default {
+    display: flex;
+}
+
+.d-flex-center {
+    display: flex;
+    align-items: center;
+}
+
+.d-flex-start {
+    display: flex;
+    align-items: flex-start;
+}
+
+.d-flex-sb {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.d-flex-wrap {
+    display: flex;
+    align-items: center;
+    flex-flow: wrap;
+}
+
+.d-none {
+    display: none;
+}
+
+.d-block {
+    display: block;
+}
+
+
+/* 常用宽度/高度 */
+
+.w_16 {
+    width: 160px !important;
+}
+
+.w_20 {
+    width: 200px !important;
+}
+
+.mh-100 {
+    min-height: 100px;
+}
+
+
+/* 常用边距 */
+
+.mr_5 {
+    margin-right: 5px;
+}
+
+.mr_8 {
+    margin-right: 8px;
+}
+
+.mr_10 {
+    margin-right: 10px;
+}
+
+.mr_16 {
+    margin-right: 16px;
+}
+
+.mr_24 {
+    margin-right: 24px;
+}
+
+.mb_8 {
+    margin-bottom: 8px;
+}
+
+.mb_15 {
+    margin-bottom: 15px;
+}
+
+.mb_16 {
+    margin-bottom: 16px;
+}
+
+
+/* 常用内边距 */
+
+.pb_8 {
+    padding-bottom: 8px;
+}
+
+.pr_10 {
+    padding-right: 10px;
+}
+
+.pr_8 {
+    padding-right: 8px;
+}
+
+.pl_8 {
+    padding-left: 8px;
+}
+
+
+/* 常用字体大小 */
+
+.fs_12 {
+    font-size: 12px;
+}
+
+.fs_14 {
+    font-size: 14px;
+}
+
+.fs_16 {
+    font-size: 16px;
+}
+
+.txt_color_sub {
+    color: rgba(0, 0, 0, 0.45);
+}
+
+
+/* 常用宽度 */
+
+.w_200 {
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+}
+
+
+/* 色系 */
+
+.success-color {}
+
+
+/* 表格点 */
+
+.dot {
+    margin-right: 10px;
+    padding: 4px;
+    border-radius: 50px;
+}
+
+
+/* 常用鼠标指针 */
+
+.c-pointer {
+    cursor: pointer;
+}
+
+
+/* 常用文本属性 */
+
+.user-select {
+    user-select: none;
+}
+
+.fontSize-icon {
+    font-size: var(--fontSize-default);
+}
+
+
+/* 常用动效 */
+
+.suspension {
+    transition: all .3s ease;
+}
+
+.suspension:hover {
+    -webkit-transform: translateY(-4px) scale(1.02);
+    -moz-transform: translateY(-4px) scale(1.02);
+    -ms-transform: translateY(-4px) scale(1.02);
+    -o-transform: translateY(-4px) scale(1.02);
+    transform: translateY(-4px) scale(1.02);
+    -webkit-box-shadow: 0 14px 24px rgba(0, 0, 0, .2);
+    box-shadow: 0 14px 24px #0003;
+    z-index: 999;
+    border-radius: 6px;
+}

@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["ESNext", "DOM"],
+    "skipLibCheck": true,
+    "noEmit": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "noImplicitAny": true, // 没有隐式的any
+    "strictNullChecks": true, // 严格的null与undefined检查
+    "noFallthroughCasesInSwitch": true // 防止在switch代码块里的两个case之间忘记添加break语句。
+  },
+  // 读取所有可识别的src目录下的文件
+  "include": [
+    "src/**/*",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "types/env.d.ts"
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

@@ -1,0 +1,52 @@
+/* notification */
+
+.ant-notification-notice {
+    box-shadow: var(--box-shadow-light);
+    border-radius: 8px;
+    padding: 10px !important;
+    width: 300px;
+}
+
+.ant-notification-topRight {
+    top: 16px !important;
+    margin-right: 16px !important;
+    /* padding: 10px !important; */
+}
+
+
+/* 头部个人信息样式 */
+
+.admin-info-base {
+    width: 260px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.admin-info-other {
+    padding: 10px 0;
+    text-align: center;
+}
+
+.admin-info-name {
+    font-size: 18px;
+}
+
+
+/* card 卡片 */
+
+.ant-card-head {
+    padding: 0 16px !important;
+    font-size: 1rem !important;
+}
+
+.ant-card-body {
+    padding: 16px !important;
+}
+
+
+/* menu 卡片 */
+
+.ant-menu-title-content {
+    user-select: none;
+}
