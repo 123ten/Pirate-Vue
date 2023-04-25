@@ -21,7 +21,9 @@ export default defineConfig({
     host: "0.0.0.0", // 指定服务器应该监听哪个 IP 地址。 如果将此设置为 0.0.0.0 或者 true 将监听所有地址，包括局域网和公网地址。
     open: true, // 在开发服务器启动时自动在浏览器中打开应用程序。
     port: 3000, // 指定开发服务器端口
+    hmr: true,
   },
+
   css: {
     preprocessorOptions: {
       less: {
