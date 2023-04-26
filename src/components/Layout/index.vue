@@ -16,7 +16,7 @@ onMounted(() => {
 <template>
   <a-layout class="container d-flex-default">
     <Menu v-show="!isLayoutFullScreen" />
-    <a-layout class="layout" :style="{ left: `${isMenuOutIn ? 96 : 216}px` }">
+    <a-layout class="layout">
       <Header v-show="!isLayoutFullScreen" />
       <router-view
         :class="isLayoutFullScreen ? 'fullScreen' : ''"
