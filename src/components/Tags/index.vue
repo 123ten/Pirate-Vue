@@ -7,13 +7,13 @@ import {
   MinusOutlined,
   MinusSquareFilled,
 } from "@ant-design/icons-vue";
-import { onMounted, reactive, ref, watch } from "vue";
+import { onMounted, reactive, ref, watch, nextTick } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store";
 import { fullScreen } from "@/utils/dom";
 const store = useMenuStore();
-const { isLayoutFullScreen } = storeToRefs(store);
+const { isLayoutFullScreen, isCurrentPageReload } = storeToRefs(store);
 const router = useRouter();
 const route = useRoute();
 
@@ -150,7 +150,7 @@ const onMouseRight = (index: number, data: any) => {
   console.log(mouseRight, currentTabIndex.value, 12312321);
 };
 /** TODO 鼠标右键菜单点击
- * @param {number} type  类型
+ * @param {number} status  类型
  * 1.重新加载
  * 2.关闭标签
  * 3.当前标签全屏
@@ -160,11 +160,17 @@ const onMouseRight = (index: number, data: any) => {
 const onMouseRightMenu = (status: number) => {
   console.log(status, mouseRight, "type");
   const length = mouseRight.data.title.length;
-  if (status === 2) {
+  if (status === 1) {
+    isCurrentPageReload.value = true;
+    nextTick(() => {
+      isCurrentPageReload.value = false;
+    });
+  } else if (status === 2) {
     delTabItem(mouseRight.index);
   } else if (status === 3) {
     fullScreen();
     isLayoutFullScreen.value = true;
+    router.push(mouseRight.data.path);
   } else if (status === 4) {
     tabList.value = tabList.value.filter(
       (item, index) => index === mouseRight.index
@@ -187,8 +193,8 @@ const onMouseRightMenu = (status: number) => {
         v-for="(item, index) in tabList"
         :key="item.title"
         class="nav-tag-item"
+        @contextmenu.prevent="onMouseRight(index, item)"
         @click="handleTabItem(item, index)"
-        @click.right="onMouseRight(index, item)"
       >
         {{ item.title }}
         <CloseOutlined

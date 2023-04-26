@@ -8,7 +8,7 @@ import {
   SearchOutlined,
   EditOutlined,
 } from "@ant-design/icons-vue";
-import { onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, unref } from "vue";
 
 interface IColumns {
   title: string;
@@ -44,6 +44,9 @@ const columns = ref<IColumns[]>([
     key: "age",
     align: "center",
     resizable: true,
+    width: 100,
+    minWidth: 100,
+    maxWidth: 200,
   },
   {
     title: "住址",
@@ -209,6 +212,7 @@ const dataSource = ref<IDataSource[]>([
 ]);
 const menuChecked = ref<string[]>([]);
 const menuCheckList = ref<IColumns[]>([]);
+const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const menuOrSearch = ref("menu");
 const isDropdownVisible = ref(false);
 const isDelAllVisible = ref(false);
@@ -244,6 +248,13 @@ const onDelAllConfirm = () => {
 const onDelAllcancel = () => {
   isDelAllVisible.value = false;
 };
+// 删除-显示隐藏的回调
+const onDelVisibleChange = () => {
+  // selectedRowKeys没有选中时 默认禁用 删除按钮
+  if (!unref(selectedRowKeys).length) {
+    isDelAllVisible.value = false;
+  }
+};
 // 删除当前行-确定
 const onDelCurrentConfirm = (record: IDataSource) => {
   console.log(record, "record");
@@ -259,23 +270,36 @@ const onDelCurrentcancel = (record: IDataSource) => {
 const onCheckboxChange = () => {
   console.log(menuChecked.value, columnStorages.value, "menuChecked");
   const arr = [];
-  columnStorages.value.forEach((item) => {
+  unref(columnStorages).forEach((item) => {
     if (menuChecked.value.includes(item.dataIndex || item.key)) {
       arr.push(item);
     }
   });
   // 操作,默认需要
-  arr.push(columnStorages.value[columnStorages.value.length - 1]);
+  const columnS = unref(columnStorages);
+  arr.push(columnS[columnS.length - 1]);
   columns.value = arr;
 };
 // 显示与隐藏 form
 const onOpenSearch = () => {
-  isOpenSearch.value = !isOpenSearch.value;
+  isOpenSearch.value = !unref(isOpenSearch);
 };
 // 表格可伸缩
 const handleResizeColumn = (w: number, col: any) => {
   col.width = w;
 };
+
+const onSelectChange = (changableRowKeys: string[]) => {
+  console.log("selectedRowKeys changed: ", changableRowKeys);
+  selectedRowKeys.value = changableRowKeys;
+};
+const rowSelection = computed(() => {
+  return {
+    selectedRowKeys: unref(selectedRowKeys),
+    onChange: onSelectChange,
+    hideDefaultSelections: true,
+  };
+});
 </script>
 
 <template>
@@ -436,6 +460,7 @@ const handleResizeColumn = (w: number, col: any) => {
               ok-text="删除"
               cancel-text="取消"
               @cancel="onDelAllcancel"
+              @visibleChange="onDelVisibleChange"
               v-model:visible="isDelAllVisible"
             >
               <template #okButton>
@@ -443,7 +468,7 @@ const handleResizeColumn = (w: number, col: any) => {
                   删除
                 </a-button>
               </template>
-              <a-button type="danger">
+              <a-button type="danger" :disabled="!selectedRowKeys.length">
                 <template #icon>
                   <DeleteOutlined />
                 </template>
@@ -490,6 +515,7 @@ const handleResizeColumn = (w: number, col: any) => {
         </a-space>
       </div>
       <a-table
+        :row-selection="rowSelection"
         :loading="isTableLoading"
         :dataSource="dataSource"
         :columns="columns"
