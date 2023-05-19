@@ -27,6 +27,10 @@
     width: 300px;
 }
 
+.ant-notification-notice-close {
+    top: 13px;
+}
+
 .ant-notification-topRight {
     top: 16px !important;
     margin-right: 16px !important;

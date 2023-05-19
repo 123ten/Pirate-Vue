@@ -50,7 +50,10 @@ const emits = defineEmits([
   "onSelectChange", // 选中表格数据change事件
   "onColumnChange", // columns 发生变化时
   "onPagesChange", // 页码发生变化时
-  "on",
+  "onReload", // 刷新表格
+  "onDetail",
+  "onEdit", // 表格内置编辑
+  "onDelete", // 表格内置删除行
 ]);
 
 const columnStorages = ref<IColumns[]>(props.columns); // 暂存 被删除的columns
@@ -78,7 +81,7 @@ onMounted(() => {
 
 // 刷新表格
 const onReload = () => {
-  // isTableLoading.value = true;
+  emits("onReload");
 };
 
 // 打开搜索框弹窗
@@ -281,54 +284,60 @@ const rowSelection = computed(() => {
         }"
       >
         <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'operate'">
+          <slot name="operate" v-if="column.key === 'operate'">
             <a-space>
-              <a-tooltip>
-                <template #title>
-                  <span>查看详情</span>
-                </template>
-                <a-button type="primary" size="small">
-                  <ZoomInOutlined />
-                </a-button>
-              </a-tooltip>
-              <a-tooltip>
-                <template #title>
-                  <span>编辑</span>
-                </template>
-                <a-button type="primary" size="small">
-                  <EditOutlined />
-                </a-button>
-              </a-tooltip>
-              <a-tooltip>
-                <template #title>
-                  <span>删除</span>
-                </template>
-                <a-popconfirm
-                  title="确定删除选中记录？"
-                  ok-text="删除"
-                  cancel-text="取消"
-                  @cancel="onDelCurrentCancel(record)"
-                  v-model:visible="record.isDelVisible"
-                  placement="left"
-                >
-                  <template #okButton>
-                    <a-button
-                      type="danger"
-                      size="small"
-                      @click="onDelCurrentConfirm(record)"
-                    >
-                      删除
-                    </a-button>
+              <slot name="operateDetails">
+                <a-tooltip>
+                  <template #title>
+                    <span>查看详情</span>
                   </template>
-                  <a-button type="danger" size="small">
-                    <template #icon>
-                      <DeleteOutlined />
-                    </template>
+                  <a-button type="primary" size="small">
+                    <ZoomInOutlined />
                   </a-button>
-                </a-popconfirm>
-              </a-tooltip>
+                </a-tooltip>
+              </slot>
+              <slot name="operateEdit">
+                <a-tooltip>
+                  <template #title>
+                    <span>编辑</span>
+                  </template>
+                  <a-button type="primary" size="small">
+                    <EditOutlined />
+                  </a-button>
+                </a-tooltip>
+              </slot>
+              <slot name="operateDelete">
+                <a-tooltip>
+                  <template #title>
+                    <span>删除</span>
+                  </template>
+                  <a-popconfirm
+                    title="确定删除选中记录？"
+                    ok-text="删除"
+                    cancel-text="取消"
+                    @cancel="onDelCurrentCancel(record)"
+                    v-model:visible="record.isDelVisible"
+                    placement="left"
+                  >
+                    <template #okButton>
+                      <a-button
+                        type="danger"
+                        size="small"
+                        @click="onDelCurrentConfirm(record)"
+                      >
+                        删除
+                      </a-button>
+                    </template>
+                    <a-button type="danger" size="small">
+                      <template #icon>
+                        <DeleteOutlined />
+                      </template>
+                    </a-button>
+                  </a-popconfirm>
+                </a-tooltip>
+              </slot>
             </a-space>
-          </template>
+          </slot>
         </template>
       </a-table>
     </div>
