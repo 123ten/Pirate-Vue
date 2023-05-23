@@ -11,19 +11,18 @@ import {
   ZoomInOutlined,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
+import AddEditModal from "@/components/Modals/TheGroup/AddEditModal.vue";
 
 const columns = ref<IColumns[]>([
   {
     title: "组别名称",
     dataIndex: "name",
-    key: "name",
     align: "center",
     width: 200,
   },
   {
     title: "权限",
-    dataIndex: "age",
-    key: "age",
+    dataIndex: "rules",
     align: "center",
     // resizable: true,
     // width: 100,
@@ -33,7 +32,6 @@ const columns = ref<IColumns[]>([
   {
     title: "状态",
     dataIndex: "status",
-    key: "status",
     align: "center",
     // width: 100,
   },
@@ -46,14 +44,12 @@ const columns = ref<IColumns[]>([
   {
     title: "创建时间",
     dataIndex: "createTime",
-    key: "createTime",
     align: "center",
     width: 180,
   },
   {
     title: "操作",
     dataIndex: "operate",
-    key: "operate",
     align: "center",
     fixed: "right",
     width: 100,
@@ -99,46 +95,58 @@ const dataSource = ref<IDataSource[]>([
     ],
   },
 ]);
-const menuChecked = ref<string[]>([]);
-const menuCheckList = ref<IColumns[]>([]);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
   pageSize: 10,
   current: 1,
   total: 0,
 });
-const isDelAllVisible = ref<boolean>(false);
+const isEdit = ref<boolean>(false); // 是否编辑
+const isDeleteAllVisible = ref<boolean>(false);
 const isExpandAllRows = ref<boolean>(false);
 const isTableLoading = ref<boolean>(false); // 表格加载状态
+const isAddEditModal = ref<boolean>(false);
 
 onMounted(() => {
   dataSource.value = dataSource.value.map((item) => {
-    item.isDelVisible = false;
+    item.isDeleteVisible = false;
     return item;
   });
 });
 
-// 打开搜索框弹窗
+// 添加
+const handleAddEdit = (type: number) => {
+  isEdit.value = type === 1;
+  isAddEditModal.value = true;
+};
+// 添加/编辑 - cancel
+const onAddEditCancel = () => {
+  isAddEditModal.value = false;
+};
+// 添加/编辑 - confirm
+const onAddEditConfirm = () => {
+  onAddEditCancel();
+};
 
 // 删除-确定
-const onDelAllConfirm = () => {
-  isDelAllVisible.value = false;
+const onDeleteAllConfirm = () => {
+  isDeleteAllVisible.value = false;
 };
 // 删除-取消
-const onDelAllcancel = () => {
-  isDelAllVisible.value = false;
+const onDeleteAllcancel = () => {
+  isDeleteAllVisible.value = false;
 };
 // 删除-显示隐藏的回调
-const onDelVisibleChange = () => {
+const onDeleteVisibleChange = () => {
   // selectedRowKeys没有选中时 默认禁用 删除按钮
   if (!unref(selectedRowKeys).length) {
-    isDelAllVisible.value = false;
+    isDeleteAllVisible.value = false;
   }
 };
 // 删除当前行-确定
-const onDelCurrentConfirm = (record: IDataSource) => {
+const onDeleteCurrentConfirm = (record: IDataSource) => {
   console.log(record, "record");
-  record.isDelVisible = false;
+  record.isDeleteVisible = false;
 };
 
 // 分页
@@ -171,72 +179,8 @@ const onSelectChange = (rowKeys: string[]) => {
       @onPagesChange="onPagesChange"
       @onSelectChange="onSelectChange"
     >
-      <!-- <template #formSearch>
-        <a-form :model="formSeach" layout="inline" name="basic">
-          <a-space direction="vertical">
-            <a-row style="width: 100%">
-              <a-col :span="6">
-                <a-form-item
-                  label="UsernameUsernameUsername"
-                  name="username"
-                  :rules="[
-                    {
-                      required: true,
-                      message: 'Please input your username!',
-                    },
-                  ]"
-                >
-                  <a-input v-model:value="formSeach.username" />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item
-                  label="Username"
-                  name="username"
-                  :rules="[
-                    {
-                      required: true,
-                      message: 'Please input your username!',
-                    },
-                  ]"
-                >
-                  <a-input v-model:value="formSeach.username" />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item
-                  label="Username"
-                  name="username"
-                  :rules="[
-                    {
-                      required: true,
-                      message: 'Please input your username!',
-                    },
-                  ]"
-                >
-                  <a-input v-model:value="formSeach.username" />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item
-                  label="Username"
-                  name="username"
-                  :rules="[
-                    {
-                      required: true,
-                      message: 'Please input your username!',
-                    },
-                  ]"
-                >
-                  <a-input v-model:value="formSeach.username" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-space>
-        </a-form>
-      </template> -->
       <template #leftBtn>
-        <ITooltip title="添加" content="添加">
+        <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
             <PlusOutlined />
           </template>
@@ -256,12 +200,16 @@ const onSelectChange = (rowKeys: string[]) => {
               title="确定删除选中记录？"
               ok-text="删除"
               cancel-text="取消"
-              @cancel="onDelAllcancel"
-              @visibleChange="onDelVisibleChange"
-              v-model:visible="isDelAllVisible"
+              @cancel="onDeleteAllcancel"
+              @visibleChange="onDeleteVisibleChange"
+              v-model:visible="isDeleteAllVisible"
             >
               <template #okButton>
-                <a-button type="danger" size="small" @click="onDelAllConfirm">
+                <a-button
+                  type="danger"
+                  size="small"
+                  @click="onDeleteAllConfirm"
+                >
                   删除
                 </a-button>
               </template>
@@ -275,8 +223,8 @@ const onSelectChange = (rowKeys: string[]) => {
           </template>
         </ITooltip>
         <ITooltip
-          :title="isExpandAllRows ? '收起所有子菜单' : '展开所有子菜单'"
-          :content="isExpandAllRows ? '收起所有' : '展开所有'"
+          :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
+          :content="isExpandAllRows ? '收缩所有' : '展开所有'"
           :type="isExpandAllRows ? 'danger' : 'warning'"
           @click="isExpandAllRows = !isExpandAllRows"
         >
@@ -284,19 +232,19 @@ const onSelectChange = (rowKeys: string[]) => {
       </template>
       <template #bodyCell="{ column, record }">
         <!-- {{ column }} -->
-        <template v-if="column.key === 'status'">
+        <template v-if="column.dataIndex === 'status'">
           <a-tag :color="record.status === 1 ? 'success' : 'error'">
             {{ record.status === 1 ? "启用" : "禁用" }}
           </a-tag>
         </template>
-        <template v-if="column.key === 'operate'">
+        <template v-if="column.dataIndex === 'operate'">
           <a-space>
-            <ITooltip title="查看详情" size="small">
+            <!-- <ITooltip title="查看详情" size="small">
               <template #icon>
                 <ZoomInOutlined />
               </template>
-            </ITooltip>
-            <ITooltip title="编辑" size="small">
+            </ITooltip> -->
+            <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
               <template #icon>
                 <EditOutlined />
               </template>
@@ -308,13 +256,13 @@ const onSelectChange = (rowKeys: string[]) => {
                   ok-text="删除"
                   cancel-text="取消"
                   placement="left"
-                  v-model:visible="record.isDelVisible"
+                  v-model:visible="record.isDeleteVisible"
                 >
                   <template #okButton>
                     <a-button
                       type="danger"
                       size="small"
-                      @click="onDelCurrentConfirm(record)"
+                      @click="onDeleteCurrentConfirm(record)"
                     >
                       删除
                     </a-button>
@@ -331,6 +279,13 @@ const onSelectChange = (rowKeys: string[]) => {
         </template>
       </template>
     </ITable>
+
+    <AddEditModal
+      v-model:visible="isAddEditModal"
+      :title="isEdit ? '编辑' : '添加'"
+      @cancel="onAddEditCancel"
+      @confirm="onAddEditConfirm"
+    />
   </div>
 </template>
 

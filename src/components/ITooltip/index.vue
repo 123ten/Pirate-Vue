@@ -19,9 +19,6 @@ const emits = defineEmits([
   "click", // 表格搜索
 ]);
 // 默认按钮 点击事件
-const click = () => {
-  emits("click");
-};
 </script>
 
 <template>
@@ -35,7 +32,7 @@ const click = () => {
         :type="props.type"
         :disabled="props.disabled"
         :size="props.size"
-        @click="click"
+        @click="emits('click')"
       >
         <template #icon>
           <!-- 图标 可自定义 -->
