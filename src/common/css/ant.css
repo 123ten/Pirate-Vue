@@ -1,5 +1,28 @@
 /* 按钮 */
 
+:root {
+    --ant-warning: #e6a23c
+}
+
+.ant-btn.ant-btn-warning {
+    color: #fff;
+    border-color: var(--ant-warning);
+    background: var(--ant-warning);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
+
+.ant-btn.ant-btn-warning:hover,
+.ant-btn.ant-btn-warning:focus {
+    color: #fff;
+    border-color: var(--ant-warning);
+    background: var(--ant-warning);
+}
+
+.ant-btn.ant-btn-warning:hover {
+    opacity: .8;
+}
+
 .reload-btn {
     background-color: #40485b !important;
 }

@@ -7,52 +7,48 @@ import {
   TableOutlined,
   SearchOutlined,
   EditOutlined,
+  EditFilled,
+  ZoomInOutlined,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
 
-interface IColumns {
-  title: string;
-  dataIndex: string;
-  key: string;
-  align: string; // 表格对齐方式 center | left | right
-  fixed?: string; // 表头左右固定 left | right
-  // responsive?: string[];
-  width?: number | string; // 表头宽度
-
-  resizable?: boolean; // 表头是否可伸缩
-  minWidth?: number; // 拖动列最小宽度，会受到表格自动调整分配宽度影响
-  maxWidth?: number; // 拖动列最大宽度，会受到表格自动调整分配宽度影响
-}
-interface IDataSource {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  isDelVisible?: boolean;
-}
-const formSeach = reactive({}); // 搜索
 const columns = ref<IColumns[]>([
   {
-    title: "姓名",
+    title: "组别名称",
     dataIndex: "name",
     key: "name",
     align: "center",
+    width: 200,
   },
   {
-    title: "年龄",
+    title: "权限",
     dataIndex: "age",
     key: "age",
     align: "center",
-    resizable: true,
-    width: 100,
-    minWidth: 100,
-    maxWidth: 200,
+    // resizable: true,
+    // width: 100,
+    // minWidth: 100,
+    // maxWidth: 200,
   },
   {
-    title: "住址",
-    dataIndex: "address",
-    key: "address",
+    title: "状态",
+    dataIndex: "status",
+    key: "status",
     align: "center",
+    // width: 100,
+  },
+  {
+    title: "修改时间",
+    dataIndex: "updatetime",
+    align: "center",
+    width: 180,
+  },
+  {
+    title: "创建时间",
+    dataIndex: "createTime",
+    key: "createTime",
+    align: "center",
+    width: 180,
   },
   {
     title: "操作",
@@ -69,144 +65,38 @@ const dataSource = ref<IDataSource[]>([
     name: "胡彦斌",
     age: 32,
     address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
+    children: [
+      {
+        key: "1-1",
+        name: "胡彦祖1",
+        age: 22,
+        address: "西湖区湖底公园1号",
+        children: [
+          {
+            key: "1-1-1",
+            name: "胡彦祖1",
+            age: 22,
+            address: "西湖区湖底公园1号",
+            children: [
+              {
+                key: "12",
+                name: "胡彦祖1",
+                age: 22,
+                address: "西湖区湖底公园1号",
+                children: [
+                  {
+                    key: "1-1-2",
+                    name: "胡彦祖1",
+                    age: 22,
+                    address: "西湖区湖底公园1号",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
   },
 ]);
 const menuChecked = ref<string[]>([]);
@@ -217,21 +107,15 @@ const pages = ref<IPages>({
   current: 1,
   total: 0,
 });
-const isDelAllVisible = ref(false);
-const isTableLoading = ref(false); // 表格加载状态
+const isDelAllVisible = ref<boolean>(false);
+const isExpandAllRows = ref<boolean>(false);
+const isTableLoading = ref<boolean>(false); // 表格加载状态
 
 onMounted(() => {
   dataSource.value = dataSource.value.map((item) => {
     item.isDelVisible = false;
     return item;
   });
-  menuCheckList.value = columns.value.filter(
-    (item) => ![item.dataIndex, item.key].includes("operate")
-  );
-  menuChecked.value = menuCheckList.value.map(
-    (item) => item.dataIndex || item.key
-  );
-  console.log(menuChecked.value, "menuChecked.value");
 });
 
 // 打开搜索框弹窗
@@ -254,6 +138,7 @@ const onDelVisibleChange = () => {
 // 删除当前行-确定
 const onDelCurrentConfirm = (record: IDataSource) => {
   console.log(record, "record");
+  record.isDelVisible = false;
 };
 
 // 分页
@@ -263,8 +148,13 @@ const onPagesChange = (records: IPages) => {
 };
 
 // 显示与隐藏表头
-const onColumnChange = (columnsArr: IColumns[]) => {
-  columns.value = columnsArr;
+const onColumnChange = (newColumns: IColumns[]) => {
+  columns.value = newColumns;
+};
+// 多选
+const onSelectChange = (rowKeys: string[]) => {
+  selectedRowKeys.value = rowKeys;
+  console.log(rowKeys, "rowKeys");
 };
 </script>
 
@@ -274,11 +164,14 @@ const onColumnChange = (columnsArr: IColumns[]) => {
       :columns="columns"
       :dataSource="dataSource"
       :pages="pages"
+      isSelectedRowKeys
+      :isExpandAllRows="isExpandAllRows"
+      :loading="isTableLoading"
       @onColumnChange="onColumnChange"
-      @onDelCurrentConfirm="onDelCurrentConfirm"
       @onPagesChange="onPagesChange"
+      @onSelectChange="onSelectChange"
     >
-      <template #formSearch>
+      <!-- <template #formSearch>
         <a-form :model="formSeach" layout="inline" name="basic">
           <a-space direction="vertical">
             <a-row style="width: 100%">
@@ -341,6 +234,101 @@ const onColumnChange = (columnsArr: IColumns[]) => {
             </a-row>
           </a-space>
         </a-form>
+      </template> -->
+      <template #leftBtn>
+        <ITooltip title="添加" content="添加">
+          <template #icon>
+            <PlusOutlined />
+          </template>
+        </ITooltip>
+        <ITooltip
+          title="编辑选中行"
+          content="编辑"
+          :disabled="!selectedRowKeys.length"
+        >
+          <template #icon>
+            <EditFilled />
+          </template>
+        </ITooltip>
+        <ITooltip title="删除选中行">
+          <template #content>
+            <a-popconfirm
+              title="确定删除选中记录？"
+              ok-text="删除"
+              cancel-text="取消"
+              @cancel="onDelAllcancel"
+              @visibleChange="onDelVisibleChange"
+              v-model:visible="isDelAllVisible"
+            >
+              <template #okButton>
+                <a-button type="danger" size="small" @click="onDelAllConfirm">
+                  删除
+                </a-button>
+              </template>
+              <a-button type="danger" :disabled="!selectedRowKeys.length">
+                <template #icon>
+                  <DeleteOutlined />
+                </template>
+                删除
+              </a-button>
+            </a-popconfirm>
+          </template>
+        </ITooltip>
+        <ITooltip
+          :title="isExpandAllRows ? '收起所有子菜单' : '展开所有子菜单'"
+          :content="isExpandAllRows ? '收起所有' : '展开所有'"
+          :type="isExpandAllRows ? 'danger' : 'warning'"
+          @click="isExpandAllRows = !isExpandAllRows"
+        >
+        </ITooltip>
+      </template>
+      <template #bodyCell="{ column, record }">
+        <!-- {{ column }} -->
+        <template v-if="column.key === 'status'">
+          <a-tag :color="record.status === 1 ? 'success' : 'error'">
+            {{ record.status === 1 ? "启用" : "禁用" }}
+          </a-tag>
+        </template>
+        <template v-if="column.key === 'operate'">
+          <a-space>
+            <ITooltip title="查看详情" size="small">
+              <template #icon>
+                <ZoomInOutlined />
+              </template>
+            </ITooltip>
+            <ITooltip title="编辑" size="small">
+              <template #icon>
+                <EditOutlined />
+              </template>
+            </ITooltip>
+            <ITooltip title="删除">
+              <template #content>
+                <a-popconfirm
+                  title="确定删除选中记录？"
+                  ok-text="删除"
+                  cancel-text="取消"
+                  placement="left"
+                  v-model:visible="record.isDelVisible"
+                >
+                  <template #okButton>
+                    <a-button
+                      type="danger"
+                      size="small"
+                      @click="onDelCurrentConfirm(record)"
+                    >
+                      删除
+                    </a-button>
+                  </template>
+                  <a-button type="danger" size="small">
+                    <template #icon>
+                      <DeleteOutlined />
+                    </template>
+                  </a-button>
+                </a-popconfirm>
+              </template>
+            </ITooltip>
+          </a-space>
+        </template>
       </template>
     </ITable>
   </div>

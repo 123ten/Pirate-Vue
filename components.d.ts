@@ -48,6 +48,7 @@ declare module '@vue/runtime-core' {
     Home: typeof import("./src/views/Home/index.vue")["default"]
     IBreadcrumb: typeof import("./src/components/IBreadcrumb/index.vue")["default"]
     ITable: typeof import('./src/components/ITable/index.vue')['default']
+    ITooltip: typeof import('./src/components/ITooltip/index.vue')['default']
     Layout: typeof import('./src/components/Layout/index.vue')['default']
     Menu: typeof import('./src/components/Menu/index.vue')['default']
     Panel: typeof import('./src/components/HomeContent/panel.vue')['default']
