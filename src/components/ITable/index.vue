@@ -17,19 +17,29 @@ import {
   watch,
 } from "vue";
 import type { ColumnFilterItem } from "ant-design-vue/es/table/interface";
+import { on } from "events";
+
+//#region interface
+interface IDataSource {
+  key: string;
+  children?: IDataSource[];
+}
 interface IProps {
   columns: IColumns[]; // 表格列的配置描述
   dataSource: IDataSource[]; //
   selectedRowKeys?: string[]; // 选中的表格多选
   pageSizeOptions?: string[]; // 指定每页可以显示多少条
   pages?: IPages; // 页码
+  scroll?: null;
   keywordPlaceholder?: string; // 搜索框 占位内容
   isSelectedRowKeys?: boolean; // 是否显示表格多选框
   loading?: boolean; // 表格加载状态
   isFormSearchBtn?: boolean; // 是否显示 form 按钮 搭配插槽 formSearch 一起使用
   isExpandAllRows?: boolean; // 控制展开所有行
 }
+//#endregion
 
+// #region props
 const props = withDefaults(defineProps<IProps>(), {
   columns: () => [],
   dataSource: () => [],
@@ -40,13 +50,15 @@ const props = withDefaults(defineProps<IProps>(), {
     current: 1,
     total: 0,
   }),
+  scroll: null,
   keywordPlaceholder: "",
   isSelectedRowKeys: false,
   loading: false,
   isFormSearchBtn: false,
   isExpandAllRows: false,
 });
-
+// #endregion
+// #region emits
 const emits = defineEmits([
   "onSelectChange", // 选中表格数据change事件
   "onColumnChange", // columns 发生变化时
@@ -57,6 +69,7 @@ const emits = defineEmits([
   "onDelete", // 表格内置删除行
   "onSearchBlur", // 表格搜索
 ]);
+//#endregion
 
 const pages = toRef(props, "pages");
 const columnStorages = ref<IColumns[]>(props.columns); // 暂存 被删除的columns
@@ -256,6 +269,7 @@ const rowSelection = computed(() => {
         :dataSource="dataSource"
         :loading="props.loading"
         :columns="props.columns"
+        :scroll="props.scroll"
         v-model:expandedRowKeys="expandedRowKeys"
         bordered
         @resizeColumn="handleResizeColumn"

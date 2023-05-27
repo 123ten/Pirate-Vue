@@ -124,6 +124,23 @@ watch(
           管理员日志管理
         </a-menu-item>
       </a-sub-menu>
+      <a-sub-menu key="user" title="会员管理">
+        <template #icon>
+          <TeamOutlined class="fontSize-icon" />
+        </template>
+        <a-menu-item key="index" @click="toRouter('index')">
+          <TeamOutlined class="fontSize-icon" />
+          会员管理
+        </a-menu-item>
+        <a-menu-item key="rule" @click="toRouter('rule')">
+          <UserOutlined class="fontSize-icon" />
+          会员规则管理
+        </a-menu-item>
+        <a-menu-item key="userLog" @click="toRouter('userLog')">
+          <MenuOutlined class="fontSize-icon" />
+          会员日志管理
+        </a-menu-item>
+      </a-sub-menu>
     </a-menu>
   </a-layout-sider>
 </template>

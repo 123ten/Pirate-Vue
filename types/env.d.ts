@@ -8,3 +8,7 @@ declare module "nprogress" {
   const start: any;
   const done: any;
 }
+
+declare module "sortablejs" {
+  const create: any;
+}

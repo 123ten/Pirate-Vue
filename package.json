@@ -18,6 +18,7 @@
     "less-loader": "^11.1.0",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.34",
+    "sortablejs": "^1.15.0",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },

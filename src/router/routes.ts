@@ -64,6 +64,39 @@ export const routes: Array<RouteRecordRaw> = [
           },
         ],
       },
+      {
+        path: "/user",
+        redirect: "index",
+        children: [
+          {
+            path: "index",
+            name: "index",
+            meta: {
+              parentName: "user",
+              title: "会员管理",
+            },
+            component: () => import("@/views/User/Index/index.vue"),
+          },
+          {
+            path: "rule",
+            name: "rule",
+            meta: {
+              parentName: "user",
+              title: "会员规则管理",
+            },
+            component: () => import("@/views/User/Rule/index.vue"),
+          },
+          {
+            path: "userLog",
+            name: "userLog",
+            meta: {
+              parentName: "user",
+              title: "会员日志管理",
+            },
+            component: () => import("@/views/User/UserLog/index.vue"),
+          },
+        ],
+      },
     ],
   },
 ];

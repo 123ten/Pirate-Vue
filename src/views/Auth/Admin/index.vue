@@ -9,16 +9,35 @@ import {
   EditOutlined,
   EditFilled,
   ZoomInOutlined,
+  UserOutlined,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
 import AddEditModal from "@/components/Modals/TheAdmin/AddEditModal.vue";
+import IPreviewImage from "@/components/IPreviewImage/index.vue";
+import data from "./data.json";
+import type { TableColumnType } from "ant-design-vue";
+
+interface IDataSource {
+  key?: string |number;
+  isDelVisible?: boolean;
+  username?: string;
+  nickname?: string;
+  groups?: string;
+  avatar?: string;
+  email?: string;
+  phone?: string;
+  lastlogintime?: string;
+  createTime?: string;
+  status?: number;
+}
 
 const columns = ref<IColumns[]>([
   {
     title: "序号",
     dataIndex: "index",
+    key: "index",
     align: "center",
-    width: 80,
+    customRender: ({ index }) => index + 1,
   },
   {
     title: "用户名",
@@ -54,13 +73,11 @@ const columns = ref<IColumns[]>([
     title: "最后登录",
     dataIndex: "lastlogintime",
     align: "center",
-    width: 180,
   },
   {
     title: "创建时间",
     dataIndex: "createTime",
     align: "center",
-    width: 180,
   },
   {
     title: "状态",
@@ -75,14 +92,7 @@ const columns = ref<IColumns[]>([
     width: 100,
   },
 ]);
-const dataSource = ref<IDataSource[]>([
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-]);
+const dataSource = ref<IDataSource[]>(data);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
   pageSize: 10,
@@ -91,10 +101,12 @@ const pages = ref<IPages>({
 });
 const formSeach = reactive({});
 
+const avatarPreviewSrc = ref("");
 const isEdit = ref<boolean>(false); // 是否编辑
 const isDeleteAllVisible = ref<boolean>(false);
 const isTableLoading = ref<boolean>(false); // 表格加载状态
 const isAddEditModal = ref<boolean>(false);
+const isAvatarPreviewSrc = ref<boolean>(false);
 
 onMounted(() => {
   dataSource.value = dataSource.value.map((item) => {
@@ -153,6 +165,12 @@ const onSelectChange = (rowKeys: string[]) => {
   selectedRowKeys.value = rowKeys;
   console.log(rowKeys, "rowKeys");
 };
+
+// 显示预览图片
+const openAvatarPreviewImage = (src: string) => {
+  isAvatarPreviewSrc.value = true;
+  avatarPreviewSrc.value = src;
+};
 </script>
 
 <template>
@@ -164,6 +182,7 @@ const onSelectChange = (rowKeys: string[]) => {
       isSelectedRowKeys
       isFormSearchBtn
       :loading="isTableLoading"
+      :scroll="{ x: true }"
       @onColumnChange="onColumnChange"
       @onPagesChange="onPagesChange"
       @onSelectChange="onSelectChange"
@@ -286,7 +305,16 @@ const onSelectChange = (rowKeys: string[]) => {
         </ITooltip>
       </template>
       <template #bodyCell="{ column, record }">
-        <!-- {{ column }} -->
+        <template v-if="column.dataIndex === 'avatar'">
+          <!-- <a-image :width="30" :height="30" :src="record.avatar" /> -->
+          <a-avatar
+            size="large"
+            :src="record.avatar"
+            @click="openAvatarPreviewImage(record.avatar)"
+          >
+            <template #icon><UserOutlined /></template>
+          </a-avatar>
+        </template>
         <template v-if="column.dataIndex === 'status'">
           <a-tag :color="record.status === 1 ? 'success' : 'error'">
             {{ record.status === 1 ? "启用" : "禁用" }}
@@ -340,6 +368,10 @@ const onSelectChange = (rowKeys: string[]) => {
       :title="isEdit ? '编辑' : '添加'"
       @cancel="onAddEditCancel"
       @confirm="onAddEditConfirm"
+    />
+    <IPreviewImage
+      :src="avatarPreviewSrc"
+      v-model:visible="isAvatarPreviewSrc"
     />
   </div>
 </template>
