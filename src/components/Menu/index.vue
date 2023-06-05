@@ -18,10 +18,8 @@ const route = useRoute();
 const store = useMenuStore();
 const { isMenuOutIn } = storeToRefs(store);
 
-const keys = reactive({
-  parentKey: "",
-  key: "",
-});
+const openKeys = ref<string[]>([]);
+const selectedKeys = ref<string[]>([]);
 
 onMounted(() => {
   // const innerWidth = document.documentElement.clientWidth;
@@ -51,17 +49,21 @@ onBeforeUnmount(() => {
 // 跳转
 const toRouter = (name: string) => {
   console.log(name, "name");
-
   router.push({
     name,
   });
-  // keys.key = name as string;
-  // keys.parentKey = route.meta.parentName as string;
-  console.log(keys, "keys");
 };
 const currentOpenMenu = () => {
-  keys.key = route.name as string;
-  keys.parentKey = route.meta.parentName as string;
+  openKeys.value = [route.meta.parentName as string];
+  selectedKeys.value = [route.name as string];
+};
+const onOpenChange = (keys: string[]) => {
+  // const latestOpenKey = keys.find((key) => state.openKeys.indexOf(key) === -1);
+  // if (state.rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
+  //   state.openKeys = keys;
+  // } else {
+  //   state.openKeys = latestOpenKey ? [latestOpenKey] : [];
+  // }
 };
 watch(
   () => route.path,
@@ -95,7 +97,12 @@ watch(
         <MenuFoldOutlined v-show="!isMenuOutIn" style="font-size: 18px" />
       </div>
     </div>
-    <a-menu mode="inline" :selectedKeys="[keys.key]">
+    <a-menu
+      mode="inline"
+      v-model:openKeys="openKeys"
+      v-model:selectedKeys="selectedKeys"
+      @openChange="onOpenChange"
+    >
       <!-- :openKeys="[keys.parentKey]" -->
       <a-menu-item key="home" @click="toRouter('home')">
         <template #icon>
@@ -139,6 +146,23 @@ watch(
         <a-menu-item key="userLog" @click="toRouter('userLog')">
           <MenuOutlined class="fontSize-icon" />
           会员日志管理
+        </a-menu-item>
+      </a-sub-menu>
+      <a-sub-menu key="routine" title="常规管理">
+        <template #icon>
+          <TeamOutlined class="fontSize-icon" />
+        </template>
+        <a-menu-item key="config" @click="toRouter('config')">
+          <TeamOutlined class="fontSize-icon" />
+          系统配置
+        </a-menu-item>
+        <a-menu-item key="annex" @click="toRouter('annex')">
+          <UserOutlined class="fontSize-icon" />
+          附件管理
+        </a-menu-item>
+        <a-menu-item key="info" @click="toRouter('info')">
+          <MenuOutlined class="fontSize-icon" />
+          个人资料
         </a-menu-item>
       </a-sub-menu>
     </a-menu>

@@ -1,5 +1,4 @@
 <!-- 菜单规则管理 -->
-<!-- 角色组管理 -->
 <script setup lang="ts">
 import {
   SyncOutlined,

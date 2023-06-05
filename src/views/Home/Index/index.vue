@@ -1,8 +1,8 @@
 <!-- Home 首页 -->
 <script setup lang="ts">
-import Banner from "@/components/HomeContent/banner.vue";
-import Panel from "@/components/HomeContent/panel.vue";
-import Chart1 from "@/components/HomeContent/chart1.vue";
+import Banner from "../components/HomeContent/banner.vue";
+import Panel from "../components/HomeContent/panel.vue";
+import Chart1 from "../components/HomeContent/chart1.vue";
 </script>
 
 <template>

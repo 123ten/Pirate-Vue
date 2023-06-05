@@ -7,7 +7,7 @@ import {
   MinusOutlined,
   MinusSquareFilled,
 } from "@ant-design/icons-vue";
-import { onMounted, reactive, ref, watch, nextTick } from "vue";
+import { onMounted, reactive, ref, watch, nextTick, unref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store";
@@ -26,7 +26,7 @@ interface IMouseRight {
   data: ITagData;
 }
 const tags = reactive({
-  width: 2 * 14 + 49,
+  width: 2 * 14 + 32,
   x: 0,
 });
 const mouseRight = reactive<IMouseRight>({
@@ -40,11 +40,11 @@ const tabList = ref<ITagData[]>([]);
 const currentTabIndex = ref(0);
 onMounted(() => {
   // 默认初始化宽度
-  tabList.value.push({
+  unref(tabList).push({
     title: route.meta.title as string,
     path: route.path,
   });
-  resetTagWidth(tabList.value[0].title.length, false);
+  resetTagWidth(unref(tabList)[0].title.length, false);
 });
 watch(
   () => route.path,
@@ -57,17 +57,19 @@ watch(
     console.log(route.meta.title, "newPath");
 
     // 判断是否存在重复 tag
-    const isRepeatTag = tabList.value.some((item) => item.path === params.path);
+    const isRepeatTag = unref(tabList).some(
+      (item) => item.path === params.path
+    );
     // console.log(isRepeatTag, "isRepeatTag");
-    if (!isRepeatTag) tabList.value.push(params);
+    if (!isRepeatTag) unref(tabList).push(params);
 
     // 获取下标 跳转到该下标
-    const newTagIndex = tabList.value.findIndex(
+    const newTagIndex = unref(tabList).findIndex(
       (item) => item.path === params.path
     );
     // console.log(newTagIndex, "newTagIndex");
 
-    handleTabItem(params, newTagIndex, tabList.value.length === 1);
+    handleTabItem(params, newTagIndex, unref(tabList).length === 1);
   }
 );
 /**
@@ -87,7 +89,7 @@ const handleTabItem = (
 ) => {
   const length = data.title.length;
   // 当重复点击时, 不重复执行 且不为删除时
-  if (currentTabIndex.value === index && !isDel) return false;
+  if (unref(currentTabIndex) === index && !isDel) return false;
   currentTabIndex.value = index;
   // console.log(isDel, "isDelisDel");
 
@@ -95,12 +97,12 @@ const handleTabItem = (
   resetTagWidth(length, !isDel);
   // 偏移量 = 不包括自身 前面所有的宽度相加
   let count = 0;
-  for (let i = 0; i < tabList.value.length; i++) {
-    const curLength = tabList.value[i].title.length;
+  for (let i = 0; i < unref(tabList).length; i++) {
+    const curLength = unref(tabList)[i].title.length;
     // console.log(curLength, i, "item");
     if (i === index) break;
     if (i < index) {
-      count += curLength * 14 + 49;
+      count += curLength * 14 + 32; // 标题文字数量 * 字体大小 + 左右内边距
     }
   }
   tags.x = count;
@@ -111,35 +113,35 @@ const handleTabItem = (
 const delTabItem = (index: number) => {
   console.log(currentTabIndex.value, index, "currentTabIndex.value");
 
-  tabList.value.splice(index, 1);
+  unref(tabList).splice(index, 1);
   // 如点击最后一个 没有长度时 默认首页
-  if (!tabList.value.length) {
-    tabList.value.push({
+  if (!unref(tabList).length) {
+    unref(tabList).push({
       title: "首页",
       path: "/home",
     });
     return;
   }
   // 如点击下标为 0 的tab
-  if (index === 0 && currentTabIndex.value === index) {
-    console.log(tabList.value, "tabList.value");
-    // handleTabItem(tabList.value[0], 0, true);
-    resetTagWidth(tabList.value[0].title.length);
-  } else if (currentTabIndex.value === index && index !== 0) {
+  if (index === 0 && unref(currentTabIndex) === index) {
+    console.log(unref(tabList), "unref(tabList)");
+    // handleTabItem(unref(tabList)[0], 0, true);
+    resetTagWidth(unref(tabList)[0].title.length);
+  } else if (unref(currentTabIndex) === index && index !== 0) {
     // 如点击自身
 
     // 拿到上一位的长度
-    handleTabItem(tabList.value[index - 1], index - 1);
-  } else if (currentTabIndex.value > index) {
+    handleTabItem(unref(tabList)[index - 1], index - 1);
+  } else if (unref(currentTabIndex) > index) {
     handleTabItem(
-      tabList.value[currentTabIndex.value - 1],
-      currentTabIndex.value - 1
+      unref(tabList)[unref(currentTabIndex) - 1],
+      unref(currentTabIndex) - 1
     );
   }
   // 当长度为 1 时重新赋值长度
   // 背景宽度 = 字体长度 * 字号大小 + 内外边距
-  if (tabList.value.length === 1) {
-    const length = tabList.value[0].title.length;
+  if (unref(tabList).length === 1) {
+    const length = unref(tabList)[0].title.length;
     resetTagWidth(length, false);
   }
 };
@@ -147,7 +149,7 @@ const delTabItem = (index: number) => {
 const onMouseRight = (index: number, data: any) => {
   mouseRight.index = index;
   mouseRight.data = data;
-  console.log(mouseRight, currentTabIndex.value, 12312321);
+  console.log(mouseRight, unref(currentTabIndex), 12312321);
 };
 /** TODO 鼠标右键菜单点击
  * @param {number} status  类型
@@ -198,7 +200,7 @@ const onMouseRightMenu = (status: number) => {
       >
         {{ item.title }}
         <CloseOutlined
-          v-if="tabList.length !== 1"
+          v-if="tabList.length !== 1 && currentTabIndex === index"
           class="nav-tag-close"
           style="font-size: 10px"
           @click.stop="delTabItem(index)"

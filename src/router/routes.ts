@@ -20,7 +20,7 @@ export const routes: Array<RouteRecordRaw> = [
         meta: {
           title: "首页",
         },
-        component: () => import("@/views/Home/index.vue"),
+        component: () => import("@/views/Home/Index/index.vue"),
       },
       {
         path: "/auth",
@@ -94,6 +94,39 @@ export const routes: Array<RouteRecordRaw> = [
               title: "会员日志管理",
             },
             component: () => import("@/views/User/UserLog/index.vue"),
+          },
+        ],
+      },
+      {
+        path: "/routine",
+        redirect: "config",
+        children: [
+          {
+            path: "config",
+            name: "config",
+            meta: {
+              parentName: "routine",
+              title: "系统配置",
+            },
+            component: () => import("@/views/Routine/Config/index.vue"),
+          },
+          {
+            path: "annex",
+            name: "annex",
+            meta: {
+              parentName: "routine",
+              title: "附件管理",
+            },
+            component: () => import("@/views/Routine/Annex/index.vue"),
+          },
+          {
+            path: "info",
+            name: "info",
+            meta: {
+              parentName: "routine",
+              title: "个人资料",
+            },
+            component: () => import("@/views/Routine/Info/index.vue"),
           },
         ],
       },
