@@ -12,13 +12,13 @@ import {
   UserOutlined,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
-import AddEditModal from "@/components/Modals/TheAdmin/AddEditModal.vue";
+import AddEditModal from "./components/AddEditModal/index.vue";
 import IPreviewImage from "@/components/IPreviewImage/index.vue";
 import data from "./data.json";
-import type { TableColumnType } from "ant-design-vue";
+import { IColumns, IPages, IPagination } from "@/common/ts/index";
 
 interface IDataSource {
-  key?: string |number;
+  key?: string | number;
   isDelVisible?: boolean;
   username?: string;
   nickname?: string;
@@ -197,59 +197,23 @@ const openAvatarPreviewImage = (src: string) => {
           <a-space direction="vertical">
             <a-row style="width: 100%">
               <a-col :span="6">
-                <a-form-item
-                  label="UsernameUsernameUsername"
-                  name="username"
-                  :rules="[
-                    {
-                      required: true,
-                      message: 'Please input your username!',
-                    },
-                  ]"
-                >
-                  <a-input v-model:value="formSeach.username" />
+                <a-form-item label="UsernameUsernameUsername" name="username">
+                  <a-input v-model:value="formSeach.username" allow-clear />
                 </a-form-item>
               </a-col>
               <a-col :span="6">
-                <a-form-item
-                  label="Username"
-                  name="nickname"
-                  :rules="[
-                    {
-                      required: true,
-                      message: 'Please input your username!',
-                    },
-                  ]"
-                >
-                  <a-input v-model:value="formSeach.username" />
+                <a-form-item label="Username" name="nickname">
+                  <a-input v-model:value="formSeach.username" allow-clear />
                 </a-form-item>
               </a-col>
               <a-col :span="6">
-                <a-form-item
-                  label="Username"
-                  name="123"
-                  :rules="[
-                    {
-                      required: true,
-                      message: 'Please input your username!',
-                    },
-                  ]"
-                >
-                  <a-input v-model:value="formSeach.username" />
+                <a-form-item label="Username" name="123">
+                  <a-input v-model:value="formSeach.username" allow-clear />
                 </a-form-item>
               </a-col>
               <a-col :span="6">
-                <a-form-item
-                  label="Username"
-                  name="222"
-                  :rules="[
-                    {
-                      required: true,
-                      message: 'Please input your username!',
-                    },
-                  ]"
-                >
-                  <a-input v-model:value="formSeach.username" />
+                <a-form-item label="Username" name="222">
+                  <a-input v-model:value="formSeach.username" allow-clear />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -264,15 +228,6 @@ const openAvatarPreviewImage = (src: string) => {
         <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
             <PlusOutlined />
-          </template>
-        </ITooltip>
-        <ITooltip
-          title="编辑选中行"
-          content="编辑"
-          :disabled="!selectedRowKeys.length"
-        >
-          <template #icon>
-            <EditFilled />
           </template>
         </ITooltip>
         <ITooltip title="删除选中行">
@@ -322,11 +277,6 @@ const openAvatarPreviewImage = (src: string) => {
         </template>
         <template v-if="column.dataIndex === 'operate'">
           <a-space>
-            <!-- <ITooltip title="查看详情" size="small">
-              <template #icon>
-                <ZoomInOutlined />
-              </template>
-            </ITooltip> -->
             <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
               <template #icon>
                 <EditOutlined />

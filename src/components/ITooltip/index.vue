@@ -15,6 +15,7 @@ const props = withDefaults(defineProps<IProps>(), {
   type: "primary",
   size: "",
 });
+
 const emits = defineEmits([
   "click", // 表格搜索
 ]);
@@ -22,7 +23,7 @@ const emits = defineEmits([
 </script>
 
 <template>
-  <a-tooltip>
+  <a-tooltip :disabled="props.disabled">
     <template #title>
       <span>{{ props.title }}</span>
     </template>

@@ -9,6 +9,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AAlert: typeof import('ant-design-vue/es')['Alert']
     AAvatar: typeof import('ant-design-vue/es')['Avatar']
     ABreadcrumb: typeof import("ant-design-vue/es")["Breadcrumb"]
     ABreadcrumbItem: typeof import("ant-design-vue/es")["BreadcrumbItem"]
@@ -23,9 +24,11 @@ declare module '@vue/runtime-core' {
     ADropdown: typeof import('ant-design-vue/es')['Dropdown']
     AForm: typeof import('ant-design-vue/es')['Form']
     AFormItem: typeof import('ant-design-vue/es')['FormItem']
+    AFormItemRest: typeof import('ant-design-vue/es')['FormItemRest']
     AImage: typeof import('ant-design-vue/es')['Image']
     AInput: typeof import('ant-design-vue/es')['Input']
     AInputGroup: typeof import('ant-design-vue/es')['InputGroup']
+    AInputNumber: typeof import('ant-design-vue/es')['InputNumber']
     AInputPassword: typeof import('ant-design-vue/es')['InputPassword']
     ALayout: typeof import('ant-design-vue/es')['Layout']
     ALayoutHeader: typeof import("ant-design-vue/es")["LayoutHeader"]
@@ -41,6 +44,7 @@ declare module '@vue/runtime-core' {
     ARadio: typeof import('ant-design-vue/es')['Radio']
     ARadioButton: typeof import('ant-design-vue/es')['RadioButton']
     ARadioGroup: typeof import('ant-design-vue/es')['RadioGroup']
+    ARangePicker: typeof import('ant-design-vue/es')['RangePicker']
     ARow: typeof import('ant-design-vue/es')['Row']
     ASelect: typeof import('ant-design-vue/es')['Select']
     ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
@@ -62,14 +66,18 @@ declare module '@vue/runtime-core' {
     Header: typeof import('./src/components/Header/index.vue')['default']
     Home: typeof import("./src/views/Home/index.vue")["default"]
     IBreadcrumb: typeof import("./src/components/IBreadcrumb/index.vue")["default"]
+    IIcon: typeof import('./src/components/IIcon/index.vue')['default']
+    IModal: typeof import('./src/components/IModal/index.vue')['default']
     IPreviewImage: typeof import('./src/components/IPreviewImage/index.vue')['default']
     ITable: typeof import('./src/components/ITable/index.vue')['default']
     ITooltip: typeof import('./src/components/ITooltip/index.vue')['default']
+    IUpload: typeof import('./src/components/IUpload/index.vue')['default']
     Layout: typeof import('./src/components/Layout/index.vue')['default']
     Menu: typeof import('./src/components/Menu/index.vue')['default']
     Panel: typeof import('./src/components/HomeContent/panel.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SelectFileModal: typeof import('./src/components/Modals/SelectFileModal/index.vue')['default']
     Tags: typeof import('./src/components/Tags/index.vue')['default']
   }
 }

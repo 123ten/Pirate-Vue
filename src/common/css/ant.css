@@ -1,99 +1,104 @@
 /* 按钮 */
 
 :root {
-    --ant-warning: #e6a23c
+  --ant-warning: #e6a23c;
 }
-
+.ant-btn {
+  border-radius: 5px !important;
+}
 .ant-btn.ant-btn-warning {
-    color: #fff;
-    border-color: var(--ant-warning);
-    background: var(--ant-warning);
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+  color: #fff;
+  border-color: var(--ant-warning);
+  background: var(--ant-warning);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
 }
 
 .ant-btn.ant-btn-warning:hover,
 .ant-btn.ant-btn-warning:focus {
-    color: #fff;
-    border-color: var(--ant-warning);
-    background: var(--ant-warning);
+  color: #fff;
+  border-color: var(--ant-warning);
+  background: var(--ant-warning);
 }
 
 .ant-btn.ant-btn-warning:hover {
-    opacity: .8;
+  opacity: 0.8;
 }
-
-.reload-btn {
-    background-color: #40485b !important;
+.ant-btn-reload {
+  background-color: #40485b !important;
 }
-
-.reload-btn:hover,
-.reload-btn:focus {
-    color: #40485b !important;
-    border-color: #40485b !important;
+.ant-btn.ant-btn-reload:hover,
+.ant-btn.ant-btn-reload:focus {
+  opacity: .7;
+  color: #40485b !important;
+  border-color: #40485b !important;
 }
-
 
 /* space */
 
 .ant-space-vertical {
-    width: 100%;
+  width: 100%;
 }
-
 
 /* notification */
 
 .ant-notification-notice {
-    box-shadow: var(--box-shadow-light);
-    border-radius: 8px;
-    padding: 10px !important;
-    width: 300px;
+  box-shadow: var(--box-shadow-light);
+  border-radius: 8px;
+  padding: 10px !important;
+  width: 300px;
 }
 
 .ant-notification-notice-close {
-    top: 13px;
+  top: 13px;
 }
 
 .ant-notification-topRight {
-    top: 16px !important;
-    margin-right: 16px !important;
-    /* padding: 10px !important; */
+  top: 16px !important;
+  margin-right: 16px !important;
+  /* padding: 10px !important; */
 }
-
 
 /* 头部个人信息样式 */
 
 .admin-info-base {
-    width: 260px;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
+  width: 260px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
 }
 
 .admin-info-other {
-    padding: 10px 0;
-    text-align: center;
+  padding: 10px 0;
+  text-align: center;
 }
 
 .admin-info-name {
-    font-size: 18px;
+  font-size: 18px;
 }
-
 
 /* card 卡片 */
 
 .ant-card-head {
-    padding: 0 16px !important;
-    font-size: 1rem !important;
+  padding: 0 16px !important;
+  font-size: 1rem !important;
 }
 
 .ant-card-body {
-    padding: 16px !important;
+  padding: 16px !important;
 }
-
 
 /* menu 卡片 */
 
 .ant-menu-title-content {
-    user-select: none;
+  user-select: none;
+}
+
+/* alert */
+.ant-alert-gray {
+  background-color: #e6e8eb;
+  /* border: 1px solid #91d5ff; */
+}
+.ant-alert-gray .ant-alert-message {
+  color: #909399;
 }

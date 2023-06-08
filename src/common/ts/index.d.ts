@@ -12,12 +12,6 @@ interface IColumns {
   customCell?(record: IDataSource, rowIndex: number, column: IColumns); // 设置单元格属性
   customRender?({ text, record, index, column });
 }
-interface IDataSource {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-}
 
 interface IPagination {
   current: number;
@@ -33,3 +27,5 @@ interface IPages {
   current: number; // 当前页码
   total: number; // 总条数
 }
+
+export { IColumns, IPages, IPagination };

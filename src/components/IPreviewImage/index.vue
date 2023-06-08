@@ -1,15 +1,7 @@
 <!-- 图片预览 -->
 <script setup lang="ts">
 import {
-  computed,
-  onMounted,
-  reactive,
-  ref,
-  toRefs,
-  toRef,
-  unref,
   withDefaults,
-  watch,
 } from "vue";
 interface IPropsPreviewImage {
   src: string; // 图片地址

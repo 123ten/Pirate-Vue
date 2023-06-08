@@ -6,12 +6,12 @@ import {
   LoadingOutlined,
   UserOutlined,
 } from "@ant-design/icons-vue";
-import { message } from "ant-design-vue";
+import { message, notification } from "ant-design-vue";
 import { Form } from "ant-design-vue";
 
 const useForm = Form.useForm;
 const formInfo = reactive({
-  avatar: "http://127.0.0.1/upload/2023/06/03/81e719354ead92d0b80697501.jpeg",
+  avatar: "http://127.0.0.1/upload/2023/06/05/563379075e243224d704e7c00.jpeg",
   // avatar: "",
   username: "",
   password: "",
@@ -41,12 +41,15 @@ const handleAvatarUploadChange = ({ file }: any) => {
     if (code === "0000") {
       formInfo.avatar = data[0].full_url;
       console.log("fileList", unref(fileList));
-      isAvatarUploadLoading.value = false;
     }
+    isAvatarUploadLoading.value = false;
   } else if (status === "error") {
     console.log("上传失败");
     isAvatarUploadLoading.value = false;
-    message.error("上传失败");
+    notification.error({
+      message: "上传失败",
+    });
+    // message.error('上传失败')
   }
 };
 </script>

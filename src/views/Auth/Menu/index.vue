@@ -11,7 +11,7 @@ import {
   ZoomInOutlined,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
-import AddEditModal from "@/components/Modals/TheMenu/AddEditModal.vue";
+import AddEditModal from "./components/AddEditModal/index.vue";
 import Sortable from "sortablejs";
 
 interface IDataSource {
@@ -127,7 +127,7 @@ const isEdit = ref<boolean>(false); // 是否编辑
 const isDeleteAllVisible = ref<boolean>(false);
 const isExpandAllRows = ref<boolean>(false);
 const isTableLoading = ref<boolean>(false); // 表格加载状态
-const isAddEditModal = ref<boolean>(false);
+const isAddEditModal = ref<boolean>(true);
 
 onMounted(() => {
   dataSource.value = dataSource.value.map((item) => {
@@ -335,6 +335,7 @@ const onSelectChange = (rowKeys: string[]) => {
     </ITable>
 
     <AddEditModal
+    
       v-model:visible="isAddEditModal"
       :title="isEdit ? '编辑' : '添加'"
       @cancel="onAddEditCancel"

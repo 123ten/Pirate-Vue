@@ -17,7 +17,7 @@ import {
   watch,
 } from "vue";
 import type { ColumnFilterItem } from "ant-design-vue/es/table/interface";
-import { on } from "events";
+import { IColumns, IPages, IPagination } from "@/common/ts/index";
 
 //#region interface
 interface IDataSource {
@@ -155,14 +155,14 @@ const handlePageSizeChange = (
 const onCheckboxChange = () => {
   //   console.log(menuChecked.value, columnStorages.value, "menuChecked");
   const arr = [];
-  unref(columnStorages).forEach((item) => {
+  const _columns = unref(columnStorages);
+  _columns.forEach((item) => {
     if (unref(menuChecked).includes(item.dataIndex)) {
       arr.push(item);
     }
   });
   // 操作,默认需要
-  const newColumns = unref(columnStorages);
-  arr.push(newColumns[newColumns.length - 1]);
+  arr.push(_columns[_columns.length - 1]);
   emits("onColumnChange", arr);
 };
 // 显示与隐藏 form
@@ -208,14 +208,14 @@ const rowSelection = computed(() => {
       </Transition>
       <div class="table-header">
         <a-space>
-          <a-tooltip>
-            <template #title>
-              <span>刷新</span>
+          <ITooltip title="刷新" type="reload">
+            <template #icon>
+              <SyncOutlined
+                @click="onReload"
+                style="color: #fff; font-size: 14px"
+              />
             </template>
-            <a-button class="reload-btn" @click="onReload">
-              <SyncOutlined style="color: #fff" />
-            </a-button>
-          </a-tooltip>
+          </ITooltip>
           <!-- 左侧按钮 可自定义左侧按钮内容 -->
           <slot name="leftBtn"></slot>
         </a-space>
@@ -224,6 +224,7 @@ const rowSelection = computed(() => {
             :placeholder="props.keywordPlaceholder"
             v-model:value="keyword"
             @blur="onSearchBlur"
+            allow-clear
           />
           <a-radio-group v-model:value="menuOrSearch">
             <a-dropdown placement="bottom" v-model:visible="isDropdownVisible">

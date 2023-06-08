@@ -6,10 +6,13 @@ import { createPinia } from "pinia";
 import Antd from "ant-design-vue";
 import "ant-design-vue/dist/antd.less";
 import "./common/css/ant.css";
-import "./common/css/style.css";
 import "./common/css/reset.css";
+import "./common/css/style.css";
 // 引入echarts
 import echarts from "@/common/ts/echarts";
+import antdConfig from "@/config/antd.config";
+
+antdConfig();
 
 const pinia = createPinia();
 const app = createApp(App);

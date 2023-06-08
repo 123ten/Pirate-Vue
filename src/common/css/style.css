@@ -25,7 +25,6 @@ body,
   /* background-color: #f5f5f5; */
 }
 
-
 /*里面的代码可以根据自己需求去进行更改*/
 
 /* 设置滚动条的样式 */
@@ -57,7 +56,6 @@ body,
 /* ::-webkit-scrollbar-thumb:window-inactive {
     background: rgba(255, 0, 0, 0.4);
 } */
-
 
 #app {
   /* overflow: hidden; */
@@ -174,7 +172,9 @@ a {
 .mb_16 {
   margin-bottom: 16px;
 }
-
+.mt_8 {
+  margin-top: 8px;
+}
 /* 常用内边距 */
 
 .pb_8 {

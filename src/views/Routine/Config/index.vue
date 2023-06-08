@@ -5,6 +5,7 @@ import Basic from "./components/Basic/index.vue";
 import Mail from "./components/Mail/index.vue";
 import QuickAccess from "./components/QuickAccess/index.vue";
 const activeKey = ref<string | number>("1");
+const test = "123"
 </script>
 
 <template>

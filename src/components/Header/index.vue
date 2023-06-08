@@ -72,8 +72,11 @@ const onDelCacheDropdown = () => {
 const delCache = () => {
   notification.success({
     message: "操作成功",
-    duration: 0,
   });
+};
+// 注销
+const onLogout = () => {
+  console.log("onLogout");
 };
 </script>
 
@@ -134,8 +137,12 @@ const delCache = () => {
             </div>
           </div>
           <div class="d-flex-sb">
-            <a-button type="primary" ghost>个人资料</a-button>
-            <a-button type="primary" danger ghost>注销</a-button>
+            <a-button type="primary" ghost>
+              <router-link to="/routine/info">个人资料</router-link>
+            </a-button>
+            <a-button type="primary" danger ghost @click="onLogout"
+              >注销</a-button
+            >
           </div>
         </template>
         <div class="admin-info d-flex-center">
