@@ -12,6 +12,7 @@ import {
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
 import AddEditModal from "@/components/Modals/TheGroup/AddEditModal.vue";
+import { IColumns, IPages } from "@/types/index";
 
 interface IDataSource {
   key: string;
@@ -195,15 +196,6 @@ const onSelectChange = (rowKeys: string[]) => {
         <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
             <PlusOutlined />
-          </template>
-        </ITooltip>
-        <ITooltip
-          title="编辑选中行"
-          content="编辑"
-          :disabled="!selectedRowKeys.length"
-        >
-          <template #icon>
-            <EditFilled />
           </template>
         </ITooltip>
         <ITooltip title="删除选中行">

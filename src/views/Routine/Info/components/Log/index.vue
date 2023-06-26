@@ -9,7 +9,7 @@ const pages = reactive({
 </script>
 
 <template>
-  <a-timeline>
+  <a-timeline >
     <a-timeline-item color="gray">
       <p>登录</p>
       <p>2023-01-01 01:01:10</p>

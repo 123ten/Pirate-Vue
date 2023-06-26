@@ -10,6 +10,7 @@ import {
   CSSProperties,
 } from "vue";
 import { useDraggable } from "@vueuse/core";
+import type { IDragRect } from "./index";
 
 interface IPropsModal {
   title: string; // modal 标题
@@ -17,12 +18,7 @@ interface IPropsModal {
   visible: boolean; // 控制 modal 开关
   maskClosable?: boolean; // 点击蒙层是否允许关闭
   isDraw?: boolean; // 是否允许拖拽 modal 框
-}
-interface IDragRect {
-  left: number;
-  right: number;
-  top: number;
-  bottom: number;
+  bodyStyle: CSSProperties; // body 样式
 }
 
 const props = withDefaults(defineProps<IPropsModal>(), {
@@ -31,6 +27,10 @@ const props = withDefaults(defineProps<IPropsModal>(), {
   visible: false,
   maskClosable: false,
   isDraw: true,
+  bodyStyle: () => ({
+    maxHeight: "60vh",
+    overflowY: "auto",
+  }),
 });
 const emits = defineEmits([
   "confirm", // 点击确定回调
@@ -94,6 +94,7 @@ const transformStyle = computed<CSSProperties>(() => {
     :visible="props.visible"
     :width="props.width"
     centered
+    :bodyStyle="props.bodyStyle"
     :maskClosable="props.maskClosable"
     @ok="emits('confirm')"
     @cancel="emits('cancel')"

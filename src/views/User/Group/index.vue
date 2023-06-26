@@ -1,5 +1,4 @@
-<!-- 菜单规则管理 -->
-<!-- 角色组管理 -->
+<!-- 会员分组管理 -->
 <script setup lang="ts">
 import {
   SyncOutlined,
@@ -12,13 +11,12 @@ import {
   ZoomInOutlined,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
-import AddEditModal from "@/components/Modals/TheMenu/AddEditModal.vue";
-import Sortable from "sortablejs";
+import AddEditModal from "@/components/Modals/TheGroup/AddEditModal.vue";
+import { IColumns, IPages } from "@/types/index";
 
 interface IDataSource {
   key: string;
-  menuname?: string;
-  name?: string;
+  name: string;
   age: number;
   address: string;
   status?: string | number; // 状态 0 禁用 1 启用
@@ -27,46 +25,38 @@ interface IDataSource {
   isDeleteVisible?: boolean; // 是否显示删除气泡
   children?: IDataSource[]; // 设置 children 务必设置 width 否则可能出现宽度浮动
 }
-interface ISortTableEnd {
-  newIndex: number;
-  oldIndex: number;
-}
 
 const columns = ref<IColumns[]>([
   {
-    title: "标题",
-    dataIndex: "title",
+    title: "组别名称",
+    dataIndex: "name",
     align: "center",
     width: 200,
   },
   {
-    title: "图标",
-    dataIndex: "icon",
+    title: "权限",
+    dataIndex: "rules",
     align: "center",
-  },
-  {
-    title: "名称",
-    dataIndex: "menuname",
-    align: "center",
-  },
-  {
-    title: "类型",
-    dataIndex: "menutype",
-    align: "center",
-  },
-  {
-    title: "缓存",
-    dataIndex: "cache",
-    align: "center",
+    // resizable: true,
+    // width: 100,
+    // minWidth: 100,
+    // maxWidth: 200,
   },
   {
     title: "状态",
     dataIndex: "status",
     align: "center",
+    // width: 100,
   },
   {
     title: "修改时间",
     dataIndex: "updatetime",
+    align: "center",
+    width: 180,
+  },
+  {
+    title: "创建时间",
+    dataIndex: "createTime",
     align: "center",
     width: 180,
   },
@@ -81,13 +71,13 @@ const columns = ref<IColumns[]>([
 const dataSource = ref<IDataSource[]>([
   {
     key: "1",
-    menuname: "胡彦斌",
+    name: "胡彦斌",
     age: 32,
     address: "西湖区湖底公园1号",
     children: [
       {
         key: "1-1",
-        menuname: "胡彦祖1",
+        name: "胡彦祖1",
         age: 22,
         address: "西湖区湖底公园1号",
         children: [
@@ -135,36 +125,7 @@ onMounted(() => {
     item.isDeleteVisible = false;
     return item;
   });
-  rowDrop();
 });
-// 行拖拽
-const rowDrop = () => {
-  const tbody = document.querySelector(".ant-table-content tbody");
-  const _this = this;
-  let nowDrageRow = 0; // 当前拖拽的索引
-  Sortable.create(tbody, {
-    onEnd({ newIndex, oldIndex }: ISortTableEnd) {
-      // const currRow = _this.fofList.splice(oldIndex, 1)[0];
-      // _this.list.splice(newIndex, 0, currRow);
-      // _this.list.forEach((item, index) => {
-      //   item.orderNum = index + 1;
-      // });
-    },
-    // 开始拖拽的时候
-    onStart: function (evt: any) {
-      console.log("evt", evt, evt.oldIndex);
-
-      nowDrageRow = evt.oldIndex;
-    },
-    // 拖拽移动的时候
-    onMove: function (evt: any, originalEvent: any) {
-      console.log("onMove", evt);
-      if (nowDrageRow === unref(dataSource).length - 1) {
-        return false; // 禁止拖拽某一行
-      }
-    },
-  });
-};
 
 // 添加
 const handleAddEdit = (type: number) => {
@@ -237,15 +198,6 @@ const onSelectChange = (rowKeys: string[]) => {
             <PlusOutlined />
           </template>
         </ITooltip>
-        <ITooltip
-          title="编辑选中行"
-          content="编辑"
-          :disabled="!selectedRowKeys.length"
-        >
-          <template #icon>
-            <EditFilled />
-          </template>
-        </ITooltip>
         <ITooltip title="删除选中行">
           <template #content>
             <a-popconfirm
@@ -283,22 +235,19 @@ const onSelectChange = (rowKeys: string[]) => {
         </ITooltip>
       </template>
       <template #bodyCell="{ column, record }">
+        <!-- {{ column }} -->
         <template v-if="column.dataIndex === 'status'">
           <a-tag :color="record.status === 1 ? 'success' : 'error'">
             {{ record.status === 1 ? "启用" : "禁用" }}
           </a-tag>
         </template>
-        <template v-if="column.dataIndex === 'menuname'">
-          <span v-if="record.menuname">{{ record.menuname }}</span>
-          <a-input v-else placeholder="请输入名称"></a-input>
-        </template>
         <template v-if="column.dataIndex === 'operate'">
           <a-space>
-            <ITooltip title="查看详情" size="small">
+            <!-- <ITooltip title="查看详情" size="small">
               <template #icon>
-                <ZoomInOutlined class="move" />
+                <ZoomInOutlined />
               </template>
-            </ITooltip>
+            </ITooltip> -->
             <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
               <template #icon>
                 <EditOutlined />

@@ -11,6 +11,7 @@ const { proxy } = getCurrentInstance() as any;
 onMounted(() => {
   // message.info("This is a normal message");
 });
+
 </script>
 
 <template>

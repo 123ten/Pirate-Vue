@@ -13,13 +13,15 @@ import {
 import { computed, onMounted, reactive, ref, unref } from "vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
 import Sortable from "sortablejs";
+import { IColumns, IPages } from "@/types/index";
 
 interface IDataSource {
   key: string;
   menuname?: string;
   name?: string;
-  age: number;
-  address: string;
+  age?: number;
+  address?: string;
+  ruletype?: string | number; // 1 菜单目录 2 菜单项 3 页面按钮
   status?: string | number; // 状态 0 禁用 1 启用
   updatetime?: string; // 修改时间
   createTime?: string; // 创建时间
@@ -30,27 +32,27 @@ interface ISortTableEnd {
   newIndex: number;
   oldIndex: number;
 }
-
+//#region 变量
 const columns = ref<IColumns[]>([
   {
-    title: "标题",
+    title: "规则标题",
     dataIndex: "title",
     align: "center",
     width: 200,
   },
   {
-    title: "图标",
+    title: "规则图标",
     dataIndex: "icon",
     align: "center",
   },
   {
-    title: "名称",
+    title: "规则名称",
     dataIndex: "menuname",
     align: "center",
   },
   {
-    title: "类型",
-    dataIndex: "menutype",
+    title: "规则类型",
+    dataIndex: "ruletype",
     align: "center",
   },
   {
@@ -83,6 +85,7 @@ const dataSource = ref<IDataSource[]>([
     menuname: "胡彦斌",
     age: 32,
     address: "西湖区湖底公园1号",
+    ruletype: 1,
     children: [
       {
         key: "1-1",
@@ -127,15 +130,20 @@ const isEdit = ref<boolean>(false); // 是否编辑
 const isDeleteAllVisible = ref<boolean>(false);
 const isExpandAllRows = ref<boolean>(false);
 const isTableLoading = ref<boolean>(false); // 表格加载状态
-const isAddEditModal = ref<boolean>(true);
+const isAddEditModal = ref<boolean>(false);
+//#endregion
 
 onMounted(() => {
-  dataSource.value = dataSource.value.map((item) => {
+  init();
+  rowDrop();
+});
+
+const init = () => {
+  dataSource.value = unref(dataSource).map((item) => {
     item.isDeleteVisible = false;
     return item;
   });
-  rowDrop();
-});
+};
 // 行拖拽
 const rowDrop = () => {
   const tbody = document.querySelector(".ant-table-content tbody");
@@ -211,9 +219,34 @@ const onColumnChange = (newColumns: IColumns[]) => {
   columns.value = newColumns;
 };
 // 多选
-const onSelectChange = (rowKeys: string[]) => {
+const onSelectChange = (rowKeys: IDataSource["key"][]) => {
   selectedRowKeys.value = rowKeys;
   console.log(rowKeys, "rowKeys");
+};
+
+// 规则类型
+const ruletypeStatus = (type: IDataSource["ruletype"]) => {
+  const maps = new Map();
+  maps.set(1, {
+    color: "success",
+    name: "菜单目录",
+  });
+  maps.set(2, {
+    color: "error",
+    name: "菜单项",
+  });
+  maps.set(3, {
+    color: "processing",
+    name: "页面按钮",
+  });
+  if (maps.has(type)) {
+    return maps.get(type);
+  } else {
+    return {
+      color: "error",
+      name: "暂无数据",
+    };
+  }
 };
 </script>
 
@@ -234,15 +267,6 @@ const onSelectChange = (rowKeys: string[]) => {
         <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
             <PlusOutlined />
-          </template>
-        </ITooltip>
-        <ITooltip
-          title="编辑选中行"
-          content="编辑"
-          :disabled="!selectedRowKeys.length"
-        >
-          <template #icon>
-            <EditFilled />
           </template>
         </ITooltip>
         <ITooltip title="删除选中行">
@@ -282,14 +306,24 @@ const onSelectChange = (rowKeys: string[]) => {
         </ITooltip>
       </template>
       <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'status'">
-          <a-tag :color="record.status === 1 ? 'success' : 'error'">
-            {{ record.status === 1 ? "启用" : "禁用" }}
+        <template v-if="column.dataIndex === 'ruletype'">
+          <a-tag :color="ruletypeStatus(record.ruletype).color">
+            {{ ruletypeStatus(record.ruletype).name }}
           </a-tag>
         </template>
-        <template v-if="column.dataIndex === 'menuname'">
-          <span v-if="record.menuname">{{ record.menuname }}</span>
-          <a-input v-else placeholder="请输入名称"></a-input>
+        <template v-if="column.dataIndex === 'cache'">
+          <a-switch
+            v-model:checked="record.cache"
+            :checkedValue="1"
+            :unCheckedValue="0"
+          />
+        </template>
+        <template v-if="column.dataIndex === 'status'">
+          <a-switch
+            v-model:checked="record.status"
+            :checkedValue="1"
+            :unCheckedValue="0"
+          />
         </template>
         <template v-if="column.dataIndex === 'operate'">
           <a-space>
@@ -335,7 +369,6 @@ const onSelectChange = (rowKeys: string[]) => {
     </ITable>
 
     <AddEditModal
-    
       v-model:visible="isAddEditModal"
       :title="isEdit ? '编辑' : '添加'"
       @cancel="onAddEditCancel"

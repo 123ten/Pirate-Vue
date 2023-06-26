@@ -5,15 +5,13 @@ import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store";
 import { notification } from "ant-design-vue";
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   CompressOutlined,
   ExpandOutlined,
   BellOutlined,
-  DownOutlined,
   UserOutlined,
   DeleteOutlined,
   DesktopOutlined,
+  TranslationOutlined,
 } from "@ant-design/icons-vue";
 import { fullScreen, exitFullScreen } from "@/utils/dom";
 
@@ -91,6 +89,15 @@ const onLogout = () => {
       <div class="nav-menu-item" title="首页">
         <DesktopOutlined style="font-size: 18px" />
       </div>
+      <a-popover :trigger="['click']" overlayClassName="i-popover-menu">
+        <template #content>
+          <div class="i-popover-item">中文简体</div>
+          <div class="i-popover-item">English</div>
+        </template>
+        <div class="nav-menu-item" title="首页">
+          <TranslationOutlined style="font-size: 18px" />
+        </div>
+      </a-popover>
       <!-- 全屏/取消全屏 -->
       <div
         class="nav-menu-item"
@@ -116,7 +123,7 @@ const onLogout = () => {
         <template #overlay>
           <a-menu>
             <a-menu-item key="0" @click="delCache"> 清理系统缓存 </a-menu-item>
-            <a-menu-item key="1" @click="delCache"> 清理浏览器缓存</a-menu-item>
+            <a-menu-item key="1" @click="delCache"> 清理浏览器缓存 </a-menu-item>
             <a-menu-divider />
             <a-menu-item key="3" @click="delCache"> 一键清理所有 </a-menu-item>
           </a-menu>

@@ -5,21 +5,23 @@ import {
   onMounted,
   reactive,
   ref,
-  toRefs,
+  toRaw,
   toRef,
   unref,
   withDefaults,
   watch,
 } from "vue";
 import { CheckOutlined } from "@ant-design/icons-vue";
-import { IColumns, IPages } from "@/common/ts/index";
+import { IColumns, IPages } from "@/types/index";
 interface IPropsModal {
   title: string; // modal 标题
   visible: boolean; // 控制 modal 开关
+  maxFileNum: string | number; // 选择文件数 默认 只能选择一个
 }
 const props = withDefaults(defineProps<IPropsModal>(), {
   title: "",
   visible: false,
+  maxFileNum: 1,
 });
 const emits = defineEmits([
   "confirm", // 点击确定回调
@@ -93,9 +95,14 @@ const formSeach = reactive({
   upload_count: "",
   filename: "",
   createTime: "",
+  end_count: "",
+  start_count: "",
 });
 
 const avatarPreviewSrc = ref<string>("");
+
+const fileNum = ref<string | number>(props.maxFileNum);
+
 const isTableLoading = ref<boolean>(false); // 表格加载状态
 const isAvatarPreviewSrc = ref<boolean>(false);
 
@@ -113,7 +120,13 @@ const onColumnChange = (newColumns: IColumns[]) => {
 // 多选
 const onSelectChange = (rowKeys: string[]) => {
   selectedRowKeys.value = rowKeys;
+  // 更新选择数量
+  fileNum.value = Number(props.maxFileNum) - rowKeys.length;
   console.log(rowKeys, "rowKeys");
+};
+
+const onSearch = () => {
+  console.log(toRaw(formSeach));
 };
 </script>
 
@@ -170,8 +183,8 @@ const onSelectChange = (rowKeys: string[]) => {
                   <a-form-item label="文件类型" name="mimetype">
                     <a-input
                       v-model:value="formSeach.mimetype"
-                      allowClear
                       placeholder="文件类型"
+                      allow-clear
                     />
                   </a-form-item>
                 </a-col>
@@ -179,13 +192,19 @@ const onSelectChange = (rowKeys: string[]) => {
                   <a-form-item label="上传次数" name="upload_count">
                     <a-input-group compact>
                       <a-form-item-rest>
-                        <a-input v-model:value="formSeach.start_count" />
+                        <a-input-number
+                          v-model:value="formSeach.start_count"
+                          min="0"
+                        />
                         <a-input
                           class="input-middleware"
                           placeholder="至"
                           disabled
                         />
-                        <a-input v-model:value="formSeach.end_count" />
+                        <a-input-number
+                          v-model:value="formSeach.end_count"
+                          min="0"
+                        />
                       </a-form-item-rest>
                     </a-input-group>
                   </a-form-item>
@@ -197,12 +216,14 @@ const onSelectChange = (rowKeys: string[]) => {
                     <a-input
                       v-model:value="formSeach.filename"
                       placeholder="原始名称"
+                      allow-clear
                     />
                   </a-form-item>
                 </a-col>
-                <a-col :span="6">
+                <a-col :span="12">
                   <a-form-item label="最后上传时间" name="createTime">
                     <a-range-picker
+                      style="width: 100%"
                       v-model:value="formSeach.createTime"
                       format="YYYY-MM-DD HH:mm:ss"
                       value-format="YYYY-MM-DD HH:mm:ss"
@@ -213,7 +234,7 @@ const onSelectChange = (rowKeys: string[]) => {
             </a-space>
           </a-form>
           <a-space class="mt_8">
-            <a-button type="primary" html-type="submit">查询</a-button>
+            <a-button type="primary" @click="onSearch">查询</a-button>
             <a-button>重置</a-button>
           </a-space>
         </template>
@@ -227,7 +248,7 @@ const onSelectChange = (rowKeys: string[]) => {
               <CheckOutlined />
             </template>
           </ITooltip>
-          还可以选择{{ 0 }}个
+          还可以选择{{ fileNum }}个
         </template>
         <template #bodyCell="{ column, record }">
           <template v-if="column.dataIndex === 'operate'">

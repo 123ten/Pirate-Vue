@@ -25,6 +25,8 @@ interface IFormState {
   avatar: string; // 头像
   email: string; // 邮箱
   phone: string; // 手机号
+  sex: string | number; // 性别
+  birthday: string; // 生日
   password: string; // 密码
   sign: string; // 个性签名
   status: number; // 状态
@@ -55,6 +57,8 @@ const formState = reactive<IFormState>({
   avatar: "",
   email: "",
   phone: "",
+  sex: 1,
+  birthday: "",
   password: "",
   sign: "",
   status: 0,
@@ -135,6 +139,19 @@ const handleCancel = (): void => {
           v-model:value="formState.phone"
           allow-clear
           placeholder="请输入手机号"
+        />
+      </a-form-item>
+      <a-form-item label="性别" name="sex">
+        <a-radio-group v-model:value="formState.sex">
+          <a-radio :value="1"> 男 </a-radio>
+          <a-radio :value="2"> 女 </a-radio>
+          <a-radio :value="3"> 保密 </a-radio>
+        </a-radio-group>
+      </a-form-item>
+      <a-form-item name="date-picker" label="生日">
+        <a-date-picker
+          v-model:value="formState.birthday"
+          value-format="YYYY-MM-DD"
         />
       </a-form-item>
       <a-form-item label="密码" v-bind="validateInfos.password">

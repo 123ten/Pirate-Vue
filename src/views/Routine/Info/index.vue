@@ -7,10 +7,10 @@ import Log from "./components/Log/index.vue";
 <template>
   <a-row class="default-main" :gutter="[16, 16]">
     <a-col :span="12">
-      <Edit />
+      <Edit class="is-always-shadow" />
     </a-col>
     <a-col :span="12">
-      <a-card title="操作日志" :bordered="false">
+      <a-card title="操作日志" :bordered="false" class="is-always-shadow">
         <Log />
       </a-card>
     </a-col>

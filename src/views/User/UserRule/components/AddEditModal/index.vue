@@ -13,7 +13,7 @@ import {
   toRaw,
 } from "vue";
 import IIcon from "@/components/IIcon/index.vue";
-import { IFormState } from "./index";
+import { IFormState } from "../../types/index";
 
 interface IProps {
   title: string; // 添加编辑
@@ -67,9 +67,11 @@ const onClick = () => {
       </a-form-item>
       <a-form-item label="规则类型" name="password">
         <a-radio-group v-model:value="formState.ruletype">
-          <a-radio :value="1">菜单目录</a-radio>
-          <a-radio :value="2">菜单项</a-radio>
+          <a-radio :value="1">会员中心菜单目录</a-radio>
+          <a-radio :value="2">会员中心菜单项</a-radio>
           <a-radio :value="3">页面按钮</a-radio>
+          <a-radio :value="4">普通路由</a-radio>
+          <a-radio :value="5">顶栏菜单项</a-radio>
         </a-radio-group>
       </a-form-item>
       <a-form-item label="规则标题" name="username">
@@ -77,31 +79,42 @@ const onClick = () => {
       </a-form-item>
       <a-form-item label="规则名称" name="username">
         <a-input v-model:value="formState.username" />
+        <span class="block-help">
+          将注册为web端路由名称，同时作为server端API验权使用
+        </span>
       </a-form-item>
-      <template v-if="formState.ruletype !== 3">
-        <a-form-item label="路由路径" name="username">
-          <a-input v-model:value="formState.username" />
-        </a-form-item>
+      <a-form-item label="路由路径" name="username">
+        <a-input v-model:value="formState.username" />
+      </a-form-item>
+      <template v-if="![3,5].includes(formState.ruletype as number)">
         <a-form-item label="规则图标" name="username">
           <IIcon />
         </a-form-item>
       </template>
-      <template v-if="formState.ruletype === 2">
-        <a-form-item label="菜单类型" name="username">
+      <template v-if="[2,4,5].includes(formState.ruletype as number)">
+        <a-form-item
+          label="菜单类型"
+          name="username"
+          v-if="formState.ruletype !== 4"
+        >
           <a-radio-group v-model:value="formState.menutype">
             <a-radio :value="1">选项卡</a-radio>
             <a-radio :value="2">链接(站外)</a-radio>
             <a-radio :value="3">iframe</a-radio>
           </a-radio-group>
         </a-form-item>
-        <template v-if="formState.menutype === 1">
+        <template
+          v-if="(formState.menutype === 1 && [2,5].includes(formState.ruletype as number))
+          || formState.ruletype === 4"
+        >
           <a-form-item label="组件路径" name="username">
-            <a-input v-model:value="formState.username" />
+            <a-input v-model:value="formState.username" allow-clear />
           </a-form-item>
           <a-form-item label="扩展属性" name="username">
             <a-select
               v-model:value="formState.region"
               placeholder="please select your zone"
+              allow-clear
             >
               <a-select-option value="shanghai">无</a-select-option>
               <a-select-option value="beijing">只添加为路由</a-select-option>
@@ -111,9 +124,17 @@ const onClick = () => {
         </template>
         <template v-else>
           <a-form-item label="链接地址" name="username">
-            <a-input v-model:value="formState.username" />
+            <a-input v-model:value="formState.username" allow-clear />
           </a-form-item>
         </template>
+      </template>
+      <template v-if="[3,4,5].includes(formState.ruletype as number)">
+        <a-form-item label="游客登录" name="username">
+          <a-radio-group v-model:value="formState.type">
+            <a-radio :value="0">禁用</a-radio>
+            <a-radio :value="1">允许</a-radio>
+          </a-radio-group>
+        </a-form-item>
       </template>
       <!-- <a-form-item label="链接地址" name="username">
         <a-input v-model:value="formState.username" />
@@ -127,12 +148,6 @@ const onClick = () => {
           :min="0"
           style="width: 100%"
         />
-      </a-form-item>
-      <a-form-item label="缓存" name="username">
-        <a-radio-group v-model:value="formState.type">
-          <a-radio :value="0">禁用</a-radio>
-          <a-radio :value="1">启用</a-radio>
-        </a-radio-group>
       </a-form-item>
       <a-form-item label="状态" name="username">
         <a-radio-group v-model:value="formState.type">

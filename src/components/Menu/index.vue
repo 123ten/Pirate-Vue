@@ -13,10 +13,14 @@ import {
   FileDoneOutlined,
 } from "@ant-design/icons-vue";
 import { useRouter, useRoute } from "vue-router";
+import * as antIcons from "@ant-design/icons-vue";
+import data from "./data.json";
 const router = useRouter();
 const route = useRoute();
 const store = useMenuStore();
 const { isMenuOutIn } = storeToRefs(store);
+
+const menudata = ref(data);
 
 const openKeys = ref<string[]>([]);
 const selectedKeys = ref<string[]>([]);
@@ -103,6 +107,29 @@ watch(
       v-model:selectedKeys="selectedKeys"
       @openChange="onOpenChange"
     >
+      <!-- <template v-for="item in menudata" :key="item.name">
+        <a-menu-item :key="item.name" @click="toRouter(item.name)">
+          <template #icon>
+            <component
+              :is="antIcons[item.icon as keyof typeof antIcons]"
+              class="fontSize-icon"
+            />
+          </template>
+          <span>{{ item.title }}</span>
+        </a-menu-item>
+        <a-sub-menu
+          v-for="val in item.children"
+          :key="val.name"
+          :title="val.title"
+        >
+          <template #icon>
+            <component
+              :is="antIcons[val.icon as keyof typeof antIcons]"
+              class="fontSize-icon"
+            />
+          </template>
+        </a-sub-menu>
+      </template> -->
       <!-- :openKeys="[keys.parentKey]" -->
       <a-menu-item key="home" @click="toRouter('home')">
         <template #icon>
@@ -138,6 +165,10 @@ watch(
         <a-menu-item key="index" @click="toRouter('index')">
           <TeamOutlined class="fontSize-icon" />
           会员管理
+        </a-menu-item>
+        <a-menu-item key="/user/group" @click="toRouter('/user/group')">
+          <UserOutlined class="fontSize-icon" />
+          会员分组管理
         </a-menu-item>
         <a-menu-item key="rule" @click="toRouter('rule')">
           <UserOutlined class="fontSize-icon" />

@@ -9,8 +9,8 @@ interface IColumns {
   resizable?: boolean; // 表头是否可伸缩
   minWidth?: number; // 拖动列最小宽度，会受到表格自动调整分配宽度影响
   maxWidth?: number; // 拖动列最大宽度，会受到表格自动调整分配宽度影响
-  customCell?(record: IDataSource, rowIndex: number, column: IColumns); // 设置单元格属性
-  customRender?({ text, record, index, column });
+  customCell?(record: any, rowIndex: number, column: IColumns): void; // 设置单元格属性
+  customRender?({ text, record, index, column }): void;
 }
 
 interface IPagination {

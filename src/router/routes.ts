@@ -78,13 +78,22 @@ export const routes: Array<RouteRecordRaw> = [
             component: () => import("@/views/User/Index/index.vue"),
           },
           {
+            path: "group",
+            name: "/user/group",
+            meta: {
+              parentName: "user",
+              title: "会员分组管理",
+            },
+            component: () => import("@/views/User/Group/index.vue"),
+          },
+          {
             path: "rule",
             name: "rule",
             meta: {
               parentName: "user",
               title: "会员规则管理",
             },
-            component: () => import("@/views/User/Rule/index.vue"),
+            component: () => import("@/views/User/UserRule/index.vue"),
           },
           {
             path: "userLog",

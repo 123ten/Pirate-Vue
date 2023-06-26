@@ -36,9 +36,11 @@ const handleUploadChange = (info: UploadChangeParam) => {
   console.log("info.file", info.file);
 
   if (info.file.status === "uploading") {
+    isUploadLoading.value = true;
   } else if (info.file.status === "done") {
   } else if (info.file.status === "error") {
   }
+  isUploadLoading.value = false;
 };
 // 打开选择文件弹窗
 const openFileModal = () => {
@@ -64,7 +66,7 @@ const onFileModalConfirm = () => {
       class="uploader"
       :show-upload-list="false"
       accept="image/png,image/jpeg"
-      action="http://localhost:3000/upload"
+      action="http://localhost/upload"
       @change="handleUploadChange"
     >
       <img v-if="imgUrl" :src="imgUrl" :alt="props.alt" :title="props.title" />

@@ -17,7 +17,8 @@ import {
   watch,
 } from "vue";
 import type { ColumnFilterItem } from "ant-design-vue/es/table/interface";
-import { IColumns, IPages, IPagination } from "@/common/ts/index";
+import Sortable from "sortablejs";
+import type { IColumns, IPages, IPagination } from "@/types/index";
 
 //#region interface
 interface IDataSource {
@@ -36,6 +37,10 @@ interface IProps {
   loading?: boolean; // 表格加载状态
   isFormSearchBtn?: boolean; // 是否显示 form 按钮 搭配插槽 formSearch 一起使用
   isExpandAllRows?: boolean; // 控制展开所有行
+}
+interface ISortTableEnd {
+  newIndex: number;
+  oldIndex: number;
 }
 //#endregion
 
@@ -128,6 +133,35 @@ const expandAllRows = () => {
     keys = [];
   }
   expandedRowKeys.value = keys;
+};
+
+// 行拖拽
+const rowDrop = () => {
+  const tbody = document.querySelector(".ant-table-content tbody");
+  const _this = this;
+  let nowDrageRow = 0; // 当前拖拽的索引
+  Sortable.create(tbody, {
+    onEnd({ newIndex, oldIndex }: ISortTableEnd) {
+      // const currRow = _this.fofList.splice(oldIndex, 1)[0];
+      // _this.list.splice(newIndex, 0, currRow);
+      // _this.list.forEach((item, index) => {
+      //   item.orderNum = index + 1;
+      // });
+    },
+    // 开始拖拽的时候
+    onStart: function (evt: any) {
+      console.log("evt", evt, evt.oldIndex);
+
+      nowDrageRow = evt.oldIndex;
+    },
+    // 拖拽移动的时候
+    onMove: function (evt: any, originalEvent: any) {
+      console.log("onMove", evt);
+      if (nowDrageRow === unref(dataSource).length - 1) {
+        return false; // 禁止拖拽某一行
+      }
+    },
+  });
 };
 
 /** 分页

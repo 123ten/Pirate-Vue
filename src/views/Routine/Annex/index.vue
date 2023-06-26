@@ -9,7 +9,7 @@ import {
   InfoCircleFilled,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
-import { IColumns, IPages } from "@/common/ts/index";
+import { IColumns, IPages } from "@/types/index";
 import IPreviewImage from "@/components/IPreviewImage/index.vue";
 
 interface IDataSource {

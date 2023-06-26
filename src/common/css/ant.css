@@ -2,36 +2,60 @@
 
 :root {
   --ant-warning: #e6a23c;
+  --ant-reload: #40485b;
+  --ant-move: #909399;
 }
 .ant-btn {
   border-radius: 5px !important;
 }
+/* btn - warning */
 .ant-btn.ant-btn-warning {
-  color: #fff;
   border-color: var(--ant-warning);
   background: var(--ant-warning);
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
 }
-
 .ant-btn.ant-btn-warning:hover,
 .ant-btn.ant-btn-warning:focus {
-  color: #fff;
   border-color: var(--ant-warning);
-  background: var(--ant-warning);
+  background-color: var(--ant-warning);
 }
-
-.ant-btn.ant-btn-warning:hover {
-  opacity: 0.8;
-}
-.ant-btn-reload {
-  background-color: #40485b !important;
+/* btn - reload */
+.ant-btn.ant-btn-reload {
+  background-color: var(--ant-reload);
 }
 .ant-btn.ant-btn-reload:hover,
 .ant-btn.ant-btn-reload:focus {
-  opacity: .7;
-  color: #40485b !important;
-  border-color: #40485b !important;
+  border-color: var(--ant-reload);
+  background-color: var(--ant-reload);
+}
+/* btn - move */
+.ant-btn.ant-btn-move {
+  background-color: var(--ant-move);
+}
+.ant-btn.ant-btn-move:hover,
+.ant-btn.ant-btn-move:focus {
+  border-color: var(--ant-move);
+  background-color: var(--ant-move);
+}
+/* 颜色 */
+.ant-btn.ant-btn-warning,
+.ant-btn.ant-btn-warning:hover,
+.ant-btn.ant-btn-warning:focus,
+.ant-btn.ant-btn-reload,
+.ant-btn.ant-btn-reload:hover,
+.ant-btn.ant-btn-reload:focus,
+.ant-btn.ant-btn-move,
+.ant-btn.ant-btn-move:hover,
+.ant-btn.ant-btn-move:focus {
+  color: #fff;
+}
+
+/* 透明度 */
+.ant-btn.ant-btn-move:hover,
+.ant-btn.ant-btn-reload:hover,
+.ant-btn.ant-btn-warning:hover {
+  opacity: 0.8;
 }
 
 /* space */
@@ -101,4 +125,31 @@
 }
 .ant-alert-gray .ant-alert-message {
   color: #909399;
+}
+
+/* tag */
+.ant-tag.table-tag {
+  margin-right: 0;
+}
+
+/* ant-picker */
+.ant-picker {
+  width: 100%;
+}
+
+/* i-popover-menu */
+.i-popover-menu .ant-popover-inner-content {
+  padding: 0;
+  padding-top: 4px;
+}
+
+.i-popover-menu .i-popover-item {
+  text-align: center;
+  padding: 7px 20px;
+  cursor: pointer;
+  color: #000;
+  user-select: none;
+}
+.i-popover-menu .i-popover-item:hover {
+  background-color: #f5f5f5;
 }

@@ -247,6 +247,15 @@ a {
 .fontSize-icon {
   font-size: var(--fontSize-default);
 }
+/* block-help */
+.block-help {
+  display: block;
+  width: 100%;
+  color: #909399;
+  font-size: 13px;
+  line-height: 16px;
+  padding-top: 5px;
+}
 
 /* 常用动效 */
 

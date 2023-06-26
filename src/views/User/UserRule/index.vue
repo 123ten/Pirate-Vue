@@ -1,88 +1,70 @@
-<!-- 管理员管理 -->
+<!-- 会员规则管理 -->
 <script setup lang="ts">
 import {
-  SyncOutlined,
   PlusOutlined,
   DeleteOutlined,
-  TableOutlined,
-  SearchOutlined,
   EditOutlined,
-  EditFilled,
   ZoomInOutlined,
-  UserOutlined,
+  DragOutlined,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
-import IPreviewImage from "@/components/IPreviewImage/index.vue";
-import data from "./data.json";
 import { IColumns, IPages } from "@/types/index";
+import * as antIcons from "@ant-design/icons-vue";
 
 interface IDataSource {
-  key?: string | number;
-  isDelVisible?: boolean;
-  username?: string;
-  nickname?: string;
-  groups?: string;
-  avatar?: string;
-  email?: string;
-  phone?: string;
-  lastlogintime?: string;
-  createTime?: string;
-  status?: number;
+  key: string;
+  menuname?: string;
+  name?: string;
+  age?: number;
+  address?: string;
+  ruletype?: string | number; // 1 菜单目录 2 菜单项 3 页面按钮
+  status?: string | number; // 状态 0 禁用 1 启用
+  updatetime?: string; // 修改时间
+  createTime?: string; // 创建时间
+  isDeleteVisible?: boolean; // 是否显示删除气泡
+  children?: IDataSource[]; // 设置 children 务必设置 width 否则可能出现宽度浮动
 }
-
+//#region 变量
 const columns = ref<IColumns[]>([
   {
-    title: "序号",
-    dataIndex: "index",
-    key: "index",
+    title: "规则标题",
+    dataIndex: "title",
     align: "center",
-    customRender: ({ index }) => index + 1,
+    width: 200,
   },
   {
-    title: "用户名",
-    dataIndex: "username",
+    title: "规则图标",
+    dataIndex: "icon",
     align: "center",
+    width: 100,
   },
   {
-    title: "昵称",
-    dataIndex: "nickname",
-    align: "center",
-  },
-  {
-    title: "分组",
-    dataIndex: "groups",
+    title: "规则名称",
+    dataIndex: "menuname",
     align: "center",
   },
   {
-    title: "头像",
-    dataIndex: "avatar",
-    align: "center",
-  },
-  {
-    title: "邮箱",
-    dataIndex: "email",
-    align: "center",
-  },
-  {
-    title: "手机号",
-    dataIndex: "phone",
-    align: "center",
-  },
-  {
-    title: "最后登录",
-    dataIndex: "lastlogintime",
-    align: "center",
-  },
-  {
-    title: "创建时间",
-    dataIndex: "createTime",
+    title: "规则类型",
+    dataIndex: "ruletype",
     align: "center",
   },
   {
     title: "状态",
     dataIndex: "status",
     align: "center",
+  },
+  {
+    title: "修改时间",
+    dataIndex: "updatetime",
+    align: "center",
+    width: 180,
+  },
+  {
+    title: "创建时间",
+    dataIndex: "updatetime",
+    align: "center",
+    width: 180,
   },
   {
     title: "操作",
@@ -92,28 +74,70 @@ const columns = ref<IColumns[]>([
     width: 100,
   },
 ]);
-const dataSource = ref<IDataSource[]>(data);
+const dataSource = ref<IDataSource[]>([
+  {
+    key: "1",
+    menuname: "胡彦斌",
+    age: 32,
+    address: "西湖区湖底公园1号",
+    ruletype: 1,
+    children: [
+      {
+        key: "1-1",
+        menuname: "胡彦祖1",
+        age: 22,
+        address: "西湖区湖底公园1号",
+        children: [
+          {
+            key: "1-1-1",
+            name: "胡彦祖1",
+            age: 22,
+            address: "西湖区湖底公园1号",
+            children: [
+              {
+                key: "12",
+                name: "胡彦祖1",
+                age: 22,
+                address: "西湖区湖底公园1号",
+                children: [
+                  {
+                    key: "1-1-2",
+                    name: "胡彦祖1",
+                    age: 22,
+                    address: "西湖区湖底公园1号",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+]);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
   pageSize: 10,
   current: 1,
   total: 0,
 });
-const formSeach = reactive({});
-
-const avatarPreviewSrc = ref("");
 const isEdit = ref<boolean>(false); // 是否编辑
 const isDeleteAllVisible = ref<boolean>(false);
+const isExpandAllRows = ref<boolean>(false);
 const isTableLoading = ref<boolean>(false); // 表格加载状态
 const isAddEditModal = ref<boolean>(false);
-const isAvatarPreviewSrc = ref<boolean>(false);
+//#endregion
 
 onMounted(() => {
-  dataSource.value = dataSource.value.map((item) => {
-    item.isDelVisible = false;
+  init();
+});
+
+const init = () => {
+  dataSource.value = unref(dataSource).map((item) => {
+    item.isDeleteVisible = false;
     return item;
   });
-});
+};
 
 // 添加
 const handleAddEdit = (type: number) => {
@@ -126,7 +150,6 @@ const onAddEditCancel = () => {
 };
 // 添加/编辑 - confirm
 const onAddEditConfirm = () => {
-  return;
   onAddEditCancel();
 };
 
@@ -148,7 +171,7 @@ const onDeleteVisibleChange = () => {
 // 删除当前行-确定
 const onDeleteCurrentConfirm = (record: IDataSource) => {
   console.log(record, "record");
-  record.isDelVisible = false;
+  record.isDeleteVisible = false;
 };
 
 // 分页
@@ -162,15 +185,34 @@ const onColumnChange = (newColumns: IColumns[]) => {
   columns.value = newColumns;
 };
 // 多选
-const onSelectChange = (rowKeys: string[]) => {
+const onSelectChange = (rowKeys: IDataSource["key"][]) => {
   selectedRowKeys.value = rowKeys;
   console.log(rowKeys, "rowKeys");
 };
 
-// 显示预览图片
-const openAvatarPreviewImage = (src: string) => {
-  isAvatarPreviewSrc.value = true;
-  avatarPreviewSrc.value = src;
+// 规则类型
+const ruletypeStatus = (type: IDataSource["ruletype"]) => {
+  const maps = new Map();
+  maps.set(1, {
+    color: "success",
+    name: "菜单目录",
+  });
+  maps.set(2, {
+    color: "error",
+    name: "菜单项",
+  });
+  maps.set(3, {
+    color: "processing",
+    name: "页面按钮",
+  });
+  if (maps.has(type)) {
+    return maps.get(type);
+  } else {
+    return {
+      color: "error",
+      name: "暂无数据",
+    };
+  }
 };
 </script>
 
@@ -181,50 +223,12 @@ const openAvatarPreviewImage = (src: string) => {
       :dataSource="dataSource"
       :pages="pages"
       isSelectedRowKeys
-      isFormSearchBtn
+      :isExpandAllRows="isExpandAllRows"
       :loading="isTableLoading"
-      :scroll="{ x: true }"
       @onColumnChange="onColumnChange"
       @onPagesChange="onPagesChange"
       @onSelectChange="onSelectChange"
     >
-      <template #formSearch>
-        <a-form
-          :model="formSeach"
-          layout="inline"
-          name="basic"
-          autocomplete="off"
-        >
-          <a-space direction="vertical">
-            <a-row style="width: 100%">
-              <a-col :span="6">
-                <a-form-item label="UsernameUsernameUsername" name="username">
-                  <a-input v-model:value="formSeach.username" allow-clear />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item label="Username" name="nickname">
-                  <a-input v-model:value="formSeach.username" allow-clear />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item label="Username" name="123">
-                  <a-input v-model:value="formSeach.username" allow-clear />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item label="Username" name="222">
-                  <a-input v-model:value="formSeach.username" allow-clear />
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-space>
-          <a-space>
-            <a-button>查询</a-button>
-            <a-button>重置</a-button>
-          </a-space>
-        </a-form>
-      </template>
       <template #leftBtn>
         <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
@@ -259,25 +263,37 @@ const openAvatarPreviewImage = (src: string) => {
             </a-popconfirm>
           </template>
         </ITooltip>
+        <ITooltip
+          :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
+          :content="isExpandAllRows ? '收缩所有' : '展开所有'"
+          :type="isExpandAllRows ? 'danger' : 'warning'"
+          @click="isExpandAllRows = !isExpandAllRows"
+        >
+        </ITooltip>
       </template>
       <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'avatar'">
-          <!-- <a-image :width="30" :height="30" :src="record.avatar" /> -->
-          <a-avatar
-            size="large"
-            :src="record.avatar"
-            @click="openAvatarPreviewImage(record.avatar)"
-          >
-            <template #icon><UserOutlined /></template>
-          </a-avatar>
+        <template v-if="column.dataIndex === 'icon'">
+          <component :is="antIcons['ZoomInOutlined']" style="font-size: 18px" />
+        </template>
+        <template v-if="column.dataIndex === 'ruletype'">
+          <a-tag :color="ruletypeStatus(record.ruletype).color">
+            {{ ruletypeStatus(record.ruletype).name }}
+          </a-tag>
         </template>
         <template v-if="column.dataIndex === 'status'">
-          <a-tag :color="record.status === 1 ? 'success' : 'error'">
-            {{ record.status === 1 ? "启用" : "禁用" }}
-          </a-tag>
+          <a-switch
+            v-model:checked="record.status"
+            :checkedValue="1"
+            :unCheckedValue="0"
+          />
         </template>
         <template v-if="column.dataIndex === 'operate'">
           <a-space>
+            <ITooltip title="查看详情" size="small" type="move">
+              <template #icon>
+                <DragOutlined />
+              </template>
+            </ITooltip>
             <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
               <template #icon>
                 <EditOutlined />
@@ -290,7 +306,7 @@ const openAvatarPreviewImage = (src: string) => {
                   ok-text="删除"
                   cancel-text="取消"
                   placement="left"
-                  v-model:visible="record.isDelVisible"
+                  v-model:visible="record.isDeleteVisible"
                 >
                   <template #okButton>
                     <a-button
@@ -319,10 +335,6 @@ const openAvatarPreviewImage = (src: string) => {
       :title="isEdit ? '编辑' : '添加'"
       @cancel="onAddEditCancel"
       @confirm="onAddEditConfirm"
-    />
-    <IPreviewImage
-      :src="avatarPreviewSrc"
-      v-model:visible="isAvatarPreviewSrc"
     />
   </div>
 </template>

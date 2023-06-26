@@ -12,51 +12,51 @@ import {
   ZoomInOutlined,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
-import AddEditModal from "@/components/Modals/TheMenu/AddEditModal.vue";
+import AddEditModal from "./components/AddEditModal/index.vue";
 import Sortable from "sortablejs";
-
-interface IDataSource {
-  key: string;
-  menuname?: string;
-  name?: string;
-  age: number;
-  address: string;
-  status?: string | number; // 状态 0 禁用 1 启用
-  updatetime?: string; // 修改时间
-  createTime?: string; // 创建时间
-  isDeleteVisible?: boolean; // 是否显示删除气泡
-  children?: IDataSource[]; // 设置 children 务必设置 width 否则可能出现宽度浮动
-}
-interface ISortTableEnd {
-  newIndex: number;
-  oldIndex: number;
-}
+import type { IColumns, IPages } from "@/types/index";
+import type { IDataSource, ISortTableEnd } from "./index";
 
 const columns = ref<IColumns[]>([
   {
-    title: "标题",
-    dataIndex: "title",
+    title: "ID",
+    dataIndex: "key",
     align: "center",
-    width: 200,
+    width: "150px",
   },
   {
-    title: "图标",
-    dataIndex: "icon",
-    align: "center",
-  },
-  {
-    title: "名称",
-    dataIndex: "menuname",
+    title: "用户名",
+    dataIndex: "username",
     align: "center",
   },
   {
-    title: "类型",
-    dataIndex: "menutype",
+    title: "昵称",
+    dataIndex: "nickname",
     align: "center",
   },
   {
-    title: "缓存",
-    dataIndex: "cache",
+    title: "分组",
+    dataIndex: "group",
+    align: "center",
+  },
+  {
+    title: "头像",
+    dataIndex: "avatar",
+    align: "center",
+  },
+  {
+    title: "性别",
+    dataIndex: "gender",
+    align: "center",
+  },
+  {
+    title: "手机号",
+    dataIndex: "phone",
+    align: "center",
+  },
+  {
+    title: "最后登录IP",
+    dataIndex: "updateip",
     align: "center",
   },
   {
@@ -65,8 +65,14 @@ const columns = ref<IColumns[]>([
     align: "center",
   },
   {
-    title: "修改时间",
+    title: "最后登录",
     dataIndex: "updatetime",
+    align: "center",
+    width: 180,
+  },
+  {
+    title: "创建时间",
+    dataIndex: "createtime",
     align: "center",
     width: 180,
   },
@@ -78,46 +84,7 @@ const columns = ref<IColumns[]>([
     width: 100,
   },
 ]);
-const dataSource = ref<IDataSource[]>([
-  {
-    key: "1",
-    menuname: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-    children: [
-      {
-        key: "1-1",
-        menuname: "胡彦祖1",
-        age: 22,
-        address: "西湖区湖底公园1号",
-        children: [
-          {
-            key: "1-1-1",
-            name: "胡彦祖1",
-            age: 22,
-            address: "西湖区湖底公园1号",
-            children: [
-              {
-                key: "12",
-                name: "胡彦祖1",
-                age: 22,
-                address: "西湖区湖底公园1号",
-                children: [
-                  {
-                    key: "1-1-2",
-                    name: "胡彦祖1",
-                    age: 22,
-                    address: "西湖区湖底公园1号",
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-]);
+const dataSource = ref<IDataSource[]>([]);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
   pageSize: 10,
@@ -126,7 +93,6 @@ const pages = ref<IPages>({
 });
 const isEdit = ref<boolean>(false); // 是否编辑
 const isDeleteAllVisible = ref<boolean>(false);
-const isExpandAllRows = ref<boolean>(false);
 const isTableLoading = ref<boolean>(false); // 表格加载状态
 const isAddEditModal = ref<boolean>(false);
 
@@ -225,7 +191,6 @@ const onSelectChange = (rowKeys: string[]) => {
       :dataSource="dataSource"
       :pages="pages"
       isSelectedRowKeys
-      :isExpandAllRows="isExpandAllRows"
       :loading="isTableLoading"
       @onColumnChange="onColumnChange"
       @onPagesChange="onPagesChange"
@@ -235,15 +200,6 @@ const onSelectChange = (rowKeys: string[]) => {
         <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
             <PlusOutlined />
-          </template>
-        </ITooltip>
-        <ITooltip
-          title="编辑选中行"
-          content="编辑"
-          :disabled="!selectedRowKeys.length"
-        >
-          <template #icon>
-            <EditFilled />
           </template>
         </ITooltip>
         <ITooltip title="删除选中行">
@@ -274,17 +230,23 @@ const onSelectChange = (rowKeys: string[]) => {
             </a-popconfirm>
           </template>
         </ITooltip>
-        <ITooltip
-          :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
-          :content="isExpandAllRows ? '收缩所有' : '展开所有'"
-          :type="isExpandAllRows ? 'danger' : 'warning'"
-          @click="isExpandAllRows = !isExpandAllRows"
-        >
-        </ITooltip>
       </template>
       <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'gender'">
+          <a-tag color="success" class="table-tag">
+            {{ record.gender === 1 ? "男" : "女" }}
+          </a-tag>
+        </template>
+        <template v-if="column.dataIndex === 'updateip'">
+          <a-tag color="success" class="table-tag">
+            {{ record.updateip }}
+          </a-tag>
+        </template>
         <template v-if="column.dataIndex === 'status'">
-          <a-tag :color="record.status === 1 ? 'success' : 'error'">
+          <a-tag
+            :color="record.status === 1 ? 'success' : 'error'"
+            class="table-tag"
+          >
             {{ record.status === 1 ? "启用" : "禁用" }}
           </a-tag>
         </template>
@@ -294,11 +256,6 @@ const onSelectChange = (rowKeys: string[]) => {
         </template>
         <template v-if="column.dataIndex === 'operate'">
           <a-space>
-            <ITooltip title="查看详情" size="small">
-              <template #icon>
-                <ZoomInOutlined class="move" />
-              </template>
-            </ITooltip>
             <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
               <template #icon>
                 <EditOutlined />
