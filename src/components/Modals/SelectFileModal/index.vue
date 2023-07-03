@@ -11,12 +11,12 @@ import {
   withDefaults,
   watch,
 } from "vue";
-import { CheckOutlined } from "@ant-design/icons-vue";
+import { CheckOutlined, PlusOutlined } from "@ant-design/icons-vue";
 import { IColumns, IPages } from "@/types/index";
 interface IPropsModal {
   title: string; // modal 标题
   visible: boolean; // 控制 modal 开关
-  maxFileNum: string | number; // 选择文件数 默认 只能选择一个
+  maxFileNum?: string | number; // 选择文件数 默认 只能选择一个
 }
 const props = withDefaults(defineProps<IPropsModal>(), {
   title: "",
@@ -30,13 +30,13 @@ const emits = defineEmits([
 
 interface IDataSource {
   key?: string | number;
-  username: string; // 用户名
-  usertype: string; // 用户类型 1 管理员 2 普通用户
-  size: string; // 文件大小
-  mimetype: string; // 文件类型
-  full_url: string; // 完整路径
-  upload_count: string; // 上传次数
-  filename: string; // 原始名称
+  username?: string; // 用户名
+  usertype?: string; // 用户类型 1 管理员 2 普通用户
+  size?: string; // 文件大小
+  mimetype?: string; // 文件类型
+  full_url?: string; // 完整路径
+  upload_count?: string; // 上传次数
+  filename?: string; // 原始名称
   createTime?: string; // 最后上传时间
 }
 
@@ -80,7 +80,7 @@ const columns = ref<IColumns[]>([
     width: 100,
   },
 ]);
-const dataSource = ref<IDataSource[]>([[]]);
+const dataSource = ref<IDataSource[]>([{}]);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
   pageSize: 10,
@@ -105,6 +105,7 @@ const fileNum = ref<string | number>(props.maxFileNum);
 
 const isTableLoading = ref<boolean>(false); // 表格加载状态
 const isAvatarPreviewSrc = ref<boolean>(false);
+const tableRef = ref(null);
 
 onMounted(() => {});
 
@@ -123,6 +124,10 @@ const onSelectChange = (rowKeys: string[]) => {
   // 更新选择数量
   fileNum.value = Number(props.maxFileNum) - rowKeys.length;
   console.log(rowKeys, "rowKeys");
+};
+// 选择
+const handleCheckedFile = (record: IDataSource) => {
+  unref(tableRef);
 };
 
 const onSearch = () => {
@@ -254,7 +259,7 @@ const onSearch = () => {
           <template v-if="column.dataIndex === 'operate'">
             <ITooltip title="选择" size="small">
               <template #icon>
-                <CheckOutlined />
+                <PlusOutlined @click="handleCheckedFile(record)" />
               </template>
             </ITooltip>
           </template>

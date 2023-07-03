@@ -90,12 +90,11 @@ const formState = reactive<IFormState>({
 </script>
 
 <template>
-  <a-modal
-    v-model:visible="visible"
+  <IModal
+    :visible="props.visible"
     :title="props.title"
-    centered
     :maskClosable="false"
-    @ok="emits('confirm')"
+    @confirm="emits('confirm')"
     @cancel="emits('cancel')"
   >
     <a-form
@@ -142,7 +141,7 @@ const formState = reactive<IFormState>({
         </a-radio-group>
       </a-form-item>
     </a-form>
-  </a-modal>
+  </IModal>
 </template>
 
 <style lang="less" scoped></style>

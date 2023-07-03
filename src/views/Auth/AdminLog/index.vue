@@ -8,6 +8,7 @@ import {
 import { computed, onMounted, reactive, ref, unref } from "vue";
 import IPreviewImage from "@/components/IPreviewImage/index.vue";
 import data from "./data.json";
+import type { IColumns, IPages } from "@/types/index";
 
 interface IDataSource {
   key?: string | number;
@@ -77,7 +78,7 @@ const pages = ref<IPages>({
   current: 1,
   total: 0,
 });
-const formSeach = reactive({});
+const formSeach = reactive<any>({});
 
 const avatarPreviewSrc = ref("");
 const isEdit = ref<boolean>(false); // 是否编辑

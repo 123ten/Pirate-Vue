@@ -14,6 +14,7 @@ import {
 import { computed, onMounted, reactive, ref, unref } from "vue";
 import AddEditModal from "@/components/Modals/TheMenu/AddEditModal.vue";
 import Sortable from "sortablejs";
+import type { IColumns, IPages } from "@/types/index";
 
 interface IDataSource {
   key: string;

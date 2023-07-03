@@ -45,7 +45,7 @@ const onClick = () => {
   <IModal
     v-model:visible="props.visible"
     :title="props.title"
-    @ok="onClick"
+    @confirm="onClick"
     width="1000px"
     :maskClosable="false"
   >
@@ -58,7 +58,7 @@ const onClick = () => {
     >
       <a-form-item label="上级菜单规则" name="username">
         <a-select
-          v-model:value="formState.region"
+          v-model:value="formState.menutype"
           placeholder="please select your zone"
         >
           <a-select-option value="shanghai">Zone one</a-select-option>
@@ -73,14 +73,14 @@ const onClick = () => {
         </a-radio-group>
       </a-form-item>
       <a-form-item label="规则标题" name="username">
-        <a-input v-model:value="formState.username" />
+        <a-input v-model:value="formState.menutype" />
       </a-form-item>
       <a-form-item label="规则名称" name="username">
-        <a-input v-model:value="formState.username" />
+        <a-input v-model:value="formState.menutype" />
       </a-form-item>
       <template v-if="formState.ruletype !== 3">
         <a-form-item label="路由路径" name="username">
-          <a-input v-model:value="formState.username" />
+          <a-input v-model:value="formState.menutype" />
         </a-form-item>
         <a-form-item label="规则图标" name="username">
           <IIcon />
@@ -96,11 +96,11 @@ const onClick = () => {
         </a-form-item>
         <template v-if="formState.menutype === 1">
           <a-form-item label="组件路径" name="username">
-            <a-input v-model:value="formState.username" />
+            <a-input v-model:value="formState.menutype" />
           </a-form-item>
           <a-form-item label="扩展属性" name="username">
             <a-select
-              v-model:value="formState.region"
+              v-model:value="formState.menutype"
               placeholder="please select your zone"
             >
               <a-select-option value="shanghai">无</a-select-option>
@@ -111,7 +111,7 @@ const onClick = () => {
         </template>
         <template v-else>
           <a-form-item label="链接地址" name="username">
-            <a-input v-model:value="formState.username" />
+            <a-input v-model:value="formState.menutype" />
           </a-form-item>
         </template>
       </template>
@@ -119,23 +119,23 @@ const onClick = () => {
         <a-input v-model:value="formState.username" />
       </a-form-item> -->
       <a-form-item label="规则备注" name="username">
-        <a-textarea v-model:value="formState.username" />
+        <a-textarea v-model:value="formState.menutype" />
       </a-form-item>
       <a-form-item label="规则权重" name="username">
         <a-input-number
-          v-model:value="formState.value"
+          v-model:value="formState.menutype"
           :min="0"
           style="width: 100%"
         />
       </a-form-item>
       <a-form-item label="缓存" name="username">
-        <a-radio-group v-model:value="formState.type">
+        <a-radio-group v-model:value="formState.menutype">
           <a-radio :value="0">禁用</a-radio>
           <a-radio :value="1">启用</a-radio>
         </a-radio-group>
       </a-form-item>
       <a-form-item label="状态" name="username">
-        <a-radio-group v-model:value="formState.type">
+        <a-radio-group v-model:value="formState.menutype">
           <a-radio :value="0">禁用</a-radio>
           <a-radio :value="1">启用</a-radio>
         </a-radio-group>

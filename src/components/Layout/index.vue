@@ -1,22 +1,25 @@
 <!-- layout 主体 -->
 <script setup lang="ts">
-import { onMounted, getCurrentInstance } from "vue";
+import { onMounted, getCurrentInstance, unref } from "vue";
 import { message } from "ant-design-vue";
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store";
 const store = useMenuStore();
-const { isMenuOutIn, isLayoutFullScreen, isCurrentPageReload } =
+const { isMenuOutIn, isAsideMenu, isLayoutFullScreen, isCurrentPageReload } =
   storeToRefs(store);
 const { proxy } = getCurrentInstance() as any;
 onMounted(() => {
+  console.log("isAsideMenu", unref(isAsideMenu));
+
   // message.info("This is a normal message");
 });
-
 </script>
 
 <template>
   <a-layout class="container d-flex-default">
-    <Menu v-show="!isLayoutFullScreen" />
+    <MenuMobile v-show="!isLayoutFullScreen" v-if="isAsideMenu" />
+    <MenuPc v-show="!isLayoutFullScreen" v-else />
+    
     <a-layout class="layout">
       <Header v-show="!isLayoutFullScreen" />
       <router-view

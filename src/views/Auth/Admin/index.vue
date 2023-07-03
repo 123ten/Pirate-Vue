@@ -15,7 +15,7 @@ import { computed, onMounted, reactive, ref, unref } from "vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
 import IPreviewImage from "@/components/IPreviewImage/index.vue";
 import data from "./data.json";
-import { IColumns, IPages } from "@/types/index";
+import type { IColumns, IPages } from "@/types/index";
 
 interface IDataSource {
   key?: string | number;
@@ -99,7 +99,7 @@ const pages = ref<IPages>({
   current: 1,
   total: 0,
 });
-const formSeach = reactive({});
+const formSeach = reactive<any>({});
 
 const avatarPreviewSrc = ref("");
 const isEdit = ref<boolean>(false); // 是否编辑
@@ -315,7 +315,7 @@ const openAvatarPreviewImage = (src: string) => {
     </ITable>
 
     <AddEditModal
-      v-model:visible="isAddEditModal"
+      :visible="isAddEditModal"
       :title="isEdit ? '编辑' : '添加'"
       @cancel="onAddEditCancel"
       @confirm="onAddEditConfirm"

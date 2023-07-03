@@ -285,7 +285,7 @@ const onSelectChange = (rowKeys: string[]) => {
     </ITable>
 
     <AddEditModal
-      v-model:visible="isAddEditModal"
+      :visible="isAddEditModal"
       :title="isEdit ? '编辑' : '添加'"
       @cancel="onAddEditCancel"
       @confirm="onAddEditConfirm"

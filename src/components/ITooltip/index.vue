@@ -29,7 +29,7 @@ const emits = defineEmits([
     </template>
     <!-- 自定义内容 -->
     <slot name="content">
-      <a-button
+      <IButton
         :type="props.type"
         :disabled="props.disabled"
         :size="props.size"
@@ -41,7 +41,9 @@ const emits = defineEmits([
         </template>
         <!-- 内容 -->
         {{ props.content }}
-      </a-button>
+      </IButton>
+      <!-- <a-button>
+      </a-button> -->
     </slot>
   </a-tooltip>
 </template>

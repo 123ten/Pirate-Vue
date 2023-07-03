@@ -87,8 +87,10 @@ watch(
   >
     <div class="menu-logo d-flex-center">
       <template v-if="!isMenuOutIn">
-        <img class="logo-img" src="../../assets/images/logo.svg" alt="" />
-        <div class="website-name">Vite演示站</div>
+        <div class="logo-name d-flex-center">
+          <img class="logo-img" src="../../assets/images/logo_piece.png" alt="" />
+          <div class="website-name">Pirate Vue</div>
+        </div>
       </template>
       <!-- 点击展开收起菜单 -->
       <div

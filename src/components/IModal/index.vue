@@ -17,8 +17,8 @@ interface IPropsModal {
   width?: string; // modal 宽度
   visible: boolean; // 控制 modal 开关
   maskClosable?: boolean; // 点击蒙层是否允许关闭
-  isDraw?: boolean; // 是否允许拖拽 modal 框
-  bodyStyle: CSSProperties; // body 样式
+  dragModal?: boolean; // 是否允许拖拽 modal 框
+  bodyStyle?: CSSProperties; // body 样式
 }
 
 const props = withDefaults(defineProps<IPropsModal>(), {
@@ -26,7 +26,8 @@ const props = withDefaults(defineProps<IPropsModal>(), {
   width: "",
   visible: false,
   maskClosable: false,
-  isDraw: true,
+  // isDraw: true,
+  dragModal: true,
   bodyStyle: () => ({
     maxHeight: "60vh",
     overflowY: "auto",
@@ -103,12 +104,12 @@ const transformStyle = computed<CSSProperties>(() => {
       <div
         ref="modalTitleRef"
         style="width: 100%"
-        :style="{ cursor: props.isDraw ? 'move' : 'auto' }"
+        :style="{ cursor: props.dragModal ? 'move' : 'auto' }"
       >
         {{ props.title }}
       </div>
     </template>
-    <template #modalRender="{ originVNode }" v-if="props.isDraw">
+    <template #modalRender="{ originVNode }" v-if="props.dragModal">
       <div :style="transformStyle">
         <component :is="originVNode" />
       </div>

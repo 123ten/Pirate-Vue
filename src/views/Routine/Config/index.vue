@@ -5,12 +5,12 @@ import Basic from "./components/Basic/index.vue";
 import Mail from "./components/Mail/index.vue";
 import QuickAccess from "./components/QuickAccess/index.vue";
 const activeKey = ref<string | number>("1");
-const test = "123"
+const test = "123";
 </script>
 
 <template>
   <a-row class="default-main" :gutter="[16, 16]">
-    <a-col :span="16">
+    <a-col :lg="16" :xs="24">
       <a-tabs
         v-model:activeKey="activeKey"
         type="card"
@@ -34,8 +34,8 @@ const test = "123"
         <a-tab-pane key="4" tab="添加配置项"></a-tab-pane>
       </a-tabs>
     </a-col>
-    <a-col :span="8" class="main-card">
-      <div class="quick-access is-always-shadow">
+    <a-col :lg="8" :xs="24">
+      <div class="quick-access is-always-shadow main-card">
         <div class="card-head">快捷配置入口</div>
         <div class="card-main">
           <a-button size="small">快捷配置入口</a-button>

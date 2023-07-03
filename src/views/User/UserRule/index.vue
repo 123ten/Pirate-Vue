@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
-import { IColumns, IPages } from "@/types/index";
+import type { IColumns, IPages } from "@/types/index";
 import * as antIcons from "@ant-design/icons-vue";
 
 interface IDataSource {
@@ -331,7 +331,7 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
     </ITable>
 
     <AddEditModal
-      v-model:visible="isAddEditModal"
+      :visible="isAddEditModal"
       :title="isEdit ? '编辑' : '添加'"
       @cancel="onAddEditCancel"
       @confirm="onAddEditConfirm"

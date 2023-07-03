@@ -61,8 +61,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <a-row class="small-panel-box mb_16" :gutter="16">
-    <a-col :span="6" v-for="(item, index) in panelList" :key="index">
+  <a-row class="small-panel-box" :gutter="16">
+    <a-col class="mb_16" :lg="6" :sm="12" :xs="24" v-for="(item, index) in panelList" :key="index">
       <div class="small-panel suspension">
         <div class="small-panel-title">{{ item.title }}</div>
         <div class="small-panel-content">

@@ -167,18 +167,13 @@ const initFileChart = () => {
 
 <template>
   <a-row class="chart1" :gutter="16">
-    <a-col :span="9">
+    <a-col :lg="18" :xs="24" class="mb_16">
       <a-card hoverable title="会员增长情况">
         <div ref="userChartRef" class="user-growth-chart"></div>
       </a-card>
     </a-col>
 
-    <a-col :span="9">
-      <a-card hoverable title="附件增长情况">
-        <div ref="fileChartRef" class="file-growth-chart"></div>
-      </a-card>
-    </a-col>
-    <a-col :span="6" class="is1200">
+    <a-col :lg="6" :xs="24" class="is1200 mb_16">
       <a-card hoverable title="刚刚加入会员" class="new-user-card">
         <template #actions>
           <div class="new-users-growth">
@@ -256,7 +251,14 @@ const initFileChart = () => {
         </template>
       </a-card>
     </a-col>
+    
+    <a-col  :lg="24" :xs="24">
+      <a-card hoverable title="附件增长情况">
+        <div ref="fileChartRef" class="file-growth-chart"></div>
+      </a-card>
+    </a-col>
   </a-row>
+
 </template>
 
 <style lang="less" scoped>

@@ -1,7 +1,8 @@
 header.nav-bar {
     padding: 0 16px;
     height: 50px;
-    background-color: var(--bgColor) !important;
+    min-height: 50px;
+    // background-color: var(--bgColor) !important;
     transition: all 0.2s;
 
     .nav-menus {
@@ -130,5 +131,17 @@ header.nav-bar {
 
     100% {
         transform: scale(1);
+    }
+}
+
+
+@media screen and (max-width:1200px) {
+    header.nav-bar .nav-menus {
+        box-shadow: none;
+        overflow: inherit;
+    }
+
+    .nav-bar {
+        background-color: #fff;
     }
 }

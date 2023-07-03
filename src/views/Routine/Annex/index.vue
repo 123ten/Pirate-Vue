@@ -9,7 +9,7 @@ import {
   InfoCircleFilled,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
-import { IColumns, IPages } from "@/types/index";
+import type { IColumns, IPages } from "@/types/index";
 import IPreviewImage from "@/components/IPreviewImage/index.vue";
 
 interface IDataSource {
@@ -88,7 +88,7 @@ const pages = ref<IPages>({
   current: 1,
   total: 0,
 });
-const formSeach = reactive({
+const formSeach = reactive<any>({
   username: "",
   usertype: "",
   mimetype: "",

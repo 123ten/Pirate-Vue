@@ -88,7 +88,6 @@ const keyword = ref<string>(""); // 搜索
 const menuOrSearch = ref<string>("menu");
 const isDropdownVisible = ref<boolean>(false);
 const isOpenSearch = ref<boolean>(false); // 展开搜索栏区域
-
 onMounted(() => {
   // 修改 columns
   menuCheckList.value = props.columns.filter(

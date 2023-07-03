@@ -37,17 +37,7 @@ const props = withDefaults(defineProps<IPropsModal>(), {
 const emits = defineEmits([
   "confirm", // 点击确定回调
   "cancel", // 点击遮罩层或右上角叉或取消按钮的回调
-  "update:visible",
 ]);
-// 控制 modal 的双向绑定 防止控制台报错
-const visible = computed({
-  get() {
-    return props.visible;
-  },
-  set(value) {
-    emits("update:visible", value);
-  },
-});
 
 // 校验规则
 const rules = {
@@ -76,12 +66,12 @@ const handleUploadAvatarChange = () => {
 </script>
 
 <template>
-  <a-modal
-    v-model:visible="visible"
+  <IModal
+    :visible="props.visible"
     :title="props.title"
-    centered
+    width="1000px"
     :maskClosable="false"
-    @ok="emits('confirm')"
+    @confirm="emits('confirm')"
     @cancel="emits('cancel')"
   >
     <a-form
@@ -169,7 +159,7 @@ const handleUploadAvatarChange = () => {
         </a-radio-group>
       </a-form-item>
     </a-form>
-  </a-modal>
+  </IModal>
 </template>
 
 <style lang="less" scoped></style>
