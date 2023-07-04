@@ -18,13 +18,17 @@
         }
 
         .table-header {
+            margin-bottom: 16px;
             position: relative;
             z-index: 1;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-sizing: border-box;
-            padding-bottom: 16px;
+            overflow-x: auto;
+        }
+        .i-table {
+
         }
     }
 }
@@ -38,4 +42,13 @@
 .zoom-in-leave-to {
     opacity: 0;
     transform: rotateX(180deg);
+}
+
+@media screen  and (max-width:1200px) {
+    .table-header_search {
+        display: none;
+    }
+    /deep/ .ant-table-wrapper .ant-table-content {
+        overflow-x: auto;
+    }
 }

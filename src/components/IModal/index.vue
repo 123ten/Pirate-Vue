@@ -14,7 +14,7 @@ import type { IDragRect } from "./index";
 
 interface IPropsModal {
   title: string; // modal 标题
-  width?: string; // modal 宽度
+  width?: string | number; // modal 宽度
   visible: boolean; // 控制 modal 开关
   maskClosable?: boolean; // 点击蒙层是否允许关闭
   dragModal?: boolean; // 是否允许拖拽 modal 框

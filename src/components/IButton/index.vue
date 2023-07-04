@@ -19,6 +19,7 @@ interface IProps {
   disabled?: boolean;
   loading?: boolean;
   ghost?: boolean; // 幽灵属性，使按钮背景透明
+  class?: ""; // 按钮类名
 }
 //#endregion
 const props = withDefaults(defineProps<IProps>(), {
@@ -32,6 +33,7 @@ const props = withDefaults(defineProps<IProps>(), {
   disabled: false,
   loading: false,
   ghost: false,
+  class: "",
 });
 const emits = defineEmits([
   "click", // 表格搜索
@@ -49,6 +51,7 @@ const emits = defineEmits([
     :danger="props.danger"
     :loading="props.loading"
     :ghost="props.ghost"
+    :class="props.class"
     @click="emits('click')"
   >
     <!-- 图标 可自定义 -->

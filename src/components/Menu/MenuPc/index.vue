@@ -103,102 +103,81 @@ watch(
         <MenuFoldOutlined v-show="!isMenuOutIn" style="font-size: 18px" />
       </div>
     </div>
-    <a-menu
-      mode="inline"
-      v-model:openKeys="openKeys"
-      v-model:selectedKeys="selectedKeys"
-      @openChange="onOpenChange"
-    >
-      <!-- <template v-for="item in menudata" :key="item.name">
-        <a-menu-item :key="item.name" @click="toRouter(item.name)">
+
+    <div class="i-menu-content">
+      <a-menu
+        mode="inline"
+        v-model:openKeys="openKeys"
+        v-model:selectedKeys="selectedKeys"
+        @openChange="onOpenChange"
+      >
+        <a-menu-item key="home" @click="toRouter('home')">
           <template #icon>
-            <component
-              :is="antIcons[item.icon as keyof typeof antIcons]"
-              class="fontSize-icon"
-            />
+            <HomeOutlined class="fontSize-icon" />
           </template>
-          <span>{{ item.title }}</span>
+          <span>首页</span>
         </a-menu-item>
-        <a-sub-menu
-          v-for="val in item.children"
-          :key="val.name"
-          :title="val.title"
-        >
+        <a-sub-menu key="auth" title="权限管理">
           <template #icon>
-            <component
-              :is="antIcons[val.icon as keyof typeof antIcons]"
-              class="fontSize-icon"
-            />
+            <TeamOutlined class="fontSize-icon" />
           </template>
+          <a-menu-item key="group" @click="toRouter('group')">
+            <TeamOutlined class="fontSize-icon" />
+            角色组管理
+          </a-menu-item>
+          <a-menu-item key="admin" @click="toRouter('admin')">
+            <UserOutlined class="fontSize-icon" />
+            管理员管理
+          </a-menu-item>
+          <a-menu-item key="menu" @click="toRouter('menu')">
+            <MenuOutlined class="fontSize-icon" />
+            菜单规则管理
+          </a-menu-item>
+          <a-menu-item key="adminLog" @click="toRouter('adminLog')">
+            <FileDoneOutlined class="fontSize-icon" />
+            管理员日志管理
+          </a-menu-item>
         </a-sub-menu>
-      </template> -->
-      <!-- :openKeys="[keys.parentKey]" -->
-      <a-menu-item key="home" @click="toRouter('home')">
-        <template #icon>
-          <HomeOutlined class="fontSize-icon" />
-        </template>
-        <span>首页</span>
-      </a-menu-item>
-      <a-sub-menu key="auth" title="权限管理">
-        <template #icon>
-          <TeamOutlined class="fontSize-icon" />
-        </template>
-        <a-menu-item key="group" @click="toRouter('group')">
-          <TeamOutlined class="fontSize-icon" />
-          角色组管理
-        </a-menu-item>
-        <a-menu-item key="admin" @click="toRouter('admin')">
-          <UserOutlined class="fontSize-icon" />
-          管理员管理
-        </a-menu-item>
-        <a-menu-item key="menu" @click="toRouter('menu')">
-          <MenuOutlined class="fontSize-icon" />
-          菜单规则管理
-        </a-menu-item>
-        <a-menu-item key="adminLog" @click="toRouter('adminLog')">
-          <FileDoneOutlined class="fontSize-icon" />
-          管理员日志管理
-        </a-menu-item>
-      </a-sub-menu>
-      <a-sub-menu key="user" title="会员管理">
-        <template #icon>
-          <TeamOutlined class="fontSize-icon" />
-        </template>
-        <a-menu-item key="index" @click="toRouter('index')">
-          <TeamOutlined class="fontSize-icon" />
-          会员管理
-        </a-menu-item>
-        <a-menu-item key="/user/group" @click="toRouter('/user/group')">
-          <UserOutlined class="fontSize-icon" />
-          会员分组管理
-        </a-menu-item>
-        <a-menu-item key="rule" @click="toRouter('rule')">
-          <UserOutlined class="fontSize-icon" />
-          会员规则管理
-        </a-menu-item>
-        <a-menu-item key="userLog" @click="toRouter('userLog')">
-          <MenuOutlined class="fontSize-icon" />
-          会员日志管理
-        </a-menu-item>
-      </a-sub-menu>
-      <a-sub-menu key="routine" title="常规管理">
-        <template #icon>
-          <TeamOutlined class="fontSize-icon" />
-        </template>
-        <a-menu-item key="config" @click="toRouter('config')">
-          <TeamOutlined class="fontSize-icon" />
-          系统配置
-        </a-menu-item>
-        <a-menu-item key="annex" @click="toRouter('annex')">
-          <UserOutlined class="fontSize-icon" />
-          附件管理
-        </a-menu-item>
-        <a-menu-item key="info" @click="toRouter('info')">
-          <MenuOutlined class="fontSize-icon" />
-          个人资料
-        </a-menu-item>
-      </a-sub-menu>
-    </a-menu>
+        <a-sub-menu key="user" title="会员管理">
+          <template #icon>
+            <TeamOutlined class="fontSize-icon" />
+          </template>
+          <a-menu-item key="index" @click="toRouter('index')">
+            <TeamOutlined class="fontSize-icon" />
+            会员管理
+          </a-menu-item>
+          <a-menu-item key="/user/group" @click="toRouter('/user/group')">
+            <UserOutlined class="fontSize-icon" />
+            会员分组管理
+          </a-menu-item>
+          <a-menu-item key="rule" @click="toRouter('rule')">
+            <UserOutlined class="fontSize-icon" />
+            会员规则管理
+          </a-menu-item>
+          <a-menu-item key="userLog" @click="toRouter('userLog')">
+            <MenuOutlined class="fontSize-icon" />
+            会员日志管理
+          </a-menu-item>
+        </a-sub-menu>
+        <a-sub-menu key="routine" title="常规管理">
+          <template #icon>
+            <TeamOutlined class="fontSize-icon" />
+          </template>
+          <a-menu-item key="config" @click="toRouter('config')">
+            <TeamOutlined class="fontSize-icon" />
+            系统配置
+          </a-menu-item>
+          <a-menu-item key="annex" @click="toRouter('annex')">
+            <UserOutlined class="fontSize-icon" />
+            附件管理
+          </a-menu-item>
+          <a-menu-item key="info" @click="toRouter('info')">
+            <MenuOutlined class="fontSize-icon" />
+            个人资料
+          </a-menu-item>
+        </a-sub-menu>
+      </a-menu>
+    </div>
   </a-layout-sider>
 </template>
 

@@ -5,7 +5,7 @@ import {
   PlusOutlined,
   DeleteOutlined,
   TableOutlined,
-  SearchOutlined,
+  DragOutlined,
   EditOutlined,
   EditFilled,
   ZoomInOutlined,
@@ -135,41 +135,12 @@ const isAddEditModal = ref<boolean>(false);
 
 onMounted(() => {
   init();
-  rowDrop();
 });
 
 const init = () => {
   dataSource.value = unref(dataSource).map((item) => {
     item.isDeleteVisible = false;
     return item;
-  });
-};
-// 行拖拽
-const rowDrop = () => {
-  const tbody = document.querySelector(".ant-table-content tbody");
-  const _this = this;
-  let nowDrageRow = 0; // 当前拖拽的索引
-  Sortable.create(tbody, {
-    onEnd({ newIndex, oldIndex }: ISortTableEnd) {
-      // const currRow = _this.fofList.splice(oldIndex, 1)[0];
-      // _this.list.splice(newIndex, 0, currRow);
-      // _this.list.forEach((item, index) => {
-      //   item.orderNum = index + 1;
-      // });
-    },
-    // 开始拖拽的时候
-    onStart: function (evt: any) {
-      console.log("evt", evt, evt.oldIndex);
-
-      nowDrageRow = evt.oldIndex;
-    },
-    // 拖拽移动的时候
-    onMove: function (evt: any, originalEvent: any) {
-      console.log("onMove", evt);
-      if (nowDrageRow === unref(dataSource).length - 1) {
-        return false; // 禁止拖拽某一行
-      }
-    },
   });
 };
 
@@ -259,6 +230,7 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
       isSelectedRowKeys
       :isExpandAllRows="isExpandAllRows"
       :loading="isTableLoading"
+      isDragVisible
       @onColumnChange="onColumnChange"
       @onPagesChange="onPagesChange"
       @onSelectChange="onSelectChange"
@@ -327,9 +299,9 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
         </template>
         <template v-if="column.dataIndex === 'operate'">
           <a-space>
-            <ITooltip title="查看详情" size="small">
+            <ITooltip title="查看详情" size="small" type="move" btnClass="drop-row-btn">
               <template #icon>
-                <ZoomInOutlined class="move" />
+                <DragOutlined/>
               </template>
             </ITooltip>
             <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">

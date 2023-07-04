@@ -139,7 +139,6 @@ const onSearch = () => {
   <IModal
     :visible="props.visible"
     :title="props.title"
-    width="60%"
     @confirm="emits('confirm')"
     @cancel="emits('cancel')"
   >

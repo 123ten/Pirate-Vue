@@ -157,4 +157,16 @@
 /* 抽屉 */
 .i-menu-mobile .ant-drawer-content-wrapper .ant-drawer-body {
   padding: 0;
+  display: flex;
+  flex-flow: column;
+}
+
+@media screen and (max-width: 575px) {
+  .ant-form.ant-form-vertical .ant-form-item,
+  .ant-modal-body .ant-form .ant-form-item {
+    margin-bottom: 8px;
+  }
+  .ant-form-item .ant-form-item-label {
+    padding-bottom: 0;
+  }
 }

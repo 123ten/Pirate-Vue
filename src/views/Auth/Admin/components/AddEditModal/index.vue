@@ -86,14 +86,14 @@ const handleCancel = (): void => {
   <IModal
     :visible="props.visible"
     :title="props.title"
-    width="30%"
+    width="500px"
     @confirm="handleConfirm"
     @cancel="handleCancel"
   >
     <a-form
       :model="formState"
       name="admin"
-      :label-col="{ span: 3 }"
+      :label-col="{ span: 6 }"
       autocomplete="off"
       :rules="rules"
     >

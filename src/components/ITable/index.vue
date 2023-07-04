@@ -37,6 +37,7 @@ interface IProps {
   loading?: boolean; // 表格加载状态
   isFormSearchBtn?: boolean; // 是否显示 form 按钮 搭配插槽 formSearch 一起使用
   isExpandAllRows?: boolean; // 控制展开所有行
+  isDragVisible?: boolean; // 是否允许拖拽行
 }
 interface ISortTableEnd {
   newIndex: number;
@@ -61,6 +62,7 @@ const props = withDefaults(defineProps<IProps>(), {
   loading: false,
   isFormSearchBtn: false,
   isExpandAllRows: false,
+  isDragVisible: false,
 });
 // #endregion
 // #region emits
@@ -96,6 +98,8 @@ onMounted(() => {
   menuChecked.value = unref(menuCheckList).map((item) => item.dataIndex);
   // 默认是否展开
   expandAllRows();
+
+  props.isDragVisible && rowDrop();
 });
 // 监听 展开收起
 watch(
@@ -112,11 +116,8 @@ const onReload = () => {
 const expandAllRows = () => {
   // 是否存在 children 节点 不包括 [] 空数组
   const isChildren = unref(dataSource).some((item) => item.children);
-
-  // console.log(isChildren, "expandAllRows");
   if (!isChildren) return;
 
-  // expandedRowKeys.value = ["1", "1-1", "1-1-1"];
   let keys: string[] = [];
   if (props.isExpandAllRows) {
     (function childrenFn(list: IDataSource[]) {
@@ -136,29 +137,29 @@ const expandAllRows = () => {
 
 // 行拖拽
 const rowDrop = () => {
-  const tbody = document.querySelector(".ant-table-content tbody");
+  const tbody = document.querySelector(".ant-table-container .ant-table-content tbody");
   const _this = this;
   let nowDrageRow = 0; // 当前拖拽的索引
-  Sortable.create(tbody, {
+  const sortable = Sortable.create(tbody, {
+    animation: 200,
+    handle: ".drop-row-btn", // 指定只能选中 drop-row-btn
     onEnd({ newIndex, oldIndex }: ISortTableEnd) {
+      console.log("newIndex, oldIndex", newIndex, oldIndex);
+
       // const currRow = _this.fofList.splice(oldIndex, 1)[0];
       // _this.list.splice(newIndex, 0, currRow);
       // _this.list.forEach((item, index) => {
       //   item.orderNum = index + 1;
       // });
+      //获取拖动后容器中的每一项的位置排序
+      const arr = sortable.toArray();
+      console.log("位置排序", arr);
     },
     // 开始拖拽的时候
     onStart: function (evt: any) {
       console.log("evt", evt, evt.oldIndex);
 
       nowDrageRow = evt.oldIndex;
-    },
-    // 拖拽移动的时候
-    onMove: function (evt: any, originalEvent: any) {
-      console.log("onMove", evt);
-      if (nowDrageRow === unref(dataSource).length - 1) {
-        return false; // 禁止拖拽某一行
-      }
     },
   });
 };
@@ -258,6 +259,7 @@ const rowSelection = computed(() => {
             v-model:value="keyword"
             @blur="onSearchBlur"
             allow-clear
+            class="table-header_search"
           />
           <a-radio-group v-model:value="menuOrSearch">
             <a-dropdown placement="bottom" v-model:visible="isDropdownVisible">

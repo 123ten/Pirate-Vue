@@ -11,7 +11,7 @@ import {
   ZoomInOutlined,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
-import AddEditModal from "@/components/Modals/TheGroup/AddEditModal.vue";
+import AddEditModal from "./components/AddEditModal/index.vue";
 import { IColumns, IPages } from "@/types/index";
 
 interface IDataSource {

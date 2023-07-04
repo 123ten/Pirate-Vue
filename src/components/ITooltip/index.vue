@@ -7,6 +7,7 @@ interface IProps {
   disabled?: boolean; // tooltip 默认按钮 是否禁用 默认 否
   type?: string; // tooltip 默认按钮 按钮主题色
   size?: string; // size 默认按钮大小
+  btnClass?: ""; // 按钮类名
 }
 const props = withDefaults(defineProps<IProps>(), {
   title: "",
@@ -14,6 +15,7 @@ const props = withDefaults(defineProps<IProps>(), {
   disabled: false,
   type: "primary",
   size: "",
+  btnClass: "",
 });
 
 const emits = defineEmits([
@@ -33,6 +35,7 @@ const emits = defineEmits([
         :type="props.type"
         :disabled="props.disabled"
         :size="props.size"
+        :class="props.btnClass"
         @click="emits('click')"
       >
         <template #icon>
