@@ -88,7 +88,7 @@ watch(
     <div class="menu-logo d-flex-center">
       <template v-if="!isMenuOutIn">
         <div class="logo-name d-flex-center">
-          <img class="logo-img" src="../../assets/images/logo_piece.png" alt="" />
+          <img class="logo-img" src="@/assets/images/logo_piece.png" alt="" />
           <div class="website-name">Pirate Vue</div>
         </div>
       </template>
