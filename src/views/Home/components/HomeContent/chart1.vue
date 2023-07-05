@@ -56,7 +56,9 @@ const initUserChart = () => {
     },
     toolbox: {
       feature: {
-        saveAsImage: {},
+        saveAsImage: {
+          title: "保存",
+        },
       },
     },
     legend: {
@@ -251,14 +253,13 @@ const initFileChart = () => {
         </template>
       </a-card>
     </a-col>
-    
-    <a-col  :lg="24" :xs="24">
+
+    <a-col :lg="24" :xs="24">
       <a-card hoverable title="附件增长情况">
         <div ref="fileChartRef" class="file-growth-chart"></div>
       </a-card>
     </a-col>
   </a-row>
-
 </template>
 
 <style lang="less" scoped>

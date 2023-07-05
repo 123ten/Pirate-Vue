@@ -27,9 +27,8 @@
             box-sizing: border-box;
             overflow-x: auto;
         }
-        .i-table {
 
-        }
+        .i-table {}
     }
 }
 
@@ -44,10 +43,13 @@
     transform: rotateX(180deg);
 }
 
-@media screen  and (max-width:1200px) {
+@media screen and (max-width:678px) {
     .table-header_search {
         display: none;
     }
+}
+
+@media screen and (max-width:1200px) {
     /deep/ .ant-table-wrapper .ant-table-content {
         overflow-x: auto;
     }

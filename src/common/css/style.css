@@ -120,6 +120,9 @@ a {
 .d-none {
   display: none;
 }
+.d-flex {
+  display: flex;
+}
 
 .d-block {
   display: block;
@@ -209,6 +212,16 @@ a {
 
 .txt_color_sub {
   color: rgba(0, 0, 0, 0.45);
+}
+/* 常用文本对齐方式 */
+.t-align-c {
+  text-align: center;
+}
+.t-align-l {
+  text-align: left;
+}
+.t-align-r {
+  text-align: right;
 }
 
 /* 常用宽度 */

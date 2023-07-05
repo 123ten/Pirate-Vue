@@ -25,3 +25,8 @@ app.use(Antd);
 app.config.globalProperties.$echarts = echarts; //vue3的挂载方式
 
 app.mount("#app");
+
+// 禁用右键全局
+document.addEventListener('contextmenu',function(e){
+    e.preventDefault();
+})

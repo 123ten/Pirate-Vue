@@ -37,7 +37,7 @@ interface IProps {
   loading?: boolean; // 表格加载状态
   isFormSearchBtn?: boolean; // 是否显示 form 按钮 搭配插槽 formSearch 一起使用
   isExpandAllRows?: boolean; // 控制展开所有行
-  isDragVisible?: boolean; // 是否允许拖拽行
+  isDragVisible?: boolean; // 是否允许拖拽行 搭配 class drop-row-btn
 }
 interface ISortTableEnd {
   newIndex: number;
@@ -137,7 +137,9 @@ const expandAllRows = () => {
 
 // 行拖拽
 const rowDrop = () => {
-  const tbody = document.querySelector(".ant-table-container .ant-table-content tbody");
+  const tbody = document.querySelector(
+    ".ant-table-container .ant-table-content tbody"
+  );
   const _this = this;
   let nowDrageRow = 0; // 当前拖拽的索引
   const sortable = Sortable.create(tbody, {
@@ -237,7 +239,7 @@ const rowSelection = computed(() => {
       <!-- formSearch -->
       <Transition name="zoom-in">
         <div v-show="isOpenSearch" class="table-form">
-          <slot name="formSearch"></slot>
+          <slot name="formSearch"> </slot>
         </div>
       </Transition>
       <div class="table-header">
@@ -261,30 +263,36 @@ const rowSelection = computed(() => {
             allow-clear
             class="table-header_search"
           />
-          <a-radio-group v-model:value="menuOrSearch">
-            <a-dropdown placement="bottom" v-model:visible="isDropdownVisible">
-              <a-radio-button value="menu">
-                <TableOutlined />
-              </a-radio-button>
-              <template #overlay v-if="menuCheckList.length">
-                <a-menu>
+          <a-radio-group v-model:value="menuOrSearch" style="display: flex">
+            <a-radio-button value="menu">
+              <a-popover
+                v-model:visible="isDropdownVisible"
+                trigger="click"
+                overlayClassName="i-popover-menu"
+              >
+                <template #content>
                   <a-checkbox-group
                     v-model:value="menuChecked"
                     style="width: 100%"
                     @change="onCheckboxChange"
                   >
-                    <a-menu-item
+                    <label
+                      class="i-popover-item d-block"
+                      style="text-align: left"
                       v-for="item in menuCheckList"
                       :key="item.key || item.dataIndex"
                     >
                       <a-checkbox :value="item.key || item.dataIndex">
                         {{ item.title }}
                       </a-checkbox>
-                    </a-menu-item>
+                    </label>
                   </a-checkbox-group>
-                </a-menu>
-              </template>
-            </a-dropdown>
+                </template>
+                <div class="nav-menu-item" title="筛选">
+                  <TableOutlined />
+                </div>
+              </a-popover>
+            </a-radio-button>
             <a-tooltip>
               <template #title v-if="!isOpenSearch">
                 <span>展开通用搜索</span>
