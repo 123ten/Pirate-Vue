@@ -13,19 +13,17 @@ interface IColumns {
   customRender?({ text, record, index, column }): void;
 }
 
-interface IPagination {
-  current: number;
-  pageSize: number;
-  pageSizeOptions: string[];
-  showQuickJumper: boolean;
-  showSizeChanger: boolean;
-  total: number;
-}
-
 interface IPages {
   pageSize: number; // 当前页数
   current: number; // 当前页码
   total: number; // 总条数
+}
+
+interface IPagination extends IPages {
+  pageSizeOptions?: string[];
+  showQuickJumper?: boolean;
+  showSizeChanger?: boolean;
+  // showTotal: (total: number) => unknown;
 }
 
 export { IColumns, IPages, IPagination };

@@ -62,23 +62,32 @@ onMounted(() => {
 
 <template>
   <a-row class="small-panel-box" :gutter="16">
-    <a-col class="mb_16" :lg="6" :sm="12" :xs="24" v-for="(item, index) in panelList" :key="index">
-      <div class="small-panel suspension">
-        <div class="small-panel-title">{{ item.title }}</div>
-        <div class="small-panel-content">
-          <div class="content-left d-flex-default">
-            <component
-              :is="item.icon"
-              class="content-icon mr_8"
-              :style="{ color: `${item.color}` }"
-            />
-            <div class="number" ref="numRef">
-              {{ item.value }}
+    <a-col
+      class="mb_16"
+      :lg="6"
+      :sm="12"
+      :xs="24"
+      v-for="(item, index) in panelList"
+      :key="index"
+    >
+      <a-skeleton active :loading="!item" :paragraph="{ rows: 1 }">
+        <div class="small-panel suspension">
+          <div class="small-panel-title">{{ item.title }}</div>
+          <div class="small-panel-content">
+            <div class="content-left d-flex-default">
+              <component
+                :is="item.icon"
+                class="content-icon mr_8"
+                :style="{ color: `${item.color}` }"
+              />
+              <div class="number" ref="numRef">
+                {{ item.value }}
+              </div>
             </div>
+            <div class="content-right">{{ item.rate }}%</div>
           </div>
-          <div class="content-right">{{ item.rate }}%</div>
         </div>
-      </div>
+      </a-skeleton>
     </a-col>
   </a-row>
 </template>

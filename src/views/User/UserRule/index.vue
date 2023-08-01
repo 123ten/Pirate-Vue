@@ -7,10 +7,20 @@ import {
   ZoomInOutlined,
   DragOutlined,
 } from "@ant-design/icons-vue";
-import { computed, onMounted, reactive, ref, unref } from "vue";
-import AddEditModal from "./components/AddEditModal/index.vue";
+import {
+  computed,
+  defineAsyncComponent,
+  onMounted,
+  reactive,
+  ref,
+  unref,
+} from "vue";
 import type { IColumns, IPages } from "@/types/index";
 import * as antIcons from "@ant-design/icons-vue";
+
+const AddEditModal = defineAsyncComponent(
+  () => import("./components/AddEditModal/index.vue")
+);
 
 interface IDataSource {
   key: string;

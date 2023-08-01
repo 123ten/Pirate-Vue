@@ -8,14 +8,6 @@
             background-color: #fff;
         }
 
-        .table-form {
-            box-sizing: border-box;
-            padding: 16px;
-            transform-style: preserve-3d;
-            transform-origin: bottom;
-            position: relative;
-            z-index: 0; // 层级低于 table-header
-        }
 
         .table-header {
             margin-bottom: 16px;
@@ -29,6 +21,31 @@
         }
 
         .i-table {}
+
+        .i-table-form {
+            box-sizing: border-box;
+            // padding: 16px;
+            margin-bottom: 16px;
+            transform-style: preserve-3d;
+            transform-origin: bottom;
+            position: relative;
+            z-index: 0; // 层级低于 table-header
+            overflow: hidden;
+
+            .i-table-form-default {
+                display: flex;
+
+                .i-form-item {
+                    margin-bottom: 16px;
+                }
+
+                .i-form-operate {
+                    margin-left: 16px;
+                    align-self: flex-end;
+                }
+            }
+        }
+
     }
 }
 

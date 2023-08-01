@@ -31,6 +31,7 @@ interface IProps {
   selectedRowKeys?: string[]; // 选中的表格多选
   pageSizeOptions?: string[]; // 指定每页可以显示多少条
   pages?: IPages; // 页码
+  formOptions?: any;
   scroll?: null;
   keywordPlaceholder?: string; // 搜索框 占位内容
   isSelectedRowKeys?: boolean; // 是否显示表格多选框
@@ -78,7 +79,10 @@ const emits = defineEmits([
 ]);
 //#endregion
 
-const pages = toRef(props, "pages");
+// 内置搜索
+const formSeach = reactive({});
+
+const pages = reactive<IPages>(props.pages);
 const columnStorages = ref<IColumns[]>(props.columns); // 暂存 被删除的columns
 const menuChecked = ref<string[]>([]); // 选中显示隐藏表头
 const menuCheckList = ref<IColumns[]>([]); // 表头的数据列
@@ -96,8 +100,9 @@ onMounted(() => {
     (item) => ![item.dataIndex, item.key].includes("operate")
   );
   menuChecked.value = unref(menuCheckList).map((item) => item.dataIndex);
+
   // 默认是否展开
-  expandAllRows();
+  props.isExpandAllRows && expandAllRows();
 
   props.isDragVisible && rowDrop();
 });
@@ -178,17 +183,22 @@ const handlePageSizeChange = (
   sorter: Function | boolean,
   { currentDataSource }: any
 ) => {
-  const pages: IPages = {
-    pageSize: pagination.pageSize,
-    current: pagination.current,
-    total: pagination.total,
-  };
+  pages.pageSize = pagination.pageSize;
+  pages.current = pagination.current;
+  pages.total = pagination.total;
+  // const page: IPages = {
+  //   pageSize: pagination.pageSize,
+  //   current: pagination.current,
+  //   total: pagination.total,
+  // };
+  console.log("pages", pages);
+
   emits("onPagesChange", pages);
   //   console.log(pagination, filters, sorter, currentDataSource, "current, size");
 };
 
 // 选中显示表格列
-const onCheckboxChange = () => {
+const handleCheckboxChange = () => {
   //   console.log(menuChecked.value, columnStorages.value, "menuChecked");
   const arr = [];
   const _columns = unref(columnStorages);
@@ -202,7 +212,7 @@ const onCheckboxChange = () => {
   emits("onColumnChange", arr);
 };
 // 显示与隐藏 form
-const onOpenSearch = () => {
+const handleOpenSearch = () => {
   isOpenSearch.value = !unref(isOpenSearch);
 };
 // 表格可伸缩
@@ -216,7 +226,7 @@ const onSelectChange = (changableRowKeys: string[]) => {
   emits("onSelectChange", changableRowKeys);
 };
 // 搜索 input blur 事件
-const onSearchBlur = () => {
+const handleSearchBlur = () => {
   // 当新数据 = 旧数据 不传输事件
   if (unref(keyword) === unref(oldKeyword)) return;
   oldKeyword.value = unref(keyword);
@@ -238,8 +248,108 @@ const rowSelection = computed(() => {
     <div class="container-table">
       <!-- formSearch -->
       <Transition name="zoom-in">
-        <div v-show="isOpenSearch" class="table-form">
-          <slot name="formSearch"> </slot>
+        <div v-show="isOpenSearch" class="i-table-form">
+          <slot name="formSearch">
+            <div class="i-table-form-default">
+              <a-form
+                :model="formSeach"
+                layout="inline"
+                name="basic"
+                autocomplete="off"
+                v-bind="props.formOptions"
+              >
+                <a-row>
+                  <a-col :span="6">
+                    <a-form-item
+                      label="用户名"
+                      name="username"
+                      class="i-form-item"
+                    >
+                      <a-input
+                        v-model:value="formSeach.username"
+                        allowClear
+                        placeholder="用户名"
+                      />
+                    </a-form-item>
+                  </a-col>
+                  <a-col :span="6">
+                    <a-form-item label="用户类型" name="usertype">
+                      <a-input
+                        v-model:value="formSeach.usertype"
+                        allowClear
+                        placeholder="用户类型"
+                      />
+                    </a-form-item>
+                  </a-col>
+                  <a-col :span="6">
+                    <a-form-item label="文件类型" name="mimetype">
+                      <a-input
+                        v-model:value="formSeach.mimetype"
+                        allowClear
+                        placeholder="文件类型"
+                      />
+                    </a-form-item>
+                  </a-col>
+                  <a-col :span="6">
+                    <a-form-item label="上传次数" name="upload_count">
+                      <a-space>
+                        <a-input
+                          v-model:value="formSeach.start_count"
+                          allowClear
+                        />
+                        至
+                        <a-input
+                          v-model:value="formSeach.end_count"
+                          allowClear
+                        />
+                      </a-space>
+                    </a-form-item>
+                  </a-col>
+                </a-row>
+                <a-row>
+                  <a-col :span="6">
+                    <a-form-item label="原始名称" name="filename">
+                      <a-input
+                        v-model:value="formSeach.filename"
+                        placeholder="原始名称"
+                      />
+                    </a-form-item>
+                  </a-col>
+                  <a-col :span="6">
+                    <a-form-item label="最后上传时间" name="createTime">
+                      <a-range-picker
+                        v-model:value="formSeach.createTime"
+                        format="YYYY-MM-DD HH:mm:ss"
+                        value-format="YYYY-MM-DD HH:mm:ss"
+                      />
+                    </a-form-item>
+                  </a-col>
+                  <a-col :span="6">
+                    <a-form-item label="最后上传时间" name="createTime">
+                      <a-range-picker
+                        v-model:value="formSeach.createTime"
+                        format="YYYY-MM-DD HH:mm:ss"
+                        value-format="YYYY-MM-DD HH:mm:ss"
+                      />
+                    </a-form-item>
+                  </a-col>
+                  <a-col :span="6">
+                    <a-form-item label="最后上传时间" name="createTime">
+                      <a-range-picker
+                        v-model:value="formSeach.createTime"
+                        format="YYYY-MM-DD HH:mm:ss"
+                        value-format="YYYY-MM-DD HH:mm:ss"
+                      />
+                    </a-form-item>
+                  </a-col>
+                </a-row>
+              </a-form>
+              <a-space class="i-form-operate">
+                <a-button type="primary">查询</a-button>
+                <a-button>重置</a-button>
+              </a-space>
+            </div>
+          </slot>
         </div>
       </Transition>
       <div class="table-header">
@@ -259,47 +369,46 @@ const rowSelection = computed(() => {
           <a-input
             :placeholder="props.keywordPlaceholder"
             v-model:value="keyword"
-            @blur="onSearchBlur"
+            @blur="handleSearchBlur"
             allow-clear
             class="table-header_search"
           />
           <a-radio-group v-model:value="menuOrSearch" style="display: flex">
-            <a-radio-button value="menu">
-              <a-popover
-                v-model:visible="isDropdownVisible"
-                trigger="click"
-                overlayClassName="i-popover-menu"
-              >
-                <template #content>
-                  <a-checkbox-group
-                    v-model:value="menuChecked"
-                    style="width: 100%"
-                    @change="onCheckboxChange"
+            <a-popover
+              v-model:visible="isDropdownVisible"
+              trigger="click"
+              overlayClassName="i-popover-menu"
+            >
+              <template #content>
+                <a-checkbox-group
+                  v-model:value="menuChecked"
+                  style="width: 100%"
+                  @change="handleCheckboxChange"
+                >
+                  <label
+                    class="i-popover-item d-block"
+                    style="text-align: left"
+                    v-for="item in menuCheckList"
+                    :key="item.key || item.dataIndex"
                   >
-                    <label
-                      class="i-popover-item d-block"
-                      style="text-align: left"
-                      v-for="item in menuCheckList"
-                      :key="item.key || item.dataIndex"
+                    <a-checkbox
+                      :value="item.key || item.dataIndex"
+                      style="white-space: nowrap"
                     >
-                      <a-checkbox :value="item.key || item.dataIndex">
-                        {{ item.title }}
-                      </a-checkbox>
-                    </label>
-                  </a-checkbox-group>
-                </template>
-                <div class="nav-menu-item" title="筛选">
-                  <TableOutlined />
-                </div>
-              </a-popover>
-            </a-radio-button>
-            <a-tooltip>
-              <template #title v-if="!isOpenSearch">
-                <span>展开通用搜索</span>
+                      {{ item.title }}
+                    </a-checkbox>
+                  </label>
+                </a-checkbox-group>
               </template>
+              <a-radio-button value="menu">
+                <TableOutlined title="筛选" />
+              </a-radio-button>
+            </a-popover>
+            <a-tooltip>
+              <template #title v-if="!isOpenSearch"> 展开通用搜索 </template>
               <a-radio-button
                 value="search"
-                @click="onOpenSearch"
+                @click="handleOpenSearch"
                 v-if="isFormSearchBtn"
               >
                 <SearchOutlined />
@@ -310,21 +419,21 @@ const rowSelection = computed(() => {
       </div>
       <a-table
         :row-selection="props.isSelectedRowKeys ? rowSelection : null"
-        :dataSource="dataSource"
+        :data-source="dataSource"
         :loading="props.loading"
         :columns="props.columns"
         :scroll="props.scroll"
         v-model:expandedRowKeys="expandedRowKeys"
         bordered
-        @resizeColumn="handleResizeColumn"
+        @resize-column="handleResizeColumn"
         @change="handlePageSizeChange"
         :pagination="{
           showQuickJumper: true,
-          showSizeChanger:true,
+          showSizeChanger: true,
           total: pages.total,
           pageSize: pages.pageSize,
-          current:pages.current,
-          showTotal: (total:number) =>`共 ${total} 条`,
+          current: pages.current,
+          showTotal: (total:number) => `共 ${total} 条`,
           pageSizeOptions: props.pageSizeOptions,
         }"
       >

@@ -4,7 +4,7 @@ export const fullScreen = () => {
   de.requestFullscreen() ||
     de.mozRequestFullScreen() ||
     de.webkitRequestFullScreen() ||
-    de.msRequestFullScreen()();
+    de.msRequestFullScreen();
 };
 // 退出全屏
 export const exitFullScreen = () => {

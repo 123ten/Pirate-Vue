@@ -1,10 +1,6 @@
 <!-- 权限按钮 -->
 <script setup lang="ts">
 //#region interface
-interface IDataSource {
-  key: string;
-  children?: IDataSource[];
-}
 /**
  * @param type 按钮类型
  */
