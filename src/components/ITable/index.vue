@@ -300,7 +300,7 @@ const formColumns = computed(() => {
                           v-model:value="formSeach[item.dataIndex]"
                           allow-clear
                           :placeholder="item.title || item.placeholder"
-                        />
+                        /> 
                         <!-- select 下拉框 -->
                         <a-select
                           v-else-if="item.type === 'select'"
