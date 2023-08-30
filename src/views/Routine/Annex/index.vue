@@ -29,16 +29,26 @@ const columns = ref<IColumns[]>([
     title: "ID",
     dataIndex: "id",
     align: "center",
+    search: true,
   },
   {
     title: "用户名",
     dataIndex: "username",
     align: "center",
+    search: true,
   },
   {
     title: "用户类型",
     dataIndex: "usertype",
     align: "center",
+    search: true,
+    type: "radio",
+    options: [
+      {
+        label: "测试",
+        value: 1,
+      },
+    ],
   },
   {
     title: "大小",
@@ -149,6 +159,7 @@ const openAvatarPreviewImage = (src: string) => {
       @onPagesChange="onPagesChange"
       @onSelectChange="onSelectChange"
     >
+      <!-- <template #usernameSearch> 11111 </template> -->
       <template #leftBtn>
         <ITooltip
           title="删除"

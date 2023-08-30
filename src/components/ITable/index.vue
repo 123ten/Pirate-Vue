@@ -80,7 +80,7 @@ const emits = defineEmits([
 //#endregion
 
 // 内置搜索
-const formSeach = reactive({});
+const formSeach = reactive<any>({});
 
 const pages = reactive<IPages>(props.pages);
 const columnStorages = ref<IColumns[]>(props.columns); // 暂存 被删除的columns
@@ -241,6 +241,25 @@ const rowSelection = computed(() => {
     fixed: true, // 把选择框列固定在左边
   };
 });
+/**
+ * @description 表单搜索配置项
+ */
+const formColumns = computed(() => {
+  const columns = props.columns ? props.columns : [];
+  const rowColumns: IColumns[][] = [];
+  let count = 0;
+  columns
+    .filter((item) => item.search)
+    .forEach((item, index) => {
+      if (index % 4 === 0) {
+        rowColumns[count] = [];
+        count++;
+      }
+      // console.log(rowColumns[count - 1], count, index);
+      rowColumns[count - 1].push(item);
+    });
+  return rowColumns;
+});
 </script>
 
 <template>
@@ -248,7 +267,7 @@ const rowSelection = computed(() => {
     <div class="container-table">
       <!-- formSearch -->
       <Transition name="zoom-in">
-        <div v-show="isOpenSearch" class="i-table-form">
+        <div v-show="isOpenSearch && formColumns.length" class="i-table-form">
           <slot name="formSearch">
             <div class="i-table-form-default">
               <a-form
@@ -256,90 +275,61 @@ const rowSelection = computed(() => {
                 layout="inline"
                 name="basic"
                 autocomplete="off"
+                class="i-table-form"
                 v-bind="props.formOptions"
               >
-                <a-row>
-                  <a-col :span="6">
+                <a-row
+                  v-for="(arr, index) in formColumns"
+                  :key="index"
+                  style="width: 100%"
+                >
+                  <a-col
+                    v-for="item in arr"
+                    :key="item.dataIndex"
+                    :span="item.span || 6"
+                  >
                     <a-form-item
-                      label="用户名"
-                      name="username"
+                      :label="item.title"
+                      :name="item.dataIndex"
                       class="i-form-item"
                     >
-                      <a-input
-                        v-model:value="formSeach.username"
-                        allowClear
-                        placeholder="用户名"
-                      />
-                    </a-form-item>
-                  </a-col>
-                  <a-col :span="6">
-                    <a-form-item label="用户类型" name="usertype">
-                      <a-input
-                        v-model:value="formSeach.usertype"
-                        allowClear
-                        placeholder="用户类型"
-                      />
-                    </a-form-item>
-                  </a-col>
-                  <a-col :span="6">
-                    <a-form-item label="文件类型" name="mimetype">
-                      <a-input
-                        v-model:value="formSeach.mimetype"
-                        allowClear
-                        placeholder="文件类型"
-                      />
-                    </a-form-item>
-                  </a-col>
-                  <a-col :span="6">
-                    <a-form-item label="上传次数" name="upload_count">
-                      <a-space>
+                      <slot :name="`${item.dataIndex}Search`">
+                        <!-- input 输入框 -->
                         <a-input
-                          v-model:value="formSeach.start_count"
-                          allowClear
+                          v-if="!item.type || item.type === 'input'"
+                          v-model:value="formSeach[item.dataIndex]"
+                          allow-clear
+                          :placeholder="item.title || item.placeholder"
                         />
-                        至
-                        <a-input
-                          v-model:value="formSeach.end_count"
-                          allowClear
-                        />
-                      </a-space>
-                    </a-form-item>
-                  </a-col>
-                </a-row>
-                <a-row>
-                  <a-col :span="6">
-                    <a-form-item label="原始名称" name="filename">
-                      <a-input
-                        v-model:value="formSeach.filename"
-                        placeholder="原始名称"
-                      />
-                    </a-form-item>
-                  </a-col>
-                  <a-col :span="6">
-                    <a-form-item label="最后上传时间" name="createTime">
-                      <a-range-picker
-                        v-model:value="formSeach.createTime"
-                        format="YYYY-MM-DD HH:mm:ss"
-                        value-format="YYYY-MM-DD HH:mm:ss"
-                      />
-                    </a-form-item>
-                  </a-col>
-                  <a-col :span="6">
-                    <a-form-item label="最后上传时间" name="createTime">
-                      <a-range-picker
-                        v-model:value="formSeach.createTime"
-                        format="YYYY-MM-DD HH:mm:ss"
-                        value-format="YYYY-MM-DD HH:mm:ss"
-                      />
-                    </a-form-item>
-                  </a-col>
-                  <a-col :span="6">
-                    <a-form-item label="最后上传时间" name="createTime">
-                      <a-range-picker
-                        v-model:value="formSeach.createTime"
-                        format="YYYY-MM-DD HH:mm:ss"
-                        value-format="YYYY-MM-DD HH:mm:ss"
-                      />
+                        <!-- select 下拉框 -->
+                        <a-select
+                          v-else-if="item.type === 'select'"
+                          v-model:value="formSeach[item.dataIndex]"
+                          allow-clear
+                          :placeholder="item.title || item.placeholder"
+                        >
+                          <a-select-option
+                            v-for="option in item.options"
+                            :key="option.value"
+                            :value="option.value"
+                          >
+                            {{ option.label }}
+                          </a-select-option>
+                        </a-select>
+                        <!-- radio 单选框 -->
+                        <a-radio-group
+                          v-else-if="item.type === 'radio'"
+                          v-model:value="formSeach[item.dataIndex]"
+                        >
+                          <a-radio
+                            v-for="option in item.options"
+                            :key="option.value"
+                            :value="option.value"
+                          >
+                            {{ option.label }}
+                          </a-radio>
+                        </a-radio-group>
+                      </slot>
                     </a-form-item>
                   </a-col>
                 </a-row>
@@ -409,7 +399,7 @@ const rowSelection = computed(() => {
               <a-radio-button
                 value="search"
                 @click="handleOpenSearch"
-                v-if="isFormSearchBtn"
+                v-if="isFormSearchBtn && formColumns.length"
               >
                 <SearchOutlined />
               </a-radio-button>
