@@ -66,7 +66,7 @@ const onFileModalConfirm = () => {
       class="uploader"
       :show-upload-list="false"
       accept="image/png,image/jpeg"
-      action="http://localhost/upload"
+      action="https://localhost/api/upload"
       @change="handleUploadChange"
     >
       <img v-if="imgUrl" :src="imgUrl" :alt="props.alt" :title="props.title" />

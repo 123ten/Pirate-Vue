@@ -18,7 +18,7 @@ import {
 } from "vue";
 import type { ColumnFilterItem } from "ant-design-vue/es/table/interface";
 import Sortable from "sortablejs";
-import type { IColumns, IPages, IPagination } from "@/types/index";
+import type { IColumns, IPages, IPagination, TStyle } from "@/types/index";
 
 //#region interface
 interface IDataSource {
@@ -32,6 +32,7 @@ interface IProps {
   pageSizeOptions?: string[]; // 指定每页可以显示多少条
   pages?: IPages; // 页码
   formOptions?: any;
+  size?: "large" | "middle" | "small";
   scroll?: null;
   keywordPlaceholder?: string; // 搜索框 占位内容
   isSelectedRowKeys?: boolean; // 是否显示表格多选框
@@ -199,7 +200,6 @@ const handlePageSizeChange = (
 
 // 选中显示表格列
 const handleCheckboxChange = () => {
-  //   console.log(menuChecked.value, columnStorages.value, "menuChecked");
   const arr = [];
   const _columns = unref(columnStorages);
   _columns.forEach((item) => {
@@ -260,6 +260,26 @@ const formColumns = computed(() => {
     });
   return rowColumns;
 });
+
+const columnsComputed = computed(() => {
+  const columns = props.columns ? props.columns : [];
+  const _columns = columns.map((column) => {
+    if (column.minWidth) {
+      column.customHeaderCell = () => {
+        return {
+          style: {
+            minWidth: column.minWidth + "px",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          },
+        };
+      };
+    }
+    return column;
+  });
+  return _columns;
+});
 </script>
 
 <template>
@@ -300,7 +320,7 @@ const formColumns = computed(() => {
                           v-model:value="formSeach[item.dataIndex]"
                           allow-clear
                           :placeholder="item.title || item.placeholder"
-                        /> 
+                        />
                         <!-- select 下拉框 -->
                         <a-select
                           v-else-if="item.type === 'select'"
@@ -411,10 +431,11 @@ const formColumns = computed(() => {
         :row-selection="props.isSelectedRowKeys ? rowSelection : null"
         :data-source="dataSource"
         :loading="props.loading"
-        :columns="props.columns"
-        :scroll="props.scroll"
+        :columns="columnsComputed"
+        :scroll="props.scroll || { x: true }"
         v-model:expandedRowKeys="expandedRowKeys"
         bordered
+        :size="props.size || 'small'"
         @resize-column="handleResizeColumn"
         @change="handlePageSizeChange"
         :pagination="{
@@ -423,7 +444,7 @@ const formColumns = computed(() => {
           total: pages.total,
           pageSize: pages.pageSize,
           current: pages.current,
-          showTotal: (total:number) => `共 ${total} 条`,
+          showTotal: (total) => `共 ${total} 条`,
           pageSizeOptions: props.pageSizeOptions,
         }"
       >

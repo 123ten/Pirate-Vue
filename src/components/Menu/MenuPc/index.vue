@@ -20,36 +20,12 @@ const route = useRoute();
 const store = useMenuStore();
 const { isMenuOutIn } = storeToRefs(store);
 
-const menudata = ref(data);
-
 const openKeys = ref<string[]>([]);
 const selectedKeys = ref<string[]>([]);
 
 onMounted(() => {
-  // const innerWidth = document.documentElement.clientWidth;
-  // resize(innerWidth);
-  // window.addEventListener("resize", resize);
   currentOpenMenu();
 });
-onBeforeUnmount(() => {
-  // window.removeEventListener("resize", resize);
-});
-// const resize = (event: any) => {
-//   let innerWidth = 0;
-//   if (typeof event === "number") {
-//     innerWidth = event;
-//   } else {
-//     innerWidth = event.target.innerWidth;
-//   }
-//   //   console.log(innerWidth, "event");
-//   // 更改导航栏布局
-//   if (innerWidth <= 400) {
-//     mode.value = "horizontal";
-//   } else {
-//     mode.value = "inline";
-//   }
-// };
-//
 // 跳转
 const toRouter = (name: string) => {
   console.log(name, "name");
@@ -58,16 +34,8 @@ const toRouter = (name: string) => {
   });
 };
 const currentOpenMenu = () => {
-  openKeys.value = [route.meta.parentName as string];
+  // openKeys.value = [route.meta.parentName as string];
   selectedKeys.value = [route.name as string];
-};
-const onOpenChange = (keys: string[]) => {
-  // const latestOpenKey = keys.find((key) => state.openKeys.indexOf(key) === -1);
-  // if (state.rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
-  //   state.openKeys = keys;
-  // } else {
-  //   state.openKeys = latestOpenKey ? [latestOpenKey] : [];
-  // }
 };
 watch(
   () => route.path,
@@ -109,7 +77,6 @@ watch(
         mode="inline"
         v-model:openKeys="openKeys"
         v-model:selectedKeys="selectedKeys"
-        @openChange="onOpenChange"
       >
         <a-menu-item key="home" @click="toRouter('home')">
           <template #icon>

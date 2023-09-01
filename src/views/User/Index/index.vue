@@ -2,86 +2,91 @@
 <!-- 角色组管理 -->
 <script setup lang="ts">
 import {
-  SyncOutlined,
-  PlusOutlined,
-  DeleteOutlined,
-  TableOutlined,
-  SearchOutlined,
-  EditOutlined,
-  EditFilled,
   ZoomInOutlined,
+  UserOutlined,
+  SendOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  InfoCircleFilled,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
-import Sortable from "sortablejs";
 import type { IColumns, IPages } from "@/types/index";
 import type { IDataSource, ISortTableEnd } from "./index";
 
 const columns = ref<IColumns[]>([
   {
-    title: "ID",
+    title: "序号",
     dataIndex: "key",
     align: "center",
-    width: "150px",
+    minWidth: 80,
   },
   {
     title: "用户名",
     dataIndex: "username",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "昵称",
     dataIndex: "nickname",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "分组",
     dataIndex: "group",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "头像",
     dataIndex: "avatar",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "性别",
     dataIndex: "gender",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "手机号",
     dataIndex: "phone",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "最后登录IP",
     dataIndex: "updateip",
     align: "center",
+    minWidth: 140,
   },
   {
     title: "状态",
     dataIndex: "status",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "最后登录",
     dataIndex: "updatetime",
     align: "center",
-    width: 180,
+    minWidth: 180,
   },
   {
     title: "创建时间",
     dataIndex: "createtime",
     align: "center",
-    width: 180,
+    minWidth: 180,
   },
   {
     title: "操作",
     dataIndex: "operate",
     align: "center",
     fixed: "right",
-    width: 100,
+    minWidth: 100,
   },
 ]);
 const dataSource = ref<IDataSource[]>([]);
@@ -101,36 +106,7 @@ onMounted(() => {
     item.isDeleteVisible = false;
     return item;
   });
-  rowDrop();
 });
-// 行拖拽
-const rowDrop = () => {
-  const tbody = document.querySelector(".ant-table-content tbody");
-  const _this = this;
-  let nowDrageRow = 0; // 当前拖拽的索引
-  Sortable.create(tbody, {
-    onEnd({ newIndex, oldIndex }: ISortTableEnd) {
-      // const currRow = _this.fofList.splice(oldIndex, 1)[0];
-      // _this.list.splice(newIndex, 0, currRow);
-      // _this.list.forEach((item, index) => {
-      //   item.orderNum = index + 1;
-      // });
-    },
-    // 开始拖拽的时候
-    onStart: function (evt: any) {
-      console.log("evt", evt, evt.oldIndex);
-
-      nowDrageRow = evt.oldIndex;
-    },
-    // 拖拽移动的时候
-    onMove: function (evt: any, originalEvent: any) {
-      console.log("onMove", evt);
-      if (nowDrageRow === unref(dataSource).length - 1) {
-        return false; // 禁止拖拽某一行
-      }
-    },
-  });
-};
 
 // 添加
 const handleAddEdit = (type: number) => {

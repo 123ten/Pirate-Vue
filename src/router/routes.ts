@@ -11,6 +11,22 @@ export const routes: Array<RouteRecordRaw> = [
     redirect: "/home",
   },
   {
+    path: "/admin/login",
+    meta: {
+      title: "登录页",
+    },
+    component: () => import("@/views/Login/index.vue"),
+  },
+  {
+    // 404
+    path: "/404",
+    name: "notFound",
+    component: () => import("@/views/Common/Error/404/404.vue"),
+    meta: {
+      title: "404 Not Found", // 页面不存在
+    },
+  },
+  {
     path: "",
     component: Layout,
     children: [
