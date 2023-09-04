@@ -280,6 +280,11 @@ const columnsComputed = computed(() => {
   });
   return _columns;
 });
+
+// table total
+const showTotal = (total: number) => {
+  return `共 ${total} 条`;
+};
 </script>
 
 <template>
@@ -444,7 +449,7 @@ const columnsComputed = computed(() => {
           total: pages.total,
           pageSize: pages.pageSize,
           current: pages.current,
-          showTotal: (total) => `共 ${total} 条`,
+          showTotal: showTotal,
           pageSizeOptions: props.pageSizeOptions,
         }"
       >

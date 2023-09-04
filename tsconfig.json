@@ -18,7 +18,8 @@
     },
     "noImplicitAny": true, // 没有隐式的any
     "strictNullChecks": true, // 严格的null与undefined检查
-    "noFallthroughCasesInSwitch": true // 防止在switch代码块里的两个case之间忘记添加break语句。
+    "noFallthroughCasesInSwitch": true, // 防止在switch代码块里的两个case之间忘记添加break语句。
+    "noImplicitThis": false // 允许this有隐式的any类型
   },
   // 读取所有可识别的src目录下的文件
   "include": [

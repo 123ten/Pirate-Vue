@@ -41,31 +41,6 @@ const handleUserNameInput = debounce(() => {
 </script>
 
 <template>
-  <div class="switch-language">
-    <el-dropdown
-      size="large"
-      :hide-timeout="50"
-      placement="bottom-end"
-      :hide-on-click="true"
-    >
-      <Icon
-        name="fa fa-globe"
-        color="var(--el-text-color-secondary)"
-        size="28"
-      />
-      <template #dropdown>
-        <el-dropdown-menu class="chang-lang">
-          <el-dropdown-item
-            v-for="item in config.lang.langArray"
-            :key="item.name"
-            @click="editDefaultLang(item.name)"
-          >
-            {{ item.value }}
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </template>
-    </el-dropdown>
-  </div>
   <div @contextmenu.stop="" id="bubble" class="bubble">
     <canvas id="bubble-canvas" class="bubble-canvas"></canvas>
   </div>
