@@ -10,9 +10,9 @@ import {
   InfoCircleFilled,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
-import AddEditModal from "./components/AddEditModal/index.vue";
 import type { IColumns, IPages } from "@/types/index";
 import type { IDataSource, ISortTableEnd } from "./index";
+import AddEditModal from "./components/AddEditModal/index.vue";
 
 const columns = ref<IColumns[]>([
   {
@@ -207,64 +207,62 @@ const onSelectChange = (rowKeys: string[]) => {
           </template>
         </ITooltip>
       </template>
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'gender'">
-          <a-tag color="success" class="table-tag">
-            {{ record.gender === 1 ? "男" : "女" }}
-          </a-tag>
-        </template>
-        <template v-if="column.dataIndex === 'updateip'">
-          <a-tag color="success" class="table-tag">
-            {{ record.updateip }}
-          </a-tag>
-        </template>
-        <template v-if="column.dataIndex === 'status'">
-          <a-tag
-            :color="record.status === 1 ? 'success' : 'error'"
-            class="table-tag"
-          >
-            {{ record.status === 1 ? "启用" : "禁用" }}
-          </a-tag>
-        </template>
-        <template v-if="column.dataIndex === 'menuname'">
-          <span v-if="record.menuname">{{ record.menuname }}</span>
-          <a-input v-else placeholder="请输入名称"></a-input>
-        </template>
-        <template v-if="column.dataIndex === 'operate'">
-          <a-space>
-            <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
-              <template #icon>
-                <EditOutlined />
-              </template>
-            </ITooltip>
-            <ITooltip title="删除">
-              <template #content>
-                <a-popconfirm
-                  title="确定删除选中记录？"
-                  ok-text="删除"
-                  cancel-text="取消"
-                  placement="left"
-                  v-model:visible="record.isDeleteVisible"
-                >
-                  <template #okButton>
-                    <a-button
-                      type="danger"
-                      size="small"
-                      @click="onDeleteCurrentConfirm(record)"
-                    >
-                      删除
-                    </a-button>
-                  </template>
-                  <a-button type="danger" size="small">
-                    <template #icon>
-                      <DeleteOutlined />
-                    </template>
+      <template #gender="{ record }">
+        <a-tag color="success" class="table-tag">
+          {{ record.gender === 1 ? "男" : "女" }}
+        </a-tag>
+      </template>
+      <template #updateip="{ record }">
+        <a-tag color="success" class="table-tag">
+          {{ record.updateip }}
+        </a-tag>
+      </template>
+      <template #status="{ record }">
+        <a-tag
+          :color="record.status === 1 ? 'success' : 'error'"
+          class="table-tag"
+        >
+          {{ record.status === 1 ? "启用" : "禁用" }}
+        </a-tag>
+      </template>
+      <template #menuname="{ record }">
+        <span v-if="record.menuname">{{ record.menuname }}</span>
+        <a-input v-else placeholder="请输入名称"></a-input>
+      </template>
+      <template #operate="{ record }">
+        <a-space>
+          <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
+            <template #icon>
+              <EditOutlined />
+            </template>
+          </ITooltip>
+          <ITooltip title="删除">
+            <template #content>
+              <a-popconfirm
+                title="确定删除选中记录？"
+                ok-text="删除"
+                cancel-text="取消"
+                placement="left"
+                v-model:visible="record.isDeleteVisible"
+              >
+                <template #okButton>
+                  <a-button
+                    type="danger"
+                    size="small"
+                    @click="onDeleteCurrentConfirm(record)"
+                  >
+                    删除
                   </a-button>
-                </a-popconfirm>
-              </template>
-            </ITooltip>
-          </a-space>
-        </template>
+                </template>
+                <a-button type="danger" size="small">
+                  <template #icon>
+                    <DeleteOutlined />
+                  </template>
+                </a-button>
+              </a-popconfirm>
+            </template>
+          </ITooltip>
+        </a-space>
       </template>
     </ITable>
 

@@ -13,7 +13,6 @@ import {
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
 import AddEditModal from "@/components/Modals/TheMenu/AddEditModal.vue";
-import Sortable from "sortablejs";
 import type { IColumns, IPages } from "@/types/index";
 
 interface IDataSource {
@@ -38,45 +37,43 @@ const columns = ref<IColumns[]>([
     title: "标题",
     dataIndex: "title",
     align: "center",
-    width: 200,
+    minWidth: 200,
   },
   {
     title: "图标",
     dataIndex: "icon",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "名称",
     dataIndex: "menuname",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "类型",
     dataIndex: "menutype",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "缓存",
     dataIndex: "cache",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "状态",
     dataIndex: "status",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "修改时间",
     dataIndex: "updatetime",
     align: "center",
-    width: 180,
-  },
-  {
-    title: "操作",
-    dataIndex: "operate",
-    align: "center",
-    fixed: "right",
-    width: 100,
+    minWidth: 180,
   },
 ]);
 const dataSource = ref<IDataSource[]>([
@@ -136,36 +133,7 @@ onMounted(() => {
     item.isDeleteVisible = false;
     return item;
   });
-  rowDrop();
 });
-// 行拖拽
-const rowDrop = () => {
-  const tbody = document.querySelector(".ant-table-content tbody");
-  const _this = this;
-  let nowDrageRow = 0; // 当前拖拽的索引
-  Sortable.create(tbody, {
-    onEnd({ newIndex, oldIndex }: ISortTableEnd) {
-      // const currRow = _this.fofList.splice(oldIndex, 1)[0];
-      // _this.list.splice(newIndex, 0, currRow);
-      // _this.list.forEach((item, index) => {
-      //   item.orderNum = index + 1;
-      // });
-    },
-    // 开始拖拽的时候
-    onStart: function (evt: any) {
-      console.log("evt", evt, evt.oldIndex);
-
-      nowDrageRow = evt.oldIndex;
-    },
-    // 拖拽移动的时候
-    onMove: function (evt: any, originalEvent: any) {
-      console.log("onMove", evt);
-      if (nowDrageRow === unref(dataSource).length - 1) {
-        return false; // 禁止拖拽某一行
-      }
-    },
-  });
-};
 
 // 添加
 const handleAddEdit = (type: number) => {
@@ -282,57 +250,6 @@ const onSelectChange = (rowKeys: string[]) => {
           @click="isExpandAllRows = !isExpandAllRows"
         >
         </ITooltip>
-      </template>
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'status'">
-          <a-tag :color="record.status === 1 ? 'success' : 'error'">
-            {{ record.status === 1 ? "启用" : "禁用" }}
-          </a-tag>
-        </template>
-        <template v-if="column.dataIndex === 'menuname'">
-          <span v-if="record.menuname">{{ record.menuname }}</span>
-          <a-input v-else placeholder="请输入名称"></a-input>
-        </template>
-        <template v-if="column.dataIndex === 'operate'">
-          <a-space>
-            <ITooltip title="查看详情" size="small">
-              <template #icon>
-                <ZoomInOutlined class="move" />
-              </template>
-            </ITooltip>
-            <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
-              <template #icon>
-                <EditOutlined />
-              </template>
-            </ITooltip>
-            <ITooltip title="删除">
-              <template #content>
-                <a-popconfirm
-                  title="确定删除选中记录？"
-                  ok-text="删除"
-                  cancel-text="取消"
-                  placement="left"
-                  v-model:visible="record.isDeleteVisible"
-                >
-                  <template #okButton>
-                    <a-button
-                      type="danger"
-                      size="small"
-                      @click="onDeleteCurrentConfirm(record)"
-                    >
-                      删除
-                    </a-button>
-                  </template>
-                  <a-button type="danger" size="small">
-                    <template #icon>
-                      <DeleteOutlined />
-                    </template>
-                  </a-button>
-                </a-popconfirm>
-              </template>
-            </ITooltip>
-          </a-space>
-        </template>
       </template>
     </ITable>
 

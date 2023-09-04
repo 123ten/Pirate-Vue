@@ -277,66 +277,69 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
         >
         </ITooltip>
       </template>
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'ruletype'">
-          <a-tag :color="ruletypeStatus(record.ruletype).color">
-            {{ ruletypeStatus(record.ruletype).name }}
-          </a-tag>
-        </template>
-        <template v-if="column.dataIndex === 'cache'">
-          <a-switch
-            v-model:checked="record.cache"
-            :checkedValue="1"
-            :unCheckedValue="0"
-          />
-        </template>
-        <template v-if="column.dataIndex === 'status'">
-          <a-switch
-            v-model:checked="record.status"
-            :checkedValue="1"
-            :unCheckedValue="0"
-          />
-        </template>
-        <template v-if="column.dataIndex === 'operate'">
-          <a-space>
-            <ITooltip title="查看详情" size="small" type="move" btnClass="drop-row-btn">
-              <template #icon>
-                <DragOutlined/>
-              </template>
-            </ITooltip>
-            <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
-              <template #icon>
-                <EditOutlined />
-              </template>
-            </ITooltip>
-            <ITooltip title="删除">
-              <template #content>
-                <a-popconfirm
-                  title="确定删除选中记录？"
-                  ok-text="删除"
-                  cancel-text="取消"
-                  placement="left"
-                  v-model:visible="record.isDeleteVisible"
-                >
-                  <template #okButton>
-                    <a-button
-                      type="danger"
-                      size="small"
-                      @click="onDeleteCurrentConfirm(record)"
-                    >
-                      删除
-                    </a-button>
-                  </template>
-                  <a-button type="danger" size="small">
-                    <template #icon>
-                      <DeleteOutlined />
-                    </template>
+      <template #ruletype="{ record }">
+        <a-tag :color="ruletypeStatus(record.ruletype).color">
+          {{ ruletypeStatus(record.ruletype).name }}
+        </a-tag>
+      </template>
+      <template #cache="{ record }">
+        <a-switch
+          v-model:checked="record.cache"
+          :checkedValue="1"
+          :unCheckedValue="0"
+        />
+      </template>
+      <template #status="{ record }">
+        <a-switch
+          v-model:checked="record.status"
+          :checkedValue="1"
+          :unCheckedValue="0"
+        />
+      </template>
+      <template #operate="{ record }">
+        <a-space>
+          <ITooltip
+            title="查看详情"
+            size="small"
+            type="move"
+            btnClass="drop-row-btn"
+          >
+            <template #icon>
+              <DragOutlined />
+            </template>
+          </ITooltip>
+          <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
+            <template #icon>
+              <EditOutlined />
+            </template>
+          </ITooltip>
+          <ITooltip title="删除">
+            <template #content>
+              <a-popconfirm
+                title="确定删除选中记录？"
+                ok-text="删除"
+                cancel-text="取消"
+                placement="left"
+                v-model:visible="record.isDeleteVisible"
+              >
+                <template #okButton>
+                  <a-button
+                    type="danger"
+                    size="small"
+                    @click="onDeleteCurrentConfirm(record)"
+                  >
+                    删除
                   </a-button>
-                </a-popconfirm>
-              </template>
-            </ITooltip>
-          </a-space>
-        </template>
+                </template>
+                <a-button type="danger" size="small">
+                  <template #icon>
+                    <DeleteOutlined />
+                  </template>
+                </a-button>
+              </a-popconfirm>
+            </template>
+          </ITooltip>
+        </a-space>
       </template>
     </ITable>
 

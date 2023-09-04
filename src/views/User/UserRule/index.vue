@@ -41,47 +41,50 @@ const columns = ref<IColumns[]>([
     title: "规则标题",
     dataIndex: "title",
     align: "center",
-    width: 200,
+    minWidth: 200,
   },
   {
     title: "规则图标",
     dataIndex: "icon",
     align: "center",
-    width: 100,
+    minWidth: 100,
   },
   {
     title: "规则名称",
     dataIndex: "menuname",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "规则类型",
     dataIndex: "ruletype",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "状态",
     dataIndex: "status",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "修改时间",
     dataIndex: "updatetime",
     align: "center",
-    width: 180,
+    minWidth: 180,
   },
   {
     title: "创建时间",
     dataIndex: "updatetime",
     align: "center",
-    width: 180,
+    minWidth: 100,
   },
   {
     title: "操作",
     dataIndex: "operate",
     align: "center",
     fixed: "right",
-    width: 100,
+    minWidth: 100,
   },
 ]);
 const dataSource = ref<IDataSource[]>([
@@ -281,62 +284,61 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
         >
         </ITooltip>
       </template>
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'icon'">
-          <component :is="antIcons['ZoomInOutlined']" style="font-size: 18px" />
-        </template>
-        <template v-if="column.dataIndex === 'ruletype'">
-          <a-tag :color="ruletypeStatus(record.ruletype).color">
-            {{ ruletypeStatus(record.ruletype).name }}
-          </a-tag>
-        </template>
-        <template v-if="column.dataIndex === 'status'">
-          <a-switch
-            v-model:checked="record.status"
-            :checkedValue="1"
-            :unCheckedValue="0"
-          />
-        </template>
-        <template v-if="column.dataIndex === 'operate'">
-          <a-space>
-            <ITooltip title="查看详情" size="small" type="move">
-              <template #icon>
-                <DragOutlined />
-              </template>
-            </ITooltip>
-            <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
-              <template #icon>
-                <EditOutlined />
-              </template>
-            </ITooltip>
-            <ITooltip title="删除">
-              <template #content>
-                <a-popconfirm
-                  title="确定删除选中记录？"
-                  ok-text="删除"
-                  cancel-text="取消"
-                  placement="left"
-                  v-model:visible="record.isDeleteVisible"
-                >
-                  <template #okButton>
-                    <a-button
-                      type="danger"
-                      size="small"
-                      @click="onDeleteCurrentConfirm(record)"
-                    >
-                      删除
-                    </a-button>
-                  </template>
-                  <a-button type="danger" size="small">
-                    <template #icon>
-                      <DeleteOutlined />
-                    </template>
+
+      <template #icon="{ record }">
+        <component :is="antIcons['ZoomInOutlined']" style="font-size: 18px" />
+      </template>
+      <template #ruletype="{ record }">
+        <a-tag :color="ruletypeStatus(record.ruletype).color">
+          {{ ruletypeStatus(record.ruletype).name }}
+        </a-tag>
+      </template>
+      <template #status="{ record }">
+        <a-switch
+          v-model:checked="record.status"
+          :checkedValue="1"
+          :unCheckedValue="0"
+        />
+      </template>
+      <template #operate="{ record }">
+        <a-space>
+          <ITooltip title="查看详情" size="small" type="move">
+            <template #icon>
+              <DragOutlined />
+            </template>
+          </ITooltip>
+          <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
+            <template #icon>
+              <EditOutlined />
+            </template>
+          </ITooltip>
+          <ITooltip title="删除">
+            <template #content>
+              <a-popconfirm
+                title="确定删除选中记录？"
+                ok-text="删除"
+                cancel-text="取消"
+                placement="left"
+                v-model:visible="record.isDeleteVisible"
+              >
+                <template #okButton>
+                  <a-button
+                    type="danger"
+                    size="small"
+                    @click="onDeleteCurrentConfirm(record)"
+                  >
+                    删除
                   </a-button>
-                </a-popconfirm>
-              </template>
-            </ITooltip>
-          </a-space>
-        </template>
+                </template>
+                <a-button type="danger" size="small">
+                  <template #icon>
+                    <DeleteOutlined />
+                  </template>
+                </a-button>
+              </a-popconfirm>
+            </template>
+          </ITooltip>
+        </a-space>
       </template>
     </ITable>
 

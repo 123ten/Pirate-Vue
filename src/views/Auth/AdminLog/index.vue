@@ -207,51 +207,34 @@ const toUrl = (url: string) => {
           </a-space>
         </a-form>
       </template>
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'avatar'">
-          <!-- <a-image :width="30" :height="30" :src="record.avatar" /> -->
-          <a-avatar
-            size="large"
-            :src="record.avatar"
-            @click="openAvatarPreviewImage(record.avatar)"
+      <template #url="{ record }">
+        <a-input-group compact>
+          <a-input
+            v-model:value="record.url"
+            readonly
+            style="width: 200px; text-align: left"
           >
-            <template #icon><UserOutlined /></template>
-          </a-avatar>
-        </template>
-        <template v-if="column.dataIndex === 'status'">
-          <a-tag :color="record.status === 1 ? 'success' : 'error'">
-            {{ record.status === 1 ? "启用" : "禁用" }}
-          </a-tag>
-        </template>
-        <template v-if="column.dataIndex === 'url'">
-          <a-input-group compact>
-            <a-input
-              v-model:value="record.url"
-              readonly
-              style="width: 200px; text-align: left"
-            >
-            </a-input>
-            <a-button @click="toUrl(record.url)">
-              <template #icon>
-                <SendOutlined />
-              </template>
-            </a-button>
-          </a-input-group>
-        </template>
-        <template v-if="column.dataIndex === 'ip'">
-          <a-tag color="processing">
-            {{ record.ip }}
-          </a-tag>
-        </template>
-        <template v-if="column.dataIndex === 'operate'">
-          <a-space>
-            <ITooltip title="查看详情" size="small">
-              <template #icon>
-                <ZoomInOutlined />
-              </template>
-            </ITooltip>
-          </a-space>
-        </template>
+          </a-input>
+          <a-button @click="toUrl(record.url)">
+            <template #icon>
+              <SendOutlined />
+            </template>
+          </a-button>
+        </a-input-group>
+      </template>
+      <template #ip="{ record }">
+        <a-tag color="processing">
+          {{ record.ip }}
+        </a-tag>
+      </template>
+      <template #operate="{ record }">
+        <a-space>
+          <ITooltip title="查看详情" size="small">
+            <template #icon>
+              <ZoomInOutlined />
+            </template>
+          </ITooltip>
+        </a-space>
       </template>
     </ITable>
     <IPreviewImage

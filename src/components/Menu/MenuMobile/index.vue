@@ -26,7 +26,7 @@ const openKeys = ref<string[]>([]);
 const selectedKeys = ref<string[]>([]);
 
 onMounted(() => {
-  console.log("isMenuOutIn", isMenuOutIn);
+  // console.log("isMenuOutIn", isMenuOutIn);
 
   currentOpenMenu();
 });
@@ -47,13 +47,6 @@ watch(
   () => {
     console.log(route.name, "route");
     currentOpenMenu();
-  }
-);
-
-watch(
-  () => isMenuOutIn.value,
-  () => {
-    console.log(isMenuOutIn.value);
   }
 );
 

@@ -16,12 +16,6 @@ import { SyncOutlined } from "@ant-design/icons-vue";
 import * as antIcons from "@ant-design/icons-vue";
 import { notification } from "ant-design-vue";
 
-// interface IPropsPreviewImage {
-//   //   icon: string; // icon
-// }
-// const props = withDefaults(defineProps<IPropsPreviewImage>(), {
-//   //   icon: "",
-// });
 const emits = defineEmits(["update:visible"]);
 
 //#region 变量
@@ -130,21 +124,20 @@ const iconComputed = computed(
       <div class="icons-content">
         <div
           class="icons-item"
-          v-for="(key, index) in icons"
+          v-for="(icon, index) in icons"
           :key="index"
-          @click="checkIcon(key)"
+          @click="checkIcon(icon)"
         >
           <component
-            :is="antIcons[key  as keyof typeof antIcons]"
+            :is="antIcons[icon as keyof typeof antIcons]"
             style="font-size: 20px"
-          ></component>
+          />
         </div>
       </div>
     </template>
     <a-input placeholder="搜索图标">
       <template #addonBefore>
-        <component :is="iconComputed" class="mr_8"></component>
-        {{ currentIcon }}
+        <component :is="iconComputed" />
       </template>
       <template #addonAfter>
         <SyncOutlined @click="onLoad" />

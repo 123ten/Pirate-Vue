@@ -21,18 +21,21 @@ const columns = ref<IColumns[]>([
     title: "ID",
     dataIndex: "id",
     align: "center",
+    minWidth: 80,
     search: true,
   },
   {
     title: "用户名",
     dataIndex: "username",
     align: "center",
+    minWidth: 100,
     search: true,
   },
   {
     title: "用户类型",
     dataIndex: "usertype",
     align: "center",
+    minWidth: 100,
     search: true,
     type: "radio",
     options: [
@@ -46,33 +49,36 @@ const columns = ref<IColumns[]>([
     title: "大小",
     dataIndex: "size",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "文件类型",
     dataIndex: "mimetype",
     align: "center",
-    width: 280,
+    minWidth: 100,
   },
   {
     title: "预览",
     dataIndex: "full_url",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "上传次数",
     dataIndex: "upload_count",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "原始名称",
     dataIndex: "filename",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "最后上传时间",
     dataIndex: "createTime",
     align: "center",
-    width: 180,
     minWidth: 180,
   },
   {
@@ -80,7 +86,7 @@ const columns = ref<IColumns[]>([
     dataIndex: "operate",
     align: "center",
     fixed: "right",
-    width: 100,
+    minWidth: 100,
   },
 ]);
 const dataSource = ref<IDataSource[]>([]);
@@ -164,23 +170,22 @@ const openAvatarPreviewImage = (src: string) => {
           </template>
         </ITooltip>
       </template>
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'operate'">
-          <a-space>
-            <ITooltip title="编辑" size="small">
-              <template #icon>
-                <EditOutlined />
-              </template>
-            </ITooltip>
-            <ITooltip title="删除" size="small" type="danger">
-              <template #icon>
-                <DeleteOutlined />
-              </template>
-            </ITooltip>
-          </a-space>
-        </template>
+      <template #operate="{ record }">
+        <a-space>
+          <ITooltip title="编辑" size="small">
+            <template #icon>
+              <EditOutlined />
+            </template>
+          </ITooltip>
+          <ITooltip title="删除" size="small" type="danger">
+            <template #icon>
+              <DeleteOutlined />
+            </template>
+          </ITooltip>
+        </a-space>
       </template>
     </ITable>
+
     <IPreviewImage
       :src="avatarPreviewSrc"
       v-model:visible="isAvatarPreviewSrc"

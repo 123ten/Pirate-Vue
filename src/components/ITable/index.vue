@@ -263,6 +263,7 @@ const formColumns = computed(() => {
 
 const columnsComputed = computed(() => {
   const columns = props.columns ? props.columns : [];
+
   const _columns = columns.map((column) => {
     if (column.minWidth) {
       column.customHeaderCell = () => {
@@ -453,8 +454,9 @@ const showTotal = (total: number) => {
           pageSizeOptions: props.pageSizeOptions,
         }"
       >
-        <template #bodyCell="row">
-          <slot name="bodyCell" v-bind="row"></slot>
+        <template #bodyCell="score">
+          <slot name="bodyCell" v-bind="score"></slot>
+          <slot :name="score.column.dataIndex" v-bind="score"></slot>
         </template>
       </a-table>
     </div>

@@ -45,32 +45,37 @@ const columns = ref<IColumns[]>([
     title: "ID",
     dataIndex: "id",
     align: "center",
+    minWidth: 80,
   },
   {
     title: "大小",
     dataIndex: "size",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "文件类型",
     dataIndex: "mimetype",
     align: "center",
-    width: 280,
+    minWidth: 100,
   },
   {
     title: "预览",
     dataIndex: "full_url",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "上传次数",
     dataIndex: "upload_count",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "原始名称",
     dataIndex: "filename",
     align: "center",
+    minWidth: 150,
   },
   {
     title: "操作",
@@ -254,14 +259,12 @@ const onSearch = () => {
           </ITooltip>
           还可以选择{{ fileNum }}个
         </template>
-        <template #bodyCell="{ column, record }">
-          <template v-if="column.dataIndex === 'operate'">
-            <ITooltip title="选择" size="small">
-              <template #icon>
-                <PlusOutlined @click="handleCheckedFile(record)" />
-              </template>
-            </ITooltip>
-          </template>
+        <template #operate="{ record }">
+          <ITooltip title="选择" size="small">
+            <template #icon>
+              <PlusOutlined @click="handleCheckedFile(record)" />
+            </template>
+          </ITooltip>
         </template>
       </ITable>
       <IPreviewImage
