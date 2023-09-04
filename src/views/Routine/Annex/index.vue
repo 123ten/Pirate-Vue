@@ -1,7 +1,6 @@
 <!-- 附件管理 -->
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, unref } from "vue";
-import IPreviewImage from "@/components/IPreviewImage/index.vue";
 import type { IColumns, IPages } from "@/types/index";
 
 interface IDataSource {
@@ -22,7 +21,6 @@ const columns = ref<IColumns[]>([
     dataIndex: "id",
     align: "center",
     minWidth: 80,
-    search: true,
   },
   {
     title: "用户名",
@@ -37,7 +35,7 @@ const columns = ref<IColumns[]>([
     align: "center",
     minWidth: 100,
     search: true,
-    type: "radio",
+    type: "date",
     options: [
       {
         label: "测试",

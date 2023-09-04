@@ -155,6 +155,14 @@ export const routes: Array<RouteRecordRaw> = [
           },
         ],
       },
+      {
+        path: "/module",
+        name: "module",
+        meta: {
+          title: "模块市场",
+        },
+        component: () => import("@/views/Module/Index/index.vue"),
+      },
     ],
   },
 ];

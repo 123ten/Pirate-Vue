@@ -17,9 +17,8 @@ onMounted(() => {
 
 <template>
   <a-layout class="container d-flex-default">
-    <MenuMobile v-show="!isLayoutFullScreen" v-if="isAsideMenu" />
-    <MenuPc v-show="!isLayoutFullScreen" v-else />
-    
+    <SiderBar v-show="!isLayoutFullScreen" />
+
     <a-layout class="layout">
       <Header v-show="!isLayoutFullScreen" />
       <router-view

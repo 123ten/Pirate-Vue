@@ -1,0 +1,108 @@
+{
+  "code": "0000",
+  "msg": "操作成功",
+  "data": [
+    {
+      "path": "/home",
+      "name": "home",
+      "title": "首页",
+      "icon": "HomeOutlined"
+    },
+    {
+      "path": "/auth",
+      "name": "auth",
+      "title": "权限管理",
+      "icon": "TeamOutlined",
+      "children": [
+        {
+          "path": "group",
+          "name": "group",
+          "title": "角色组管理",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "admin",
+          "name": "admin",
+          "title": "管理员管理",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "menu",
+          "name": "menu",
+          "title": "菜单规则管理",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "adminLog",
+          "name": "adminLog",
+          "title": "管理员日志管理",
+          "icon": "HomeOutlined"
+        }
+      ]
+    },
+    {
+      "path": "user",
+      "name": "user",
+      "title": "会员管理",
+      "icon": "TeamOutlined",
+      "children": [
+        {
+          "path": "index",
+          "name": "index",
+          "title": "会员管理",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "/user/group",
+          "name": "userGroup",
+          "title": "会员分组管理",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "rule",
+          "name": "rule",
+          "title": "会员规则管理",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "userLog",
+          "name": "userLog",
+          "title": "会员日志管理",
+          "icon": "HomeOutlined"
+        }
+      ]
+    },
+    {
+      "path": "routine",
+      "name": "routine",
+      "title": "常规管理",
+      "icon": "TeamOutlined",
+      "children": [
+        {
+          "path": "config",
+          "name": "config",
+          "title": "系统配置",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "annex",
+          "name": "annex",
+          "title": "附件管理",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "info",
+          "name": "info",
+          "title": "个人资料",
+          "icon": "HomeOutlined"
+        }
+      ]
+    },
+    {
+      "path": "module",
+      "name": "module",
+      "title": "模块市场",
+      "icon": "HomeOutlined"
+    }
+  ]
+}

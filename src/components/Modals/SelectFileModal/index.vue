@@ -77,13 +77,6 @@ const columns = ref<IColumns[]>([
     align: "center",
     minWidth: 150,
   },
-  {
-    title: "操作",
-    dataIndex: "operate",
-    align: "center",
-    fixed: "right",
-    width: 100,
-  },
 ]);
 const dataSource = ref<IDataSource[]>([{}]);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
@@ -129,10 +122,6 @@ const onSelectChange = (rowKeys: string[]) => {
   // 更新选择数量
   fileNum.value = Number(props.maxFileNum) - rowKeys.length;
   console.log(rowKeys, "rowKeys");
-};
-// 选择
-const handleCheckedFile = (record: IDataSource) => {
-  unref(tableRef);
 };
 
 const onSearch = () => {
@@ -258,13 +247,6 @@ const onSearch = () => {
             </template>
           </ITooltip>
           还可以选择{{ fileNum }}个
-        </template>
-        <template #operate="{ record }">
-          <ITooltip title="选择" size="small">
-            <template #icon>
-              <PlusOutlined @click="handleCheckedFile(record)" />
-            </template>
-          </ITooltip>
         </template>
       </ITable>
       <IPreviewImage

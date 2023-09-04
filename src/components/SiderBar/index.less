@@ -1,0 +1,19 @@
+.i-menu,
+.i-menu-mobile {
+    margin-left: 16px;
+    padding-bottom: 0;
+    height: calc(100vh - 32px);
+    background-color: #fff;
+    box-shadow: var(--box-shadow-light);
+
+}
+
+.i-menu :deep(.ant-layout-sider-children) {
+    display: flex;
+    flex-flow: column;
+}
+
+.i-menu :deep(.ant-layout-sider-trigger),
+.i-menu-mobile :deep(.ant-layout-sider-trigger) {
+    display: none;
+}

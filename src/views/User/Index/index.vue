@@ -9,10 +9,10 @@ import {
   DeleteOutlined,
   InfoCircleFilled,
 } from "@ant-design/icons-vue";
+import AddEditModal from "./components/AddEditModal/index.vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
 import type { IColumns, IPages } from "@/types/index";
 import type { IDataSource, ISortTableEnd } from "./index";
-import AddEditModal from "./components/AddEditModal/index.vue";
 
 const columns = ref<IColumns[]>([
   {

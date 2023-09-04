@@ -5,6 +5,8 @@ import {
   FileTextFilled,
   TeamOutlined,
   SlidersOutlined,
+  ArrowDownOutlined,
+  ArrowUpOutlined,
 } from "@ant-design/icons-vue";
 import { onMounted, ref } from "vue";
 import { CountUp } from "countup.js";
@@ -15,6 +17,7 @@ interface IPanelList {
   color: string;
   value: number;
   rate: number;
+  status: 1 | 0; // 1 是 0 否
 }
 const panelList = ref([
   {
@@ -22,6 +25,7 @@ const panelList = ref([
     icon: LineChartOutlined,
     color: "#8595f4",
     value: 1111,
+    status: 1,
     rate: 10,
   },
   {
@@ -29,6 +33,7 @@ const panelList = ref([
     icon: FileTextFilled,
     color: "#ad85f4",
     value: 222,
+    status: 1,
     rate: 10,
   },
   {
@@ -72,7 +77,9 @@ onMounted(() => {
     >
       <a-skeleton active :loading="!item" :paragraph="{ rows: 1 }">
         <div class="small-panel suspension">
-          <div class="small-panel-title">{{ item.title }}</div>
+          <div class="small-panel-title">
+            {{ item.title }}
+          </div>
           <div class="small-panel-content">
             <div class="content-left d-flex-default">
               <component
@@ -84,7 +91,22 @@ onMounted(() => {
                 {{ item.value }}
               </div>
             </div>
-            <div class="content-right">{{ item.rate }}%</div>
+            <div
+              class="content-right"
+              :style="{
+                color: `var(${
+                  item.status === 1 ? '--error-color' : '--success-color'
+                })`,
+              }"
+            >
+              <ArrowUpOutlined
+                v-if="item.status === 1"
+                style="font-size: 12px"
+              />
+              <ArrowDownOutlined v-else style="font-size: 12px" />{{
+                item.rate
+              }}%
+            </div>
           </div>
         </div>
       </a-skeleton>

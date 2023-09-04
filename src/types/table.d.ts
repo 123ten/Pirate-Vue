@@ -1,6 +1,8 @@
 type TCustomHeaderCell = {
   style: TStyle;
 };
+// 	设置选择器类型
+type TDateType = "date" | "week" | "month" | "quarter" | "year";
 
 interface IColumns {
   type?: TypeSearchType;
@@ -10,6 +12,7 @@ interface IColumns {
   key?: string;
   align?: "center" | "left" | "right"; // 表格对齐方式 center | left | right
   fixed?: "left" | "right"; // 表头左右固定 left | right
+  dataType?: TDateType;
   placeholder?: string; // 占位内容
   // responsive?: string[];
   span?: number | string; // 搜索框占位宽度

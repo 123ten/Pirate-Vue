@@ -6,7 +6,6 @@ import {
   SendOutlined,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
-import IPreviewImage from "@/components/IPreviewImage/index.vue";
 import data from "./data.json";
 import type { IColumns, IPages } from "@/types/index";
 

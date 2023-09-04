@@ -200,9 +200,9 @@ const handlePageSizeChange = (
 
 // 选中显示表格列
 const handleCheckboxChange = () => {
-  const arr = [];
+  const arr: IColumns[] = [];
   const _columns = unref(columnStorages);
-  _columns.forEach((item) => {
+  _columns.forEach((item: IColumns) => {
     if (unref(menuChecked).includes(item.dataIndex)) {
       arr.push(item);
     }
@@ -251,11 +251,11 @@ const formColumns = computed(() => {
   columns
     .filter((item) => item.search)
     .forEach((item, index) => {
-      if (index % 4 === 0) {
+      const _span: number = Number(item.span || 4);
+      if (index % _span === 0) {
         rowColumns[count] = [];
         count++;
       }
-      // console.log(rowColumns[count - 1], count, index);
       rowColumns[count - 1].push(item);
     });
   return rowColumns;
@@ -355,6 +355,12 @@ const showTotal = (total: number) => {
                             {{ option.label }}
                           </a-radio>
                         </a-radio-group>
+                        <!-- date-picker 日期选择框 -->
+                        <a-date-picker
+                          v-else-if="item.type === 'date'"
+                          v-model:value="formSeach[item.dataIndex]"
+                          :picker="item.dataType"
+                        />
                       </slot>
                     </a-form-item>
                   </a-col>

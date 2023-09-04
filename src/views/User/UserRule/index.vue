@@ -286,7 +286,7 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
       </template>
 
       <template #icon="{ record }">
-        <component :is="antIcons['ZoomInOutlined']" style="font-size: 18px" />
+        <component :is="antIcons[record.icon]" style="font-size: 18px" />
       </template>
       <template #ruletype="{ record }">
         <a-tag :color="ruletypeStatus(record.ruletype).color">
