@@ -1,5 +1,6 @@
 <!-- 附件管理 -->
 <script setup lang="ts">
+import { InfoCircleFilled } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
 import type { IColumns, IPages } from "@/types/index";
 

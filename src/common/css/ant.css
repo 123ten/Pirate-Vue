@@ -5,8 +5,8 @@
   --ant-reload: #40485b;
   --ant-move: #909399;
 }
-.ant-btn {
-  border-radius: 5px !important;
+button.ant-btn {
+  border-radius: 5px;
 }
 /* btn - warning */
 .ant-btn.ant-btn-warning {
@@ -159,6 +159,28 @@
   padding: 0;
   display: flex;
   flex-flow: column;
+}
+
+/* 自定义 btn group 组 */
+.ant-btn-group {
+  /* overflow: hidden; */
+}
+.ant-btn-group button.ant-btn:nth-of-type(1) {
+  border-top-left-radius: 5px !important;
+  border-bottom-left-radius: 5px !important;
+}
+.ant-btn-group button.ant-btn:nth-last-of-type(1) {
+  border-top-right-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+}
+.ant-btn-group .ant-btn {
+  border-radius: initial;
+}
+.ant-btn-group .ant-btn-success.lock-active,
+.ant-btn-group .ant-btn-primary.lock-active {
+  color: #fff;
+  border-color: #096dd9;
+  background: #096dd9;
 }
 
 @media screen and (max-width: 575px) {

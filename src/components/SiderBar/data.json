@@ -54,7 +54,7 @@
         },
         {
           "path": "/user/group",
-          "name": "userGroup",
+          "name": "/user/group",
           "title": "会员分组管理",
           "icon": "HomeOutlined"
         },

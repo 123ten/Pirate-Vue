@@ -25,7 +25,7 @@ onMounted(() => {
   currentOpenMenu();
 });
 const currentOpenMenu = () => {
-  if (!unref(isMenuOutIn)) {
+  if (!unref(isMenuOutIn) && !unref(isAsideMenu)) {
     openKeys.value = [route.meta.parentName as string];
   }
   selectedKeys.value = [route.name as string];

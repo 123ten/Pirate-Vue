@@ -46,7 +46,7 @@ onMounted(() => {
         <a-menu-item
           v-for="children in item.children"
           :key="children.name"
-          @click="toRouter(children.path)"
+          @click="toRouter(children.name)"
         >
           <component :is="antIcons[children.icon]" class="fontSize-icon" />
           <span>{{ children.title }}</span>
@@ -55,7 +55,7 @@ onMounted(() => {
       </a-sub-menu>
     </template>
     <template v-else>
-      <a-menu-item :key="item.name" @click="toRouter(item.path)">
+      <a-menu-item :key="item.name" @click="toRouter(item.name)">
         <template #icon>
           <component :is="antIcons[item.icon]" class="fontSize-icon" />
         </template>

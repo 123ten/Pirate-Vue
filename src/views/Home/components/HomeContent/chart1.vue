@@ -138,7 +138,7 @@ const initFileChart = () => {
     series: (function () {
       var series = [];
       for (var i = 1; i <= 12; i++) {
-        series.push({
+        const serie = {
           type: "radar",
           symbol: "none",
           lineStyle: {
@@ -155,7 +155,8 @@ const initFileChart = () => {
               name: i + "月",
             },
           ],
-        });
+        };
+        series.push(serie);
       }
       return series;
     })(),
