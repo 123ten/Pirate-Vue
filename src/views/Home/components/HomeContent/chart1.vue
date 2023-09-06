@@ -111,7 +111,7 @@ const initFileChart = () => {
       type: "scroll",
       bottom: 15,
       data: (function () {
-        var list = [];
+        var list: any = [];
         for (var i = 1; i <= 12; i++) {
           list.push(i + "月");
         }
@@ -136,7 +136,7 @@ const initFileChart = () => {
       ],
     },
     series: (function () {
-      var series = [];
+      var series: any = [];
       for (var i = 1; i <= 12; i++) {
         const serie = {
           type: "radar",
