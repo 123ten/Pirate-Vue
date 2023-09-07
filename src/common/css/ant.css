@@ -1,6 +1,8 @@
 /* 按钮 */
 
 :root {
+  --ant-success: var(--success-color);
+  --ant-error: var(--error-color);
   --ant-warning: #e6a23c;
   --ant-reload: #40485b;
   --ant-move: #909399;
@@ -20,6 +22,15 @@ button.ant-btn {
   border-color: var(--ant-warning);
   background-color: var(--ant-warning);
 }
+/* btn - success */
+.ant-btn.ant-btn-success {
+  background-color: var(--ant-success);
+}
+.ant-btn.ant-btn-success:hover,
+.ant-btn.ant-btn-success:focus {
+  border-color: var(--ant-success);
+  background-color: var(--ant-success);
+}
 /* btn - reload */
 .ant-btn.ant-btn-reload {
   background-color: var(--ant-reload);
@@ -38,7 +49,7 @@ button.ant-btn {
   border-color: var(--ant-move);
   background-color: var(--ant-move);
 }
-/* 颜色 */
+/* btn - 颜色 */
 .ant-btn.ant-btn-warning,
 .ant-btn.ant-btn-warning:hover,
 .ant-btn.ant-btn-warning:focus,
@@ -47,14 +58,22 @@ button.ant-btn {
 .ant-btn.ant-btn-reload:focus,
 .ant-btn.ant-btn-move,
 .ant-btn.ant-btn-move:hover,
-.ant-btn.ant-btn-move:focus {
+.ant-btn.ant-btn-move:focus,
+.ant-btn.ant-btn-success,
+.ant-btn.ant-btn-success:hover,
+.ant-btn.ant-btn-success:focus {
   color: #fff;
 }
+/* .ant-btn-primary.lock-active {
+  border-color: #096dd9;
+  background: #096dd9;
+} */
 
 /* 透明度 */
 .ant-btn.ant-btn-move:hover,
 .ant-btn.ant-btn-reload:hover,
-.ant-btn.ant-btn-warning:hover {
+.ant-btn.ant-btn-warning:hover,
+.ant-btn.ant-btn-success:hover {
   opacity: 0.8;
 }
 
@@ -175,12 +194,6 @@ button.ant-btn {
 }
 .ant-btn-group .ant-btn {
   border-radius: initial;
-}
-.ant-btn-group .ant-btn-success.lock-active,
-.ant-btn-group .ant-btn-primary.lock-active {
-  color: #fff;
-  border-color: #096dd9;
-  background: #096dd9;
 }
 
 @media screen and (max-width: 575px) {

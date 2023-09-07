@@ -1,11 +1,22 @@
 <!-- 模块下载 -->
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
+  name: "ModuleHeader",
+});
+</script>
 <script setup lang="ts">
 import {
   InfoCircleFilled,
   SyncOutlined,
   UploadOutlined,
   HomeOutlined,
+  UserOutlined,
 } from "@ant-design/icons-vue";
+// import IButton from "@/components/IButton/index.vue";
+import RocketSvgIcon from "@/components/SvgIcon/rocket.vue";
+import UploadCloudSvgIcon from "@/components/SvgIcon/uploadCloud.vue";
+
 import { ref } from "vue";
 
 const remark =
@@ -17,7 +28,7 @@ const onReload = () => {};
 </script>
 
 <template>
-  <div class="module-header">
+  <div class="module-header mb_16">
     <a-alert :message="remark" type="gray" show-icon closable>
       <template #icon>
         <InfoCircleFilled style="color: #909399" />
@@ -32,7 +43,7 @@ const onReload = () => {};
           />
         </template>
       </ITooltip>
-      <div class="ant-btn-group mb_8 mr_8">
+      <div class="ant-btn-group mr_8">
         <a-button type="primary" class="lock-active">
           <template #icon>
             <UploadOutlined />
@@ -47,22 +58,22 @@ const onReload = () => {};
         </a-button>
       </div>
       <div class="ant-btn-group mr_8">
-        <a-button type="success" class="lock-active">
+        <IButton type="success">
           <template #icon>
-            <UploadOutlined />
+            <UploadCloudSvgIcon />
           </template>
           发布模块
-        </a-button>
+        </IButton>
         <a-button type="success">
           <template #icon>
-            <HomeOutlined />
+            <RocketSvgIcon />
           </template>
           获得积分
         </a-button>
       </div>
-      <a-button type="success" class="lock-active">
+      <a-button type="success">
         <template #icon>
-          <UploadOutlined />
+          <UserOutlined />
         </template>
         会员信息
       </a-button>

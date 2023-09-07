@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import ModuleHeader from "../components/ModuleHeader/index.vue";
 import ModuleMain from "../components/ModuleMain/index.vue";
+
 </script>
 
 <template>

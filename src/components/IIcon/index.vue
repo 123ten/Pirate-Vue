@@ -1,4 +1,10 @@
 <!-- 图标配置 -->
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
+  name: "IIcon",
+});
+</script>
 <script setup lang="ts">
 import {
   computed,
@@ -33,8 +39,6 @@ const visible = ref<boolean>(false);
 
 onMounted(() => {
   initIcon();
-
-  //   console.log("antIcons", Object.keys(antIcons));
 });
 // 初始化icon
 const initIcon = () => {
@@ -92,9 +96,7 @@ const checkIcon = (key: string) => {
   visible.value = false;
 };
 
-const iconComputed = computed(
-  () => antIcons[unref(currentIcon) as keyof typeof antIcons]
-);
+const iconComputed = computed(() => antIcons[unref(currentIcon)]);
 </script>
 
 <template>
@@ -128,10 +130,7 @@ const iconComputed = computed(
           :key="index"
           @click="checkIcon(icon)"
         >
-          <component
-            :is="antIcons[icon as keyof typeof antIcons]"
-            style="font-size: 20px"
-          />
+          <component :is="antIcons[icon]" style="font-size: 20px" />
         </div>
       </div>
     </template>
