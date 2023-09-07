@@ -149,7 +149,12 @@ a {
 }
 
 /* 常用边距 */
-
+.mtb_4 {
+  margin: 4px 0;
+}
+.mlr_4 {
+  margin: 0 4px;
+}
 .mr_5 {
   margin-right: 5px;
 }

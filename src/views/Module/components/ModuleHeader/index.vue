@@ -35,7 +35,7 @@ const onReload = () => {};
       </template>
     </a-alert>
     <div class="header-menu-btn">
-      <ITooltip title="刷新" type="reload" class="mr_8">
+      <ITooltip title="刷新" type="reload" class="mr_8 mtb_4">
         <template #icon>
           <SyncOutlined
             @click="onReload"
@@ -43,7 +43,7 @@ const onReload = () => {};
           />
         </template>
       </ITooltip>
-      <div class="ant-btn-group mr_8">
+      <div class="ant-btn-group mr_8 mtb_4">
         <a-button type="primary" class="lock-active">
           <template #icon>
             <UploadOutlined />
@@ -57,7 +57,7 @@ const onReload = () => {};
           本地模块
         </a-button>
       </div>
-      <div class="ant-btn-group mr_8">
+      <div class="ant-btn-group mr_8 mtb_4">
         <IButton type="success">
           <template #icon>
             <UploadCloudSvgIcon />
@@ -71,7 +71,7 @@ const onReload = () => {};
           获得积分
         </a-button>
       </div>
-      <a-button type="success">
+      <a-button type="success" class="mtb_4">
         <template #icon>
           <UserOutlined />
         </template>
