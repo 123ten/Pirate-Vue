@@ -11,6 +11,12 @@
   --ba-bg-color: #f5f5f5;
   --ba-bg-color-overlay: #ffffff;
   --ba-border-color: #f6f6f6;
+
+  --i-box-shadow-light: 0px 0px 12px rgba(0, 0, 0, 0.12);
+  --i-text-color-placeholder: #a8abb2;
+
+  /* 最小宽度 */
+  --min-width-screen: 590px;
 }
 
 html,

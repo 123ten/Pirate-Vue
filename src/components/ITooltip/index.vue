@@ -45,8 +45,6 @@ const emits = defineEmits([
         <!-- 内容 -->
         {{ props.content }}
       </IButton>
-      <!-- <a-button>
-      </a-button> -->
     </slot>
   </a-tooltip>
 </template>

@@ -17,22 +17,80 @@
 
     // 内容区域
     .module-goods {
+        display: flex;
+        flex-wrap: wrap;
+
+
         .goods-item {
-            .goods-img {}
+            width: 245px;
+            box-shadow: var(--i-box-shadow-light);
+            cursor: pointer;
+
+            .goods-img {
+                width: 100%;
+            }
 
             .goods-content {
-                .goods-tags {}
+                box-sizing: border-box;
+                padding: 8px;
 
-                .goods-title {}
+                .goods-tags {
+                    .tags-item {
+                        margin-bottom: 8px;
+                    }
+                }
+
+                .goods-title {
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
 
                 .goods-exhibit {
-                    .goods-download {}
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: space-between;
+
+                    .goods-download {
+                        display: flex;
+                        align-items: center;
+                        color: var(--i-text-color-placeholder);
+                        font-size: 14px;
+                    }
 
                     .goods-point {
-                        .old-point {}
+                        display: flex;
+                        align-items: flex-end;
 
-                        .new-point {}
+                        .old-point {
+                            color: var(--i-text-color-placeholder);
+                            text-decoration: line-through;
+                        }
+
+                        .new-point {
+                            margin-left: 3px;
+                            font-size: 17px;
+                            color: var(--error-color);
+                        }
                     }
+                }
+            }
+        }
+
+        @media screen and (max-width: 590px) {
+            .goods-item {
+                width: 100%;
+                display: flex;
+                margin-right: 0;
+                padding-left: 8px;
+
+                .goods-img {
+                    width: 150px;
+                    object-fit: contain;
+                }
+
+                .goods-content {
+                    flex: 1;
                 }
             }
         }
