@@ -196,6 +196,11 @@ button.ant-btn {
   border-radius: initial;
 }
 
+/* modal */
+.ant-modal-content .ant-modal-body {
+  padding: 16px;
+}
+
 @media screen and (max-width: 575px) {
   .ant-form.ant-form-vertical .ant-form-item,
   .ant-modal-body .ant-form .ant-form-item {

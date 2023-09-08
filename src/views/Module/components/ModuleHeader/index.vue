@@ -13,16 +13,14 @@ import {
   HomeOutlined,
   UserOutlined,
 } from "@ant-design/icons-vue";
-// import IButton from "@/components/IButton/index.vue";
-import RocketSvgIcon from "@/components/SvgIcon/rocket.vue";
-import UploadCloudSvgIcon from "@/components/SvgIcon/uploadCloud.vue";
+// import IButton from "@components/IButton/index.vue";
+import RocketSvgIcon from "@components/SvgIcon/rocket.vue";
+import UploadCloudSvgIcon from "@components/SvgIcon/uploadCloud.vue";
 
 import { ref } from "vue";
 
 const remark =
   "您可以在此页下载喜欢的系统模块，积分需要做任务来参与生态建设后获得，建议在开发环境（默认端口1818）安装模块";
-
-const value1 = ref<string>("");
 
 const onReload = () => {};
 </script>

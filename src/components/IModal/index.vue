@@ -94,7 +94,6 @@ const transformStyle = computed<CSSProperties>(() => {
   <a-modal
     :visible="props.visible"
     :width="props.width"
-    centered
     :bodyStyle="props.bodyStyle"
     :maskClosable="props.maskClosable"
     @ok="emits('confirm')"

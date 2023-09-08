@@ -1,13 +1,19 @@
 <!-- 模块下载 -->
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, unref } from "vue";
 import { DownloadOutlined, CloudDownloadOutlined } from "@ant-design/icons-vue";
+import DetailModal from "./components/DetailModal/index.vue";
 export default defineComponent({
   name: "ModuleMain",
 });
 </script>
 <script setup lang="ts">
 const activeKey = ref<string>("1");
+const detailModalRef = ref();
+
+const openDetailModal = () => {
+  unref(detailModalRef)?.init();
+};
 </script>
 
 <template>
@@ -19,6 +25,7 @@ const activeKey = ref<string>("1");
             class="goods-item suspension mb_16 mr_16"
             v-for="item in 10"
             :key="item"
+            @click="openDetailModal"
           >
             <img
               src="https://cdn.buildadmin.com/storage/default/20230228/430a772d137c807ee0f17befe014ec290d2206c3.png"
@@ -70,6 +77,7 @@ const activeKey = ref<string>("1");
         <p>Content of Tab Pane 3</p>
       </a-tab-pane>
     </a-tabs>
+    <DetailModal ref="detailModalRef" />
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import path, { resolve } from "path";
+import path, { resolve, join } from "path";
 import fs from "fs";
 import Components from "unplugin-vue-components/vite";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
@@ -18,8 +18,10 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),
+      "@types": resolve(__dirname, "src/types"),
+      "@utils": resolve(__dirname, "src/utils"),
       "@assets": resolve(__dirname, "src/assets"),
-      "@component": resolve(__dirname, "src/component"),
+      "@components": resolve(__dirname, "src/components"),
     },
   },
   server: {
@@ -29,8 +31,8 @@ export default defineConfig({
     hmr: true, // 热更新
     https: {
       // 主要是下面两行的配置文件，不要忘记引入 fs 和 path 两个对象
-      cert: fs.readFileSync(path.join(__dirname, "src/ssl/cert.crt")),
-      key: fs.readFileSync(path.join(__dirname, "src/ssl/cert.key")),
+      cert: fs.readFileSync(join(__dirname, "src/ssl/cert.crt")),
+      key: fs.readFileSync(join(__dirname, "src/ssl/cert.key")),
     },
   },
 

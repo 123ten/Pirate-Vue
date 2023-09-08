@@ -12,7 +12,7 @@ import {
   ZoomInOutlined,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
-import AddEditModal from "@/components/Modals/TheMenu/AddEditModal.vue";
+import AddEditModal from "@components/Modals/TheMenu/AddEditModal.vue";
 import type { IColumns, IPages } from "@/types/index";
 
 interface IDataSource {

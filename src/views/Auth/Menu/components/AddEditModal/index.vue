@@ -12,7 +12,7 @@ import {
   watch,
   toRaw,
 } from "vue";
-import IIcon from "@/components/IIcon/index.vue";
+import IIcon from "@components/IIcon/index.vue";
 import { IFormState } from "./index";
 
 interface IProps {

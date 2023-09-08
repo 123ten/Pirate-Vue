@@ -1,6 +1,6 @@
 // routes.ts
 import { RouteRecordRaw } from "vue-router";
-const Layout = () => import("@/components/Layout/index.vue");
+const Layout = () => import("@components/Layout/index.vue");
 export const routes: Array<RouteRecordRaw> = [
   {
     path: "",
