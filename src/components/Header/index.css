@@ -2,129 +2,104 @@ header.nav-bar {
   padding: 0 16px;
   height: 50px;
   min-height: 50px;
-  // background-color: var(--bgColor) !important;
   transition: all 0.2s;
-
-  .nav-menus {
-    min-width: 300px;
-    justify-content: space-around;
-    height: 100%;
-    box-shadow: var(--box-shadow-light);
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-
-    .nav-menu-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 100%;
-      cursor: pointer;
-
-      .msg-icon {
-        animation-name: upAnimation;
-        transform-origin: center top;
-        animation-duration: 2s;
-        animation-fill-mode: both;
-        animation-iteration-count: infinite;
-        animation-delay: 0.5s;
-      }
-
-      &:hover {
-        background: #f5f5f5;
-
-        .anticon {
-          animation: smallToLast 0.3s ease-out forwards;
-        }
-      }
-    }
-  }
 }
-
+header.nav-bar .nav-menus {
+  min-width: 300px;
+  justify-content: space-around;
+  height: 100%;
+  box-shadow: var(--box-shadow-light);
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+header.nav-bar .nav-menus .nav-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 100%;
+  cursor: pointer;
+}
+header.nav-bar .nav-menus .nav-menu-item .msg-icon {
+  animation-name: upAnimation;
+  transform-origin: center top;
+  animation-duration: 2s;
+  animation-fill-mode: both;
+  animation-iteration-count: infinite;
+  animation-delay: 0.5s;
+}
+header.nav-bar .nav-menus .nav-menu-item:hover {
+  background: #f5f5f5;
+}
+header.nav-bar .nav-menus .nav-menu-item:hover .anticon {
+  animation: smallToLast 0.3s ease-out forwards;
+}
 :deep(.ant-dropdown-menu-item) {
   text-align: center;
 }
-
-// 铃铛晃动动画
 @keyframes upAnimation {
   0% {
     transform: rotate(0deg);
     transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
   }
-
   10% {
     transform: rotate(-12deg);
     transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
   }
-
   20% {
     transform: rotate(12deg);
     transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
   }
-
   28% {
     transform: rotate(-10deg);
     transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
   }
-
   36% {
     transform: rotate(10deg);
     transition-timing-function: cubic-bezier(0.755, 0.5, 0.855, 0.06);
   }
-
   42% {
     transform: rotate(-8deg);
     transition-timing-function: cubic-bezier(0.755, 0.5, 0.855, 0.06);
   }
-
   48% {
     transform: rotate(8deg);
     transition-timing-function: cubic-bezier(0.755, 0.5, 0.855, 0.06);
   }
-
   52% {
     transform: rotate(-4deg);
     transition-timing-function: cubic-bezier(0.755, 0.5, 0.855, 0.06);
   }
-
   56% {
     transform: rotate(4deg);
     transition-timing-function: cubic-bezier(0.755, 0.5, 0.855, 0.06);
   }
-
   60% {
     transform: rotate(0deg);
     transition-timing-function: cubic-bezier(0.755, 0.5, 0.855, 0.06);
   }
-
   100% {
     transform: rotate(0deg);
     transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
   }
 }
-
-// 鼠标移入动画
 @keyframes smallToLast {
   0% {
     transform: scale(0);
   }
-
   90% {
     transform: scale(1.1);
   }
-
   100% {
     transform: scale(1);
   }
 }
-
 @media screen and (max-width: 1200px) {
   header.nav-bar .nav-menus {
     box-shadow: none;
     overflow: inherit;
   }
-
   .nav-bar {
     background-color: #fff;
   }
