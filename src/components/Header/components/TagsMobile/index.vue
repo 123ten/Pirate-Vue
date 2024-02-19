@@ -1,12 +1,11 @@
 <!-- Tags 标签 -->
 <script setup lang="ts">
-import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons-vue";
-import { onMounted, reactive, ref, watch, nextTick, unref } from "vue";
+import { MenuUnfoldOutlined } from "@ant-design/icons-vue";
+import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store";
 const store = useMenuStore();
-const { isMenuOutIn, isLayoutFullScreen, isCurrentPageReload } =
-  storeToRefs(store);
+const { isMenuOutIn } = storeToRefs(store);
 
 onMounted(() => {});
 </script>
@@ -21,7 +20,3 @@ onMounted(() => {});
     <menu-unfold-outlined style="font-size: 18px" />
   </div>
 </template>
-
-<style lang="less" scoped>
-@import "./index.less";
-</style>

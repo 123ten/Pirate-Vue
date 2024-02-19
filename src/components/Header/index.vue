@@ -5,7 +5,7 @@ import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store";
 
 const store = useMenuStore();
-const { isMenuOutIn, isAsideMenu } = storeToRefs(store);
+const { isMenuOutIn, isAsideMenu, isLayoutFullScreen } = storeToRefs(store);
 
 onBeforeMount(() => {
   init();
@@ -28,6 +28,7 @@ const init = () => {
 
 <template>
   <header
+    v-if="!isLayoutFullScreen"
     class="nav-bar d-flex-sb"
     :style="{ left: `${isMenuOutIn ? 96 : 232}px` }"
   >
@@ -49,6 +50,7 @@ const init = () => {
       <nav-info />
     </div>
   </header>
+  <tags-pc v-if="isAsideMenu" />
 </template>
 
 <style lang="less">

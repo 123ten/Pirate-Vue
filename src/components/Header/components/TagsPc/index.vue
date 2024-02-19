@@ -2,18 +2,21 @@
 <script setup lang="ts">
 import {
   CloseOutlined,
+  DownOutlined,
   SyncOutlined,
   ExpandOutlined,
   MinusOutlined,
   MinusSquareFilled,
 } from "@ant-design/icons-vue";
+import * as antIcons from "@ant-design/icons-vue";
 import { onMounted, reactive, ref, watch, nextTick, unref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store";
 import { fullScreen } from "@/utils/dom";
 const store = useMenuStore();
-const { isLayoutFullScreen, isCurrentPageReload } = storeToRefs(store);
+const { isLayoutFullScreen, isCurrentPageReload, isAsideMenu } =
+  storeToRefs(store);
 const router = useRouter();
 const route = useRoute();
 
@@ -42,7 +45,7 @@ const isDelete = ref<boolean>(false); // 是否删除
 
 onMounted(() => {
   // 默认初始化宽度
-  unref(tabList).push({
+  unref(tabList).unshift({
     title: route.meta.title as string,
     path: route.path,
   });
@@ -67,7 +70,7 @@ watch(
       (item) => item.path === params.path
     );
     // console.log(isRepeatTag, "isRepeatTag");
-    if (!isRepeatTag) unref(tabList).push(params);
+    if (!isRepeatTag) unref(tabList).unshift(params);
 
     // 获取下标 跳转到该下标
     const newTagIndex = unref(tabList).findIndex(
@@ -85,7 +88,7 @@ watch(
 const resetTagWidth = (length: number) => {
   // 背景宽度 = 字体长度 * 字号大小 + (内外边距 + close 内外边距)
   // 加上 x 49，不加上 x 32
-  tagState.width = length * 14 + (unref(tabList).length !== 1 ? 49 : 32);
+  tagState.width = length * 14 + (unref(tabList).length !== 1 ? 49 : 32) + 18;
 };
 /**
  * @description 点击tab-item
@@ -100,7 +103,7 @@ const handleTabItem = (
 ) => {
   // 当重复点击tag, 且不是点击删除按钮时，不重复执行
   if (unref(currentTabIndex) === index && !isClose) {
-    return false;
+    // return false;
   }
   currentTabIndex.value = index;
   // console.log(isDel, "isDelisDel");
@@ -113,7 +116,7 @@ const handleTabItem = (
     // console.log(curLength, i, "item");
     if (i === index) break;
     if (i < index) {
-      count += curLength * 14 + 32; // 标题文字数量 * 字体大小 + 左右内边距
+      count += curLength * 14 + 32 + 18; // 标题文字数量 * 字体大小 + 左右内边距
     }
   }
   tagState.x = count;
@@ -146,7 +149,7 @@ const delTabItem = (index: number) => {
 
   if (index === 0 && unref(currentTabIndex) === index) {
     // 如点击下标为 0 的tab
-    handleTabItem(unref(tabList)[index], index, true);
+    handleTabItem(unref(tabList)[index], index);
   } else if (unref(currentTabIndex) === index && index !== 0) {
     // 如点击自身
     // 拿到上一位的长度
@@ -174,7 +177,7 @@ const onMouseRight = (index: number, data: any) => {
  * 5.关闭全部标签
  */
 const onMouseRightMenu = (status: number) => {
-  console.log(status, mouseRightState, "type");
+  // console.log(status, mouseRightState, "type");
   const length = mouseRightState.data.title.length;
   if (status === 1) {
     isCurrentPageReload.value = true;
@@ -203,72 +206,100 @@ const onMouseRightMenu = (status: number) => {
 
 <template>
   <!-- isLayoutFullScreen 点击全屏时 去除加载动画-->
-  <a-dropdown :trigger="['contextmenu']" v-if="!isLayoutFullScreen">
-    <div class="nav-tags d-flex-default">
-      <div
-        v-for="(item, index) in tabList"
-        :key="item.title"
-        class="nav-tag-item"
-        @contextmenu.prevent="onMouseRight(index, item)"
-        @click="handleTabItem(item, index)"
-      >
-        {{ item.title }}
-        <close-outlined
-          v-if="tabList.length !== 1 && currentTabIndex === index"
-          class="nav-tag-close"
-          style="font-size: 10px"
-          @click.stop="delTabItem(index)"
-        />
+  <nav class="nav d-flex-default" v-if="!isLayoutFullScreen">
+    <a-dropdown :trigger="['contextmenu']">
+      <div class="nav-tags d-flex-default">
+        <div
+          v-for="(item, index) in tabList"
+          :key="item.title"
+          class="nav-tag-item d-flex-default"
+          :class="{
+            active: currentTabIndex === index,
+            activeClose: tabList.length !== 1 && currentTabIndex === index,
+          }"
+          @contextmenu.prevent="onMouseRight(index, item)"
+          @click="handleTabItem(item, index)"
+        >
+          <component
+            :is="antIcons['HomeOutlined']"
+            style="font-size: 12px; margin-right: 6px"
+          />
+          {{ item.title }}
+          <close-outlined
+            v-if="tabList.length !== 1 && currentTabIndex === index"
+            class="nav-tag-close"
+            style="font-size: 10px"
+            @click.stop="delTabItem(index)"
+          />
+        </div>
+        <div
+          class="nav-tabs-active-box"
+          :style="{
+            width: `${tagState.width}px`,
+            transform: `translateX(${tagState.x}px)`,
+          }"
+        ></div>
       </div>
-      <div
-        class="nav-tabs-active-box"
-        :style="{
-          width: `${tagState.width}px`,
-          transform: `translateX(${tagState.x}px)`,
-        }"
-      ></div>
-    </div>
-    <template #overlay>
-      <a-menu>
-        <a-menu-item
-          key="1"
-          @click="onMouseRightMenu(1)"
-          :disabled="currentTabIndex !== mouseRightState.index"
-        >
-          <sync-outlined style="font-size: 12px" />
-          重新加载
-        </a-menu-item>
-        <a-menu-item
-          key="2"
-          @click="onMouseRightMenu(2)"
-          :disabled="tabList.length === 1"
-        >
-          <close-outlined style="font-size: 12px" />
-          关闭标签
-        </a-menu-item>
-        <a-menu-item key="3" @click="onMouseRightMenu(3)">
-          <expand-outlined style="font-size: 12px" />
-          当前标签页全屏
-        </a-menu-item>
-        <a-menu-item
-          key="4"
-          @click="onMouseRightMenu(4)"
-          :disabled="tabList.length === 1"
-        >
-          <minus-outlined style="font-size: 12px" />
-          关闭其他标签页
-        </a-menu-item>
-        <a-menu-item
-          key="5"
-          @click="onMouseRightMenu(5)"
-          :disabled="tabList.length === 1"
-        >
-          <minus-square-filled style="font-size: 12px" />
-          关闭全部标签页
-        </a-menu-item>
-      </a-menu>
-    </template>
-  </a-dropdown>
+      <template #overlay>
+        <a-menu>
+          <a-menu-item
+            key="1"
+            @click="onMouseRightMenu(1)"
+            :disabled="currentTabIndex !== mouseRightState.index"
+          >
+            <sync-outlined style="font-size: 12px" />
+            重新加载
+          </a-menu-item>
+          <a-menu-item
+            key="2"
+            @click="onMouseRightMenu(2)"
+            :disabled="tabList.length === 1"
+          >
+            <close-outlined style="font-size: 12px" />
+            关闭标签
+          </a-menu-item>
+          <a-menu-item key="3" @click="onMouseRightMenu(3)">
+            <expand-outlined style="font-size: 12px" />
+            当前标签页全屏
+          </a-menu-item>
+          <a-menu-item
+            key="4"
+            @click="onMouseRightMenu(4)"
+            :disabled="tabList.length === 1"
+          >
+            <minus-outlined style="font-size: 12px" />
+            关闭其他标签页
+          </a-menu-item>
+          <a-menu-item
+            key="5"
+            @click="onMouseRightMenu(5)"
+            :disabled="tabList.length === 1"
+          >
+            <minus-square-filled style="font-size: 12px" />
+            关闭全部标签页
+          </a-menu-item>
+        </a-menu>
+      </template>
+    </a-dropdown>
+    <a-dropdown v-if="isAsideMenu">
+      <div class="more c-pointer d-flex-center">
+        <span class="more-txt">更多</span>
+        <down-outlined />
+      </div>
+      <template #overlay>
+        <a-menu>
+          <a-menu-item
+            key="5"
+            @click="onMouseRightMenu(5)"
+            :disabled="tabList.length === 1"
+          >
+            <minus-square-filled style="font-size: 12px" />
+            关闭全部标签页
+          </a-menu-item>
+        </a-menu>
+      </template>
+    </a-dropdown>
+  </nav>
 </template>
 
 <style lang="less" scoped>
