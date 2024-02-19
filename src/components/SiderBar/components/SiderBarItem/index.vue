@@ -23,7 +23,7 @@ const { isMenuOutIn } = storeToRefs(store);
 
 // 跳转
 const toRouter = (name: RouteRecordName) => {
-  console.log(name, "name");
+  // console.log(name, "name");
   router.push({
     name,
   });

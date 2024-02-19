@@ -1,78 +1,77 @@
 .default-main {
-    .container-table {
-        // overflow: hidden;
+  .container-table {
+    // overflow: hidden;
 
-        .table-form,
-        .table-header,
-        .ant-table-wrapper {
-            background-color: #fff;
-        }
+    .table-form,
+    .table-header,
+    .ant-table-wrapper {
+      background-color: #fff;
+    }
 
+    .table-header {
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+      overflow-x: auto;
+    }
 
-        .table-header {
-            margin-bottom: 16px;
-            position: relative;
-            z-index: 1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-sizing: border-box;
-            overflow-x: auto;
-        }
+    .i-table {
+    }
 
-        .i-table {}
+    .i-table-form {
+      box-sizing: border-box;
+      // padding: 16px;
+      margin-bottom: 16px;
+      transform-style: preserve-3d;
+      transform-origin: bottom;
+      position: relative;
+      z-index: 0; // 层级低于 table-header
+      overflow: hidden;
+
+      .i-table-form-default {
+        display: flex;
+        justify-content: space-between;
 
         .i-table-form {
-            box-sizing: border-box;
-            // padding: 16px;
-            margin-bottom: 16px;
-            transform-style: preserve-3d;
-            transform-origin: bottom;
-            position: relative;
-            z-index: 0; // 层级低于 table-header
-            overflow: hidden;
-
-            .i-table-form-default {
-                display: flex;
-                justify-content: space-between;
-
-                .i-table-form {
-                    flex: 1;
-                }
-
-                .i-form-item {
-                    margin-bottom: 16px;
-                }
-
-                .i-form-operate {
-                    margin-left: 16px;
-                    align-self: flex-end;
-                }
-            }
+          flex: 1;
         }
 
+        .i-form-item {
+          margin-bottom: 16px;
+        }
+
+        .i-form-operate {
+          margin-left: 16px;
+          align-self: flex-end;
+        }
+      }
     }
+  }
 }
 
 .zoom-in-enter-active,
 .zoom-in-leave-active {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .zoom-in-enter-from,
 .zoom-in-leave-to {
-    opacity: 0;
-    transform: rotateX(180deg);
+  opacity: 0;
+  transform: rotateX(180deg);
 }
 
-@media screen and (max-width:678px) {
-    .table-header_search {
-        display: none;
-    }
+@media screen and (max-width: 678px) {
+  .table-header_search {
+    display: none;
+  }
 }
 
-@media screen and (max-width:1200px) {
-    /deep/ .ant-table-wrapper .ant-table-content {
-        overflow-x: auto;
-    }
+@media screen and (max-width: 1200px) {
+  :deep(.ant-table-wrapper .ant-table-content) {
+    overflow-x: auto;
+  }
 }

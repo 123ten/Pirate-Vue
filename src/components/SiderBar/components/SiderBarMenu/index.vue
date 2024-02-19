@@ -24,19 +24,21 @@ const selectedKeys = ref<string[]>([]);
 onMounted(() => {
   currentOpenMenu();
 });
+watch(
+  () => route.path,
+  () => {
+    currentOpenMenu();
+  }
+);
+/**
+ * @description 当前打开的菜单
+ */
 const currentOpenMenu = () => {
   if (!unref(isMenuOutIn) && !unref(isAsideMenu)) {
     openKeys.value = [route.meta.parentName as string];
   }
   selectedKeys.value = [route.name as string];
 };
-watch(
-  () => route.path,
-  () => {
-    console.log(route.name, "route");
-    currentOpenMenu();
-  }
-);
 </script>
 
 <template>

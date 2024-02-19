@@ -17,39 +17,45 @@ const { isLayoutFullScreen, isCurrentPageReload } = storeToRefs(store);
 const router = useRouter();
 const route = useRoute();
 
-interface ITagData {
+interface TagDataInterface {
   title: string;
   path: string;
 }
-interface IMouseRight {
+interface MouseRightStateInterface {
   index: number;
-  data: ITagData;
+  data: TagDataInterface;
 }
-const tags = reactive({
+const tagState = reactive({
   width: 2 * 14 + 32,
   x: 0,
 });
-const mouseRight = reactive<IMouseRight>({
+const mouseRightState = reactive<MouseRightStateInterface>({
   index: 0,
   data: {
     title: "",
     path: "",
   },
 });
-const tabList = ref<ITagData[]>([]);
-const currentTabIndex = ref(0);
+const tabList = ref<TagDataInterface[]>([]);
+const currentTabIndex = ref<number>(0);
+const isDelete = ref<boolean>(false); // 是否删除
+
 onMounted(() => {
   // 默认初始化宽度
   unref(tabList).push({
     title: route.meta.title as string,
     path: route.path,
   });
-  resetTagWidth(unref(tabList)[0].title.length, false);
+  resetTagWidth(unref(tabList)[0].title.length);
 });
 watch(
   () => route.path,
   (newPath) => {
-    const params: ITagData = {
+    if (isDelete.value) {
+      isDelete.value = false;
+      return;
+    }
+    const params: TagDataInterface = {
       title: route.meta.title as string,
       path: newPath,
     };
@@ -69,32 +75,37 @@ watch(
     );
     // console.log(newTagIndex, "newTagIndex");
 
-    handleTabItem(params, newTagIndex, unref(tabList).length === 1);
+    handleTabItem(params, newTagIndex);
   }
 );
 /**
  * 重置 tag 背景宽度
- * @param length {number}
- * @param isClose  {boolean} 是否有 close 有则加上 无则减去
+ * @param length {number} 字体长度
  */
-const resetTagWidth = (length: number, isClose: boolean = true) => {
+const resetTagWidth = (length: number) => {
   // 背景宽度 = 字体长度 * 字号大小 + (内外边距 + close 内外边距)
-  tags.width = length * 14 + (isClose ? 49 : 32);
+  // 加上 x 49，不加上 x 32
+  tagState.width = length * 14 + (unref(tabList).length !== 1 ? 49 : 32);
 };
-// 点击tab-item
+/**
+ * @description 点击tab-item
+ * @param data 跳转到的路由数据
+ * @param index 点击 tab 下标
+ * @param isClose 是否删除
+ */
 const handleTabItem = (
-  data: ITagData,
+  data: TagDataInterface,
   index: number,
-  isDel: boolean = false
+  isClose: boolean = false
 ) => {
-  const length = data.title.length;
-  // 当重复点击时, 不重复执行 且不为删除时
-  if (unref(currentTabIndex) === index && !isDel) return false;
+  // 当重复点击tag, 且不是点击删除按钮时，不重复执行
+  if (unref(currentTabIndex) === index && !isClose) {
+    return false;
+  }
   currentTabIndex.value = index;
   // console.log(isDel, "isDelisDel");
 
   // console.log(length, index, isDel, "handleTabItem - index");
-  resetTagWidth(length, !isDel);
   // 偏移量 = 不包括自身 前面所有的宽度相加
   let count = 0;
   for (let i = 0; i < unref(tabList).length; i++) {
@@ -105,13 +116,23 @@ const handleTabItem = (
       count += curLength * 14 + 32; // 标题文字数量 * 字体大小 + 左右内边距
     }
   }
-  tags.x = count;
+  tagState.x = count;
 
-  if (data.path) router.push(data.path);
+  if (data.path) {
+    router.push(data.path);
+  }
+
+  resetTagWidth(data.title.length);
 };
-// 删除tab-item
+/**
+ * @description 删除tab-item
+ * @param index
+ */
 const delTabItem = (index: number) => {
-  console.log(currentTabIndex.value, index, "currentTabIndex.value");
+  isDelete.value = true; // 删除标签时，不再执行路由监听
+
+  // console.log(currentTabIndex.value, index, "currentTabIndex.value");
+  // console.log("unref(tabList) -->", unref(tabList));
 
   unref(tabList).splice(index, 1);
   // 如点击最后一个 没有长度时 默认首页
@@ -122,14 +143,12 @@ const delTabItem = (index: number) => {
     });
     return;
   }
-  // 如点击下标为 0 的tab
+
   if (index === 0 && unref(currentTabIndex) === index) {
-    console.log(unref(tabList), "unref(tabList)");
-    // handleTabItem(unref(tabList)[0], 0, true);
-    resetTagWidth(unref(tabList)[0].title.length);
+    // 如点击下标为 0 的tab
+    handleTabItem(unref(tabList)[index], index, true);
   } else if (unref(currentTabIndex) === index && index !== 0) {
     // 如点击自身
-
     // 拿到上一位的长度
     handleTabItem(unref(tabList)[index - 1], index - 1);
   } else if (unref(currentTabIndex) > index) {
@@ -138,20 +157,15 @@ const delTabItem = (index: number) => {
       unref(currentTabIndex) - 1
     );
   }
-  // 当长度为 1 时重新赋值长度
-  // 背景宽度 = 字体长度 * 字号大小 + 内外边距
-  if (unref(tabList).length === 1) {
-    const length = unref(tabList)[0].title.length;
-    resetTagWidth(length, false);
-  }
 };
 // 鼠标右键点击时
 const onMouseRight = (index: number, data: any) => {
-  mouseRight.index = index;
-  mouseRight.data = data;
-  console.log(mouseRight, unref(currentTabIndex), 12312321);
+  mouseRightState.index = index;
+  mouseRightState.data = data;
+  // console.log(mouseRightState, unref(currentTabIndex), 12312321);
 };
-/** TODO 鼠标右键菜单点击
+/**
+ * @description 鼠标右键菜单点击
  * @param {number} status  类型
  * 1.重新加载
  * 2.关闭标签
@@ -160,26 +174,26 @@ const onMouseRight = (index: number, data: any) => {
  * 5.关闭全部标签
  */
 const onMouseRightMenu = (status: number) => {
-  console.log(status, mouseRight, "type");
-  const length = mouseRight.data.title.length;
+  console.log(status, mouseRightState, "type");
+  const length = mouseRightState.data.title.length;
   if (status === 1) {
     isCurrentPageReload.value = true;
     nextTick(() => {
       isCurrentPageReload.value = false;
     });
   } else if (status === 2) {
-    delTabItem(mouseRight.index);
+    delTabItem(mouseRightState.index);
   } else if (status === 3) {
     fullScreen();
     isLayoutFullScreen.value = true;
-    router.push(mouseRight.data.path);
+    router.push(mouseRightState.data.path);
   } else if (status === 4) {
     tabList.value = tabList.value.filter(
-      (item, index) => index === mouseRight.index
+      (item, index) => index === mouseRightState.index
     );
-    router.push(mouseRight.data.path);
-    resetTagWidth(length, false);
-    tags.x = 0;
+    router.push(mouseRightState.data.path);
+    resetTagWidth(length);
+    tagState.x = 0;
   } else if (status === 5) {
     tabList.value = [];
     router.push("/home");
@@ -199,7 +213,7 @@ const onMouseRightMenu = (status: number) => {
         @click="handleTabItem(item, index)"
       >
         {{ item.title }}
-        <CloseOutlined
+        <close-outlined
           v-if="tabList.length !== 1 && currentTabIndex === index"
           class="nav-tag-close"
           style="font-size: 10px"
@@ -209,8 +223,8 @@ const onMouseRightMenu = (status: number) => {
       <div
         class="nav-tabs-active-box"
         :style="{
-          width: `${tags.width}px`,
-          transform: `translateX(${tags.x}px)`,
+          width: `${tagState.width}px`,
+          transform: `translateX(${tagState.x}px)`,
         }"
       ></div>
     </div>
@@ -219,9 +233,9 @@ const onMouseRightMenu = (status: number) => {
         <a-menu-item
           key="1"
           @click="onMouseRightMenu(1)"
-          :disabled="currentTabIndex !== mouseRight.index"
+          :disabled="currentTabIndex !== mouseRightState.index"
         >
-          <SyncOutlined style="font-size: 12px" />
+          <sync-outlined style="font-size: 12px" />
           重新加载
         </a-menu-item>
         <a-menu-item
@@ -229,11 +243,11 @@ const onMouseRightMenu = (status: number) => {
           @click="onMouseRightMenu(2)"
           :disabled="tabList.length === 1"
         >
-          <CloseOutlined style="font-size: 12px" />
+          <close-outlined style="font-size: 12px" />
           关闭标签
         </a-menu-item>
         <a-menu-item key="3" @click="onMouseRightMenu(3)">
-          <ExpandOutlined style="font-size: 12px" />
+          <expand-outlined style="font-size: 12px" />
           当前标签页全屏
         </a-menu-item>
         <a-menu-item
@@ -241,7 +255,7 @@ const onMouseRightMenu = (status: number) => {
           @click="onMouseRightMenu(4)"
           :disabled="tabList.length === 1"
         >
-          <MinusOutlined style="font-size: 12px" />
+          <minus-outlined style="font-size: 12px" />
           关闭其他标签页
         </a-menu-item>
         <a-menu-item
@@ -249,7 +263,7 @@ const onMouseRightMenu = (status: number) => {
           @click="onMouseRightMenu(5)"
           :disabled="tabList.length === 1"
         >
-          <MinusSquareFilled style="font-size: 12px" />
+          <minus-square-filled style="font-size: 12px" />
           关闭全部标签页
         </a-menu-item>
       </a-menu>
