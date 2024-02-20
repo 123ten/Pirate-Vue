@@ -1,3 +1,12 @@
 {
-  "login": { "login": "登录", "userName": "用户名", "password": "密码" }
+  "login": {
+    "login": "登 录",
+    "userName": "用户名",
+    "password": "密码",
+    "userNamePlaceholder": "请输入用户名",
+    "passwordPlaceholder": "请输入密码",
+    "userNameError": "请输入您的账号！",
+    "passwordError": "请输入您的密码！",
+    "remember": "保持会话"
+  }
 }

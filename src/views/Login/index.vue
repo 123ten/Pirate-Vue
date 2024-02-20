@@ -5,10 +5,13 @@ import { onMounted, onBeforeUnmount, reactive, ref } from "vue";
 import * as pageBubble from "@/utils/pageBubble";
 import { debounce } from "@/utils/common";
 import avatar_default from "@/assets/images/avatar.png";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const rules = reactive({
-  username: [{ required: true, message: "请输入您的账号！" }],
-  password: [{ required: true, message: "请输入您的密码!" }],
+  username: [{ required: true, message: t("login.userNameError") }],
+  password: [{ required: true, message: t("login.passwordError") }],
 });
 
 const formLogin = reactive({
@@ -67,8 +70,8 @@ const handleUserNameInput = debounce(() => {
             <a-form-item name="username">
               <a-input
                 v-model:value="formLogin.username"
-                placeholder="请输入账号"
                 allow-clear
+                :placeholder="$t('login.userNamePlaceholder')"
                 @input="handleUserNameInput"
               >
                 <template #prefix>
@@ -81,7 +84,7 @@ const handleUserNameInput = debounce(() => {
               <a-input-password
                 v-model:value="formLogin.password"
                 allow-clear
-                placeholder="请输入密码"
+                :placeholder="$t('login.passwordPlaceholder')"
               >
                 <template #prefix>
                   <lock-outlined class="site-form-item-icon" />
@@ -91,8 +94,7 @@ const handleUserNameInput = debounce(() => {
 
             <a-form-item name="remember">
               <a-checkbox v-model:checked="formLogin.remember">
-                保持会话
-                {{ $t("login.userName") }}
+                {{ $t("login.remember") }}
               </a-checkbox>
             </a-form-item>
 
@@ -103,7 +105,7 @@ const handleUserNameInput = debounce(() => {
                 html-type="submit"
                 :loading="isLoginBtnLoading"
               >
-                登 录
+                {{ $t("login.login") }}
               </a-button>
             </a-form-item>
           </a-form>

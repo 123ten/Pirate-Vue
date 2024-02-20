@@ -1,7 +1,12 @@
 {
   "login": {
-    "login": "login",
+    "login": "Login",
     "userName": "userName",
-    "password": "password"
+    "password": "password",
+    "userNamePlaceholder": "Please enter the username",
+    "passwordPlaceholder": "Please enter the password",
+    "userNameError": "Please enter the username",
+    "passwordError": "Please enter the password",
+    "remember": "Remember me"
   }
 }
