@@ -1,6 +1,6 @@
 <!-- header 头部 -->
 <script setup lang="ts">
-import { onBeforeMount } from "vue";
+import { defineOptions, onBeforeMount } from "vue";
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store";
 
@@ -24,6 +24,10 @@ const init = () => {
     isMenuOutIn.value = _innerWidth > 1200 && _innerWidth < 1500;
   }
 };
+
+defineOptions({
+  name: "Header",
+});
 </script>
 
 <template>

@@ -4,7 +4,7 @@ import { ref, defineOptions } from "vue";
 import { DesktopOutlined } from "@ant-design/icons-vue";
 
 defineOptions({
-  name: "NavMsg",
+  name: "NavHome",
 });
 </script>
 

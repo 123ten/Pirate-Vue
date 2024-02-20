@@ -4,31 +4,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  // box-sizing: border-box;
   padding: 10px;
   background: #fff;
   overflow: hidden;
 }
-
 .i-menu-content {
   overflow: auto;
 }
-
 .logo-img {
   width: 36px;
 }
-
 .logo-name {
   flex-grow: 1;
   justify-content: center;
 }
-
 .website-name {
   padding-left: 4px;
   font-size: 18px;
-  // font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  // color: @primary-color;
 }

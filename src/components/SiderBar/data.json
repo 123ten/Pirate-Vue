@@ -15,57 +15,65 @@
       "icon": "TeamOutlined",
       "children": [
         {
-          "path": "group",
-          "name": "group",
+          "path": "/auth/group",
+          "name": "authGroup",
           "title": "角色组管理",
           "icon": "HomeOutlined"
         },
         {
-          "path": "admin",
-          "name": "admin",
+          "path": "/auth/admin",
+          "name": "authAdmin",
           "title": "管理员管理",
           "icon": "HomeOutlined"
         },
         {
-          "path": "menu",
-          "name": "menu",
+          "path": "/auth/menuRules",
+          "name": "authMenuRules",
           "title": "菜单规则管理",
           "icon": "HomeOutlined"
         },
         {
-          "path": "adminLog",
-          "name": "adminLog",
+          "path": "/auth/adminLog",
+          "name": "authAdminLog",
           "title": "管理员日志管理",
           "icon": "HomeOutlined"
         }
       ]
     },
     {
-      "path": "user",
+      "path": "/user",
       "name": "user",
       "title": "会员管理",
       "icon": "TeamOutlined",
       "children": [
         {
-          "path": "index",
-          "name": "index",
+          "path": "/user/index",
+          "name": "userIndex",
           "title": "会员管理",
-          "icon": "HomeOutlined"
+          "icon": "HomeOutlined",
+          "children": [
+            {
+              "path": "/user/index/index",
+              "name": "user_index",
+              "title": "会员管理2",
+              "icon": "HomeOutlined"
+            }
+          ]
         },
         {
           "path": "/user/group",
-          "name": "/user/group",
+          "name": "userGroup",
           "title": "会员分组管理",
           "icon": "HomeOutlined"
         },
         {
-          "path": "rule",
-          "name": "rule",
+          "path": "/user/rule",
+          "name": "userRule",
           "title": "会员规则管理",
           "icon": "HomeOutlined"
         },
         {
-          "path": "userLog",
+          "path": "/user/log",
           "name": "userLog",
           "title": "会员日志管理",
           "icon": "HomeOutlined"
@@ -73,33 +81,33 @@
       ]
     },
     {
-      "path": "routine",
+      "path": "/routine",
       "name": "routine",
       "title": "常规管理",
       "icon": "TeamOutlined",
       "children": [
         {
-          "path": "config",
-          "name": "config",
+          "path": "/routine/config",
+          "name": "routineConfig",
           "title": "系统配置",
           "icon": "HomeOutlined"
         },
         {
-          "path": "annex",
-          "name": "annex",
+          "path": "/routine/annex",
+          "name": "routineAnnex",
           "title": "附件管理",
           "icon": "HomeOutlined"
         },
         {
-          "path": "info",
-          "name": "info",
+          "path": "/routine/info",
+          "name": "routineInfo",
           "title": "个人资料",
           "icon": "HomeOutlined"
         }
       ]
     },
     {
-      "path": "module",
+      "path": "/module",
       "name": "module",
       "title": "模块市场",
       "icon": "HomeOutlined"

@@ -71,7 +71,7 @@ const listenerChange = (flag: boolean) => {
 };
 
 defineOptions({
-  name: "NavMsg",
+  name: "NavFullScreen",
 });
 </script>
 

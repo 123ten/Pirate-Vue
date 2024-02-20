@@ -9,7 +9,15 @@ import {
   MinusSquareFilled,
 } from "@ant-design/icons-vue";
 import * as antIcons from "@ant-design/icons-vue";
-import { onMounted, reactive, ref, watch, nextTick, unref } from "vue";
+import {
+  defineOptions,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+  nextTick,
+  unref,
+} from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store";
@@ -102,9 +110,9 @@ const handleTabItem = (
   isClose: boolean = false
 ) => {
   // 当重复点击tag, 且不是点击删除按钮时，不重复执行
-  if (unref(currentTabIndex) === index && !isClose) {
-    // return false;
-  }
+  // if (unref(currentTabIndex) === index && !isClose) {
+  //   // return false;
+  // }
   currentTabIndex.value = index;
   // console.log(isDel, "isDelisDel");
 
@@ -202,6 +210,10 @@ const onMouseRightMenu = (status: number) => {
     router.push("/home");
   }
 };
+
+defineOptions({
+  name: "TagsPc",
+});
 </script>
 
 <template>
@@ -288,6 +300,34 @@ const onMouseRightMenu = (status: number) => {
       </div>
       <template #overlay>
         <a-menu>
+          <a-menu-item
+            key="1"
+            @click="onMouseRightMenu(1)"
+            :disabled="currentTabIndex !== mouseRightState.index"
+          >
+            <sync-outlined style="font-size: 12px" />
+            重新加载
+          </a-menu-item>
+          <a-menu-item
+            key="2"
+            @click="onMouseRightMenu(2)"
+            :disabled="tabList.length === 1"
+          >
+            <close-outlined style="font-size: 12px" />
+            关闭标签
+          </a-menu-item>
+          <a-menu-item key="3" @click="onMouseRightMenu(3)">
+            <expand-outlined style="font-size: 12px" />
+            当前标签页全屏
+          </a-menu-item>
+          <a-menu-item
+            key="4"
+            @click="onMouseRightMenu(4)"
+            :disabled="tabList.length === 1"
+          >
+            <minus-outlined style="font-size: 12px" />
+            关闭其他标签页
+          </a-menu-item>
           <a-menu-item
             key="5"
             @click="onMouseRightMenu(5)"

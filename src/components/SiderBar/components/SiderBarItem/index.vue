@@ -1,6 +1,6 @@
 <!-- MenuItem -->
 <script setup lang="ts">
-import { onMounted, watch } from "vue";
+import { defineProps, defineOptions, onMounted, withDefaults } from "vue";
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store";
 import { RouteRecordName, useRouter } from "vue-router";
@@ -23,7 +23,7 @@ const { isMenuOutIn } = storeToRefs(store);
 
 // 跳转
 const toRouter = (name: RouteRecordName) => {
-  // console.log(name, "name");
+  console.log(name, "name");
   router.push({
     name,
   });
@@ -31,7 +31,11 @@ const toRouter = (name: RouteRecordName) => {
 };
 
 onMounted(() => {
-  console.log("props.menu", props.menu);
+  // console.log("props.menu", props.menu);
+});
+
+defineOptions({
+  name: "SiderBarItem",
 });
 </script>
 
@@ -43,15 +47,7 @@ onMounted(() => {
         <template #icon>
           <component :is="antIcons[item.icon]" class="fontSize-icon" />
         </template>
-        <a-menu-item
-          v-for="children in item.children"
-          :key="children.name"
-          @click="toRouter(children.name)"
-        >
-          <component :is="antIcons[children.icon]" class="fontSize-icon" />
-          <span>{{ children.title }}</span>
-        </a-menu-item>
-        <!-- <SiderBarItem :menu="item.children" /> -->
+        <sider-bar-item :menu="item.children" />
       </a-sub-menu>
     </template>
     <template v-else>

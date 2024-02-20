@@ -11,7 +11,7 @@ const putLanguage = (type: number) => {
 };
 
 defineOptions({
-  name: "NavMsg",
+  name: "NavLanguage",
 });
 </script>
 

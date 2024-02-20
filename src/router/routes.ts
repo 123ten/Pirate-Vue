@@ -28,23 +28,32 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "",
+    meta: {
+      name: "home",
+      title: "首页",
+    },
     component: Layout,
     children: [
       {
         path: "/home",
         name: "home",
         meta: {
+          name: "home",
           title: "首页",
         },
         component: () => import("@/views/Home/Index/index.vue"),
       },
       {
         path: "/auth",
-        redirect: "group",
+        redirect: "/auth/group",
+        meta: {
+          name: "authGroup",
+          title: "权限管理",
+        },
         children: [
           {
-            path: "group",
-            name: "group",
+            path: "/auth/group",
+            name: "authGroup",
             meta: {
               parentName: "auth",
               title: "角色组管理",
@@ -52,8 +61,8 @@ export const routes: Array<RouteRecordRaw> = [
             component: () => import("@/views/Auth/Group/index.vue"),
           },
           {
-            path: "admin",
-            name: "admin",
+            path: "/auth/admin",
+            name: "authAdmin",
             meta: {
               parentName: "auth",
               title: "管理员管理",
@@ -61,8 +70,8 @@ export const routes: Array<RouteRecordRaw> = [
             component: () => import("@/views/Auth/Admin/index.vue"),
           },
           {
-            path: "menu",
-            name: "menu",
+            path: "/auth/menuRules",
+            name: "authMenuRules",
             meta: {
               parentName: "auth",
               title: "菜单规则管理",
@@ -70,8 +79,8 @@ export const routes: Array<RouteRecordRaw> = [
             component: () => import("@/views/Auth/Menu/index.vue"),
           },
           {
-            path: "adminLog",
-            name: "adminLog",
+            path: "/auth/adminLog",
+            name: "authAdminLog",
             meta: {
               parentName: "auth",
               title: "管理员日志管理",
@@ -82,20 +91,37 @@ export const routes: Array<RouteRecordRaw> = [
       },
       {
         path: "/user",
-        redirect: "index",
+        redirect: "/user/index",
+        meta: {
+          name: "userIndex",
+          title: "会员管理",
+        },
         children: [
           {
-            path: "index",
-            name: "index",
+            path: "/user/index",
+            redirect: "/user/index/index",
+            name: "userIndex",
             meta: {
+              name: "user_index",
               parentName: "user",
               title: "会员管理",
             },
-            component: () => import("@/views/User/Index/index.vue"),
+            // component: () => import("@/views/User/Index/index.vue"),
+            children: [
+              {
+                path: "/user/index/index",
+                name: "user_index",
+                meta: {
+                  parentName: "user,userIndex",
+                  title: "会员管理2",
+                },
+                component: () => import("@/views/Auth/AdminLog/index.vue"),
+              },
+            ],
           },
           {
-            path: "group",
-            name: "/user/group",
+            path: "/user/group",
+            name: "userGroup",
             meta: {
               parentName: "user",
               title: "会员分组管理",
@@ -103,8 +129,8 @@ export const routes: Array<RouteRecordRaw> = [
             component: () => import("@/views/User/Group/index.vue"),
           },
           {
-            path: "rule",
-            name: "rule",
+            path: "/user/rule",
+            name: "userRule",
             meta: {
               parentName: "user",
               title: "会员规则管理",
@@ -112,7 +138,7 @@ export const routes: Array<RouteRecordRaw> = [
             component: () => import("@/views/User/UserRule/index.vue"),
           },
           {
-            path: "userLog",
+            path: "/user/log",
             name: "userLog",
             meta: {
               parentName: "user",
@@ -124,11 +150,15 @@ export const routes: Array<RouteRecordRaw> = [
       },
       {
         path: "/routine",
-        redirect: "config",
+        redirect: "/routine/config",
+        meta: {
+          name: "routineConfig",
+          title: "常规管理",
+        },
         children: [
           {
-            path: "config",
-            name: "config",
+            path: "/routine/config",
+            name: "routineConfig",
             meta: {
               parentName: "routine",
               title: "系统配置",
@@ -136,8 +166,8 @@ export const routes: Array<RouteRecordRaw> = [
             component: () => import("@/views/Routine/Config/index.vue"),
           },
           {
-            path: "annex",
-            name: "annex",
+            path: "/routine/annex",
+            name: "routineAnnex",
             meta: {
               parentName: "routine",
               title: "附件管理",
@@ -145,8 +175,8 @@ export const routes: Array<RouteRecordRaw> = [
             component: () => import("@/views/Routine/Annex/index.vue"),
           },
           {
-            path: "info",
-            name: "info",
+            path: "/routine/info",
+            name: "routineInfo",
             meta: {
               parentName: "routine",
               title: "个人资料",

@@ -16,26 +16,33 @@ import { useRoute } from "vue-router";
 import data from "../../data.json";
 const route = useRoute();
 const store = useMenuStore();
-const { isMenuOutIn, isAsideMenu } = storeToRefs(store);
+const { isMenuOutIn, isAsideMenu, menus } = storeToRefs(store);
 
 const openKeys = ref<string[]>([]);
 const selectedKeys = ref<string[]>([]);
 
 onMounted(() => {
-  currentOpenMenu();
+  getMenus();
 });
+
 watch(
   () => route.path,
   () => {
     currentOpenMenu();
   }
 );
+
+const getMenus = () => {
+  menus.value = data.data;
+  currentOpenMenu();
+};
+
 /**
  * @description 当前打开的菜单
  */
 const currentOpenMenu = () => {
-  if (!unref(isMenuOutIn) && !unref(isAsideMenu)) {
-    openKeys.value = [route.meta.parentName as string];
+  if (!unref(isMenuOutIn) && !unref(isAsideMenu) && route.meta.parentName) {
+    openKeys.value = (route.meta.parentName as string).split(",");
   }
   selectedKeys.value = [route.name as string];
 };
@@ -55,23 +62,18 @@ const currentOpenMenu = () => {
       @click="isMenuOutIn = !isMenuOutIn"
     >
       <!-- 展开 -->
-      <MenuUnfoldOutlined
+      <menu-unfold-outlined
         v-show="isMenuOutIn"
         v-if="!isAsideMenu"
         style="font-size: 18px"
       />
       <!-- 收起 -->
-      <MenuFoldOutlined v-show="!isMenuOutIn" style="font-size: 18px" />
+      <menu-fold-outlined v-show="!isMenuOutIn" style="font-size: 18px" />
     </div>
   </div>
-
   <div class="i-menu-content">
-    <a-menu
-      mode="inline"
-      v-model:openKeys="openKeys"
-      v-model:selectedKeys="selectedKeys"
-    >
-      <SiderBarItem :menu="data.data" />
+    <a-menu mode="inline" :open-keys="openKeys" :selected-keys="selectedKeys">
+      <sider-barItem :menu="menus" />
     </a-menu>
   </div>
 </template>
