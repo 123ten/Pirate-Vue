@@ -200,7 +200,7 @@ const onMouseRightMenu = (status: number) => {
     router.push(mouseRightState.data.path);
   } else if (status === 4) {
     tabList.value = tabList.value.filter(
-      (item, index) => index === mouseRightState.index
+      (item, index) => item.path === mouseRightState.data.path
     );
     router.push(mouseRightState.data.path);
     resetTagWidth(length);
