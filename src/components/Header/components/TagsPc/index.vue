@@ -199,9 +199,18 @@ const onMouseRightMenu = (status: number) => {
     isLayoutFullScreen.value = true;
     router.push(mouseRightState.data.path);
   } else if (status === 4) {
-    tabList.value = tabList.value.filter(
-      (item, index) => item.path === mouseRightState.data.path
-    );
+    if (isAsideMenu.value) {
+      // 关闭其他标签 小于1200px时
+      tabList.value = tabList.value.filter(
+        (item, index) => item.path === route.path
+      );
+      currentTabIndex.value = 0;
+    } else {
+      // 关闭其他标签 右键点击的下标
+      tabList.value = tabList.value.filter(
+        (item, index) => index === mouseRightState.index
+      );
+    }
     router.push(mouseRightState.data.path);
     resetTagWidth(length);
     tagState.x = 0;
