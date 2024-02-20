@@ -1,7 +1,7 @@
 <!-- 登录 -->
 <script setup lang="ts">
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
-import { onMounted, onBeforeUnmount, reactive, ref, nextTick } from "vue";
+import { onMounted, onBeforeUnmount, reactive, ref } from "vue";
 import * as pageBubble from "@/utils/pageBubble";
 import { debounce } from "@/utils/common";
 import avatar_default from "@/assets/images/avatar.png";
@@ -50,13 +50,17 @@ const handleUserNameInput = debounce(() => {
         <img src="@/assets/images/login-header.png" alt="avatar" />
       </div>
       <div class="form">
-        <a-avatar :size="100" class="profile-avatar" :src="avatar" />
+        <a-avatar
+          :size="100"
+          class="profile-avatar avatar-turn"
+          :src="avatar"
+        />
         <div class="content">
           <a-form
             :model="formLogin"
+            :rules="rules"
             name="basic"
             autocomplete="off"
-            :rules="rules"
             @finish="handleLogin"
             @keyup.enter="handleLogin"
           >
@@ -68,7 +72,7 @@ const handleUserNameInput = debounce(() => {
                 @input="handleUserNameInput"
               >
                 <template #prefix>
-                  <UserOutlined class="site-form-item-icon" />
+                  <user-outlined class="site-form-item-icon" />
                 </template>
               </a-input>
             </a-form-item>
@@ -80,7 +84,7 @@ const handleUserNameInput = debounce(() => {
                 placeholder="请输入密码"
               >
                 <template #prefix>
-                  <LockOutlined class="site-form-item-icon" />
+                  <lock-outlined class="site-form-item-icon" />
                 </template>
               </a-input-password>
             </a-form-item>
@@ -88,6 +92,7 @@ const handleUserNameInput = debounce(() => {
             <a-form-item name="remember">
               <a-checkbox v-model:checked="formLogin.remember">
                 保持会话
+                {{ $t("login.userName") }}
               </a-checkbox>
             </a-form-item>
 

@@ -11,6 +11,7 @@ import "./common/css/style.css";
 // 引入echarts
 import echarts from "@/common/ts/echarts";
 import antdConfig from "@/config/antd.config";
+import i18n from "@/locales";
 
 antdConfig();
 
@@ -20,6 +21,7 @@ const app = createApp(App);
 
 app.use(router);
 app.use(pinia);
+app.use(i18n);
 // 挂载到vue实例中
 app.config.globalProperties.$echarts = echarts; //vue3的挂载方式
 

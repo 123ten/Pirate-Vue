@@ -1,7 +1,7 @@
 <!-- Tags 标签 -->
 <script setup lang="ts">
 import { MenuUnfoldOutlined } from "@ant-design/icons-vue";
-import { computed, defineOptions, onMounted, toRef } from "vue";
+import { computed, defineOptions, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store";
 import { useRoute } from "vue-router";
@@ -29,15 +29,6 @@ const routes = computed(() => {
   }
   return routers;
 });
-
-interface Route {
-  path: string;
-  breadcrumbName: string;
-  children?: Array<{
-    path: string;
-    breadcrumbName: string;
-  }>;
-}
 
 defineOptions({
   name: "TagsMobile",
