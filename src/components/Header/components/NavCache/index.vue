@@ -21,7 +21,7 @@ defineOptions({
 
 <template>
   <a-popover
-    v-model="isCachePopover"
+    v-model:visible="isCachePopover"
     trigger="click"
     overlayClassName="i-popover-menu"
   >

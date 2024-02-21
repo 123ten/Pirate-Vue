@@ -16,7 +16,7 @@ defineOptions({
 </script>
 
 <template>
-  <a-popover v-model="isInfoPopover" placement="bottomRight" trigger="click">
+  <a-popover v-model:visible="isInfoPopover" placement="bottomRight" trigger="click">
     <template #content>
       <div class="admin-info-base">
         <a-avatar :size="70">

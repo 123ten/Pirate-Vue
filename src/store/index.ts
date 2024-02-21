@@ -1,4 +1,5 @@
 // store/index.ts
+import { getTerminal } from "@/utils/common";
 import { defineStore } from "pinia";
 export const useStore = defineStore("main", {
   state: () => {
@@ -45,6 +46,8 @@ export const useMenuStore = defineStore("menuStore", {
       const menus = localStorage.getItem("BREADCRUMBKEYFORPM");
       return state.menus || menus || [];
     },
+    // 获取终端类型 mobile pc
+    terminalType: () => getTerminal(),
   },
   actions: {},
 });

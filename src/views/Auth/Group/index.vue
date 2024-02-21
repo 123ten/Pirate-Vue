@@ -200,7 +200,13 @@ const onSelectChange = (rowKeys: string[]) => {
         </ITooltip>
         <ITooltip title="删除选中行">
           <template #content>
-            <a-popconfirm
+            <delete-popconfirm
+              v-model:visible="isDeleteAllVisible"
+              :disabled="!selectedRowKeys.length"
+              @confirm="onDeleteAllConfirm"
+              @cancel="onDeleteAllcancel"
+            />
+            <!-- <a-popconfirm
               title="确定删除选中记录？"
               ok-text="删除"
               cancel-text="取消"
@@ -223,7 +229,7 @@ const onSelectChange = (rowKeys: string[]) => {
                 </template>
                 删除
               </a-button>
-            </a-popconfirm>
+            </a-popconfirm> -->
           </template>
         </ITooltip>
         <ITooltip
@@ -253,28 +259,24 @@ const onSelectChange = (rowKeys: string[]) => {
           </ITooltip>
           <ITooltip title="删除">
             <template #content>
-              <a-popconfirm
+              <delete-popconfirm
+                v-model:visible="record.isDeleteVisible"
+                type="table"
+                @confirm="onDeleteCurrentConfirm(record)"
+              />
+              <!-- <i-popconfirm
+                v-model:visible="record.isDeleteVisible"
                 title="确定删除选中记录？"
                 ok-text="删除"
                 cancel-text="取消"
-                placement="left"
-                v-model:visible="record.isDeleteVisible"
+                type="danger"
+                size="small"
+                @confirm="onDeleteCurrentConfirm(record)"
               >
-                <template #okButton>
-                  <a-button
-                    type="danger"
-                    size="small"
-                    @click="onDeleteCurrentConfirm(record)"
-                  >
-                    删除
-                  </a-button>
+                <template #icon>
+                  <delete-outlined />
                 </template>
-                <a-button type="danger" size="small">
-                  <template #icon>
-                    <DeleteOutlined />
-                  </template>
-                </a-button>
-              </a-popconfirm>
+              </i-popconfirm> -->
             </template>
           </ITooltip>
         </a-space>

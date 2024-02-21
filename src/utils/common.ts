@@ -69,3 +69,38 @@ export function debounce(func: Function, wait: number, immediate?: boolean) {
     }
   };
 }
+
+/**
+ * @description 获取访问终端
+ * @example getTerminal()
+ * @returns {string} 返回终端类型 mobile pc
+ */
+export function getTerminal() {
+  const terminal = navigator.userAgent.toLowerCase();
+
+  const ipad = terminal.match(/ipad/i);
+  const iphone_os = terminal.match(/iphone os/i);
+  const midp = terminal.match(/midp/i);
+  const uc7 = terminal.match(/rv:1.2.3.4/i);
+  const ucweb = terminal.match(/ucweb/i);
+  const android = terminal.match(/android/i);
+  const windows_ce = terminal.match(/windows ce/i);
+  const windows_mobile = terminal.match(/windows mobile/i);
+
+  if (
+    (ipad && ipad[0] === "ipad") ||
+    (iphone_os && iphone_os[0] === "iphone os") ||
+    (midp && midp[0] === "midp") ||
+    (uc7 && uc7[0] === "rv:1.2.3.4") ||
+    (ucweb && ucweb[0] === "ucweb") ||
+    (android && android[0] === "android") ||
+    (windows_ce && windows_ce[0] === "windows ce") ||
+    (windows_mobile && windows_mobile[0] === "windows mobile")
+  ) {
+    // 移动端浏览器
+    return "mobile";
+  } else {
+    // PC端浏览器
+    return "pc";
+  }
+}
