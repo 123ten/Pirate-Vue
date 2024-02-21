@@ -35,7 +35,7 @@ defineOptions({
       </div>
     </template>
     <div class="nav-menu-item" title="消息">
-      <bell-outlined style="font-size: 18px" class="msg-icon" />
+      <bell-outlined style="font-size: 18px" class="msg-icon dot" />
     </div>
   </a-popover>
 </template>

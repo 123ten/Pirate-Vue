@@ -62,6 +62,7 @@ onMounted(() => {
 watch(
   () => route.path,
   (newPath) => {
+    // 删除标签时 不再执行路由监听
     if (isDelete.value) {
       isDelete.value = false;
       return;
@@ -102,18 +103,15 @@ const resetTagWidth = (length: number) => {
  * @description 点击tab-item
  * @param data 跳转到的路由数据
  * @param index 点击 tab 下标
- * @param isClose 是否删除
  */
-const handleTabItem = (
-  data: TagDataInterface,
-  index: number,
-  isClose: boolean = false
-) => {
-  // 当重复点击tag, 且不是点击删除按钮时，不重复执行
-  // if (unref(currentTabIndex) === index && !isClose) {
-  //   // return false;
-  // }
+const handleTabItem = (data: TagDataInterface, index: number) => {
   currentTabIndex.value = index;
+
+  // 当小于1200px时
+  if (isAsideMenu.value) {
+    mouseRightState.index = index;
+    mouseRightState.data = data;
+  }
   // console.log(isDel, "isDelisDel");
 
   // console.log(length, index, isDel, "handleTabItem - index");
@@ -140,7 +138,12 @@ const handleTabItem = (
  * @param index
  */
 const delTabItem = (index: number) => {
-  isDelete.value = true; // 删除标签时，不再执行路由监听
+  const _currentTabIndex = unref(currentTabIndex);
+
+  // 删除当前标签时，不再执行路由监听
+  if (_currentTabIndex === index) {
+    isDelete.value = true;
+  }
 
   // console.log(currentTabIndex.value, index, "currentTabIndex.value");
   // console.log("unref(tabList) -->", unref(tabList));
@@ -155,18 +158,18 @@ const delTabItem = (index: number) => {
     return;
   }
 
-  if (index === 0 && unref(currentTabIndex) === index) {
+  if (index === 0 && _currentTabIndex === index) {
     // 如点击下标为 0 的tab
     handleTabItem(unref(tabList)[index], index);
-  } else if (unref(currentTabIndex) === index && index !== 0) {
+  } else if (_currentTabIndex === index && index !== 0) {
     // 如点击自身
     // 拿到上一位的长度
     handleTabItem(unref(tabList)[index - 1], index - 1);
-  } else if (unref(currentTabIndex) > index) {
-    handleTabItem(
-      unref(tabList)[unref(currentTabIndex) - 1],
-      unref(currentTabIndex) - 1
-    );
+  } else if (_currentTabIndex > index) {
+    handleTabItem(unref(tabList)[_currentTabIndex - 1], _currentTabIndex - 1);
+  } else {
+    // 关闭非选中标签
+    handleTabItem(unref(tabList)[index - 1], index - 1);
   }
 };
 // 鼠标右键点击时
@@ -199,18 +202,10 @@ const onMouseRightMenu = (status: number) => {
     isLayoutFullScreen.value = true;
     router.push(mouseRightState.data.path);
   } else if (status === 4) {
-    if (isAsideMenu.value) {
-      // 关闭其他标签 小于1200px时
-      tabList.value = tabList.value.filter(
-        (item, index) => item.path === route.path
-      );
-      currentTabIndex.value = 0;
-    } else {
-      // 关闭其他标签 右键点击的下标
-      tabList.value = tabList.value.filter(
-        (item, index) => index === mouseRightState.index
-      );
-    }
+    tabList.value = tabList.value.filter(
+      (item, index) => index === mouseRightState.index
+    );
+    currentTabIndex.value = 0;
     router.push(mouseRightState.data.path);
     resetTagWidth(length);
     tagState.x = 0;
