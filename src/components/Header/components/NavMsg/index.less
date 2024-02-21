@@ -56,15 +56,18 @@
 .nav-menu-item {
   .msg-icon {
     position: relative;
-    &.dot::after {
-      content: "";
-      position: absolute;
-      top: 2px;
-      right: 2px;
-      width: 4px;
-      height: 4px;
-      background-color: red;
-      border-radius: 100%;
+    &.active {
+      padding: 4px;
+      &::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 4px;
+        height: 4px;
+        background-color: red;
+        border-radius: 100%;
+      }
     }
   }
 }
