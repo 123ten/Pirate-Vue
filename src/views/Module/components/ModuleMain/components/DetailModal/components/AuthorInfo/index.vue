@@ -13,7 +13,7 @@ const simpleImage = ref(Empty.PRESENTED_IMAGE_SIMPLE);
       <img
         src="@assets/images/logo.svg"
         alt=""
-        class="author-img rotate-animation mr_8"
+        class="author-img mr_8"
       />
       <div>
         <strong>张三</strong>

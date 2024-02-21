@@ -1,7 +1,14 @@
 <!-- a-tooltip 的 常用封装 -->
 <script setup lang="ts">
-import { withDefaults } from "vue";
-interface IProps {
+import { defineEmits, defineProps, withDefaults } from "vue";
+import { TooltipProps } from "ant-design-vue";
+import { storeToRefs } from "pinia";
+import { useMenuStore } from "@/store";
+
+const store = useMenuStore();
+const { terminalType } = storeToRefs(store);
+
+interface IProps extends TooltipProps {
   title: string; // tooltip 标题
   content?: string; // tooltip 内容 使用 content 无需此参数
   disabled?: boolean; // tooltip 默认按钮 是否禁用 默认 否
@@ -9,6 +16,7 @@ interface IProps {
   size?: string; // size 默认按钮大小
   btnClass?: ""; // 按钮类名
 }
+
 const props = withDefaults(defineProps<IProps>(), {
   title: "",
   content: "",
@@ -25,13 +33,13 @@ const emits = defineEmits([
 </script>
 
 <template>
-  <a-tooltip :disabled="props.disabled">
-    <template #title>
-      <span>{{ props.title }}</span>
-    </template>
+  <a-tooltip
+    :disabled="props.disabled"
+    :title="terminalType === 'pc' && props.title"
+  >
     <!-- 自定义内容 -->
     <slot name="content">
-      <IButton
+      <i-button
         :type="props.type"
         :disabled="props.disabled"
         :size="props.size"
@@ -44,7 +52,7 @@ const emits = defineEmits([
         </template>
         <!-- 内容 -->
         {{ props.content }}
-      </IButton>
+      </i-button>
     </slot>
   </a-tooltip>
 </template>

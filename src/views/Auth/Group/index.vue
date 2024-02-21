@@ -1,15 +1,6 @@
 <!-- 角色组管理 -->
 <script setup lang="ts">
-import {
-  SyncOutlined,
-  PlusOutlined,
-  DeleteOutlined,
-  TableOutlined,
-  SearchOutlined,
-  EditOutlined,
-  EditFilled,
-  ZoomInOutlined,
-} from "@ant-design/icons-vue";
+import { PlusOutlined, EditOutlined } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
 import { IColumns, IPages } from "@/types/index";
@@ -252,16 +243,17 @@ const onSelectChange = (rowKeys: string[]) => {
                 <ZoomInOutlined />
               </template>
             </ITooltip> -->
-          <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
+          <i-tooltip title="编辑" size="small" @click="handleAddEdit(1)">
             <template #icon>
-              <EditOutlined />
+              <edit-outlined />
             </template>
-          </ITooltip>
+          </i-tooltip>
           <ITooltip title="删除">
             <template #content>
               <delete-popconfirm
                 v-model:visible="record.isDeleteVisible"
                 type="table"
+                placement="left"
                 @confirm="onDeleteCurrentConfirm(record)"
               />
               <!-- <i-popconfirm
@@ -283,7 +275,7 @@ const onSelectChange = (rowKeys: string[]) => {
       </template>
     </ITable>
 
-    <AddEditModal
+    <add-edit-modal
       :visible="isAddEditModal"
       :title="isEdit ? '编辑' : '添加'"
       @cancel="onAddEditCancel"

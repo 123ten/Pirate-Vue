@@ -14,6 +14,7 @@ const props = withDefaults(defineProps<IProps>(), {
   visible: false,
   disabled: false,
   type: "default",
+  placement: "top",
 });
 const emits = defineEmits([
   "confirm",
@@ -54,7 +55,7 @@ defineOptions({
     ok-text="删除"
     cancel-text="取消"
     type="danger"
-    placement="left"
+    :placement="props.placement"
     :visible="props.visible"
     :disabled="props.disabled"
     :size="props.type === 'table' ? 'small' : 'middle'"

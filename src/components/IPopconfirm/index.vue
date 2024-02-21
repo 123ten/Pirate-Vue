@@ -98,3 +98,7 @@ defineOptions({
     </slot>
   </a-popconfirm>
 </template>
+
+<style lang="less">
+@import url("./index.less");
+</style>
