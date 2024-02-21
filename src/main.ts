@@ -12,7 +12,9 @@ import "./common/css/style.css";
 import echarts from "@/common/ts/echarts";
 import antdConfig from "@/config/antd.config";
 import i18n from "@/locales";
+import { inject } from "@vercel/analytics";
 
+inject()
 antdConfig();
 
 const pinia = createPinia();
