@@ -16,7 +16,7 @@ const onWordRest = () => {
       <div class="welcome suspension">
         <img
           class="welcome-img"
-          src="@/assets/images/header-1.svg"
+          src="@/assets/svg/header-1.svg"
           alt="欢迎回来"
         />
         <div class="welcome-text">
@@ -33,7 +33,7 @@ const onWordRest = () => {
       <div class="working">
         <img
           class="working-coffee"
-          src="@/assets/images/coffee.svg"
+          src="@/assets/svg/coffee.svg"
           alt="休息片刻"
         />
         <div class="working-text">您今天已工作了0小时0分0秒</div>

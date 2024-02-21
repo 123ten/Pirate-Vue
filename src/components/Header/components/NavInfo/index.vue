@@ -16,12 +16,16 @@ defineOptions({
 </script>
 
 <template>
-  <a-popover v-model:visible="isInfoPopover" placement="bottomRight" trigger="click">
+  <a-popover
+    v-model:visible="isInfoPopover"
+    placement="bottomRight"
+    trigger="click"
+  >
     <template #content>
       <div class="admin-info-base">
         <a-avatar :size="70">
           <template #icon>
-            <user-outlined style="font-size: 70px" class="avatar-turn" />
+            <user-outlined style="font-size: 70px" />
           </template>
         </a-avatar>
         <div class="admin-info-other">
@@ -42,7 +46,7 @@ defineOptions({
       <!-- 账号信息 -->
       <a-avatar :size="26">
         <template #icon>
-          <user-outlined style="font-size: 26px" class="avatar-turn" />
+          <user-outlined style="font-size: 26px" />
         </template>
       </a-avatar>
       <div class="admin-name">Admin</div>

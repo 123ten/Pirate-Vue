@@ -11,7 +11,7 @@ const simpleImage = ref(Empty.PRESENTED_IMAGE_SIMPLE);
   <div class="detail-author">
     <div class="author-info mb_16">
       <img
-        src="@assets/images/logo.svg"
+        src="@assets/svg/logo.svg"
         alt=""
         class="author-img mr_8"
       />
@@ -29,7 +29,7 @@ const simpleImage = ref(Empty.PRESENTED_IMAGE_SIMPLE);
       <div class="other_works">
         <div v-for="item in 10" :key="item" class="other_work-item d-flex">
           <img
-            src="@assets/images/logo.svg"
+            src="@assets/svg/logo.svg"
             alt=""
             class="work-item_img mr_8"
           />
