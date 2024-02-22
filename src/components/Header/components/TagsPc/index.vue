@@ -95,8 +95,8 @@ watch(
  * @param length {number} 字体长度
  */
 const resetTagWidth = (length: number) => {
-  // 背景宽度 = 字体长度 * 字号大小 + (内外边距 + close 内外边距)
-  // 加上 x 49，不加上 x 32
+  // 背景宽度 = 字体长度 * 字号大小 + (内外边距 + close 内外边距) + 路由图标宽度
+  // 加上 x(icon) 49，不加上 x(icon) 32
   tagState.width = length * 14 + (unref(tabList).length !== 1 ? 49 : 32) + 18;
 };
 /**
@@ -122,7 +122,7 @@ const handleTabItem = (data: TagDataInterface, index: number) => {
     // console.log(curLength, i, "item");
     if (i === index) break;
     if (i < index) {
-      count += curLength * 14 + 32 + 18; // 标题文字数量 * 字体大小 + 左右内边距
+      count += curLength * 14 + 32 + 18; // 标题文字数量 * 字体大小 + 左右内边距 + 路由图标宽度
     }
   }
   tagState.x = count;

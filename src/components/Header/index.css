@@ -96,6 +96,9 @@ header.nav-bar .nav-menus .nav-menu-item:hover .anticon {
   }
 }
 @media screen and (max-width: 1200px) {
+  header.nav-bar {
+    padding-right: 0;
+  }
   header.nav-bar .nav-menus {
     box-shadow: none;
     overflow: inherit;
