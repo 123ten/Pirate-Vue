@@ -1,7 +1,6 @@
 import { createVNode, render } from "vue";
 import loading from "./default/index.vue";
 
-console.log("全局Loadig插件执行了");
 // 将vue组件转为VNode，然后渲染到页面上
 const VNode = createVNode(loading);
 render(VNode, document.body);

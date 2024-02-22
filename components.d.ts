@@ -85,6 +85,7 @@ declare module '@vue/runtime-core' {
     SiderBar: typeof import('./src/components/SiderBar/index.vue')['default']
     SiderBarItem: typeof import('./src/components/SiderBar/components/SiderBarItem/index.vue')['default']
     SiderBarMenu: typeof import('./src/components/SiderBar/components/SiderBarMenu/index.vue')['default']
+    SourceCodeOutlined: typeof import('./src/components/IIcon/SourceCodeOutlined/index.vue')['default']
     TagsMobile: typeof import('./src/components/Header/components/TagsMobile/index.vue')['default']
     TagsPc: typeof import('./src/components/Header/components/TagsPc/index.vue')['default']
     UploadCloud: typeof import('./src/components/SvgIcon/uploadCloud.vue')['default']

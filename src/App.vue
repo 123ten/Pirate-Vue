@@ -1,6 +1,5 @@
 <!-- App.vue -->
 <script setup lang="ts">
-import DefaultLoading from "@/views/Common/Loading/default/index.vue";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
@@ -13,7 +12,6 @@ const locale = ref(zhCN);
   <a-config-provider :locale="locale">
     <router-view />
   </a-config-provider>
-  <default-loading />
 </template>
 
 <style scoped lang="less"></style>

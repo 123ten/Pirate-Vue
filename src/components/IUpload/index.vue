@@ -71,8 +71,8 @@ const onFileModalConfirm = () => {
     >
       <img v-if="imgUrl" :src="imgUrl" :alt="props.alt" :title="props.title" />
       <div v-else class="upload-placeholder">
-        <LoadingOutlined v-if="isUploadLoading" class="upload-icon" />
-        <PlusOutlined v-else class="upload-icon" />
+        <loading-outlined v-if="isUploadLoading" class="upload-icon" />
+        <plus-outlined v-else class="upload-icon" />
         <div class="ant-upload-text">
           {{ props.placeholder }}
         </div>
@@ -80,8 +80,7 @@ const onFileModalConfirm = () => {
     </a-upload>
   </div>
   <!-- 选择文件 modal -->
-  <SelectFileModal
-    title="选择文件"
+  <select-file-modal
     :visible="isOpenFileModal"
     @confirm="onFileModalConfirm"
     @cancel="onFileModalCancel"

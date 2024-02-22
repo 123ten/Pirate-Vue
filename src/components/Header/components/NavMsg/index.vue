@@ -1,7 +1,7 @@
 <!-- 消息 -->
 <script setup lang="ts">
 import { defineOptions, ref } from "vue";
-import { BellOutlined, WarningOutlined } from "@ant-design/icons-vue";
+import { BellOutlined } from "@ant-design/icons-vue";
 
 const visible = ref<boolean>(false);
 
@@ -22,7 +22,9 @@ defineOptions({
       <div class="nav-msg-content">
         <div class="nav-msg-item" v-for="item in 10" :key="item">
           <div class="nav-msg-icon">
-            <warning-outlined />
+            <!-- <warning-outlined />
+            <CodeOutlined /> -->
+            <source-code-outlined />
           </div>
           <!-- 路由跳转 -->
           <router-link to="/" class="nav-msg-desc" @click="visible = false">

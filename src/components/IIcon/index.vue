@@ -126,8 +126,8 @@ const iconComputed = computed(() => antIcons[unref(currentIcon)]);
       <div class="icons-content">
         <div
           class="icons-item"
-          v-for="(icon, index) in icons"
-          :key="index"
+          v-for="icon in icons"
+          :key="icon"
           @click="checkIcon(icon)"
         >
           <component :is="antIcons[icon]" style="font-size: 20px" />
@@ -139,7 +139,7 @@ const iconComputed = computed(() => antIcons[unref(currentIcon)]);
         <component :is="iconComputed" />
       </template>
       <template #addonAfter>
-        <SyncOutlined @click="onLoad" />
+        <sync-outlined @click="onLoad" />
       </template>
     </a-input>
   </a-popover>

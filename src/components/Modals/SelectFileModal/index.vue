@@ -130,14 +130,14 @@ const onSearch = () => {
 </script>
 
 <template>
-  <IModal
+  <i-modal
     :visible="props.visible"
-    :title="props.title"
+    title="选择文件"
     @confirm="emits('confirm')"
     @cancel="emits('cancel')"
   >
     <a-form-item-rest>
-      <ITable
+      <i-table
         :columns="columns"
         :dataSource="dataSource"
         :pages="pages"
@@ -236,25 +236,14 @@ const onSearch = () => {
             <a-button>重置</a-button>
           </a-space>
         </template>
-        <template #leftBtn>
-          <ITooltip
-            title="选择"
-            content="选择"
-            :disabled="!selectedRowKeys.length"
-          >
-            <template #icon>
-              <CheckOutlined />
-            </template>
-          </ITooltip>
-          还可以选择{{ fileNum }}个
-        </template>
-      </ITable>
-      <IPreviewImage
+        <template #leftBtn> 还可以选择{{ fileNum }}个 </template>
+      </i-table>
+      <i-preview-image
         :src="avatarPreviewSrc"
         v-model:visible="isAvatarPreviewSrc"
       />
     </a-form-item-rest>
-  </IModal>
+  </i-modal>
 </template>
 
 <style lang="less" scoped>
