@@ -2,11 +2,17 @@
 <script setup lang="ts">
 import { ref, defineOptions } from "vue";
 import { UserOutlined } from "@ant-design/icons-vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const isInfoPopover = ref(false); // 个人资料
 
 // 注销
 const onLogout = () => {
   isInfoPopover.value = false;
+  const lang = localStorage.getItem("lang") || "zh";
+  localStorage.clear();
+  localStorage.setItem("lang", lang);
+  router.push("/admin/login");
   console.log("onLogout");
 };
 

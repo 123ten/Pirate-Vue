@@ -104,8 +104,26 @@ a {
 
 /* 常用display */
 
+/* flex */
+.flex,
 .d-flex-default {
   display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-align-center {
+  align-items: center;
+}
+
+.flex-justify-center {
+  justify-content: center;
 }
 
 .d-flex-center {

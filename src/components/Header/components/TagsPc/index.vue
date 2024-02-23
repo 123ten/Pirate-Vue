@@ -50,6 +50,7 @@ const mouseRightState = reactive<MouseRightStateInterface>({
 const tabList = ref<TagDataInterface[]>([]);
 const currentTabIndex = ref<number>(0);
 const isDelete = ref<boolean>(false); // 是否删除
+const navTagsRef = ref<HTMLElement | null>(null);
 
 onMounted(() => {
   // 默认初始化宽度
@@ -215,6 +216,52 @@ const onMouseRightMenu = (status: number) => {
   }
 };
 
+/*
+ * 鼠标滚轮滚动
+ */
+const onNavTagsWhell = (event) => {
+  onWheelDelta(event, (delta) => {
+    if (navTagsRef.value === null) return;
+    // 最大滚动距离
+    const maxScrollLeft =
+      navTagsRef.value.scrollWidth - navTagsRef.value.offsetWidth;
+    // 当最大滚动距离小于等于0时，不再滚动 减少性能消耗
+    if (maxScrollLeft <= 0) return;
+    // console.log("onNavTagsWhell", maxScrollLeft, event);
+    if (delta > 0) {
+      // 滚轮向上滚动
+      navTagsRef.value.scrollLeft -= 50;
+      if (navTagsRef.value.scrollLeft <= 0) {
+        navTagsRef.value.scrollLeft = 0;
+      }
+    } else {
+      // 滚轮向下滚动
+      navTagsRef.value.scrollLeft += 50;
+      if (navTagsRef.value.scrollLeft >= maxScrollLeft) {
+        navTagsRef.value.scrollLeft = maxScrollLeft;
+      }
+    }
+  });
+};
+
+/**
+ * 鼠标滚轮滚动事件
+ */
+const onWheelDelta = (e, cb) => {
+  if (!window.scrollY) {
+    // 禁止页面滚动
+    e.preventDefault();
+
+    if (e.wheelDelta) {
+      // 判断浏览器IE，谷歌滑轮事件
+      cb(e.wheelDelta);
+    } else if (e.detail) {
+      // Firefox滑轮事件
+      cb(e.detail);
+    }
+  }
+};
+
 defineOptions({
   name: "TagsPc",
 });
@@ -224,7 +271,18 @@ defineOptions({
   <!-- isLayoutFullScreen 点击全屏时 去除加载动画-->
   <nav class="nav d-flex-default" v-if="!isLayoutFullScreen">
     <a-dropdown :trigger="['contextmenu']">
-      <div class="nav-tags d-flex-default">
+      <div
+        class="nav-tags d-flex-default"
+        ref="navTagsRef"
+        @wheel="onNavTagsWhell"
+      >
+        <div
+          class="nav-tabs-active-box"
+          :style="{
+            width: `${tagState.width}px`,
+            transform: `translateX(${tagState.x}px)`,
+          }"
+        ></div>
         <div
           v-for="(item, index) in tabList"
           :key="item.title"
@@ -248,13 +306,6 @@ defineOptions({
             @click.stop="delTabItem(index)"
           />
         </div>
-        <div
-          class="nav-tabs-active-box"
-          :style="{
-            width: `${tagState.width}px`,
-            transform: `translateX(${tagState.x}px)`,
-          }"
-        ></div>
       </div>
       <template #overlay>
         <a-menu>

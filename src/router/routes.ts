@@ -27,6 +27,11 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    // 404 其他不存在的页面都重定向到404
+    path: "/:pathMatch(.*)",
+    redirect: "/404",
+  },
+  {
     path: "",
     meta: {
       name: "home",
