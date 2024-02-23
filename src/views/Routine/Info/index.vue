@@ -6,12 +6,16 @@ import Log from "./components/Log/index.vue";
 
 <template>
   <a-row class="default-main" :gutter="[16, 16]">
-    <a-col :lg="12" :xs="24">
-      <Edit class="is-always-shadow" />
+    <a-col :lg="12" :xs="24" class="default-main-col">
+      <edit class="is-always-shadow" />
     </a-col>
-    <a-col :lg="12" :xs="24">
-      <a-card title="操作日志" :bordered="false" class="is-always-shadow operate-log">
-        <Log />
+    <a-col :lg="12" :xs="24" class="default-main-col">
+      <a-card
+        title="操作日志"
+        :bordered="false"
+        class="is-always-shadow operate-log"
+      >
+        <log />
       </a-card>
     </a-col>
   </a-row>

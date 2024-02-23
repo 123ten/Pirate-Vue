@@ -359,3 +359,11 @@ button.drop-row-btn {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: var(--ellipsis-clamp);
 }
+
+/* 移动端 */
+@media screen and (max-width: 500px) {
+  .avatar-turn:hover {
+    transform: none;
+    transition: none;
+  }
+}
