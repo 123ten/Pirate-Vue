@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import {
   SyncOutlined,
+  ReloadOutlined,
   TableOutlined,
   SearchOutlined,
 } from "@ant-design/icons-vue";
@@ -19,7 +20,7 @@ import {
 } from "vue";
 import { ColumnFilterItem } from "ant-design-vue/es/table/interface";
 import Sortable from "sortablejs";
-import { IColumns, IPages, IPagination, IDataSource } from "@/types/index";
+import { IColumns, IPages, IPagination, IDataSource } from "@/types";
 import { FormInstance } from "ant-design-vue";
 import { useI18n } from "vue-i18n";
 
@@ -46,12 +47,17 @@ interface ISortTableEnd {
 }
 //#endregion
 
-// #region props
+// #region props/emits
 const props = withDefaults(defineProps<IProps>(), {
   columns: () => [],
   dataSource: () => [],
   selectedRowKeys: () => [],
-  pagination: () => ({}),
+  pagination: () => ({
+    // 可能是这边的问题 要是有分页问题吧
+    total: 0,
+    pageSize: 10,
+    current: 1,
+  }),
   pages: () => ({
     pageSize: 10,
     current: 1,
@@ -65,8 +71,6 @@ const props = withDefaults(defineProps<IProps>(), {
   isExpandAllRows: false,
   isDragVisible: false,
 });
-// #endregion
-// #region emits
 const emits = defineEmits([
   "onSelectChange", // 选中表格数据change事件
   "onColumnChange", // columns 发生变化时
@@ -79,7 +83,7 @@ const emits = defineEmits([
   "onQuery",
   "onReset",
 ]);
-//#endregion
+// #endregion
 
 // 国际化
 const { locale } = useI18n();
@@ -412,9 +416,9 @@ defineExpose({
         <a-space>
           <i-tooltip title="刷新" type="reload">
             <template #icon>
-              <sync-outlined
+              <reload-outlined
                 @click="onReload"
-                :spin="props.loading"
+                :spin="props.loading || true"
                 style="color: #fff; font-size: 14px"
               />
             </template>
@@ -487,10 +491,10 @@ defineExpose({
         :pagination="{
           showQuickJumper: true,
           showSizeChanger: true,
+          showTotal: showTotal,
           total: pages.total,
           pageSize: pages.pageSize,
           current: pages.current,
-          showTotal: showTotal,
           pagination: props.pagination,
         }"
         bordered

@@ -62,13 +62,9 @@ const currentOpenMenu = () => {
       @click="isMenuOutIn = !isMenuOutIn"
     >
       <!-- 展开 -->
-      <menu-unfold-outlined
-        v-show="isMenuOutIn"
-        v-if="!isAsideMenu"
-        style="font-size: 18px"
-      />
+      <menu-unfold-outlined v-show="isMenuOutIn" v-if="!isAsideMenu" />
       <!-- 收起 -->
-      <menu-fold-outlined v-show="!isMenuOutIn" style="font-size: 18px" />
+      <menu-fold-outlined v-show="!isMenuOutIn" />
     </div>
   </div>
   <div class="i-menu-content">

@@ -31,7 +31,7 @@ defineOptions({
       <div class="i-popover-item" @click="putCache(3)">一键清理所有</div>
     </template>
     <div class="nav-menu-item" title="清楚缓存">
-      <delete-outlined style="font-size: 18px" />
+      <delete-outlined />
     </div>
   </a-popover>
 </template>

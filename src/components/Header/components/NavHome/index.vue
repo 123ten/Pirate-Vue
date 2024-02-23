@@ -10,7 +10,7 @@ defineOptions({
 
 <template>
   <div class="nav-menu-item" title="会员首页">
-    <desktop-outlined style="font-size: 18px" />
+    <desktop-outlined />
   </div>
 </template>
 

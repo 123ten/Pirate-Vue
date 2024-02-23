@@ -83,9 +83,9 @@ defineOptions({
   >
     <div class="d-flex-center c-pointer user-select">
       <!-- 全屏 -->
-      <compress-outlined v-show="isFullScreen" style="font-size: 18px" />
+      <compress-outlined v-show="isFullScreen" />
       <!-- 取消全屏 -->
-      <expand-outlined v-show="!isFullScreen" style="font-size: 18px" />
+      <expand-outlined v-show="!isFullScreen" />
     </div>
   </div>
 </template>

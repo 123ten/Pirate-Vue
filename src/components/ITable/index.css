@@ -13,6 +13,10 @@
   box-sizing: border-box;
   overflow-x: auto;
 }
+.default-main .container-table .table-header :deep(.anticon-spin) {
+  width: 1em;
+  height: 1em;
+}
 .default-main .container-table .i-table-form {
   box-sizing: border-box;
   margin-bottom: 16px;

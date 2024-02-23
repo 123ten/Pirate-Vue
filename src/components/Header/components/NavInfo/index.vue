@@ -1,7 +1,7 @@
 <!-- 个人信息 -->
 <script setup lang="ts">
 import { ref, defineOptions } from "vue";
-import { UserOutlined } from "@ant-design/icons-vue";
+import { UserOutlined, PoweroffOutlined } from "@ant-design/icons-vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const isInfoPopover = ref(false); // 个人资料
@@ -44,6 +44,9 @@ defineOptions({
           <router-link to="/routine/info">个人资料</router-link>
         </a-button>
         <a-button type="primary" danger ghost @click="onLogout">
+          <template #icon>
+            <poweroff-outlined />
+          </template>
           注销
         </a-button>
       </div>

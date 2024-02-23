@@ -231,7 +231,7 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
 
 <template>
   <div class="default-main">
-    <ITable
+    <i-table
       :columns="columns"
       :dataSource="dataSource"
       :pages="pages"
@@ -243,12 +243,12 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
       @onSelectChange="onSelectChange"
     >
       <template #leftBtn>
-        <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
+        <i-tooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
-            <PlusOutlined />
+            <plus-outlined />
           </template>
-        </ITooltip>
-        <ITooltip title="删除选中行">
+        </i-tooltip>
+        <i-tooltip title="删除选中行">
           <template #content>
             <a-popconfirm
               title="确定删除选中记录？"
@@ -269,20 +269,20 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
               </template>
               <a-button type="danger" :disabled="!selectedRowKeys.length">
                 <template #icon>
-                  <DeleteOutlined />
+                  <delete-outlined />
                 </template>
                 删除
               </a-button>
             </a-popconfirm>
           </template>
-        </ITooltip>
-        <ITooltip
+        </i-tooltip>
+        <i-tooltip
           :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
           :content="isExpandAllRows ? '收缩所有' : '展开所有'"
           :type="isExpandAllRows ? 'danger' : 'warning'"
           @click="isExpandAllRows = !isExpandAllRows"
         >
-        </ITooltip>
+        </i-tooltip>
       </template>
 
       <template #icon="{ record }">
@@ -340,7 +340,7 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
           </i-tooltip>
         </a-space>
       </template>
-    </ITable>
+    </i-table>
 
     <add-edit-modal
       :visible="isAddEditModal"

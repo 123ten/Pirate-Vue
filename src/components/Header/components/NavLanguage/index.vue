@@ -43,7 +43,7 @@ defineOptions({
       </div>
     </template>
     <div class="nav-menu-item" title="切换语言">
-      <translation-outlined style="font-size: 18px" />
+      <translation-outlined />
     </div>
   </a-popover>
 </template>

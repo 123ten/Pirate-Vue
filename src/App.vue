@@ -30,4 +30,5 @@ watch(
   </a-config-provider>
 </template>
 
-<style scoped lang="less"></style>
+<style  lang="less">
+</style>

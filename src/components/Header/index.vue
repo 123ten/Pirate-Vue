@@ -42,6 +42,8 @@ defineOptions({
     <div class="nav-menus d-flex-center">
       <!-- 首页 -->
       <nav-home />
+      <!-- 切换主题 -->
+      <nav-theme />
       <!-- 语言 -->
       <nav-language />
       <!-- 全屏/取消全屏 -->

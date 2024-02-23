@@ -5,6 +5,7 @@ import { TooltipProps } from "ant-design-vue";
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store";
 import { TButtonType } from "@/types";
+import { TStyle } from "@/types/style";
 
 const store = useMenuStore();
 const { terminalType } = storeToRefs(store);
@@ -16,6 +17,7 @@ interface IProps extends TooltipProps {
   type?: TButtonType; // tooltip 默认按钮 按钮主题色
   size?: string; // size 默认按钮大小
   btnClass?: ""; // 按钮类名
+  btnStyle?: TStyle | string; // 按钮样式
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -25,6 +27,7 @@ const props = withDefaults(defineProps<IProps>(), {
   type: "primary",
   size: "",
   btnClass: "",
+  btnStyle: () => ({}),
 });
 
 const emits = defineEmits([
@@ -48,6 +51,7 @@ defineOptions({
         :disabled="props.disabled"
         :size="props.size"
         :class="props.btnClass"
+        :style="props.btnStyle"
         @click="emits('click')"
       >
         <template #icon>

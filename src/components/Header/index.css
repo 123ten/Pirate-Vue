@@ -12,6 +12,7 @@ header.nav-bar .nav-menus {
   background-color: #fff;
   border-radius: 8px;
   overflow: hidden;
+  font-size: 18px;
 }
 header.nav-bar .nav-menus .nav-menu-item {
   display: flex;

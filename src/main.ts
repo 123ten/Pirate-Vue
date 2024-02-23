@@ -5,6 +5,7 @@ import router from "./router/index";
 import { createPinia } from "pinia";
 // import Antd from "ant-design-vue";
 import "ant-design-vue/dist/antd.less";
+// import 'ant-design-vue/dist/antd.dark.less';
 import "./common/css/ant.css";
 import "./common/css/reset.css";
 import "./common/css/style.css";
