@@ -12,6 +12,8 @@ import {
 </script>
 <script setup lang="ts">
 import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
+
+
 </script>
 
 <template>
@@ -19,12 +21,12 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
     <a-carousel arrows autoplay>
       <template #prevArrow>
         <div class="custom-slick-arrow">
-          <LeftOutlined />
+          <left-outlined />
         </div>
       </template>
       <template #nextArrow>
         <div class="custom-slick-arrow">
-          <RightOutlined />
+          <right-outlined />
         </div>
       </template>
       <div>

@@ -7,8 +7,8 @@ import ModuleMain from "../components/ModuleMain/index.vue";
 
 <template>
   <div>
-    <ModuleHeader />
-    <ModuleMain />
+    <module-header />
+    <module-main />
   </div>
 </template>
 

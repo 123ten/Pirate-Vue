@@ -1,14 +1,6 @@
 <!-- 详情 -->
 <script lang="ts">
-import {
-  computed,
-  ref,
-  unref,
-  withDefaults,
-  watch,
-  defineExpose,
-  defineComponent,
-} from "vue";
+import { computed, ref, unref, withDefaults, watch, defineExpose } from "vue";
 </script>
 <script setup lang="ts">
 import BasicInfo from "./components/BasicInfo/index.vue";
@@ -30,7 +22,7 @@ defineExpose({
 </script>
 
 <template>
-  <IModal
+  <i-modal
     title="详细信息"
     width="900px"
     :visible="isDetailModal"
@@ -40,13 +32,13 @@ defineExpose({
   >
     <div class="detail-main d-flex">
       <div class="main-left">
-        <BasicInfo />
+        <basic-info />
       </div>
       <div class="main-right">
-        <AuthorInfo />
+        <author-info />
       </div>
     </div>
-  </IModal>
+  </i-modal>
 </template>
 
 <style lang="less" scoped>

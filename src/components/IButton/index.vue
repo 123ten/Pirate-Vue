@@ -1,24 +1,13 @@
 <!-- 权限按钮 -->
 <script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({
+import { withDefaults, defineProps, defineOptions, defineEmits } from "vue";
+import { TButtonType } from "@/types";
+defineOptions({
   name: "IButton",
 });
 </script>
 <script setup lang="ts">
 //#region interface
-import { ref } from "vue";
-
-type TButtonType =
-  | "primary"
-  | "ghost"
-  | "dashed"
-  | "link"
-  | "text"
-  | "default"
-  | "success"
-  | "reload"
-  | "warning";
 
 /**
  * @param type 按钮类型

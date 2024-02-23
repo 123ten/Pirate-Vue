@@ -302,17 +302,17 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
       </template>
       <template #operate="{ record }">
         <a-space>
-          <ITooltip title="查看详情" size="small" type="move">
+          <i-tooltip title="移动" size="small" type="move">
             <template #icon>
-              <DragOutlined />
+              <drag-outlined />
             </template>
-          </ITooltip>
-          <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
+          </i-tooltip>
+          <i-tooltip title="编辑" size="small" @click="handleAddEdit(1)">
             <template #icon>
-              <EditOutlined />
+              <edit-outlined />
             </template>
-          </ITooltip>
-          <ITooltip title="删除">
+          </i-tooltip>
+          <i-tooltip title="删除">
             <template #content>
               <a-popconfirm
                 title="确定删除选中记录？"
@@ -332,17 +332,17 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
                 </template>
                 <a-button type="danger" size="small">
                   <template #icon>
-                    <DeleteOutlined />
+                    <delete-outlined />
                   </template>
                 </a-button>
               </a-popconfirm>
             </template>
-          </ITooltip>
+          </i-tooltip>
         </a-space>
       </template>
     </ITable>
 
-    <AddEditModal
+    <add-edit-modal
       :visible="isAddEditModal"
       :title="isEdit ? '编辑' : '添加'"
       @cancel="onAddEditCancel"
