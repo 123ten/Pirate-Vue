@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
 import data from "./data.json";
-import type { IColumns, IPages } from "@/types/index";
+import { IColumns, IPages } from "@/types/index";
 
 interface IDataSource {
   key?: string | number;
@@ -33,6 +33,7 @@ const columns = ref<IColumns[]>([
     title: "管理员ID",
     dataIndex: "adminId",
     align: "center",
+    search: true,
   },
   {
     title: "管理员用户名",
@@ -121,91 +122,17 @@ const toUrl = (url: string) => {
 
 <template>
   <div class="default-main">
-    <ITable
+    <i-table
       :columns="columns"
-      :dataSource="dataSource"
+      :data-source="dataSource"
       :pages="pages"
-      isSelectedRowKeys
-      isFormSearchBtn
+      is-selected-row-keys
       :loading="isTableLoading"
       :scroll="{ x: true }"
-      @onColumnChange="onColumnChange"
-      @onPagesChange="onPagesChange"
-      @onSelectChange="onSelectChange"
+      @on-column-change="onColumnChange"
+      @on-pages-change="onPagesChange"
+      @on-select-change="onSelectChange"
     >
-      <template #formSearch>
-        <a-form
-          :model="formSeach"
-          layout="inline"
-          name="basic"
-          autocomplete="off"
-        >
-          <a-space direction="vertical">
-            <a-row style="width: 100%">
-              <a-col :span="6">
-                <a-form-item
-                  label="UsernameUsernameUsername"
-                  name="username"
-                  :rules="[
-                    {
-                      required: true,
-                      message: 'Please input your username!',
-                    },
-                  ]"
-                >
-                  <a-input v-model:value="formSeach.username" />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item
-                  label="Username"
-                  name="nickname"
-                  :rules="[
-                    {
-                      required: true,
-                      message: 'Please input your username!',
-                    },
-                  ]"
-                >
-                  <a-input v-model:value="formSeach.username" />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item
-                  label="Username"
-                  name="123"
-                  :rules="[
-                    {
-                      required: true,
-                      message: 'Please input your username!',
-                    },
-                  ]"
-                >
-                  <a-input v-model:value="formSeach.username" />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item
-                  label="Username"
-                  name="222"
-                  :rules="[
-                    {
-                      required: true,
-                      message: 'Please input your username!',
-                    },
-                  ]"
-                >
-                  <a-input v-model:value="formSeach.username" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-space>
-          <a-space>
-            <a-button>查询</a-button>
-            <a-button>重置</a-button>
-          </a-space>
-        </a-form>
-      </template>
       <template #url="{ record }">
         <a-input-group compact>
           <a-input
@@ -216,7 +143,7 @@ const toUrl = (url: string) => {
           </a-input>
           <a-button @click="toUrl(record.url)">
             <template #icon>
-              <SendOutlined />
+              <send-outlined />
             </template>
           </a-button>
         </a-input-group>
@@ -230,13 +157,13 @@ const toUrl = (url: string) => {
         <a-space>
           <ITooltip title="查看详情" size="small">
             <template #icon>
-              <ZoomInOutlined />
+              <zoom-in-outlined />
             </template>
           </ITooltip>
         </a-space>
       </template>
-    </ITable>
-    <IPreviewImage
+    </i-table>
+    <i-preview-image
       :src="avatarPreviewSrc"
       v-model:visible="isAvatarPreviewSrc"
     />

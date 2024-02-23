@@ -7,37 +7,36 @@ import {
 } from "@ant-design/icons-vue";
 import {
   computed,
+  defineEmits,
+  defineExpose,
+  defineProps,
   onMounted,
   reactive,
   ref,
-  toRefs,
-  toRef,
   unref,
   withDefaults,
   watch,
 } from "vue";
-import type { ColumnFilterItem } from "ant-design-vue/es/table/interface";
+import { ColumnFilterItem } from "ant-design-vue/es/table/interface";
 import Sortable from "sortablejs";
-import type { IColumns, IPages, IPagination, TStyle } from "@/types/index";
+import { IColumns, IPages, IPagination, IDataSource } from "@/types/index";
+import { FormInstance } from "ant-design-vue";
+import { useI18n } from "vue-i18n";
 
 //#region interface
-interface IDataSource {
-  key: string;
-  children?: IDataSource[];
-}
 interface IProps {
   columns: IColumns[]; // 表格列的配置描述
   dataSource: IDataSource[]; //
   selectedRowKeys?: string[]; // 选中的表格多选
-  pageSizeOptions?: string[]; // 指定每页可以显示多少条
+  pagination?: IPagination; // 指定每页可以显示多少条
   pages?: IPages; // 页码
   formOptions?: any;
   size?: "large" | "middle" | "small";
   scroll?: null;
-  keywordPlaceholder?: string; // 搜索框 占位内容
+  keywordPlaceholder?: string; // 关键字搜索框 占位内容
+  keywordVisible?: boolean; // 是否显示关键字搜索框
   isSelectedRowKeys?: boolean; // 是否显示表格多选框
   loading?: boolean; // 表格加载状态
-  isFormSearchBtn?: boolean; // 是否显示 form 按钮 搭配插槽 formSearch 一起使用
   isExpandAllRows?: boolean; // 控制展开所有行
   isDragVisible?: boolean; // 是否允许拖拽行 搭配 class drop-row-btn
 }
@@ -52,17 +51,17 @@ const props = withDefaults(defineProps<IProps>(), {
   columns: () => [],
   dataSource: () => [],
   selectedRowKeys: () => [],
-  pageSizeOptions: () => ["10", "20", "30", "50", "100"],
+  pagination: () => ({}),
   pages: () => ({
     pageSize: 10,
     current: 1,
     total: 0,
   }),
   scroll: null,
-  keywordPlaceholder: "",
+  keywordPlaceholder: "请输入关键字",
+  keywordVisible: true,
   isSelectedRowKeys: false,
   loading: false,
-  isFormSearchBtn: false,
   isExpandAllRows: false,
   isDragVisible: false,
 });
@@ -77,10 +76,16 @@ const emits = defineEmits([
   "onEdit", // 表格内置编辑
   "onDelete", // 表格内置删除行
   "onSearchBlur", // 表格搜索
+  "onQuery",
+  "onReset",
 ]);
 //#endregion
 
+// 国际化
+const { locale } = useI18n();
+
 // 内置搜索
+const formRef = ref<FormInstance>();
 const formSeach = reactive<any>({});
 
 const pages = reactive<IPages>(props.pages);
@@ -95,6 +100,7 @@ const keyword = ref<string>(""); // 搜索
 const menuOrSearch = ref<string>("menu");
 const isDropdownVisible = ref<boolean>(false);
 const isOpenSearch = ref<boolean>(false); // 展开搜索栏区域
+
 onMounted(() => {
   // 修改 columns
   menuCheckList.value = props.columns.filter(
@@ -153,12 +159,6 @@ const rowDrop = () => {
     handle: ".drop-row-btn", // 指定只能选中 drop-row-btn
     onEnd({ newIndex, oldIndex }: ISortTableEnd) {
       console.log("newIndex, oldIndex", newIndex, oldIndex);
-
-      // const currRow = _this.fofList.splice(oldIndex, 1)[0];
-      // _this.list.splice(newIndex, 0, currRow);
-      // _this.list.forEach((item, index) => {
-      //   item.orderNum = index + 1;
-      // });
       //获取拖动后容器中的每一项的位置排序
       const arr = sortable.toArray();
       console.log("位置排序", arr);
@@ -225,7 +225,9 @@ const onSelectChange = (changableRowKeys: string[]) => {
   selectedRowKeys.value = changableRowKeys;
   emits("onSelectChange", changableRowKeys);
 };
-// 搜索 input blur 事件
+/**
+ * @description 表格上方搜索框失焦 搜索 input blur 事件
+ */
 const handleSearchBlur = () => {
   // 当新数据 = 旧数据 不传输事件
   if (unref(keyword) === unref(oldKeyword)) return;
@@ -249,22 +251,25 @@ const formColumns = computed(() => {
   const rowColumns: IColumns[][] = [];
   let count = 0;
   columns
-    .filter((item) => item.search)
-    .forEach((item, index) => {
-      const _span: number = Number(item.span || 4);
+    .filter((column: IColumns) => column.search)
+    .forEach((column: IColumns, index: number) => {
+      const _span: number = Number(column.span || 4);
       if (index % _span === 0) {
         rowColumns[count] = [];
         count++;
       }
-      rowColumns[count - 1].push(item);
+      rowColumns[count - 1].push(column);
     });
   return rowColumns;
 });
 
+/**
+ * @description 表格列配置项
+ */
 const columnsComputed = computed(() => {
   const columns = props.columns ? props.columns : [];
 
-  const _columns = columns.map((column) => {
+  const _columns = columns.map((column: IColumns) => {
     if (column.minWidth) {
       column.customHeaderCell = () => {
         return {
@@ -282,26 +287,51 @@ const columnsComputed = computed(() => {
   return _columns;
 });
 
-// table total
+/**
+ * @description 搜索查询
+ */
+const onQuery = () => {
+  console.log("formSeach", formSeach);
+  emits("onQuery", formSeach);
+};
+
+const onReset = () => {
+  emits("onReset");
+  if (formRef.value) {
+    formRef.value.resetFields();
+  }
+};
+
+/**
+ * @description 显示总条数
+ * @param total 总条数
+ */
 const showTotal = (total: number) => {
+  if (locale.value === "en") return `Total ${total} items`;
   return `共 ${total} 条`;
 };
+
+defineExpose({
+  formRef,
+});
 </script>
 
 <template>
   <div class="default-main">
     <div class="container-table">
       <!-- formSearch -->
-      <Transition name="zoom-in">
-        <div v-show="isOpenSearch && formColumns.length" class="i-table-form">
+      <transition name="zoom-in">
+        <div v-if="isOpenSearch && formColumns.length" class="i-table-form">
           <slot name="formSearch">
             <div class="i-table-form-default">
               <a-form
+                ref="formRef"
                 :model="formSeach"
                 layout="inline"
                 name="basic"
                 autocomplete="off"
-                class="i-table-form"
+                class="i-table-form-search"
+                @keyup.enter.native="onQuery"
                 v-bind="props.formOptions"
               >
                 <a-row
@@ -326,6 +356,7 @@ const showTotal = (total: number) => {
                           v-model:value="formSeach[item.dataIndex]"
                           allow-clear
                           :placeholder="item.title || item.placeholder"
+                          v-bind="item.propOptions"
                         />
                         <!-- select 下拉框 -->
                         <a-select
@@ -333,6 +364,7 @@ const showTotal = (total: number) => {
                           v-model:value="formSeach[item.dataIndex]"
                           allow-clear
                           :placeholder="item.title || item.placeholder"
+                          v-bind="item.propOptions"
                         >
                           <a-select-option
                             v-for="option in item.options"
@@ -346,6 +378,7 @@ const showTotal = (total: number) => {
                         <a-radio-group
                           v-else-if="item.type === 'radio'"
                           v-model:value="formSeach[item.dataIndex]"
+                          v-bind="item.propOptions"
                         >
                           <a-radio
                             v-for="option in item.options"
@@ -360,6 +393,7 @@ const showTotal = (total: number) => {
                           v-else-if="item.type === 'date'"
                           v-model:value="formSeach[item.dataIndex]"
                           :picker="item.dataType"
+                          v-bind="item.propOptions"
                         />
                       </slot>
                     </a-form-item>
@@ -367,33 +401,36 @@ const showTotal = (total: number) => {
                 </a-row>
               </a-form>
               <a-space class="i-form-operate">
-                <a-button type="primary">查询</a-button>
-                <a-button>重置</a-button>
+                <a-button type="primary" @click="onQuery">查询</a-button>
+                <a-button @click="onReset">重置</a-button>
               </a-space>
             </div>
           </slot>
         </div>
-      </Transition>
+      </transition>
       <div class="table-header">
         <a-space>
-          <ITooltip title="刷新" type="reload">
+          <i-tooltip title="刷新" type="reload">
             <template #icon>
-              <SyncOutlined
+              <sync-outlined
                 @click="onReload"
+                :spin="props.loading"
                 style="color: #fff; font-size: 14px"
               />
             </template>
-          </ITooltip>
+          </i-tooltip>
           <!-- 左侧按钮 可自定义左侧按钮内容 -->
-          <slot name="leftBtn"></slot>
+          <slot name="leftBtn"> </slot>
         </a-space>
+        <!-- 左侧功能区域 -->
         <a-space>
           <a-input
-            :placeholder="props.keywordPlaceholder"
+            v-if="keywordVisible"
             v-model:value="keyword"
-            @blur="handleSearchBlur"
+            :placeholder="props.keywordPlaceholder"
             allow-clear
             class="table-header_search"
+            @blur="handleSearchBlur"
           />
           <a-radio-group v-model:value="menuOrSearch" style="display: flex">
             <a-popover
@@ -423,7 +460,7 @@ const showTotal = (total: number) => {
                 </a-checkbox-group>
               </template>
               <a-radio-button value="menu">
-                <TableOutlined title="筛选" />
+                <table-outlined title="筛选" />
               </a-radio-button>
             </a-popover>
             <a-tooltip>
@@ -431,25 +468,22 @@ const showTotal = (total: number) => {
               <a-radio-button
                 value="search"
                 @click="handleOpenSearch"
-                v-if="isFormSearchBtn && formColumns.length"
+                v-if="formColumns.length"
               >
-                <SearchOutlined />
+                <search-outlined />
               </a-radio-button>
             </a-tooltip>
           </a-radio-group>
         </a-space>
       </div>
       <a-table
+        v-model:expanded-row-keys="expandedRowKeys"
         :row-selection="props.isSelectedRowKeys ? rowSelection : null"
         :data-source="dataSource"
         :loading="props.loading"
         :columns="columnsComputed"
         :scroll="props.scroll || { x: true }"
-        v-model:expandedRowKeys="expandedRowKeys"
-        bordered
         :size="props.size || 'small'"
-        @resize-column="handleResizeColumn"
-        @change="handlePageSizeChange"
         :pagination="{
           showQuickJumper: true,
           showSizeChanger: true,
@@ -457,8 +491,11 @@ const showTotal = (total: number) => {
           pageSize: pages.pageSize,
           current: pages.current,
           showTotal: showTotal,
-          pageSizeOptions: props.pageSizeOptions,
+          pagination: props.pagination,
         }"
+        bordered
+        @resize-column="handleResizeColumn"
+        @change="handlePageSizeChange"
       >
         <template #bodyCell="score">
           <slot name="bodyCell" v-bind="score"></slot>
