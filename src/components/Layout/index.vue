@@ -17,7 +17,7 @@ onMounted(() => {
 
 <template>
   <a-layout class="container d-flex-default">
-    <SiderBar v-show="!isLayoutFullScreen" />
+    <sider-bar v-show="!isLayoutFullScreen" />
 
     <a-layout class="layout">
       <Header v-show="!isLayoutFullScreen" />
@@ -26,9 +26,9 @@ onMounted(() => {
         class="layout-view"
         v-slot="{ Component }"
       >
-        <Transition name="slide-right" mode="out-in">
+        <transition name="slide-right" mode="out-in">
           <component :is="Component" v-if="!isCurrentPageReload" />
-        </Transition>
+        </transition>
       </router-view>
     </a-layout>
   </a-layout>

@@ -1,10 +1,10 @@
-<!-- MoomOutlined -->
+<!-- MoonOutlined -->
 <script setup lang="ts">
 import Icon from "@ant-design/icons-vue";
 import { defineOptions } from "vue";
 
 defineOptions({
-  name: "MoomOutlined",
+  name: "MoonOutlined",
 });
 </script>
 
