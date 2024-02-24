@@ -14,7 +14,8 @@ header.nav-bar {
     border-radius: 8px;
     overflow: hidden;
     font-size: 18px;
-    background-color: var(--primary-bg-color);
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
 
     .nav-menu-item {
       display: flex;
@@ -34,7 +35,7 @@ header.nav-bar {
       }
 
       &:hover {
-        background: #f5f5f5;
+        background: var(--primary-bg-color);
 
         .anticon {
           animation: smallToLast 0.3s ease-out forwards;

@@ -19,7 +19,7 @@
   font-size: 13px;
 }
 .nav-msg-popover .nav-msg-content .nav-msg-item:hover {
-  background: #f5f5f5;
+  background: var(--primary-bg-color);
 }
 .nav-msg-popover .nav-msg-content .nav-msg-item .nav-msg-icon {
   margin-right: 10px;
