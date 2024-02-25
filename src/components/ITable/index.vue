@@ -90,7 +90,7 @@ const { locale } = useI18n();
 
 // 内置搜索
 const formRef = ref<FormInstance>();
-const formSeach = reactive<any>({});
+const formSearch = reactive<any>({});
 
 const pages = reactive<IPages>(props.pages);
 const columnStorages = ref<IColumns[]>(props.columns); // 暂存 被删除的columns
@@ -157,7 +157,7 @@ const rowDrop = () => {
     ".ant-table-container .ant-table-content tbody"
   );
   const _this = this;
-  let nowDrageRow = 0; // 当前拖拽的索引
+  let nowDragRow = 0; // 当前拖拽的索引
   const sortable = Sortable.create(tbody, {
     animation: 200,
     handle: ".drop-row-btn", // 指定只能选中 drop-row-btn
@@ -171,7 +171,7 @@ const rowDrop = () => {
     onStart: function (evt: any) {
       console.log("evt", evt, evt.oldIndex);
 
-      nowDrageRow = evt.oldIndex;
+      nowDragRow = evt.oldIndex;
     },
   });
 };
@@ -295,8 +295,8 @@ const columnsComputed = computed(() => {
  * @description 搜索查询
  */
 const onQuery = () => {
-  console.log("formSeach", formSeach);
-  emits("onQuery", formSeach);
+  console.log("formSearch", formSearch);
+  emits("onQuery", formSearch);
 };
 
 const onReset = () => {
@@ -330,7 +330,7 @@ defineExpose({
             <div class="i-table-form-default">
               <a-form
                 ref="formRef"
-                :model="formSeach"
+                :model="formSearch"
                 layout="inline"
                 name="basic"
                 autocomplete="off"
@@ -357,7 +357,7 @@ defineExpose({
                         <!-- input 输入框 -->
                         <a-input
                           v-if="!item.type || item.type === 'input'"
-                          v-model:value="formSeach[item.dataIndex]"
+                          v-model:value="formSearch[item.dataIndex]"
                           allow-clear
                           :placeholder="item.title || item.placeholder"
                           v-bind="item.propOptions"
@@ -365,7 +365,7 @@ defineExpose({
                         <!-- select 下拉框 -->
                         <a-select
                           v-else-if="item.type === 'select'"
-                          v-model:value="formSeach[item.dataIndex]"
+                          v-model:value="formSearch[item.dataIndex]"
                           allow-clear
                           :placeholder="item.title || item.placeholder"
                           v-bind="item.propOptions"
@@ -381,7 +381,7 @@ defineExpose({
                         <!-- radio 单选框 -->
                         <a-radio-group
                           v-else-if="item.type === 'radio'"
-                          v-model:value="formSeach[item.dataIndex]"
+                          v-model:value="formSearch[item.dataIndex]"
                           v-bind="item.propOptions"
                         >
                           <a-radio
@@ -395,7 +395,7 @@ defineExpose({
                         <!-- date-picker 日期选择框 -->
                         <a-date-picker
                           v-else-if="item.type === 'date'"
-                          v-model:value="formSeach[item.dataIndex]"
+                          v-model:value="formSearch[item.dataIndex]"
                           :picker="item.dataType"
                           v-bind="item.propOptions"
                         />
@@ -418,7 +418,7 @@ defineExpose({
             <template #icon>
               <reload-outlined
                 @click="onReload"
-                :spin="props.loading || true"
+                :spin="props.loading"
                 style="color: #fff; font-size: 14px"
               />
             </template>

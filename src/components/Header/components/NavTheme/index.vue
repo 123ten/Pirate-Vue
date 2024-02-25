@@ -10,6 +10,7 @@ onMounted(() => {
   visible.value = theme === "dark";
   // 设置主题
   window.document.documentElement.setAttribute("data-theme", theme || "light");
+  window.document.documentElement.setAttribute("data-animation", "default");
 });
 
 const handleThemeChange = () => {
@@ -18,6 +19,11 @@ const handleThemeChange = () => {
   // 缓存主题
   localStorage.setItem("theme", theme);
   window.document.documentElement.setAttribute("data-theme", theme);
+  window.document.documentElement.setAttribute("data-animation", "none");
+  let animationTimer = setTimeout(() => {
+    window.document.documentElement.setAttribute("data-animation", "default");
+    clearTimeout(animationTimer);
+  }, 1000);
 };
 
 defineOptions({

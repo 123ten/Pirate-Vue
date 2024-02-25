@@ -22,7 +22,7 @@
       user-select: none;
       white-space: nowrap;
       color: var(--primary-text-color);
-      transition: all 0.2s;
+      transition: all var(--transition-duration_dot3);
 
       &:hover {
         opacity: 1;
@@ -32,7 +32,7 @@
         padding: 2px;
         margin-left: 3px;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: all var(--transition-duration_dot3);
 
         &:hover {
           background-color: @primary-color;
@@ -49,8 +49,8 @@
     border-radius: 4px;
     background-color: var(--primary-color);
     box-shadow: var(--box-shadow-light);
-    transition: all 0.2s;
-    -webkit-transition: all 0.2s;
+    transition: all var(--transition-duration_dot3);
+    -webkit-transition: all var(--transition-duration_dot3);
   }
 }
 
@@ -64,7 +64,8 @@
     line-height: 12px;
     justify-content: space-between;
     width: 100%;
-    background-color: #fff;
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
     box-shadow: 1px 0 4px 0 rgba(0, 0, 0, 0.1);
     .nav-tags {
       margin-right: 0;
