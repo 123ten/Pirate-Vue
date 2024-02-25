@@ -1,7 +1,7 @@
 .default-main .container-table .table-form,
 .default-main .container-table .table-header,
 .default-main .container-table .ant-table-wrapper {
-  background-color: #fff;
+  background-color: var(--primary-color);
 }
 .default-main .container-table .table-header {
   margin-bottom: 16px;

@@ -10,7 +10,7 @@
 .module-main :deep(.ant-tabs-content) {
   box-sizing: border-box;
   padding: 16px;
-  background-color: #fff;
+  background-color: var(--primary-color);
 }
 .module-main .module-goods {
   display: flex;

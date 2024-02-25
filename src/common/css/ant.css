@@ -211,14 +211,17 @@ div.ant-input-number,
 .ant-modal .ant-modal-content,
 div.ant-select:not(.ant-select-customize-input) .ant-select-selector,
 div.ant-select-dropdown,
-div.ant-select-item {
+div.ant-select-item,
+.ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active,
+.ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab-active {
   background-color: var(--primary-color);
 }
 
-.ant-input-group .ant-input-group-addon {
+.ant-input-group .ant-input-group-addon,
+div.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab,
+div.ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab {
   background-color: var(--primary-bg-color-sub);
 }
-
 
 .ant-spin-container .ant-table-small .ant-table-thead > tr > th,
 .ant-table .ant-table-small .ant-table-thead > tr > th {
@@ -261,7 +264,9 @@ textarea.ant-input,
 div.ant-input-number,
 .ant-input-number .ant-input-number-handler,
 .ant-input-number .ant-input-number-handler .ant-input-number-handler-up-inner,
-.ant-input-number .ant-input-number-handler .ant-input-number-handler-down-inner,
+.ant-input-number
+  .ant-input-number-handler
+  .ant-input-number-handler-down-inner,
 div.ant-select,
 div.ant-select-item,
 div.ant-select-dropdown,
@@ -276,7 +281,8 @@ div.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
 .ant-form .ant-form-item,
 .ant-form .ant-form-item .ant-form-item-label > label,
 .ant-radio-group .ant-radio-wrapper,
-.ant-input-group > .ant-input-group-addon  {
+.ant-input-group > .ant-input-group-addon,
+div.ant-tabs {
   color: var(--primary-text-color-sub);
 }
 
