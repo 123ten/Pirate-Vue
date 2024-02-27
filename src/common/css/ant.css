@@ -217,9 +217,15 @@ div.ant-select-item,
   background-color: var(--primary-color);
 }
 
+.ant-dropdown-menu .ant-dropdown-menu-item:hover {
+  background-color: var(--primary-bg-color);
+}
+
 .ant-input-group .ant-input-group-addon,
 div.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab,
-div.ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab {
+div.ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab,
+input.ant-input[disabled],
+textarea.ant-input[disabled] {
   background-color: var(--primary-bg-color-sub);
 }
 
@@ -271,7 +277,9 @@ div.ant-select,
 div.ant-select-item,
 div.ant-select-dropdown,
 div.ant-select-item-option-active,
-div.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+div.ant-select-item-option-selected:not(.ant-select-item-option-disabled),
+li.ant-dropdown-menu-item,
+.ant-dropdown-menu-submenu-title {
   color: var(--primary-text-color);
 }
 
@@ -284,6 +292,13 @@ div.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
 .ant-input-group > .ant-input-group-addon,
 div.ant-tabs {
   color: var(--primary-text-color-sub);
+}
+
+li.ant-dropdown-menu-item-disabled,
+.ant-dropdown-menu-submenu-title-disabled,
+li.ant-dropdown-menu-item-disabled:hover,
+.ant-dropdown-menu-submenu-title-disabled:hover {
+  color: var(--primary-text-color-disabled);
 }
 
 /* border */
@@ -306,16 +321,6 @@ div.ant-tabs {
 /* ant-dropdown */
 .ant-dropdown .ant-dropdown-content .ant-dropdown-menu {
   background-color: var(--primary-color);
-}
-
-.ant-dropdown
-  .ant-dropdown-content
-  .ant-dropdown-menu
-  .ant-dropdown-menu-item:hover {
-  background-color: var(--primary-bg-color);
-}
-.ant-dropdown .ant-dropdown-content .ant-dropdown-menu .ant-dropdown-menu-item {
-  color: var(--primary-text-color);
 }
 
 /* ant-checkbox-group */
