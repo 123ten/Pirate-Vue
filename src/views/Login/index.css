@@ -64,6 +64,11 @@
   width: 100%;
   border-radius: 25px !important;
 }
+.login .form .content .svg_captcha {
+  width: 100px;
+  height: 40px;
+  cursor: pointer;
+}
 @media screen and (max-width: 720px) {
   .login {
     display: flex;

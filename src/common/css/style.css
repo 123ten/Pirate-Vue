@@ -1,7 +1,7 @@
 :root {
   --bgColor: #f0f2f5;
   --box-shadow-light: 0px 0px 12px rgba(0, 0, 0, 0.12);
-  --primary-color: #1890ff;
+  /* --primary-color: #1890ff; */
   --fontSize-default: 1.3rem;
   --success-color: #52c41a; /* 成功色 */
   --error-color: #f5222d; /* 失败色 */

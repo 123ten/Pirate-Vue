@@ -7,9 +7,9 @@ class AxiosUtils {
   constructor() {
     this.http = axios.create({
       // 根路径
-      baseURL: "http://119.23.246.178:80",
+      baseURL: import.meta.env.VITE_BASE_API as string,
       // 请求延迟时间 如果超过这个时间就会断开拦截
-      timeout: 10 * 1000,
+      timeout: 10 * 60,
       // headers: { "X-Custom-Header": "foobar" },
       headers: {
         Accept: "application/json",
@@ -65,7 +65,7 @@ class AxiosUtils {
 
   // public公开的,意思就是让别人用  private自己封装的 需要隐藏起来 不让别人用
   // 封装get方法
-  public get(url: string, data: any) {
+  public get(url: string, data?: any) {
     return this.request(url, "get", data);
   }
   // 封装post方法

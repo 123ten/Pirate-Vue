@@ -1,39 +1,39 @@
 .default-main {
-    .main-card {
-        // background: #fafafa;
-        overflow: hidden;
-        border-radius: 5px;
+  .main-card {
+    // background: #fafafa;
+    overflow: hidden;
+    border-radius: 5px;
 
-        /deep/ .ant-tabs-nav {
-            background: #fafafa;
-            margin-bottom: 0;
+    :deep(.ant-tabs-nav) {
+      background: var(--primary-color);
+      margin-bottom: 0;
 
-            .ant-tabs-tab {
-                border: none;
-            }
+      .ant-tabs-tab {
+        border: none;
+      }
 
-            &+.ant-tabs-content-holder {
-                padding: 0;
-            }
-        }
-
-        /deep/ .ant-tabs-content-holder {
-            padding: 16px;
-            padding-top: 0;
-        }
-
-        .card-head {
-            padding: 8px 16px;
-            background: #fafafa;
-        }
-
-        .card-main {
-            padding: 16px;
-            background-color: var(--primary-color);
-
-            .ant-btn-sm {
-                font-size: 12px;
-            }
-        }
+      & + .ant-tabs-content-holder {
+        padding: 0;
+      }
     }
+
+    :deep(.ant-tabs-content-holder) {
+      padding: 16px;
+      padding-top: 0;
+    }
+
+    .card-head {
+      padding: 8px 16px;
+      background: #fafafa;
+    }
+
+    .card-main {
+      padding: 16px;
+      background-color: var(--primary-color);
+
+      .ant-btn-sm {
+        font-size: 12px;
+      }
+    }
+  }
 }
