@@ -34,6 +34,13 @@ export default defineConfig({
       cert: fs.readFileSync(join(__dirname, "src/ssl/cert.crt")),
       key: fs.readFileSync(join(__dirname, "src/ssl/cert.key")),
     },
+    proxy: {
+      "/api": {
+        target: "http://localhost:3010",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
   },
 
   css: {

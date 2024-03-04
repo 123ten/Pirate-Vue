@@ -48,6 +48,8 @@ const handleLogin = async () => {
   try {
     const { data } = await login(loginForm);
     console.log(data);
+  } catch (error) {
+    await svgCaptchaAsync();
   } finally {
     spinning.value = false;
   }

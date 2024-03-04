@@ -7,7 +7,7 @@ class AxiosUtils {
   constructor() {
     this.http = axios.create({
       // 根路径
-      baseURL: import.meta.env.VITE_BASE_API as string,
+      baseURL: (import.meta.env.VITE_BASE_API as string),
       // 请求延迟时间 如果超过这个时间就会断开拦截
       timeout: 10 * 60,
       // headers: { "X-Custom-Header": "foobar" },
