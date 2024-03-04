@@ -117,18 +117,20 @@ const handleUserNameInput = debounce(async () => {
               </a-form-item>
 
               <a-form-item name="captcha">
-                <a-input
-                  v-model:value="loginForm.captcha"
-                  :placeholder="$t('login.captchaPlaceholder')"
-                >
-                  <template #suffix>
+                <div class="flex">
+                  <a-input
+                    v-model:value="loginForm.captcha"
+                    :placeholder="$t('login.captchaPlaceholder')"
+                  >
+                  </a-input>
+                  <a-form-item no-style>
                     <div
                       class="svg_captcha"
                       v-html="svg_captcha"
                       @click="svgCaptchaAsync"
                     ></div>
-                  </template>
-                </a-input>
+                  </a-form-item>
+                </div>
               </a-form-item>
 
               <a-form-item name="remember">

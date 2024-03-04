@@ -54,7 +54,7 @@
   user-select: none;
 }
 .login .form .content {
-  padding: 100px 40px 40px 40px;
+  padding: 80px 40px 30px 40px;
 }
 .login .form .content .ant-input-affix-wrapper,
 .login .form .content .submit {
@@ -65,8 +65,9 @@
   border-radius: 25px !important;
 }
 .login .form .content .svg_captcha {
+  margin-left: 8px;
   width: 100px;
-  height: 40px;
+  line-height: 1em;
   cursor: pointer;
 }
 @media screen and (max-width: 720px) {
