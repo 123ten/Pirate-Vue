@@ -1,6 +1,7 @@
 {
   "message": {
     "success": "Success",
+    "fail": "Fail",
     "error": "Error",
     "warning": "Warning",
     "info": "Info",
@@ -18,16 +19,25 @@
     "en": "English",
     "search": "Search"
   },
+  "placeholder": {
+    "userName": "Please enter the username",
+    "password": "Please enter the password",
+    "captcha": "Please enter the captcha"
+  },
+  "success": {
+    "login": "Login success！",
+    "loginOut": "Logout success！"
+  },
+  "error": {
+    "userName": "Please enter the username",
+    "password": "Please enter the password",
+    "captcha": "Please enter the captcha",
+    "login": "Login failed, please try again later"
+  },
   "login": {
     "login": "Login",
     "userName": "userName",
     "password": "password",
-    "userNamePlaceholder": "Please enter the username",
-    "passwordPlaceholder": "Please enter the password",
-    "captchaPlaceholder": "Captcha",
-    "userNameError": "Please enter the username",
-    "passwordError": "Please enter the password",
-    "captchaError": "Please enter the captcha",
     "remember": "Remember me"
   }
 }

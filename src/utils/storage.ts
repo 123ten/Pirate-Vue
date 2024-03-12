@@ -2,12 +2,16 @@
 export interface LocalInterFace {
   // 获取
   get<T>(key: string): T;
+
   // 设置
   set<T>(key: string, value: T): void;
+
   // 移除
   remove(key: string): void;
+
   // 判断是否存在
   isKey(key: string): boolean;
+
   // 清除
   clear(): void;
 }
@@ -23,19 +27,23 @@ class LocalUtil implements LocalInterFace {
     }
     return str;
   }
+
   // 设置
   set<T>(key: string, value: T): void {
     window.localStorage.setItem(key, JSON.stringify(value));
   }
+
   // 移除
   remove(key: string): void {
     window.localStorage.removeItem(key);
   }
+
   // 判断是否存在
   isKey(key: string): boolean {
     let str = window.localStorage.getItem(key);
-    return str ? true : false;
+    return !!str;
   }
+
   // 清除
   clear(): void {
     window.localStorage.clear();
@@ -53,27 +61,31 @@ class SessionUtil implements LocalInterFace {
     }
     return str;
   }
+
   // 设置
   set<T>(key: string, value: T): void {
     window.sessionStorage.setItem(key, JSON.stringify(value));
   }
+
   // 移除
   remove(key: string): void {
     window.sessionStorage.removeItem(key);
   }
+
   // 判断是否存在
   isKey(key: string): boolean {
     let str = window.sessionStorage.getItem(key);
-    return str ? true : false;
+    return !!str;
   }
+
   // 清除
   clear(): void {
     window.sessionStorage.clear();
   }
 }
 
-// 创建需要导出的对象
+// 创建需要导出的对象`
 const $local = new LocalUtil();
 const $session = new SessionUtil();
 // 以对象的形式导出
-export { $local, $session };
+export {$local, $session};

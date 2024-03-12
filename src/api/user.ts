@@ -1,4 +1,5 @@
 import request from "@/utils/request";
+import {LoginResult} from "./types/user";
 
 // 获取用户头像
 export const getAvatar = (params) => {
@@ -11,7 +12,7 @@ export const getSvgCaptcha = () => {
 };
 
 // 用户登录
-export const login = (data) => {
+export const login = (data): Promise<LoginResult> => {
   return request.post("/user/login", data);
 };
 

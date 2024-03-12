@@ -186,6 +186,15 @@ const onSelectChange = (rowKeys: string[]) => {
   selectedRowKeys.value = rowKeys;
   console.log(rowKeys, "rowKeys");
 };
+
+const genderRender = (record) => {
+  const genderObj = {
+    0: "保密",
+    1: "男",
+    2: "女",
+  };
+  return genderObj[record.gender];
+};
 </script>
 
 <template>
@@ -241,7 +250,7 @@ const onSelectChange = (rowKeys: string[]) => {
       </template>
       <template #gender="{ record }">
         <a-tag color="success" class="table-tag">
-          {{ record.gender === 1 ? "男" : "女" }}
+          {{ genderRender(record) }}
         </a-tag>
       </template>
       <template #updateip="{ record }">

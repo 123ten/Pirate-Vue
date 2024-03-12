@@ -88,14 +88,14 @@ export function getTerminal() {
   const windows_mobile = terminal.match(/windows mobile/i);
 
   if (
-    (ipad && ipad[0] === "ipad") ||
-    (iphone_os && iphone_os[0] === "iphone os") ||
-    (midp && midp[0] === "midp") ||
-    (uc7 && uc7[0] === "rv:1.2.3.4") ||
-    (ucweb && ucweb[0] === "ucweb") ||
-    (android && android[0] === "android") ||
-    (windows_ce && windows_ce[0] === "windows ce") ||
-    (windows_mobile && windows_mobile[0] === "windows mobile")
+      (ipad && ipad[0] === "ipad") ||
+      (iphone_os && iphone_os[0] === "iphone os") ||
+      (midp && midp[0] === "midp") ||
+      (uc7 && uc7[0] === "rv:1.2.3.4") ||
+      (ucweb && ucweb[0] === "ucweb") ||
+      (android && android[0] === "android") ||
+      (windows_ce && windows_ce[0] === "windows ce") ||
+      (windows_mobile && windows_mobile[0] === "windows mobile")
   ) {
     // 移动端浏览器
     return "mobile";
@@ -106,7 +106,7 @@ export function getTerminal() {
 }
 
 /**
- * @description setTimeroutPromise 封装setTimeout为Promise 用法：await setTimeoutPromise(1000) 1秒后执行 resolve 然后执行后面的代码
+ * @description setTimeoutPromise 封装setTimeout为Promise 用法：await setTimeoutPromise(1000) 1秒后执行 resolve 然后执行后面的代码
  * @param time
  * @returns
  */
