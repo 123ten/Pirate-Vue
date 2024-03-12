@@ -14,3 +14,13 @@ export const getSvgCaptcha = () => {
 export const login = (data) => {
   return request.post("/user/login", data);
 };
+
+// 用户注册
+export const register = (data) => {
+  return request.post("/user/register", data);
+};
+
+// 获取用户列表
+export const getUserList = (params) => {
+  return request.get("/user/list", params);
+};

@@ -11,13 +11,14 @@ import {
 } from "@ant-design/icons-vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
-import type { IColumns, IPages } from "@/types/index";
-import type { IDataSource, ISortTableEnd } from "./index";
+import { IColumns, IPages } from "@/types/index";
+import { IDataSource } from "./index";
+import { getUserList } from "@/api/user";
 
 const columns = ref<IColumns[]>([
   {
     title: "序号",
-    dataIndex: "key",
+    dataIndex: "index",
     align: "center",
     minWidth: 80,
   },
@@ -82,6 +83,12 @@ const columns = ref<IColumns[]>([
     minWidth: 180,
   },
   {
+    title: "状态",
+    dataIndex: "status",
+    align: "center",
+    minWidth: 100,
+  },
+  {
     title: "操作",
     dataIndex: "operate",
     align: "center",
@@ -92,8 +99,8 @@ const columns = ref<IColumns[]>([
 const dataSource = ref<IDataSource[]>([]);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
-  pageSize: 10,
-  current: 1,
+  size: 10,
+  page: 1,
   total: 0,
 });
 const isEdit = ref<boolean>(false); // 是否编辑
@@ -101,12 +108,33 @@ const isDeleteAllVisible = ref<boolean>(false);
 const isTableLoading = ref<boolean>(false); // 表格加载状态
 const isAddEditModal = ref<boolean>(false);
 
-onMounted(() => {
-  dataSource.value = dataSource.value.map((item) => {
-    item.isDeleteVisible = false;
-    return item;
-  });
+onMounted(async () => {
+  await getList();
+  // dataSource.value = dataSource.value.map((item) => {
+  //   item.isDeleteVisible = false;
+  //   return item;
+  // });
 });
+
+const getList = async () => {
+  const params = {
+    page: pages.value.page,
+    size: pages.value.size,
+  };
+  isTableLoading.value = true;
+  try {
+    const { data } = await getUserList(params);
+    console.log(data, "data");
+    dataSource.value = data.records;
+    pages.value = {
+      size: data.size,
+      page: data.page,
+      total: data.total,
+    };
+  } finally {
+    isTableLoading.value = false;
+  }
+};
 
 // 添加
 const handleAddEdit = (type: number) => {
@@ -168,6 +196,7 @@ const onSelectChange = (rowKeys: string[]) => {
       :pages="pages"
       isSelectedRowKeys
       :loading="isTableLoading"
+      @reload="getList"
       @onColumnChange="onColumnChange"
       @onPagesChange="onPagesChange"
       @onSelectChange="onSelectChange"
@@ -199,13 +228,16 @@ const onSelectChange = (rowKeys: string[]) => {
               </template>
               <a-button type="danger" :disabled="!selectedRowKeys.length">
                 <template #icon>
-                  <DeleteOutlined />
+                  <delete-outlined />
                 </template>
                 删除
               </a-button>
             </a-popconfirm>
           </template>
         </ITooltip>
+      </template>
+      <template #index="{ index }">
+        {{ index + 1 }}
       </template>
       <template #gender="{ record }">
         <a-tag color="success" class="table-tag">
@@ -225,15 +257,22 @@ const onSelectChange = (rowKeys: string[]) => {
           {{ record.status === 1 ? "启用" : "禁用" }}
         </a-tag>
       </template>
+      <template #avatar="{ record }">
+        <a-avatar size="large" :src="record.avatar">
+          <template #icon>
+            <user-outlined />
+          </template>
+        </a-avatar>
+      </template>
       <template #menuname="{ record }">
         <span v-if="record.menuname">{{ record.menuname }}</span>
-        <a-input v-else placeholder="请输入名称"></a-input>
+        <a-input v-else placeholder="请输入名称" />
       </template>
       <template #operate="{ record }">
         <a-space>
           <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
             <template #icon>
-              <EditOutlined />
+              <edit-outlined />
             </template>
           </ITooltip>
           <ITooltip title="删除">

@@ -1,14 +1,26 @@
 {
+  "message": {
+    "success": "成功！",
+    "error": "错误！",
+    "loading": "加载中...",
+    "noData": "暂无数据！",
+    "noMoreData": "没有更多数据了！",
+    "noMore": "没有更多了！"
+  },
   "login": {
     "login": "登 录",
     "userName": "用户名",
     "password": "密码",
+    "captcha": "验证码",
     "userNamePlaceholder": "请输入用户名",
     "passwordPlaceholder": "请输入密码",
     "captchaPlaceholder": "验证码",
     "userNameError": "请输入您的账号！",
     "passwordError": "请输入您的密码！",
     "captchaError": "请输入验证码",
-    "remember": "保持会话"
+    "remember": "保持会话",
+    "success": "登录成功！",
+    "fail": "登录失败！",
+    "captchaFail": "验证码错误！"
   }
 }

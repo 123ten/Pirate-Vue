@@ -17,6 +17,7 @@ import {
   unref,
   withDefaults,
   watch,
+  toRef,
 } from "vue";
 import { ColumnFilterItem } from "ant-design-vue/es/table/interface";
 import Sortable from "sortablejs";
@@ -75,7 +76,7 @@ const emits = defineEmits([
   "onSelectChange", // 选中表格数据change事件
   "onColumnChange", // columns 发生变化时
   "onPagesChange", // 页码发生变化时
-  "onReload", // 刷新表格
+  "reload", // 刷新表格
   "onDetail",
   "onEdit", // 表格内置编辑
   "onDelete", // 表格内置删除行
@@ -92,11 +93,11 @@ const { locale } = useI18n();
 const formRef = ref<FormInstance>();
 const formSearch = reactive<any>({});
 
-const pages = reactive<IPages>(props.pages);
-const columnStorages = ref<IColumns[]>(props.columns); // 暂存 被删除的columns
 const menuChecked = ref<string[]>([]); // 选中显示隐藏表头
 const menuCheckList = ref<IColumns[]>([]); // 表头的数据列
-const dataSource = ref<IDataSource[]>(props.dataSource);
+const pages = toRef(props, "pages"); // 暂存 被删除的columns
+const columnStorages = toRef(props, "columns"); // 暂存 被删除的columns
+const dataSource = toRef(props, "dataSource");
 const selectedRowKeys = ref<string[]>([]);
 const expandedRowKeys = ref<string[]>([]);
 const oldKeyword = ref<string>(""); // 旧的 搜索内容 防止重复调用接口
@@ -125,7 +126,7 @@ watch(
 
 // 刷新表格
 const onReload = () => {
-  emits("onReload");
+  emits("reload");
 };
 
 // 展开收起 - 内置 务必添加 key

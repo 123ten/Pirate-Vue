@@ -3,10 +3,12 @@
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 import { onMounted, onBeforeUnmount, reactive, ref } from "vue";
 import * as pageBubble from "@/utils/pageBubble";
-import { debounce } from "@/utils/common";
+import { debounce, setTimeoutPromise } from "@/utils/common";
 import avatar_default from "@/assets/images/avatar.png";
 import { useI18n } from "vue-i18n";
 import { getAvatar, getSvgCaptcha, login } from "@/api/user";
+import { notification } from "ant-design-vue";
+import router from "@/router";
 
 const { t } = useI18n();
 
@@ -47,7 +49,17 @@ const handleLogin = async () => {
   spinning.value = true;
   try {
     const { data } = await login(loginForm);
-    console.log(data);
+    // console.log(data);
+    localStorage.setItem("accessToken", data.accessToken);
+    localStorage.setItem("refreshToken", data.refreshToken);
+    localStorage.setItem("userInfo", JSON.stringify(data.userInfo));
+    router.push("/");
+
+    await setTimeoutPromise(500);
+    notification.success({
+      message: t("message.success"),
+      description: t("login.success"),
+    });
   } catch (error) {
     await svgCaptchaAsync();
   } finally {

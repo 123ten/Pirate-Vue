@@ -50,15 +50,7 @@
           "path": "/user/index",
           "name": "userIndex",
           "title": "会员管理",
-          "icon": "HomeOutlined",
-          "children": [
-            {
-              "path": "/user/index/index",
-              "name": "user_index",
-              "title": "会员管理2",
-              "icon": "HomeOutlined"
-            }
-          ]
+          "icon": "HomeOutlined"
         },
         {
           "path": "/user/group",

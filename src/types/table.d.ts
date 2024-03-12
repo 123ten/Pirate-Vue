@@ -31,8 +31,8 @@ interface IColumns {
 }
 
 interface IPages {
-  pageSize: number; // 当前页数
-  current: number; // 当前页码
+  size: number; // 当前页数
+  page: number; // 当前页码
   total: number; // 总条数
 }
 

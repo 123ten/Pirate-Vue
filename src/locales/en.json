@@ -1,4 +1,23 @@
 {
+  "message": {
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "ok": "OK",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register",
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "language": "Language",
+    "zh": "Chinese",
+    "en": "English",
+    "search": "Search"
+  },
   "login": {
     "login": "Login",
     "userName": "userName",

@@ -104,3 +104,17 @@ export function getTerminal() {
     return "pc";
   }
 }
+
+/**
+ * @description setTimeroutPromise 封装setTimeout为Promise 用法：await setTimeoutPromise(1000) 1秒后执行 resolve 然后执行后面的代码
+ * @param time
+ * @returns
+ */
+export function setTimeoutPromise(time: number) {
+  return new Promise<void>((resolve) => {
+    let timer = setTimeout(() => {
+      resolve();
+      clearTimeout(timer);
+    }, time);
+  });
+}

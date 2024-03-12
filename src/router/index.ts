@@ -1,12 +1,17 @@
 // index.ts
-import { createRouter, createWebHashHistory } from "vue-router";
+import {
+  createRouter,
+  createWebHashHistory,
+  createWebHistory,
+} from "vue-router";
 import { routes } from "./routes";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css"; // nprogress样式文件
 import GlobalLoading from "@/views/Common/Loading";
 let timer;
 
-const history = createWebHashHistory(); // hash history
+// const history = createWebHashHistory(); // hash history
+const history = createWebHistory(); // hash history
 const router = createRouter({
   history, // 历史记录
   routes, // 路由的映射

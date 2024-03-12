@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { notification } from "ant-design-vue";
 // 因为是ts需要定义类型
 // import qs from "qs";
 class AxiosUtils {
@@ -7,13 +8,14 @@ class AxiosUtils {
   constructor() {
     this.http = axios.create({
       // 根路径
-      baseURL: (import.meta.env.VITE_BASE_API as string),
+      baseURL: import.meta.env.VITE_BASE_API as string,
       // 请求延迟时间 如果超过这个时间就会断开拦截
       timeout: 10 * 60,
       // headers: { "X-Custom-Header": "foobar" },
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
       },
     });
     // 要在constructor里面进行调用 发请求的时候就要开始调用 就要对请求和响应进行拦截
@@ -47,8 +49,20 @@ class AxiosUtils {
         return response.data;
       },
       (error: any) => {
+        const { response } = error;
         // 超出 2xx 范围的状态码都会触发该函数。
         // 对响应错误做点什么
+        if (response.status === 401) {
+          // 重新登录
+          console.log("重新登录");
+        } else {
+          const { data } = response;
+          console.log("错误", error, data);
+          notification.error({
+            message: "异常！",
+            description: data.message,
+          });
+        }
         return Promise.reject(error);
       }
     );

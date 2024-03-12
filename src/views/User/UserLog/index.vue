@@ -1,174 +1,97 @@
-<!-- 菜单规则管理 -->
-<!-- 角色组管理 -->
+<!-- 管理员日志管理 -->
 <script setup lang="ts">
 import {
-  SyncOutlined,
-  PlusOutlined,
-  DeleteOutlined,
-  TableOutlined,
-  SearchOutlined,
-  EditOutlined,
-  EditFilled,
   ZoomInOutlined,
+  UserOutlined,
+  SendOutlined,
 } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref, unref } from "vue";
-import AddEditModal from "@components/Modals/TheMenu/AddEditModal.vue";
-import type { IColumns, IPages } from "@/types/index";
+import data from "./data.json";
+import { IColumns, IPages } from "@/types/index";
 
 interface IDataSource {
-  key: string;
-  menuname?: string;
-  name?: string;
-  age: number;
-  address: string;
-  status?: string | number; // 状态 0 禁用 1 启用
-  updatetime?: string; // 修改时间
-  createTime?: string; // 创建时间
-  isDeleteVisible?: boolean; // 是否显示删除气泡
-  children?: IDataSource[]; // 设置 children 务必设置 width 否则可能出现宽度浮动
-}
-interface ISortTableEnd {
-  newIndex: number;
-  oldIndex: number;
+  key?: string | number;
+  isDelVisible?: boolean;
+  username?: string;
+  nickname?: string;
+  groups?: string;
+  avatar?: string;
+  email?: string;
+  phone?: string;
+  lastlogintime?: string;
+  createTime?: string;
+  status?: boolean;
 }
 
 const columns = ref<IColumns[]>([
   {
+    title: "ID",
+    dataIndex: "id",
+    align: "center",
+  },
+  {
+    title: "管理员ID",
+    dataIndex: "adminId",
+    align: "center",
+    search: true,
+  },
+  {
+    title: "管理员用户名",
+    dataIndex: "adminname",
+    align: "center",
+  },
+  {
     title: "标题",
     dataIndex: "title",
     align: "center",
-    minWidth: 200,
   },
   {
-    title: "图标",
-    dataIndex: "icon",
+    title: "URL",
+    dataIndex: "url",
     align: "center",
-    minWidth: 100,
+    width: 280,
   },
   {
-    title: "名称",
-    dataIndex: "menuname",
+    title: "IP",
+    dataIndex: "ip",
     align: "center",
-    minWidth: 100,
   },
   {
-    title: "类型",
-    dataIndex: "menutype",
+    title: "创建时间",
+    dataIndex: "createTime",
     align: "center",
-    minWidth: 100,
-  },
-  {
-    title: "缓存",
-    dataIndex: "cache",
-    align: "center",
-    minWidth: 100,
-  },
-  {
-    title: "状态",
-    dataIndex: "status",
-    align: "center",
-    minWidth: 100,
-  },
-  {
-    title: "修改时间",
-    dataIndex: "updatetime",
-    align: "center",
+    width: 180,
     minWidth: 180,
   },
-]);
-const dataSource = ref<IDataSource[]>([
   {
-    key: "1",
-    menuname: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-    children: [
-      {
-        key: "1-1",
-        menuname: "胡彦祖1",
-        age: 22,
-        address: "西湖区湖底公园1号",
-        children: [
-          {
-            key: "1-1-1",
-            name: "胡彦祖1",
-            age: 22,
-            address: "西湖区湖底公园1号",
-            children: [
-              {
-                key: "12",
-                name: "胡彦祖1",
-                age: 22,
-                address: "西湖区湖底公园1号",
-                children: [
-                  {
-                    key: "1-1-2",
-                    name: "胡彦祖1",
-                    age: 22,
-                    address: "西湖区湖底公园1号",
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
+    title: "操作",
+    dataIndex: "operate",
+    align: "center",
+    fixed: "right",
+    width: 100,
   },
 ]);
+const dataSource = ref<IDataSource[]>(data);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
   pageSize: 10,
   current: 1,
   total: 0,
 });
+const formSeach = reactive<any>({});
+
+const avatarPreviewSrc = ref("");
 const isEdit = ref<boolean>(false); // 是否编辑
 const isDeleteAllVisible = ref<boolean>(false);
-const isExpandAllRows = ref<boolean>(false);
 const isTableLoading = ref<boolean>(false); // 表格加载状态
-const isAddEditModal = ref<boolean>(false);
+const isAvatarPreviewSrc = ref<boolean>(false);
 
 onMounted(() => {
   dataSource.value = dataSource.value.map((item) => {
-    item.isDeleteVisible = false;
+    item.isDelVisible = false;
     return item;
   });
 });
-
-// 添加
-const handleAddEdit = (type: number) => {
-  isEdit.value = type === 1;
-  isAddEditModal.value = true;
-};
-// 添加/编辑 - cancel
-const onAddEditCancel = () => {
-  isAddEditModal.value = false;
-};
-// 添加/编辑 - confirm
-const onAddEditConfirm = () => {
-  onAddEditCancel();
-};
-
-// 删除-确定
-const onDeleteAllConfirm = () => {
-  isDeleteAllVisible.value = false;
-};
-// 删除-取消
-const onDeleteAllcancel = () => {
-  isDeleteAllVisible.value = false;
-};
-// 删除-显示隐藏的回调
-const onDeleteVisibleChange = () => {
-  // selectedRowKeys没有选中时 默认禁用 删除按钮
-  if (!unref(selectedRowKeys).length) {
-    isDeleteAllVisible.value = false;
-  }
-};
-// 删除当前行-确定
-const onDeleteCurrentConfirm = (record: IDataSource) => {
-  console.log(record, "record");
-  record.isDeleteVisible = false;
-};
 
 // 分页
 const onPagesChange = (records: IPages) => {
@@ -185,79 +108,64 @@ const onSelectChange = (rowKeys: string[]) => {
   selectedRowKeys.value = rowKeys;
   console.log(rowKeys, "rowKeys");
 };
+
+// 显示预览图片
+const openAvatarPreviewImage = (src: string) => {
+  isAvatarPreviewSrc.value = true;
+  avatarPreviewSrc.value = src;
+};
+
+const toUrl = (url: string) => {
+  window.open("#" + url);
+};
 </script>
 
 <template>
   <div class="default-main">
-    <ITable
+    <i-table
       :columns="columns"
-      :dataSource="dataSource"
+      :data-source="dataSource"
       :pages="pages"
-      isSelectedRowKeys
-      :isExpandAllRows="isExpandAllRows"
+      is-selected-row-keys
       :loading="isTableLoading"
-      @onColumnChange="onColumnChange"
-      @onPagesChange="onPagesChange"
-      @onSelectChange="onSelectChange"
+      :scroll="{ x: true }"
+      @on-column-change="onColumnChange"
+      @on-pages-change="onPagesChange"
+      @on-select-change="onSelectChange"
     >
-      <template #leftBtn>
-        <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
-          <template #icon>
-            <PlusOutlined />
-          </template>
-        </ITooltip>
-        <ITooltip
-          title="编辑选中行"
-          content="编辑"
-          :disabled="!selectedRowKeys.length"
-        >
-          <template #icon>
-            <EditFilled />
-          </template>
-        </ITooltip>
-        <ITooltip title="删除选中行">
-          <template #content>
-            <a-popconfirm
-              title="确定删除选中记录？"
-              ok-text="删除"
-              cancel-text="取消"
-              @cancel="onDeleteAllcancel"
-              @visibleChange="onDeleteVisibleChange"
-              v-model:visible="isDeleteAllVisible"
-            >
-              <template #okButton>
-                <a-button
-                  type="danger"
-                  size="small"
-                  @click="onDeleteAllConfirm"
-                >
-                  删除
-                </a-button>
-              </template>
-              <a-button type="danger" :disabled="!selectedRowKeys.length">
-                <template #icon>
-                  <DeleteOutlined />
-                </template>
-                删除
-              </a-button>
-            </a-popconfirm>
-          </template>
-        </ITooltip>
-        <ITooltip
-          :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
-          :content="isExpandAllRows ? '收缩所有' : '展开所有'"
-          :type="isExpandAllRows ? 'danger' : 'warning'"
-          @click="isExpandAllRows = !isExpandAllRows"
-        >
-        </ITooltip>
+      <template #url="{ record }">
+        <a-input-group compact>
+          <a-input
+            v-model:value="record.url"
+            readonly
+            style="width: 200px; text-align: left"
+          >
+          </a-input>
+          <a-button @click="toUrl(record.url)">
+            <template #icon>
+              <send-outlined />
+            </template>
+          </a-button>
+        </a-input-group>
       </template>
-    </ITable>
-
-    <AddEditModal
-      v-model:visible="isAddEditModal"
-      :title="isEdit ? '编辑' : '添加'"
-      @cancel="onAddEditCancel"
-      @confirm="onAddEditConfirm"
+      <template #ip="{ record }">
+        <a-tag color="processing">
+          {{ record.ip }}
+        </a-tag>
+      </template>
+      <template #operate="{ record }">
+        <a-space>
+          <ITooltip title="查看详情" size="small">
+            <template #icon>
+              <zoom-in-outlined />
+            </template>
+          </ITooltip>
+        </a-space>
+      </template>
+    </i-table>
+    <i-preview-image
+      :src="avatarPreviewSrc"
+      v-model:visible="isAvatarPreviewSrc"
     />
   </div>
 </template>

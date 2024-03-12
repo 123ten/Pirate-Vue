@@ -104,25 +104,25 @@ export const routes: Array<RouteRecordRaw> = [
         children: [
           {
             path: "/user/index",
-            redirect: "/user/index/index",
+            // redirect: "/user/index/index",
             name: "userIndex",
             meta: {
               name: "user_index",
               parentName: "user",
               title: "会员管理",
             },
-            // component: () => import("@/views/User/Index/index.vue"),
-            children: [
-              {
-                path: "/user/index/index",
-                name: "user_index",
-                meta: {
-                  parentName: "user,userIndex",
-                  title: "会员管理2",
-                },
-                component: () => import("@/views/Auth/AdminLog/index.vue"),
-              },
-            ],
+            component: () => import("@/views/User/Index/index.vue"),
+            // children: [
+            //   {
+            //     path: "/user/index/index",
+            //     name: "user_index",
+            //     meta: {
+            //       parentName: "user,userIndex",
+            //       title: "会员管理2",
+            //     },
+            //     component: () => import("@/views/Auth/AdminLog/index.vue"),
+            //   },
+            // ],
           },
           {
             path: "/user/group",
