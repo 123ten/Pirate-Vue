@@ -1,4 +1,4 @@
-import axios, {AxiosInstance} from "axios";
+import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
 import {notification} from "ant-design-vue";
 import i18n from "@/locales";
 import {setTimeoutPromise} from "@/utils/common";
@@ -7,6 +7,12 @@ import {$local} from "@/utils/storage";
 import {RefreshResult} from "@/api/types/user";
 
 const {t} = i18n.global;
+
+
+interface PendingTask {
+  config: AxiosRequestConfig;
+  resolve: Function
+}
 
 class AxiosUtils {
   private readonly http: AxiosInstance;
@@ -41,12 +47,12 @@ class AxiosUtils {
   }
 
   // 拦截器
-  // 拦截器要自己定义一个方法.实现拦截
   private interceptors() {
-    // 封装的是拦截器
+
+    let refreshing: boolean = false;
+    const subscribers: PendingTask[] = [];
+
     // 请求拦截器
-    // 一般的作用是 拦截token或者请求头
-    // 添加请求拦截器
     this.http.interceptors.request.use(
         (config: any) => {
           // 在发送请求之前做些什么
@@ -75,14 +81,26 @@ class AxiosUtils {
         async (error: any) => {
           const {response} = error;
           const {data, config} = response;
+
+          if (refreshing) {
+            return new Promise((resolve) => {
+              subscribers.push({config, resolve});
+            })
+          }
+
           // 超出 2xx 范围的状态码都会触发该函数。
           // 对响应错误做点什么
           if (response.status === 401 && !config.url.includes('/user/refresh')) {
-
+            refreshing = true;
             const {code, data} = await this.refreshAccessToken()
+            refreshing = false;
 
             console.log('config', code, config)
             if (code === 200) {
+              subscribers.forEach(({config, resolve}) => {
+                resolve(this.http(config))
+              });
+
               // config.headers.Authorization = "Bearer " + data.accessToken;
               return this.http(config);
             }
@@ -111,7 +129,6 @@ class AxiosUtils {
     });
   };
 
-  // public公开的,意思就是让别人用  private自己封装的 需要隐藏起来 不让别人用
   // 封装get方法
   public get(url: string, data?: any) {
     return this.request(url, "get", data);
