@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import {LoginResult} from "./types/user";
+import {LoginResult, RefreshResult} from "./types/user";
 
 // 获取用户头像
 export const getAvatar = (params) => {
@@ -25,3 +25,8 @@ export const register = (data) => {
 export const getUserList = (params) => {
   return request.get("/user/list", params);
 };
+
+// 刷新access_token
+export const refresh = (params): Promise<RefreshResult> => {
+  return request.get("/user/refresh", params);
+}

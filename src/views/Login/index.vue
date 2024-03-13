@@ -70,7 +70,7 @@ const handleLogin = async () => {
 
 // 根据用户名搜索头像
 const handleUserNameInput = debounce(async () => {
-  console.log(loginForm.username);
+  // console.log(loginForm.username);
   try {
     const {data} = await getAvatar({username: loginForm.username});
     avatar.value = data;
@@ -107,7 +107,7 @@ const handleUserNameInput = debounce(async () => {
                 <a-input
                     v-model:value="loginForm.username"
                     allow-clear
-                    :placeholder="$t('login.userNamePlaceholder')"
+                    :placeholder="$t('placeholder.userName')"
                     @input="handleUserNameInput"
                 >
                   <template #prefix>
@@ -119,7 +119,7 @@ const handleUserNameInput = debounce(async () => {
                 <a-input-password
                     v-model:value="loginForm.password"
                     allow-clear
-                    :placeholder="$t('login.passwordPlaceholder')"
+                    :placeholder="$t('placeholder.password')"
                 >
                   <template #prefix>
                     <lock-outlined class="site-form-item-icon"/>
@@ -130,7 +130,7 @@ const handleUserNameInput = debounce(async () => {
                 <div class="flex">
                   <a-input
                       v-model:value="loginForm.captcha"
-                      :placeholder="$t('login.captchaPlaceholder')"
+                      :placeholder="$t('placeholder.captcha')"
                   >
                   </a-input>
                   <a-form-item no-style>

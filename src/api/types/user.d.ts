@@ -1,3 +1,5 @@
+import {Response} from '@/types/request';
+
 export interface UserInfo {
   id: string;
   username: string;
@@ -9,10 +11,16 @@ export interface UserInfo {
   permissions: string[];
 }
 
-export interface LoginResult {
-  data: {
-    accessToken: string;
-    refreshToken: string;
-    userInfo: UserInfo;
-  }
+interface RefreshData {
+  accessToken: string;
+  refreshToken: string;
 }
+
+interface LoginData extends RefreshData {
+  userInfo: UserInfo;
+}
+
+export type LoginResult = Response<LoginData>;
+
+
+export type RefreshResult = Response<RefreshData>;

@@ -1,8 +1,10 @@
 import axios, {AxiosInstance} from "axios";
 import {notification} from "ant-design-vue";
 import i18n from "@/locales";
-import router from "@/router";
 import {setTimeoutPromise} from "@/utils/common";
+import {refresh} from "@/api/user";
+import {$local} from "@/utils/storage";
+import {RefreshResult} from "@/api/types/user";
 
 const {t} = i18n.global;
 
@@ -18,16 +20,29 @@ class AxiosUtils {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("accessToken"),
       },
     });
     // 要在constructor里面进行调用 发请求的时候就要开始调用 就要对请求和响应进行拦截
-    this.myInterceptors();
+    this.interceptors();
+  }
+
+  /**
+   * @description 刷新 accessToken
+   * @private
+   */
+  private async refreshAccessToken(): Promise<RefreshResult> {
+    const refreshToken = $local.get("refreshToken");
+    const {data, code} = await refresh({refreshToken});
+
+    console.log('refresh', code, data);
+    $local.set("accessToken", data.accessToken);
+    $local.set("refreshToken", data.refreshToken);
+    return {data, code}
   }
 
   // 拦截器
   // 拦截器要自己定义一个方法.实现拦截
-  private myInterceptors() {
+  private interceptors() {
     // 封装的是拦截器
     // 请求拦截器
     // 一般的作用是 拦截token或者请求头
@@ -35,6 +50,11 @@ class AxiosUtils {
     this.http.interceptors.request.use(
         (config: any) => {
           // 在发送请求之前做些什么
+          const accessToken = $local.get('accessToken');
+
+          if (accessToken) {
+            config.headers.Authorization = "Bearer " + $local.get("accessToken"); // 一定要放在请求头里面
+          }
           return config;
         },
         (error: any) => {
@@ -54,13 +74,21 @@ class AxiosUtils {
         },
         async (error: any) => {
           const {response} = error;
-          const {data} = response;
+          const {data, config} = response;
           // 超出 2xx 范围的状态码都会触发该函数。
           // 对响应错误做点什么
-          if (response.status === 401) {
+          if (response.status === 401 && !config.url.includes('/user/refresh')) {
+
+            const {code, data} = await this.refreshAccessToken()
+
+            console.log('config', code, config)
+            if (code === 200) {
+              // config.headers.Authorization = "Bearer " + data.accessToken;
+              return this.http(config);
+            }
             // 重新登录
-            console.log("重新登录", data);
-            router.push("/admin/login");
+            console.log("重新登录", data, config);
+            // router.push("/admin/login");
             await setTimeoutPromise(500); // 等待500ms
           }
           // console.log("错误", error, data);
