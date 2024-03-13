@@ -3,7 +3,7 @@
 import {SendOutlined, ZoomInOutlined,} from "@ant-design/icons-vue";
 import {onMounted, reactive, ref} from "vue";
 import data from "./data.json";
-import {IColumns, IPages} from "@/types/index";
+import {IColumns, IPages} from "@/types";
 
 interface IDataSource {
   key?: string | number;
@@ -151,11 +151,11 @@ const toUrl = (url: string) => {
       </template>
       <template #operate="{ record }">
         <a-space>
-          <ITooltip title="查看详情" size="small">
+          <i-tooltip title="查看详情" size="small">
             <template #icon>
               <zoom-in-outlined/>
             </template>
-          </ITooltip>
+          </i-tooltip>
         </a-space>
       </template>
     </i-table>

@@ -151,11 +151,11 @@ const toUrl = (url: string) => {
       </template>
       <template #operate="{ record }">
         <a-space>
-          <ITooltip title="查看详情" size="small">
+          <i-tooltip title="查看详情" size="small">
             <template #icon>
               <zoom-in-outlined/>
             </template>
-          </ITooltip>
+          </i-tooltip>
         </a-space>
       </template>
     </i-table>

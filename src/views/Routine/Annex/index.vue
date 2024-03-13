@@ -1,8 +1,8 @@
 <!-- 附件管理 -->
 <script setup lang="ts">
-import {InfoCircleFilled} from "@ant-design/icons-vue";
+import {DeleteOutlined, EditOutlined, InfoCircleFilled} from "@ant-design/icons-vue";
 import {onMounted, reactive, ref} from "vue";
-import type {IColumns, IPages} from "@/types/index";
+import type {IColumns, IPages} from "@/types";
 
 interface IDataSource {
   key?: string | number;
@@ -142,10 +142,10 @@ const openAvatarPreviewImage = (src: string) => {
         closable
     >
       <template #icon>
-        <InfoCircleFilled style="color: #909399"/>
+        <info-circle-filled style="color: #909399"/>
       </template>
     </a-alert>
-    <ITable
+    <i-table
         :columns="columns"
         :dataSource="dataSource"
         :pages="pages"
@@ -159,7 +159,7 @@ const openAvatarPreviewImage = (src: string) => {
     >
       <!-- <template #usernameSearch> 11111 </template> -->
       <template #leftBtn>
-        <ITooltip
+        <i-tooltip
             title="删除"
             content="删除"
             :disabled="!selectedRowKeys.length"
@@ -168,25 +168,25 @@ const openAvatarPreviewImage = (src: string) => {
           <template #icon>
             <DeleteOutlined/>
           </template>
-        </ITooltip>
+        </i-tooltip>
       </template>
       <template #operate="{ record }">
         <a-space>
-          <ITooltip title="编辑" size="small">
+          <i-tooltip title="编辑" size="small">
             <template #icon>
-              <EditOutlined/>
+              <edit-outlined/>
             </template>
-          </ITooltip>
-          <ITooltip title="删除" size="small" type="danger">
+          </i-tooltip>
+          <i-tooltip title="删除" size="small" type="danger">
             <template #icon>
-              <DeleteOutlined/>
+              <delete-outlined/>
             </template>
-          </ITooltip>
+          </i-tooltip>
         </a-space>
       </template>
-    </ITable>
+    </i-table>
 
-    <IPreviewImage
+    <i-preview-image
         :src="avatarPreviewSrc"
         v-model:visible="isAvatarPreviewSrc"
     />

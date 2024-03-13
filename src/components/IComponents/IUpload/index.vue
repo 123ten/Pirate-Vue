@@ -1,16 +1,9 @@
 <!-- a-upload 封装 upload -->
 <script setup lang="ts">
-import {
-  computed,
-  ref,
-  unref,
-  withDefaults,
-  watch,
-  watchEffect,
-  CSSProperties,
-} from "vue";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons-vue";
-import type { UploadChangeParam, UploadProps } from "ant-design-vue";
+import {ref, withDefaults,} from "vue";
+import {LoadingOutlined, PlusOutlined} from "@ant-design/icons-vue";
+import type {UploadChangeParam} from "ant-design-vue";
+
 interface IPropsModal {
   alt?: string; // alt
   title?: string; // title
@@ -60,19 +53,19 @@ const onFileModalConfirm = () => {
   <div class="i-upload">
     <div class="i-upload-select" @click.stop="openFileModal">选择</div>
     <a-upload
-      v-model:file-list="fileList"
-      name="file"
-      list-type="picture-card"
-      class="uploader"
-      :show-upload-list="false"
-      accept="image/png,image/jpeg"
-      action="https://localhost/api/upload"
-      @change="handleUploadChange"
+        v-model:file-list="fileList"
+        name="file"
+        list-type="picture-card"
+        class="uploader"
+        :show-upload-list="false"
+        accept="image/png,image/jpeg"
+        action="https://localhost/api/upload"
+        @change="handleUploadChange"
     >
-      <img v-if="imgUrl" :src="imgUrl" :alt="props.alt" :title="props.title" />
+      <img v-if="imgUrl" :src="imgUrl" :alt="props.alt" :title="props.title"/>
       <div v-else class="upload-placeholder">
-        <loading-outlined v-if="isUploadLoading" class="upload-icon" />
-        <plus-outlined v-else class="upload-icon" />
+        <loading-outlined v-if="isUploadLoading" class="upload-icon"/>
+        <plus-outlined v-else class="upload-icon"/>
         <div class="ant-upload-text">
           {{ props.placeholder }}
         </div>
@@ -81,9 +74,9 @@ const onFileModalConfirm = () => {
   </div>
   <!-- 选择文件 modal -->
   <select-file-modal
-    :visible="isOpenFileModal"
-    @confirm="onFileModalConfirm"
-    @cancel="onFileModalCancel"
+      :visible="isOpenFileModal"
+      @confirm="onFileModalConfirm"
+      @cancel="onFileModalCancel"
   />
 </template>
 

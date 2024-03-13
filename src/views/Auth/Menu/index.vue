@@ -3,7 +3,7 @@
 import {DeleteOutlined, DragOutlined, EditOutlined, PlusOutlined,} from "@ant-design/icons-vue";
 import {onMounted, ref, unref} from "vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
-import {IColumns, IPages} from "@/types/index";
+import {IColumns, IPages} from "@/types";
 
 interface IDataSource {
   key: string;
@@ -228,12 +228,12 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
         @onSelectChange="onSelectChange"
     >
       <template #leftBtn>
-        <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
+        <i-tooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
             <PlusOutlined/>
           </template>
-        </ITooltip>
-        <ITooltip title="删除选中行">
+        </i-tooltip>
+        <i-tooltip title="删除选中行">
           <template #content>
             <a-popconfirm
                 title="确定删除选中记录？"
@@ -260,14 +260,14 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
               </a-button>
             </a-popconfirm>
           </template>
-        </ITooltip>
-        <ITooltip
+        </i-tooltip>
+        <i-tooltip
             :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
             :content="isExpandAllRows ? '收缩所有' : '展开所有'"
             :type="isExpandAllRows ? 'danger' : 'warning'"
             @click="isExpandAllRows = !isExpandAllRows"
         >
-        </ITooltip>
+        </i-tooltip>
       </template>
       <template #ruletype="{ record }">
         <a-tag :color="ruletypeStatus(record.ruletype).color">
@@ -290,7 +290,7 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
       </template>
       <template #operate="{ record }">
         <a-space>
-          <ITooltip
+          <i-tooltip
               title="查看详情"
               size="small"
               type="move"
@@ -299,13 +299,13 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
             <template #icon>
               <DragOutlined/>
             </template>
-          </ITooltip>
-          <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
+          </i-tooltip>
+          <i-tooltip title="编辑" size="small" @click="handleAddEdit(1)">
             <template #icon>
               <EditOutlined/>
             </template>
-          </ITooltip>
-          <ITooltip title="删除">
+          </i-tooltip>
+          <i-tooltip title="删除">
             <template #content>
               <a-popconfirm
                   title="确定删除选中记录？"
@@ -330,7 +330,7 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
                 </a-button>
               </a-popconfirm>
             </template>
-          </ITooltip>
+          </i-tooltip>
         </a-space>
       </template>
     </i-table>

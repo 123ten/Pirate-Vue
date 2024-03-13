@@ -1,7 +1,6 @@
 <!-- 菜单权限 - 添加编辑 -->
 <script setup lang="ts">
 import {reactive, toRaw, withDefaults,} from "vue";
-import IIcon from "@components/IIcon/index.vue";
 
 interface IProps {
   title: string; // 添加编辑
@@ -75,7 +74,7 @@ const onClick = () => {
       </a-form-item>
       <template v-if="![3,5].includes(formState.ruletype as number)">
         <a-form-item label="规则图标" name="username">
-          <IIcon/>
+          <i-icon/>
         </a-form-item>
       </template>
       <template v-if="[2,4,5].includes(formState.ruletype as number)">

@@ -1,19 +1,7 @@
 <!-- 菜单权限 - 添加编辑 -->
 <script setup lang="ts">
-import {
-  computed,
-  onMounted,
-  reactive,
-  ref,
-  toRefs,
-  toRef,
-  unref,
-  withDefaults,
-  watch,
-  toRaw,
-} from "vue";
-import IIcon from "@components/IIcon/index.vue";
-import { IFormState } from "./index";
+import {reactive, toRaw, withDefaults,} from "vue";
+import {IFormState} from "./index";
 
 interface IProps {
   title: string; // 添加编辑
@@ -42,24 +30,24 @@ const onClick = () => {
 </script>
 
 <template>
-  <IModal
-    v-model:visible="props.visible"
-    :title="props.title"
-    @confirm="onClick"
-    width="1000px"
-    :maskClosable="false"
+  <i-modal
+      v-model:visible="props.visible"
+      :title="props.title"
+      @confirm="onClick"
+      width="1000px"
+      :maskClosable="false"
   >
     <a-form
-      :model="formState"
-      name="basic"
-      :label-col="{ span: 4 }"
-      :wrapper-col="{ span: 18 }"
-      autocomplete="off"
+        :model="formState"
+        name="basic"
+        :label-col="{ span: 4 }"
+        :wrapper-col="{ span: 18 }"
+        autocomplete="off"
     >
       <a-form-item label="上级菜单规则" name="username">
         <a-select
-          v-model:value="formState.menutype"
-          placeholder="please select your zone"
+            v-model:value="formState.menutype"
+            placeholder="please select your zone"
         >
           <a-select-option value="shanghai">Zone one</a-select-option>
           <a-select-option value="beijing">Zone two</a-select-option>
@@ -73,17 +61,17 @@ const onClick = () => {
         </a-radio-group>
       </a-form-item>
       <a-form-item label="规则标题" name="username">
-        <a-input v-model:value="formState.menutype" />
+        <a-input v-model:value="formState.menutype"/>
       </a-form-item>
       <a-form-item label="规则名称" name="username">
-        <a-input v-model:value="formState.menutype" />
+        <a-input v-model:value="formState.menutype"/>
       </a-form-item>
       <template v-if="formState.ruletype !== 3">
         <a-form-item label="路由路径" name="username">
-          <a-input v-model:value="formState.menutype" />
+          <a-input v-model:value="formState.menutype"/>
         </a-form-item>
         <a-form-item label="规则图标" name="username">
-          <IIcon />
+          <i-icon/>
         </a-form-item>
       </template>
       <template v-if="formState.ruletype === 2">
@@ -96,12 +84,12 @@ const onClick = () => {
         </a-form-item>
         <template v-if="formState.menutype === 1">
           <a-form-item label="组件路径" name="username">
-            <a-input v-model:value="formState.menutype" />
+            <a-input v-model:value="formState.menutype"/>
           </a-form-item>
           <a-form-item label="扩展属性" name="username">
             <a-select
-              v-model:value="formState.menutype"
-              placeholder="please select your zone"
+                v-model:value="formState.menutype"
+                placeholder="please select your zone"
             >
               <a-select-option value="shanghai">无</a-select-option>
               <a-select-option value="beijing">只添加为路由</a-select-option>
@@ -111,7 +99,7 @@ const onClick = () => {
         </template>
         <template v-else>
           <a-form-item label="链接地址" name="username">
-            <a-input v-model:value="formState.menutype" />
+            <a-input v-model:value="formState.menutype"/>
           </a-form-item>
         </template>
       </template>
@@ -119,13 +107,13 @@ const onClick = () => {
         <a-input v-model:value="formState.username" />
       </a-form-item> -->
       <a-form-item label="规则备注" name="username">
-        <a-textarea v-model:value="formState.menutype" />
+        <a-textarea v-model:value="formState.menutype"/>
       </a-form-item>
       <a-form-item label="规则权重" name="username">
         <a-input-number
-          v-model:value="formState.menutype"
-          :min="0"
-          style="width: 100%"
+            v-model:value="formState.menutype"
+            :min="0"
+            style="width: 100%"
         />
       </a-form-item>
       <a-form-item label="缓存" name="username">
@@ -141,7 +129,7 @@ const onClick = () => {
         </a-radio-group>
       </a-form-item>
     </a-form>
-  </IModal>
+  </i-modal>
 </template>
 
 <style lang="less" scoped>

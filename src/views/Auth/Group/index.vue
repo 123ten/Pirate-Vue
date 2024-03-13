@@ -3,7 +3,7 @@
 import {EditOutlined, PlusOutlined} from "@ant-design/icons-vue";
 import {onMounted, ref, unref} from "vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
-import {IColumns, IPages} from "@/types/index";
+import {IColumns, IPages} from "@/types";
 
 interface IDataSource {
   key: string;
@@ -172,7 +172,7 @@ const onSelectChange = (rowKeys: string[]) => {
 
 <template>
   <div class="default-main">
-    <ITable
+    <i-table
         :columns="columns"
         :dataSource="dataSource"
         :pages="pages"
@@ -184,12 +184,12 @@ const onSelectChange = (rowKeys: string[]) => {
         @onSelectChange="onSelectChange"
     >
       <template #leftBtn>
-        <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
+        <i-tooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
             <PlusOutlined/>
           </template>
-        </ITooltip>
-        <ITooltip title="删除选中行">
+        </i-tooltip>
+        <i-tooltip title="删除选中行">
           <template #content>
             <delete-popconfirm
                 v-model:visible="isDeleteAllVisible"
@@ -222,14 +222,14 @@ const onSelectChange = (rowKeys: string[]) => {
               </a-button>
             </a-popconfirm> -->
           </template>
-        </ITooltip>
-        <ITooltip
+        </i-tooltip>
+        <i-tooltip
             :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
             :content="isExpandAllRows ? '收缩所有' : '展开所有'"
             :type="isExpandAllRows ? 'danger' : 'warning'"
             @click="isExpandAllRows = !isExpandAllRows"
         >
-        </ITooltip>
+        </i-tooltip>
       </template>
       <template #status="{ record }">
         <a-tag :color="record.status === 1 ? 'success' : 'error'">
@@ -248,7 +248,7 @@ const onSelectChange = (rowKeys: string[]) => {
               <edit-outlined/>
             </template>
           </i-tooltip>
-          <ITooltip title="删除">
+          <i-tooltip title="删除">
             <template #content>
               <delete-popconfirm
                   v-model:visible="record.isDeleteVisible"
@@ -270,10 +270,10 @@ const onSelectChange = (rowKeys: string[]) => {
                 </template>
               </i-popconfirm> -->
             </template>
-          </ITooltip>
+          </i-tooltip>
         </a-space>
       </template>
-    </ITable>
+    </i-table>
 
     <add-edit-modal
         :visible="isAddEditModal"

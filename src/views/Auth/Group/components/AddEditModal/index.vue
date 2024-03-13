@@ -1,29 +1,23 @@
 <!-- 角色组管理 添加/编辑 -->
-<script setup lang="ts" name="GroupAddEditModal">
-import {
-  computed,
-  onMounted,
-  reactive,
-  ref,
-  toRefs,
-  toRef,
-  unref,
-  withDefaults,
-  watch,
-} from "vue";
-import type { TreeSelectProps } from "ant-design-vue";
-import { TreeSelect } from "ant-design-vue";
+<script setup lang="ts">
+import {reactive, ref, withDefaults,} from "vue";
+import type {TreeSelectProps} from "ant-design-vue";
+import {TreeSelect} from "ant-design-vue";
+
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
+
 interface IPropsModal {
   title: string; // modal 标题
   visible: boolean; // 控制 modal 开关
 }
+
 interface IFormState {
   pid: number | string; // 上级分组
   name: string; // 组别名称
   rules: string; // 权限
   status: number; // 状态
 }
+
 const props = withDefaults(defineProps<IPropsModal>(), {
   title: "",
   visible: false,
@@ -35,8 +29,8 @@ const emits = defineEmits([
 
 // 校验规则
 const rules = {
-  name: [{ required: true, message: "请输入组别名称" }],
-  rules: [{ required: true, message: "请选择权限" }],
+  name: [{required: true, message: "请输入组别名称"}],
+  rules: [{required: true, message: "请选择权限"}],
 };
 const treeData = ref<TreeSelectProps["treeData"]>([
   {
@@ -80,25 +74,25 @@ const formState = reactive<IFormState>({
 </script>
 
 <template>
-  <IModal
-    :visible="props.visible"
-    :title="props.title"
-    :maskClosable="false"
-    @confirm="emits('confirm')"
-    @cancel="emits('cancel')"
+  <i-modal
+      :visible="props.visible"
+      :title="props.title"
+      :maskClosable="false"
+      @confirm="emits('confirm')"
+      @cancel="emits('cancel')"
   >
     <a-form
-      :model="formState"
-      name="group"
-      :label-col="{ span: 6 }"
-      :wrapper-col="{ span: 16 }"
-      autocomplete="off"
+        :model="formState"
+        name="group"
+        :label-col="{ span: 6 }"
+        :wrapper-col="{ span: 16 }"
+        autocomplete="off"
     >
       <a-form-item label="上级分组" name="pid">
         <a-select
-          v-model:value="formState.pid"
-          allow-clear
-          placeholder="请选择上级分组"
+            v-model:value="formState.pid"
+            allow-clear
+            placeholder="请选择上级分组"
         >
           <a-select-option :value="0">Zone one</a-select-option>
         </a-select>
@@ -106,32 +100,32 @@ const formState = reactive<IFormState>({
 
       <a-form-item label="组别名称" name="name" :rules="rules.name">
         <a-input
-          v-model:value="formState.name"
-          allow-clear
-          placeholder="请输入组别名称"
+            v-model:value="formState.name"
+            allow-clear
+            placeholder="请输入组别名称"
         />
       </a-form-item>
 
       <a-form-item label="权限" name="rules" :rules="rules.rules">
         <a-tree-select
-          v-model:value="formState.rules"
-          style="width: 100%"
-          :tree-data="treeData"
-          tree-checkable
-          :show-checked-strategy="SHOW_PARENT"
-          allow-clear
-          placeholder="请选择权限"
+            v-model:value="formState.rules"
+            style="width: 100%"
+            :tree-data="treeData"
+            tree-checkable
+            :show-checked-strategy="SHOW_PARENT"
+            allow-clear
+            placeholder="请选择权限"
         />
       </a-form-item>
 
       <a-form-item label="状态" name="status">
         <a-radio-group v-model:value="formState.status">
-          <a-radio :value="0"> 禁用 </a-radio>
+          <a-radio :value="0"> 禁用</a-radio>
           <a-radio :value="1">启用</a-radio>
         </a-radio-group>
       </a-form-item>
     </a-form>
-  </IModal>
+  </i-modal>
 </template>
 
 <style lang="less" scoped></style>

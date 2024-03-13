@@ -272,12 +272,12 @@ const genderRender = (record) => {
       </template>
       <template #operate="{ record }">
         <a-space>
-          <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
+          <i-tooltip title="编辑" size="small" @click="handleAddEdit(1)">
             <template #icon>
               <edit-outlined/>
             </template>
-          </ITooltip>
-          <ITooltip title="删除">
+          </i-tooltip>
+          <i-tooltip title="删除">
             <template #content>
               <a-popconfirm
                   title="确定删除选中记录？"
@@ -302,7 +302,7 @@ const genderRender = (record) => {
                 </a-button>
               </a-popconfirm>
             </template>
-          </ITooltip>
+          </i-tooltip>
         </a-space>
       </template>
     </i-table>

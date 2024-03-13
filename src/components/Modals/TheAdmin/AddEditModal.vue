@@ -1,24 +1,16 @@
 <!-- 角色组管理 添加/编辑 -->
-<script setup lang="ts" name="AdminAddEditModal">
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons-vue";
-import {
-  computed,
-  onMounted,
-  reactive,
-  ref,
-  toRefs,
-  toRef,
-  unref,
-  withDefaults,
-  watch,
-} from "vue";
-import type { TreeSelectProps } from "ant-design-vue";
-import { TreeSelect } from "ant-design-vue";
+<script setup lang="ts">
+import {LoadingOutlined, PlusOutlined} from "@ant-design/icons-vue";
+import {reactive, ref, withDefaults,} from "vue";
+import {TreeSelect} from "ant-design-vue";
+
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
+
 interface IPropsModal {
   title: string; // modal 标题
   visible: boolean; // 控制 modal 开关
 }
+
 interface IFormState {
   pid: number | string | null; // 上级分组
   username: string; // 登录用户名
@@ -30,6 +22,7 @@ interface IFormState {
   sign: string; // 个性签名
   status: number; // 状态
 }
+
 const props = withDefaults(defineProps<IPropsModal>(), {
   title: "",
   visible: false,
@@ -41,10 +34,10 @@ const emits = defineEmits([
 
 // 校验规则
 const rules = {
-  username: [{ required: true, message: "请输入登录用户名" }],
-  nickname: [{ required: true, message: "请输入昵称" }],
-  pid: [{ required: true, message: "请选择分组" }],
-  password: [{ required: true, message: "请输入密码" }],
+  username: [{required: true, message: "请输入登录用户名"}],
+  nickname: [{required: true, message: "请输入昵称"}],
+  pid: [{required: true, message: "请选择分组"}],
+  password: [{required: true, message: "请输入密码"}],
 };
 const formState = reactive<IFormState>({
   pid: null,
@@ -66,56 +59,56 @@ const handleUploadAvatarChange = () => {
 </script>
 
 <template>
-  <IModal
-    :visible="props.visible"
-    :title="props.title"
-    width="1000px"
-    :maskClosable="false"
-    @confirm="emits('confirm')"
-    @cancel="emits('cancel')"
+  <i-modal
+      :visible="props.visible"
+      :title="props.title"
+      width="1000px"
+      :maskClosable="false"
+      @confirm="emits('confirm')"
+      @cancel="emits('cancel')"
   >
     <a-form
-      :model="formState"
-      name="admin"
-      :label-col="{ span: 6 }"
-      :wrapper-col="{ span: 16 }"
-      autocomplete="off"
+        :model="formState"
+        name="admin"
+        :label-col="{ span: 6 }"
+        :wrapper-col="{ span: 16 }"
+        autocomplete="off"
     >
       <a-form-item label="用户名" name="username" :rules="rules.username">
         <a-input
-          v-model:value="formState.username"
-          allow-clear
-          placeholder="请输入管理员用户名"
+            v-model:value="formState.username"
+            allow-clear
+            placeholder="请输入管理员用户名"
         />
       </a-form-item>
       <a-form-item label="昵称" name="nickname" :rules="rules.nickname">
         <a-input
-          v-model:value="formState.nickname"
-          allow-clear
-          placeholder="请输入昵称"
+            v-model:value="formState.nickname"
+            allow-clear
+            placeholder="请输入昵称"
         />
       </a-form-item>
       <a-form-item label="分组" name="pid" :rules="rules.pid">
         <a-select
-          v-model:value="formState.pid"
-          allow-clear
-          placeholder="请选择分组"
+            v-model:value="formState.pid"
+            allow-clear
+            placeholder="请选择分组"
         >
           <a-select-option :value="0">Zone one</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="头像" name="avatar">
         <a-upload
-          v-model:file-list="fileList"
-          name="file"
-          list-type="picture-card"
-          class="avatar-uploader"
-          :show-upload-list="false"
-          accept="image/png,image/jpeg"
-          action="http://localhost:3000/upload"
-          @change="handleUploadAvatarChange"
+            v-model:file-list="fileList"
+            name="file"
+            list-type="picture-card"
+            class="avatar-uploader"
+            :show-upload-list="false"
+            accept="image/png,image/jpeg"
+            action="http://localhost:3000/upload"
+            @change="handleUploadAvatarChange"
         >
-          <img v-if="formState.avatar" :src="formState.avatar" alt="avatar" />
+          <img v-if="formState.avatar" :src="formState.avatar" alt="avatar"/>
           <div v-else>
             <loading-outlined v-if="isUploadAvatarLoading"></loading-outlined>
             <plus-outlined v-else></plus-outlined>
@@ -125,41 +118,41 @@ const handleUploadAvatarChange = () => {
       </a-form-item>
       <a-form-item label="邮箱" name="email">
         <a-input
-          v-model:value="formState.email"
-          allow-clear
-          placeholder="请输入邮箱"
+            v-model:value="formState.email"
+            allow-clear
+            placeholder="请输入邮箱"
         />
       </a-form-item>
       <a-form-item label="手机号" name="phone">
         <a-input
-          v-model:value="formState.phone"
-          allow-clear
-          placeholder="请输入手机号"
+            v-model:value="formState.phone"
+            allow-clear
+            placeholder="请输入手机号"
         />
       </a-form-item>
       <a-form-item label="密码" name="password" :rules="rules.password">
         <a-input-password
-          v-model:value="formState.password"
-          allow-clear
-          placeholder="请输入密码"
-          autocomplete="off"
+            v-model:value="formState.password"
+            allow-clear
+            placeholder="请输入密码"
+            autocomplete="off"
         />
       </a-form-item>
       <a-form-item label="个性签名" name="sign">
         <a-textarea
-          v-model:value="formState.sign"
-          allow-clear
-          placeholder="请输入个性签名"
+            v-model:value="formState.sign"
+            allow-clear
+            placeholder="请输入个性签名"
         />
       </a-form-item>
       <a-form-item label="状态" name="status">
         <a-radio-group v-model:value="formState.status">
-          <a-radio :value="0"> 禁用 </a-radio>
+          <a-radio :value="0"> 禁用</a-radio>
           <a-radio :value="1">启用</a-radio>
         </a-radio-group>
       </a-form-item>
     </a-form>
-  </IModal>
+  </i-modal>
 </template>
 
 <style lang="less" scoped></style>
