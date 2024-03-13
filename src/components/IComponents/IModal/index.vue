@@ -118,5 +118,5 @@ const transformStyle = computed<CSSProperties>(() => {
 </template>
 
 <style lang="less" scoped>
-@import "./index.less";
+@import "index.less";
 </style>

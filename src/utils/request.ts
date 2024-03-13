@@ -71,7 +71,7 @@ class AxiosUtils {
           return Promise.reject(error);
         }
     );
-  }
+  };
 
   // 封装一个request方法
   private request(url: string, method: string, data: any = {}) {
@@ -81,18 +81,18 @@ class AxiosUtils {
       params: method == "get" ? data : null,
       data: method == "post" ? data : null,
     });
-  }
+  };
 
   // public公开的,意思就是让别人用  private自己封装的 需要隐藏起来 不让别人用
   // 封装get方法
   public get(url: string, data?: any) {
     return this.request(url, "get", data);
-  }
+  };
 
   // 封装post方法
   public post(url: string, data: any) {
     return this.request(url, "post", data);
-  }
+  };
 }
 
 // 新建对象

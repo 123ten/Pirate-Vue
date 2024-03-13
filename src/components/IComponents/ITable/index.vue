@@ -19,7 +19,7 @@ import Sortable from "sortablejs";
 import {IColumns, IDataSource, IPages, IPagination} from "@/types";
 import {FormInstance} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
-import ITooltip from "@/components/ITooltip/index.vue";
+import ITooltip from "@/components/IComponents/ITooltip/index.vue";
 
 //#region interface
 interface IProps {
@@ -500,5 +500,5 @@ defineExpose({
 </template>
 
 <style lang="less" scoped>
-@import "./index.less";
+@import "index.less";
 </style>

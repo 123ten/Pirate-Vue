@@ -38,7 +38,7 @@ const columns = ref<IColumns[]>([
   },
   {
     title: "修改时间",
-    dataIndex: "updatetime",
+    dataIndex: "updateTime",
     align: "center",
     minWidth: 180,
   },
@@ -134,7 +134,7 @@ const onDeleteAllConfirm = () => {
   isDeleteAllVisible.value = false;
 };
 // 删除-取消
-const onDeleteAllcancel = () => {
+const onDeleteAllCancel = () => {
   isDeleteAllVisible.value = false;
 };
 // 删除-显示隐藏的回调
@@ -169,7 +169,7 @@ const onSelectChange = (rowKeys: string[]) => {
 
 <template>
   <div class="default-main">
-    <ITable
+    <i-table
         :columns="columns"
         :dataSource="dataSource"
         :pages="pages"
@@ -181,18 +181,18 @@ const onSelectChange = (rowKeys: string[]) => {
         @onSelectChange="onSelectChange"
     >
       <template #leftBtn>
-        <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
+        <i-tooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
             <PlusOutlined/>
           </template>
-        </ITooltip>
-        <ITooltip title="删除选中行">
+        </i-tooltip>
+        <i-tooltip title="删除选中行">
           <template #content>
             <a-popconfirm
                 title="确定删除选中记录？"
                 ok-text="删除"
                 cancel-text="取消"
-                @cancel="onDeleteAllcancel"
+                @cancel="onDeleteAllCancel"
                 @visibleChange="onDeleteVisibleChange"
                 v-model:visible="isDeleteAllVisible"
             >
@@ -213,14 +213,14 @@ const onSelectChange = (rowKeys: string[]) => {
               </a-button>
             </a-popconfirm>
           </template>
-        </ITooltip>
-        <ITooltip
+        </i-tooltip>
+        <i-tooltip
             :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
             :content="isExpandAllRows ? '收缩所有' : '展开所有'"
             :type="isExpandAllRows ? 'danger' : 'warning'"
             @click="isExpandAllRows = !isExpandAllRows"
         >
-        </ITooltip>
+        </i-tooltip>
       </template>
       <template #status="{ record }">
         <a-tag :color="record.status === 1 ? 'success' : 'error'">
@@ -234,12 +234,12 @@ const onSelectChange = (rowKeys: string[]) => {
                 <ZoomInOutlined />
               </template>
             </ITooltip> -->
-          <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
+          <i-tooltip title="编辑" size="small" @click="handleAddEdit(1)">
             <template #icon>
               <EditOutlined/>
             </template>
-          </ITooltip>
-          <ITooltip title="删除">
+          </i-tooltip>
+          <i-tooltip title="删除">
             <template #content>
               <a-popconfirm
                   title="确定删除选中记录？"
@@ -264,10 +264,10 @@ const onSelectChange = (rowKeys: string[]) => {
                 </a-button>
               </a-popconfirm>
             </template>
-          </ITooltip>
+          </i-tooltip>
         </a-space>
       </template>
-    </ITable>
+    </i-table>
 
     <AddEditModal
         v-model:visible="isAddEditModal"

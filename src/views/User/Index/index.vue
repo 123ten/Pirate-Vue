@@ -1,19 +1,12 @@
 <!-- 菜单规则管理 -->
 <!-- 角色组管理 -->
 <script setup lang="ts">
-import {
-  ZoomInOutlined,
-  UserOutlined,
-  SendOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  InfoCircleFilled,
-} from "@ant-design/icons-vue";
+import {DeleteOutlined, EditOutlined, PlusOutlined, UserOutlined} from "@ant-design/icons-vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
-import { computed, onMounted, reactive, ref, unref } from "vue";
-import { IColumns, IPages } from "@/types/index";
-import { IDataSource } from "./index";
-import { getUserList } from "@/api/user";
+import {onMounted, ref, unref} from "vue";
+import {IColumns, IPages} from "@/types";
+import {IDataSource} from "./types";
+import {getUserList} from "@/api/user";
 
 const columns = ref<IColumns[]>([
   {
@@ -123,7 +116,7 @@ const getList = async () => {
   };
   isTableLoading.value = true;
   try {
-    const { data } = await getUserList(params);
+    const {data} = await getUserList(params);
     console.log(data, "data");
     dataSource.value = data.records;
     pages.value = {
@@ -155,7 +148,7 @@ const onDeleteAllConfirm = () => {
   isDeleteAllVisible.value = false;
 };
 // 删除-取消
-const onDeleteAllcancel = () => {
+const onDeleteAllCancel = () => {
   isDeleteAllVisible.value = false;
 };
 // 删除-显示隐藏的回调
@@ -199,51 +192,51 @@ const genderRender = (record) => {
 
 <template>
   <div class="default-main">
-    <ITable
-      :columns="columns"
-      :dataSource="dataSource"
-      :pages="pages"
-      isSelectedRowKeys
-      :loading="isTableLoading"
-      @reload="getList"
-      @onColumnChange="onColumnChange"
-      @onPagesChange="onPagesChange"
-      @onSelectChange="onSelectChange"
+    <i-table
+        :columns="columns"
+        :dataSource="dataSource"
+        :pages="pages"
+        isSelectedRowKeys
+        :loading="isTableLoading"
+        @reload="getList"
+        @onColumnChange="onColumnChange"
+        @onPagesChange="onPagesChange"
+        @onSelectChange="onSelectChange"
     >
       <template #leftBtn>
-        <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
+        <i-tooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
-            <PlusOutlined />
+            <plus-outlined/>
           </template>
-        </ITooltip>
-        <ITooltip title="删除选中行">
+        </i-tooltip>
+        <i-tooltip title="删除选中行">
           <template #content>
             <a-popconfirm
-              title="确定删除选中记录？"
-              ok-text="删除"
-              cancel-text="取消"
-              @cancel="onDeleteAllcancel"
-              @visibleChange="onDeleteVisibleChange"
-              v-model:visible="isDeleteAllVisible"
+                title="确定删除选中记录？"
+                ok-text="删除"
+                cancel-text="取消"
+                @cancel="onDeleteAllCancel"
+                @visibleChange="onDeleteVisibleChange"
+                v-model:visible="isDeleteAllVisible"
             >
               <template #okButton>
                 <a-button
-                  type="danger"
-                  size="small"
-                  @click="onDeleteAllConfirm"
+                    type="danger"
+                    size="small"
+                    @click="onDeleteAllConfirm"
                 >
                   删除
                 </a-button>
               </template>
               <a-button type="danger" :disabled="!selectedRowKeys.length">
                 <template #icon>
-                  <delete-outlined />
+                  <delete-outlined/>
                 </template>
                 删除
               </a-button>
             </a-popconfirm>
           </template>
-        </ITooltip>
+        </i-tooltip>
       </template>
       <template #index="{ index }">
         {{ index + 1 }}
@@ -260,8 +253,8 @@ const genderRender = (record) => {
       </template>
       <template #status="{ record }">
         <a-tag
-          :color="record.status === 1 ? 'success' : 'error'"
-          class="table-tag"
+            :color="record.status === 1 ? 'success' : 'error'"
+            class="table-tag"
         >
           {{ record.status === 1 ? "启用" : "禁用" }}
         </a-tag>
@@ -269,42 +262,42 @@ const genderRender = (record) => {
       <template #avatar="{ record }">
         <a-avatar size="large" :src="record.avatar">
           <template #icon>
-            <user-outlined />
+            <user-outlined/>
           </template>
         </a-avatar>
       </template>
       <template #menuname="{ record }">
         <span v-if="record.menuname">{{ record.menuname }}</span>
-        <a-input v-else placeholder="请输入名称" />
+        <a-input v-else placeholder="请输入名称"/>
       </template>
       <template #operate="{ record }">
         <a-space>
           <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
             <template #icon>
-              <edit-outlined />
+              <edit-outlined/>
             </template>
           </ITooltip>
           <ITooltip title="删除">
             <template #content>
               <a-popconfirm
-                title="确定删除选中记录？"
-                ok-text="删除"
-                cancel-text="取消"
-                placement="left"
-                v-model:visible="record.isDeleteVisible"
+                  title="确定删除选中记录？"
+                  ok-text="删除"
+                  cancel-text="取消"
+                  placement="left"
+                  v-model:visible="record.isDeleteVisible"
               >
                 <template #okButton>
                   <a-button
-                    type="danger"
-                    size="small"
-                    @click="onDeleteCurrentConfirm(record)"
+                      type="danger"
+                      size="small"
+                      @click="onDeleteCurrentConfirm(record)"
                   >
                     删除
                   </a-button>
                 </template>
                 <a-button type="danger" size="small">
                   <template #icon>
-                    <DeleteOutlined />
+                    <DeleteOutlined/>
                   </template>
                 </a-button>
               </a-popconfirm>
@@ -312,13 +305,13 @@ const genderRender = (record) => {
           </ITooltip>
         </a-space>
       </template>
-    </ITable>
+    </i-table>
 
     <AddEditModal
-      v-model:visible="isAddEditModal"
-      :title="isEdit ? '编辑' : '添加'"
-      @cancel="onAddEditCancel"
-      @confirm="onAddEditConfirm"
+        v-model:visible="isAddEditModal"
+        :title="isEdit ? '编辑' : '添加'"
+        @cancel="onAddEditCancel"
+        @confirm="onAddEditConfirm"
     />
   </div>
 </template>

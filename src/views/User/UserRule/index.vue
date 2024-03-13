@@ -3,7 +3,7 @@
 import * as antIcons from "@ant-design/icons-vue";
 import {DeleteOutlined, DragOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons-vue";
 import {defineAsyncComponent, onMounted, ref, unref,} from "vue";
-import type {IColumns, IPages} from "@/types/index";
+import type {IColumns, IPages} from "@/types";
 
 const AddEditModal = defineAsyncComponent(
     () => import("./components/AddEditModal/index.vue")
@@ -15,7 +15,7 @@ interface IDataSource {
   name?: string;
   age?: number;
   address?: string;
-  ruletype?: string | number; // 1 菜单目录 2 菜单项 3 页面按钮
+  ruleType?: string | number; // 1 菜单目录 2 菜单项 3 页面按钮
   status?: string | number; // 状态 0 禁用 1 启用
   updatetime?: string; // 修改时间
   createTime?: string; // 创建时间
@@ -81,7 +81,7 @@ const dataSource = ref<IDataSource[]>([
     menuname: "胡彦斌",
     age: 32,
     address: "西湖区湖底公园1号",
-    ruletype: 1,
+    ruleType: 1,
     children: [
       {
         key: "1-1",
@@ -192,7 +192,7 @@ const onSelectChange = (rowKeys: IDataSource["key"][]) => {
 };
 
 // 规则类型
-const ruletypeStatus = (type: IDataSource["ruletype"]) => {
+const ruleTypeStatus = (type: IDataSource["ruleType"]) => {
   const maps = new Map();
   maps.set(1, {
     color: "success",
@@ -277,8 +277,8 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
         <component :is="antIcons[record.icon]" style="font-size: 18px"/>
       </template>
       <template #ruletype="{ record }">
-        <a-tag :color="ruletypeStatus(record.ruletype).color">
-          {{ ruletypeStatus(record.ruletype).name }}
+        <a-tag :color="ruleTypeStatus(record.ruleType).color">
+          {{ ruleTypeStatus(record.ruleType).name }}
         </a-tag>
       </template>
       <template #status="{ record }">

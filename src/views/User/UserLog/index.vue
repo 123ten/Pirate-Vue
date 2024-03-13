@@ -3,7 +3,7 @@
 import {SendOutlined, ZoomInOutlined,} from "@ant-design/icons-vue";
 import {onMounted, reactive, ref} from "vue";
 import data from "./data.json";
-import {IColumns, IPages} from "@/types/index";
+import {IColumns, IPages} from "@/types";
 
 interface IDataSource {
   key?: string | number;
