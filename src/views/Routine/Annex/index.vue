@@ -1,8 +1,8 @@
 <!-- 附件管理 -->
 <script setup lang="ts">
-import { InfoCircleFilled } from "@ant-design/icons-vue";
-import { computed, onMounted, reactive, ref, unref } from "vue";
-import type { IColumns, IPages } from "@/types/index";
+import {InfoCircleFilled} from "@ant-design/icons-vue";
+import {onMounted, reactive, ref} from "vue";
+import type {IColumns, IPages} from "@/types/index";
 
 interface IDataSource {
   key?: string | number;
@@ -91,11 +91,11 @@ const columns = ref<IColumns[]>([
 const dataSource = ref<IDataSource[]>([]);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
-  pageSize: 10,
-  current: 1,
+  size: 10,
+  page: 1,
   total: 0,
 });
-const formSeach = reactive<any>({
+const formSearch = reactive<any>({
   username: "",
   usertype: "",
   mimetype: "",
@@ -108,7 +108,8 @@ const avatarPreviewSrc = ref<string>("");
 const isTableLoading = ref<boolean>(false); // 表格加载状态
 const isAvatarPreviewSrc = ref<boolean>(false);
 
-onMounted(() => {});
+onMounted(() => {
+});
 
 // 分页
 const onPagesChange = (records: IPages) => {
@@ -135,37 +136,37 @@ const openAvatarPreviewImage = (src: string) => {
 <template>
   <div class="default-main">
     <a-alert
-      message="同一文件被多次上传时，只会保存一份至磁盘和增加一条附件记录；删除附件记录，将自动删除对应文件！"
-      type="gray"
-      show-icon
-      closable
+        message="同一文件被多次上传时，只会保存一份至磁盘和增加一条附件记录；删除附件记录，将自动删除对应文件！"
+        type="gray"
+        show-icon
+        closable
     >
       <template #icon>
-        <InfoCircleFilled style="color: #909399" />
+        <InfoCircleFilled style="color: #909399"/>
       </template>
     </a-alert>
     <ITable
-      :columns="columns"
-      :dataSource="dataSource"
-      :pages="pages"
-      isSelectedRowKeys
-      isFormSearchBtn
-      :loading="isTableLoading"
-      :scroll="{ x: true }"
-      @onColumnChange="onColumnChange"
-      @onPagesChange="onPagesChange"
-      @onSelectChange="onSelectChange"
+        :columns="columns"
+        :dataSource="dataSource"
+        :pages="pages"
+        isSelectedRowKeys
+        isFormSearchBtn
+        :loading="isTableLoading"
+        :scroll="{ x: true }"
+        @onColumnChange="onColumnChange"
+        @onPagesChange="onPagesChange"
+        @onSelectChange="onSelectChange"
     >
       <!-- <template #usernameSearch> 11111 </template> -->
       <template #leftBtn>
         <ITooltip
-          title="删除"
-          content="删除"
-          :disabled="!selectedRowKeys.length"
-          type="danger"
+            title="删除"
+            content="删除"
+            :disabled="!selectedRowKeys.length"
+            type="danger"
         >
           <template #icon>
-            <DeleteOutlined />
+            <DeleteOutlined/>
           </template>
         </ITooltip>
       </template>
@@ -173,12 +174,12 @@ const openAvatarPreviewImage = (src: string) => {
         <a-space>
           <ITooltip title="编辑" size="small">
             <template #icon>
-              <EditOutlined />
+              <EditOutlined/>
             </template>
           </ITooltip>
           <ITooltip title="删除" size="small" type="danger">
             <template #icon>
-              <DeleteOutlined />
+              <DeleteOutlined/>
             </template>
           </ITooltip>
         </a-space>
@@ -186,8 +187,8 @@ const openAvatarPreviewImage = (src: string) => {
     </ITable>
 
     <IPreviewImage
-      :src="avatarPreviewSrc"
-      v-model:visible="isAvatarPreviewSrc"
+        :src="avatarPreviewSrc"
+        v-model:visible="isAvatarPreviewSrc"
     />
   </div>
 </template>
