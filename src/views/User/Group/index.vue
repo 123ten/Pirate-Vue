@@ -1,18 +1,9 @@
 <!-- 会员分组管理 -->
 <script setup lang="ts">
-import {
-  SyncOutlined,
-  PlusOutlined,
-  DeleteOutlined,
-  TableOutlined,
-  SearchOutlined,
-  EditOutlined,
-  EditFilled,
-  ZoomInOutlined,
-} from "@ant-design/icons-vue";
-import { computed, onMounted, reactive, ref, unref } from "vue";
+import {DeleteOutlined, EditOutlined, PlusOutlined,} from "@ant-design/icons-vue";
+import {onMounted, ref, unref} from "vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
-import { IColumns, IPages } from "@/types/index";
+import {IColumns, IPages} from "@/types";
 
 interface IDataSource {
   key: string;
@@ -20,7 +11,7 @@ interface IDataSource {
   age: number;
   address: string;
   status?: string | number; // 状态 0 禁用 1 启用
-  updatetime?: string; // 修改时间
+  updateTime?: string; // 修改时间
   createTime?: string; // 创建时间
   isDeleteVisible?: boolean; // 是否显示删除气泡
   children?: IDataSource[]; // 设置 children 务必设置 width 否则可能出现宽度浮动
@@ -107,8 +98,8 @@ const dataSource = ref<IDataSource[]>([
 ]);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
-  pageSize: 10,
-  current: 1,
+  size: 10,
+  page: 1,
   total: 0,
 });
 const isEdit = ref<boolean>(false); // 是否编辑
@@ -179,44 +170,44 @@ const onSelectChange = (rowKeys: string[]) => {
 <template>
   <div class="default-main">
     <ITable
-      :columns="columns"
-      :dataSource="dataSource"
-      :pages="pages"
-      isSelectedRowKeys
-      :isExpandAllRows="isExpandAllRows"
-      :loading="isTableLoading"
-      @onColumnChange="onColumnChange"
-      @onPagesChange="onPagesChange"
-      @onSelectChange="onSelectChange"
+        :columns="columns"
+        :dataSource="dataSource"
+        :pages="pages"
+        isSelectedRowKeys
+        :isExpandAllRows="isExpandAllRows"
+        :loading="isTableLoading"
+        @onColumnChange="onColumnChange"
+        @onPagesChange="onPagesChange"
+        @onSelectChange="onSelectChange"
     >
       <template #leftBtn>
         <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
-            <PlusOutlined />
+            <PlusOutlined/>
           </template>
         </ITooltip>
         <ITooltip title="删除选中行">
           <template #content>
             <a-popconfirm
-              title="确定删除选中记录？"
-              ok-text="删除"
-              cancel-text="取消"
-              @cancel="onDeleteAllcancel"
-              @visibleChange="onDeleteVisibleChange"
-              v-model:visible="isDeleteAllVisible"
+                title="确定删除选中记录？"
+                ok-text="删除"
+                cancel-text="取消"
+                @cancel="onDeleteAllcancel"
+                @visibleChange="onDeleteVisibleChange"
+                v-model:visible="isDeleteAllVisible"
             >
               <template #okButton>
                 <a-button
-                  type="danger"
-                  size="small"
-                  @click="onDeleteAllConfirm"
+                    type="danger"
+                    size="small"
+                    @click="onDeleteAllConfirm"
                 >
                   删除
                 </a-button>
               </template>
               <a-button type="danger" :disabled="!selectedRowKeys.length">
                 <template #icon>
-                  <DeleteOutlined />
+                  <DeleteOutlined/>
                 </template>
                 删除
               </a-button>
@@ -224,10 +215,10 @@ const onSelectChange = (rowKeys: string[]) => {
           </template>
         </ITooltip>
         <ITooltip
-          :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
-          :content="isExpandAllRows ? '收缩所有' : '展开所有'"
-          :type="isExpandAllRows ? 'danger' : 'warning'"
-          @click="isExpandAllRows = !isExpandAllRows"
+            :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
+            :content="isExpandAllRows ? '收缩所有' : '展开所有'"
+            :type="isExpandAllRows ? 'danger' : 'warning'"
+            @click="isExpandAllRows = !isExpandAllRows"
         >
         </ITooltip>
       </template>
@@ -245,30 +236,30 @@ const onSelectChange = (rowKeys: string[]) => {
             </ITooltip> -->
           <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
             <template #icon>
-              <EditOutlined />
+              <EditOutlined/>
             </template>
           </ITooltip>
           <ITooltip title="删除">
             <template #content>
               <a-popconfirm
-                title="确定删除选中记录？"
-                ok-text="删除"
-                cancel-text="取消"
-                placement="left"
-                v-model:visible="record.isDeleteVisible"
+                  title="确定删除选中记录？"
+                  ok-text="删除"
+                  cancel-text="取消"
+                  placement="left"
+                  v-model:visible="record.isDeleteVisible"
               >
                 <template #okButton>
                   <a-button
-                    type="danger"
-                    size="small"
-                    @click="onDeleteCurrentConfirm(record)"
+                      type="danger"
+                      size="small"
+                      @click="onDeleteCurrentConfirm(record)"
                   >
                     删除
                   </a-button>
                 </template>
                 <a-button type="danger" size="small">
                   <template #icon>
-                    <DeleteOutlined />
+                    <DeleteOutlined/>
                   </template>
                 </a-button>
               </a-popconfirm>
@@ -279,10 +270,10 @@ const onSelectChange = (rowKeys: string[]) => {
     </ITable>
 
     <AddEditModal
-      v-model:visible="isAddEditModal"
-      :title="isEdit ? '编辑' : '添加'"
-      @cancel="onAddEditCancel"
-      @confirm="onAddEditConfirm"
+        v-model:visible="isAddEditModal"
+        :title="isEdit ? '编辑' : '添加'"
+        @cancel="onAddEditCancel"
+        @confirm="onAddEditConfirm"
     />
   </div>
 </template>

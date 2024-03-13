@@ -96,6 +96,6 @@ class AxiosUtils {
 }
 
 // 新建对象
-let http = new AxiosUtils();
+const http = new AxiosUtils();
 // 把对象暴露出去
 export default http;

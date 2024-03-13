@@ -1,11 +1,14 @@
 <!-- 个人资料 - 操作日志 -->
 <script setup lang="ts">
-import { reactive, ref, unref } from "vue";
-const pages = reactive({
-  pageNum: 1,
-  pageSize: 10,
+import {reactive} from "vue";
+import {IPages} from "@/types";
+
+const pages = reactive<IPages>({
+  size: 10,
+  page: 1,
   total: 0,
 });
+
 </script>
 
 <template>
@@ -16,9 +19,9 @@ const pages = reactive({
     </a-timeline-item>
   </a-timeline>
   <a-pagination
-    v-model:current="pages.pageNum"
-    show-quick-jumper
-    :total="pages.total"
+      v-model:current="pages.page"
+      show-quick-jumper
+      :total="pages.total"
   />
 </template>
 

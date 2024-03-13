@@ -1,13 +1,9 @@
 <!-- 管理员日志管理 -->
 <script setup lang="ts">
-import {
-  ZoomInOutlined,
-  UserOutlined,
-  SendOutlined,
-} from "@ant-design/icons-vue";
-import { computed, onMounted, reactive, ref, unref } from "vue";
+import {SendOutlined, ZoomInOutlined,} from "@ant-design/icons-vue";
+import {onMounted, reactive, ref} from "vue";
 import data from "./data.json";
-import { IColumns, IPages } from "@/types/index";
+import {IColumns, IPages} from "@/types/index";
 
 interface IDataSource {
   key?: string | number;
@@ -74,11 +70,11 @@ const columns = ref<IColumns[]>([
 const dataSource = ref<IDataSource[]>(data);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
-  pageSize: 10,
-  current: 1,
+  size: 10,
+  page: 1,
   total: 0,
 });
-const formSeach = reactive<any>({});
+const formSearch = reactive<any>({});
 
 const avatarPreviewSrc = ref("");
 const isEdit = ref<boolean>(false); // 是否编辑
@@ -123,27 +119,27 @@ const toUrl = (url: string) => {
 <template>
   <div class="default-main">
     <i-table
-      :columns="columns"
-      :data-source="dataSource"
-      :pages="pages"
-      is-selected-row-keys
-      :loading="isTableLoading"
-      :scroll="{ x: true }"
-      @on-column-change="onColumnChange"
-      @on-pages-change="onPagesChange"
-      @on-select-change="onSelectChange"
+        :columns="columns"
+        :data-source="dataSource"
+        :pages="pages"
+        is-selected-row-keys
+        :loading="isTableLoading"
+        :scroll="{ x: true }"
+        @on-column-change="onColumnChange"
+        @on-pages-change="onPagesChange"
+        @on-select-change="onSelectChange"
     >
       <template #url="{ record }">
         <a-input-group compact>
           <a-input
-            v-model:value="record.url"
-            readonly
-            style="width: 200px; text-align: left"
+              v-model:value="record.url"
+              readonly
+              style="width: 200px; text-align: left"
           >
           </a-input>
           <a-button @click="toUrl(record.url)">
             <template #icon>
-              <send-outlined />
+              <send-outlined/>
             </template>
           </a-button>
         </a-input-group>
@@ -157,15 +153,15 @@ const toUrl = (url: string) => {
         <a-space>
           <ITooltip title="查看详情" size="small">
             <template #icon>
-              <zoom-in-outlined />
+              <zoom-in-outlined/>
             </template>
           </ITooltip>
         </a-space>
       </template>
     </i-table>
     <i-preview-image
-      :src="avatarPreviewSrc"
-      v-model:visible="isAvatarPreviewSrc"
+        :src="avatarPreviewSrc"
+        v-model:visible="isAvatarPreviewSrc"
     />
   </div>
 </template>

@@ -1,20 +1,10 @@
 <!-- 管理员管理 -->
 <script setup lang="ts">
-import {
-  SyncOutlined,
-  PlusOutlined,
-  DeleteOutlined,
-  TableOutlined,
-  SearchOutlined,
-  EditOutlined,
-  EditFilled,
-  ZoomInOutlined,
-  UserOutlined,
-} from "@ant-design/icons-vue";
-import { computed, onMounted, reactive, ref, unref } from "vue";
+import {DeleteOutlined, EditOutlined, PlusOutlined, UserOutlined,} from "@ant-design/icons-vue";
+import {onMounted, reactive, ref, unref} from "vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
 import data from "./data.json";
-import type { IColumns, IPages } from "@/types/index";
+import type {IColumns, IPages} from "@/types/index";
 
 interface IDataSource {
   key?: string | number;
@@ -36,7 +26,7 @@ const columns = ref<IColumns[]>([
     dataIndex: "index",
     key: "index",
     align: "center",
-    customRender: ({ index }) => index + 1,
+    customRender: ({index}) => index + 1,
   },
   {
     title: "用户名",
@@ -94,8 +84,8 @@ const columns = ref<IColumns[]>([
 const dataSource = ref<IDataSource[]>(data);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
-  pageSize: 10,
-  current: 1,
+  size: 10,
+  page: 1,
   total: 0,
 });
 const formSeach = reactive<any>({});
@@ -176,44 +166,44 @@ const openAvatarPreviewImage = (src: string) => {
 <template>
   <div class="default-main">
     <ITable
-      :columns="columns"
-      :dataSource="dataSource"
-      :pages="pages"
-      isSelectedRowKeys
-      isFormSearchBtn
-      :loading="isTableLoading"
-      :scroll="{ x: true }"
-      @onColumnChange="onColumnChange"
-      @onPagesChange="onPagesChange"
-      @onSelectChange="onSelectChange"
+        :columns="columns"
+        :dataSource="dataSource"
+        :pages="pages"
+        isSelectedRowKeys
+        isFormSearchBtn
+        :loading="isTableLoading"
+        :scroll="{ x: true }"
+        @onColumnChange="onColumnChange"
+        @onPagesChange="onPagesChange"
+        @onSelectChange="onSelectChange"
     >
       <template #formSearch>
         <a-form
-          :model="formSeach"
-          layout="inline"
-          name="basic"
-          autocomplete="off"
+            :model="formSeach"
+            layout="inline"
+            name="basic"
+            autocomplete="off"
         >
           <a-space direction="vertical">
             <a-row style="width: 100%">
               <a-col :span="6">
                 <a-form-item label="UsernameUsernameUsername" name="username">
-                  <a-input v-model:value="formSeach.username" allow-clear />
+                  <a-input v-model:value="formSeach.username" allow-clear/>
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="Username" name="nickname">
-                  <a-input v-model:value="formSeach.username" allow-clear />
+                  <a-input v-model:value="formSeach.username" allow-clear/>
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="Username" name="123">
-                  <a-input v-model:value="formSeach.username" allow-clear />
+                  <a-input v-model:value="formSeach.username" allow-clear/>
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="Username" name="222">
-                  <a-input v-model:value="formSeach.username" allow-clear />
+                  <a-input v-model:value="formSeach.username" allow-clear/>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -227,31 +217,31 @@ const openAvatarPreviewImage = (src: string) => {
       <template #leftBtn>
         <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
-            <PlusOutlined />
+            <PlusOutlined/>
           </template>
         </ITooltip>
         <ITooltip title="删除选中行">
           <template #content>
             <a-popconfirm
-              title="确定删除选中记录？"
-              ok-text="删除"
-              cancel-text="取消"
-              @cancel="onDeleteAllcancel"
-              @visibleChange="onDeleteVisibleChange"
-              v-model:visible="isDeleteAllVisible"
+                title="确定删除选中记录？"
+                ok-text="删除"
+                cancel-text="取消"
+                @cancel="onDeleteAllcancel"
+                @visibleChange="onDeleteVisibleChange"
+                v-model:visible="isDeleteAllVisible"
             >
               <template #okButton>
                 <a-button
-                  type="danger"
-                  size="small"
-                  @click="onDeleteAllConfirm"
+                    type="danger"
+                    size="small"
+                    @click="onDeleteAllConfirm"
                 >
                   删除
                 </a-button>
               </template>
               <a-button type="danger" :disabled="!selectedRowKeys.length">
                 <template #icon>
-                  <DeleteOutlined />
+                  <DeleteOutlined/>
                 </template>
                 删除
               </a-button>
@@ -261,11 +251,13 @@ const openAvatarPreviewImage = (src: string) => {
       </template>
       <template #avatar="{ record }">
         <a-avatar
-          size="large"
-          :src="record.avatar"
-          @click="openAvatarPreviewImage(record.avatar)"
+            size="large"
+            :src="record.avatar"
+            @click="openAvatarPreviewImage(record.avatar)"
         >
-          <template #icon><UserOutlined /></template>
+          <template #icon>
+            <UserOutlined/>
+          </template>
         </a-avatar>
       </template>
       <template #status="{ record }">
@@ -277,30 +269,30 @@ const openAvatarPreviewImage = (src: string) => {
         <a-space>
           <ITooltip title="编辑" size="small" @click="handleAddEdit(1)">
             <template #icon>
-              <EditOutlined />
+              <EditOutlined/>
             </template>
           </ITooltip>
           <ITooltip title="删除">
             <template #content>
               <a-popconfirm
-                title="确定删除选中记录？"
-                ok-text="删除"
-                cancel-text="取消"
-                placement="left"
-                v-model:visible="record.isDelVisible"
+                  title="确定删除选中记录？"
+                  ok-text="删除"
+                  cancel-text="取消"
+                  placement="left"
+                  v-model:visible="record.isDelVisible"
               >
                 <template #okButton>
                   <a-button
-                    type="danger"
-                    size="small"
-                    @click="onDeleteCurrentConfirm(record)"
+                      type="danger"
+                      size="small"
+                      @click="onDeleteCurrentConfirm(record)"
                   >
                     删除
                   </a-button>
                 </template>
                 <a-button type="danger" size="small">
                   <template #icon>
-                    <DeleteOutlined />
+                    <DeleteOutlined/>
                   </template>
                 </a-button>
               </a-popconfirm>
@@ -311,14 +303,14 @@ const openAvatarPreviewImage = (src: string) => {
     </ITable>
 
     <AddEditModal
-      :visible="isAddEditModal"
-      :title="isEdit ? '编辑' : '添加'"
-      @cancel="onAddEditCancel"
-      @confirm="onAddEditConfirm"
+        :visible="isAddEditModal"
+        :title="isEdit ? '编辑' : '添加'"
+        @cancel="onAddEditCancel"
+        @confirm="onAddEditConfirm"
     />
     <IPreviewImage
-      :src="avatarPreviewSrc"
-      v-model:visible="isAvatarPreviewSrc"
+        :src="avatarPreviewSrc"
+        v-model:visible="isAvatarPreviewSrc"
     />
   </div>
 </template>

@@ -1,9 +1,9 @@
 <!-- 角色组管理 -->
 <script setup lang="ts">
-import { PlusOutlined, EditOutlined } from "@ant-design/icons-vue";
-import { computed, onMounted, reactive, ref, unref } from "vue";
+import {EditOutlined, PlusOutlined} from "@ant-design/icons-vue";
+import {onMounted, ref, unref} from "vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
-import { IColumns, IPages } from "@/types/index";
+import {IColumns, IPages} from "@/types/index";
 
 interface IDataSource {
   key: string;
@@ -101,8 +101,8 @@ const dataSource = ref<IDataSource[]>([
 ]);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
-  pageSize: 10,
-  current: 1,
+  size: 10,
+  page: 1,
   total: 0,
 });
 const isEdit = ref<boolean>(false); // 是否编辑
@@ -173,29 +173,29 @@ const onSelectChange = (rowKeys: string[]) => {
 <template>
   <div class="default-main">
     <ITable
-      :columns="columns"
-      :dataSource="dataSource"
-      :pages="pages"
-      isSelectedRowKeys
-      :isExpandAllRows="isExpandAllRows"
-      :loading="isTableLoading"
-      @onColumnChange="onColumnChange"
-      @onPagesChange="onPagesChange"
-      @onSelectChange="onSelectChange"
+        :columns="columns"
+        :dataSource="dataSource"
+        :pages="pages"
+        isSelectedRowKeys
+        :isExpandAllRows="isExpandAllRows"
+        :loading="isTableLoading"
+        @onColumnChange="onColumnChange"
+        @onPagesChange="onPagesChange"
+        @onSelectChange="onSelectChange"
     >
       <template #leftBtn>
         <ITooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
-            <PlusOutlined />
+            <PlusOutlined/>
           </template>
         </ITooltip>
         <ITooltip title="删除选中行">
           <template #content>
             <delete-popconfirm
-              v-model:visible="isDeleteAllVisible"
-              :disabled="!selectedRowKeys.length"
-              @confirm="onDeleteAllConfirm"
-              @cancel="onDeleteAllcancel"
+                v-model:visible="isDeleteAllVisible"
+                :disabled="!selectedRowKeys.length"
+                @confirm="onDeleteAllConfirm"
+                @cancel="onDeleteAllcancel"
             />
             <!-- <a-popconfirm
               title="确定删除选中记录？"
@@ -224,10 +224,10 @@ const onSelectChange = (rowKeys: string[]) => {
           </template>
         </ITooltip>
         <ITooltip
-          :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
-          :content="isExpandAllRows ? '收缩所有' : '展开所有'"
-          :type="isExpandAllRows ? 'danger' : 'warning'"
-          @click="isExpandAllRows = !isExpandAllRows"
+            :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
+            :content="isExpandAllRows ? '收缩所有' : '展开所有'"
+            :type="isExpandAllRows ? 'danger' : 'warning'"
+            @click="isExpandAllRows = !isExpandAllRows"
         >
         </ITooltip>
       </template>
@@ -245,16 +245,16 @@ const onSelectChange = (rowKeys: string[]) => {
             </ITooltip> -->
           <i-tooltip title="编辑" size="small" @click="handleAddEdit(1)">
             <template #icon>
-              <edit-outlined />
+              <edit-outlined/>
             </template>
           </i-tooltip>
           <ITooltip title="删除">
             <template #content>
               <delete-popconfirm
-                v-model:visible="record.isDeleteVisible"
-                type="table"
-                placement="left"
-                @confirm="onDeleteCurrentConfirm(record)"
+                  v-model:visible="record.isDeleteVisible"
+                  type="table"
+                  placement="left"
+                  @confirm="onDeleteCurrentConfirm(record)"
               />
               <!-- <i-popconfirm
                 v-model:visible="record.isDeleteVisible"
@@ -276,10 +276,10 @@ const onSelectChange = (rowKeys: string[]) => {
     </ITable>
 
     <add-edit-modal
-      :visible="isAddEditModal"
-      :title="isEdit ? '编辑' : '添加'"
-      @cancel="onAddEditCancel"
-      @confirm="onAddEditConfirm"
+        :visible="isAddEditModal"
+        :title="isEdit ? '编辑' : '添加'"
+        @cancel="onAddEditCancel"
+        @confirm="onAddEditConfirm"
     />
   </div>
 </template>

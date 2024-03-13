@@ -1,4 +1,4 @@
-import { PaginationProps } from "ant-design-vue";
+import {PaginationProps} from "ant-design-vue";
 
 type TCustomHeaderCell = {
   style: TStyle;
@@ -26,7 +26,8 @@ interface IColumns {
   resizable?: boolean; // 表头是否可伸缩
   propOptions?: any; // 搜索框配置项
   customCell?(record: any, rowIndex: number, column: IColumns): void; // 设置单元格属性
-  customRender?({ text, record, index, column }): void;
+  customRender?({text, record, index, column}): void;
+
   customHeaderCell?(column?): TCustomHeaderCell;
 }
 
@@ -36,10 +37,13 @@ interface IPages {
   total: number; // 总条数
 }
 
-interface IPagination extends IPages, PaginationProps {
+interface IPagination extends PaginationProps {
   pageSizeOptions?: string[];
   showQuickJumper?: boolean;
   showSizeChanger?: boolean;
+  pageSize: number;
+  current: number;
+  total: number;
   // showTotal: (total: number) => unknown;
 }
 
@@ -48,4 +52,4 @@ interface IDataSource {
   children?: IDataSource[];
 }
 
-export { IColumns, IPages, IPagination, IDataSource };
+export {IColumns, IPages, IPagination, IDataSource};

@@ -1,25 +1,12 @@
 <!-- 会员规则管理 -->
 <script setup lang="ts">
-import {
-  PlusOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  ZoomInOutlined,
-  DragOutlined,
-} from "@ant-design/icons-vue";
-import {
-  computed,
-  defineAsyncComponent,
-  onMounted,
-  reactive,
-  ref,
-  unref,
-} from "vue";
-import type { IColumns, IPages } from "@/types/index";
 import * as antIcons from "@ant-design/icons-vue";
+import {DeleteOutlined, DragOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons-vue";
+import {defineAsyncComponent, onMounted, ref, unref,} from "vue";
+import type {IColumns, IPages} from "@/types/index";
 
 const AddEditModal = defineAsyncComponent(
-  () => import("./components/AddEditModal/index.vue")
+    () => import("./components/AddEditModal/index.vue")
 );
 
 interface IDataSource {
@@ -35,6 +22,7 @@ interface IDataSource {
   isDeleteVisible?: boolean; // 是否显示删除气泡
   children?: IDataSource[]; // 设置 children 务必设置 width 否则可能出现宽度浮动
 }
+
 //#region 变量
 const columns = ref<IColumns[]>([
   {
@@ -130,8 +118,8 @@ const dataSource = ref<IDataSource[]>([
 ]);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
-  pageSize: 10,
-  current: 1,
+  size: 10,
+  page: 1,
   total: 0,
 });
 const isEdit = ref<boolean>(false); // 是否编辑
@@ -171,7 +159,7 @@ const onDeleteAllConfirm = () => {
   isDeleteAllVisible.value = false;
 };
 // 删除-取消
-const onDeleteAllcancel = () => {
+const onDeleteAllCancel = () => {
   isDeleteAllVisible.value = false;
 };
 // 删除-显示隐藏的回调
@@ -232,44 +220,44 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
 <template>
   <div class="default-main">
     <i-table
-      :columns="columns"
-      :dataSource="dataSource"
-      :pages="pages"
-      isSelectedRowKeys
-      :isExpandAllRows="isExpandAllRows"
-      :loading="isTableLoading"
-      @onColumnChange="onColumnChange"
-      @onPagesChange="onPagesChange"
-      @onSelectChange="onSelectChange"
+        :columns="columns"
+        :dataSource="dataSource"
+        :pages="pages"
+        isSelectedRowKeys
+        :isExpandAllRows="isExpandAllRows"
+        :loading="isTableLoading"
+        @onColumnChange="onColumnChange"
+        @onPagesChange="onPagesChange"
+        @onSelectChange="onSelectChange"
     >
       <template #leftBtn>
         <i-tooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
-            <plus-outlined />
+            <plus-outlined/>
           </template>
         </i-tooltip>
         <i-tooltip title="删除选中行">
           <template #content>
             <a-popconfirm
-              title="确定删除选中记录？"
-              ok-text="删除"
-              cancel-text="取消"
-              @cancel="onDeleteAllcancel"
-              @visibleChange="onDeleteVisibleChange"
-              v-model:visible="isDeleteAllVisible"
+                title="确定删除选中记录？"
+                ok-text="删除"
+                cancel-text="取消"
+                @cancel="onDeleteAllCancel"
+                @visibleChange="onDeleteVisibleChange"
+                v-model:visible="isDeleteAllVisible"
             >
               <template #okButton>
                 <a-button
-                  type="danger"
-                  size="small"
-                  @click="onDeleteAllConfirm"
+                    type="danger"
+                    size="small"
+                    @click="onDeleteAllConfirm"
                 >
                   删除
                 </a-button>
               </template>
               <a-button type="danger" :disabled="!selectedRowKeys.length">
                 <template #icon>
-                  <delete-outlined />
+                  <delete-outlined/>
                 </template>
                 删除
               </a-button>
@@ -277,16 +265,16 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
           </template>
         </i-tooltip>
         <i-tooltip
-          :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
-          :content="isExpandAllRows ? '收缩所有' : '展开所有'"
-          :type="isExpandAllRows ? 'danger' : 'warning'"
-          @click="isExpandAllRows = !isExpandAllRows"
+            :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
+            :content="isExpandAllRows ? '收缩所有' : '展开所有'"
+            :type="isExpandAllRows ? 'danger' : 'warning'"
+            @click="isExpandAllRows = !isExpandAllRows"
         >
         </i-tooltip>
       </template>
 
       <template #icon="{ record }">
-        <component :is="antIcons[record.icon]" style="font-size: 18px" />
+        <component :is="antIcons[record.icon]" style="font-size: 18px"/>
       </template>
       <template #ruletype="{ record }">
         <a-tag :color="ruletypeStatus(record.ruletype).color">
@@ -295,44 +283,44 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
       </template>
       <template #status="{ record }">
         <a-switch
-          v-model:checked="record.status"
-          :checkedValue="1"
-          :unCheckedValue="0"
+            v-model:checked="record.status"
+            :checkedValue="1"
+            :unCheckedValue="0"
         />
       </template>
       <template #operate="{ record }">
         <a-space>
           <i-tooltip title="移动" size="small" type="move">
             <template #icon>
-              <drag-outlined />
+              <drag-outlined/>
             </template>
           </i-tooltip>
           <i-tooltip title="编辑" size="small" @click="handleAddEdit(1)">
             <template #icon>
-              <edit-outlined />
+              <edit-outlined/>
             </template>
           </i-tooltip>
           <i-tooltip title="删除">
             <template #content>
               <a-popconfirm
-                title="确定删除选中记录？"
-                ok-text="删除"
-                cancel-text="取消"
-                placement="left"
-                v-model:visible="record.isDeleteVisible"
+                  title="确定删除选中记录？"
+                  ok-text="删除"
+                  cancel-text="取消"
+                  placement="left"
+                  v-model:visible="record.isDeleteVisible"
               >
                 <template #okButton>
                   <a-button
-                    type="danger"
-                    size="small"
-                    @click="onDeleteCurrentConfirm(record)"
+                      type="danger"
+                      size="small"
+                      @click="onDeleteCurrentConfirm(record)"
                   >
                     删除
                   </a-button>
                 </template>
                 <a-button type="danger" size="small">
                   <template #icon>
-                    <delete-outlined />
+                    <delete-outlined/>
                   </template>
                 </a-button>
               </a-popconfirm>
@@ -343,10 +331,10 @@ const ruletypeStatus = (type: IDataSource["ruletype"]) => {
     </i-table>
 
     <add-edit-modal
-      :visible="isAddEditModal"
-      :title="isEdit ? '编辑' : '添加'"
-      @cancel="onAddEditCancel"
-      @confirm="onAddEditConfirm"
+        :visible="isAddEditModal"
+        :title="isEdit ? '编辑' : '添加'"
+        @cancel="onAddEditCancel"
+        @confirm="onAddEditConfirm"
     />
   </div>
 </template>
