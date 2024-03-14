@@ -58,8 +58,8 @@ const handleLogin = async () => {
 
     await setTimeoutPromise(500);
     notification.success({
-      message: t("message.success"),
-      description: t("success.login"),
+      message: t("success.login"),
+      description: data.userInfo.username + ' ' + t("success.welcome"),
     });
   } catch (error) {
     await svgCaptchaAsync();

@@ -17,23 +17,25 @@ import {
 import {ColumnFilterItem} from "ant-design-vue/es/table/interface";
 import Sortable from "sortablejs";
 import {IColumns, IDataSource, IPages, IPagination} from "@/types";
-import {FormInstance} from "ant-design-vue";
+import {FormInstance, FormProps, TableProps} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 import ITooltip from "@/components/IComponents/ITooltip/index.vue";
+import cloneDeep from "lodash/cloneDeep";
 
 //#region interface
 interface IProps {
   columns: IColumns[]; // 表格列的配置描述
-  dataSource: IDataSource[]; //
-  selectedRowKeys?: string[]; // 选中的表格多选
+  dataSource: TableProps['dataSource']; // 数据数组
+  rowSelection?: TableProps['rowSelection']; // 表格行是否可选择
   pagination?: IPagination; // 指定每页可以显示多少条
   pages?: IPages; // 页码
-  formOptions?: any;
+  formOptions?: FormProps;
+  tableOptions?: TableProps;
   size?: "large" | "middle" | "small";
-  scroll?: null;
+  rowKey?: TableProps['rowKey']; // 表格行 key 的取值
+  scroll?: TableProps['scroll']; // 设置横向或纵向滚动，也可用于指定滚动区域的宽和高
   keywordPlaceholder?: string; // 关键字搜索框 占位内容
   keywordVisible?: boolean; // 是否显示关键字搜索框
-  isSelectedRowKeys?: boolean; // 是否显示表格多选框
   loading?: boolean; // 表格加载状态
   isExpandAllRows?: boolean; // 控制展开所有行
   isDragVisible?: boolean; // 是否允许拖拽行 搭配 class drop-row-btn
@@ -50,7 +52,6 @@ interface ISortTableEnd {
 const props = withDefaults(defineProps<IProps>(), {
   columns: () => [],
   dataSource: () => [],
-  selectedRowKeys: () => [],
   pagination: () => ({
     // 可能是这边的问题 要是有分页问题吧
     pageSize: 10,
@@ -62,16 +63,15 @@ const props = withDefaults(defineProps<IProps>(), {
     page: 1,
     total: 0,
   }),
-  scroll: null,
+  rowKey: "key",
+  scroll: undefined,
   keywordPlaceholder: "请输入关键字",
   keywordVisible: true,
-  isSelectedRowKeys: false,
   loading: false,
   isExpandAllRows: false,
   isDragVisible: false,
 });
 const emits = defineEmits([
-  "selectChange", // 选中表格数据change事件
   "columnChange", // columns 发生变化时
   "pagesChange", // 页码发生变化时
   "reload", // 刷新表格
@@ -80,7 +80,7 @@ const emits = defineEmits([
   "reset",
 ]);
 // #endregion
-
+const columnsCache: IColumns[] = cloneDeep(props.columns); // 缓存 columns
 // 国际化
 const {locale} = useI18n();
 
@@ -90,10 +90,9 @@ const formSearch = reactive<any>({});
 
 const menuChecked = ref<string[]>([]); // 选中显示隐藏表头
 const menuCheckList = ref<IColumns[]>([]); // 表头的数据列
-const pages = toRef(props, "pages"); // 暂存 被删除的columns
-const columnStorages = toRef(props, "columns"); // 暂存 被删除的columns
+const pages = toRef(props, "pages"); // 分页
+const columns = toRef(props, "columns"); // 表格列配置项
 const dataSource = toRef(props, "dataSource");
-const selectedRowKeys = ref<string[]>([]);
 const expandedRowKeys = ref<string[]>([]);
 const oldKeyword = ref<string>(""); // 旧的 搜索内容 防止重复调用接口
 const keyword = ref<string>(""); // 搜索
@@ -103,7 +102,7 @@ const isOpenSearch = ref<boolean>(false); // 展开搜索栏区域
 
 onMounted(() => {
   // 修改 columns
-  menuCheckList.value = props.columns.filter(
+  menuCheckList.value = columns.value.filter(
       (item) => ![item.dataIndex, item.key].includes("operate")
   );
   menuChecked.value = unref(menuCheckList).map((item) => item.dataIndex);
@@ -194,16 +193,18 @@ const handlePageSizeChange = (
 
 // 选中显示表格列
 const handleCheckboxChange = () => {
-  const arr: IColumns[] = [];
-  const _columns = unref(columnStorages);
+  const arr: IColumns[] = []
+  const _columns = cloneDeep(columnsCache);
   _columns.forEach((item: IColumns) => {
     if (unref(menuChecked).includes(item.dataIndex)) {
       arr.push(item);
     }
   });
-  // 操作,默认需要
   arr.push(_columns[_columns.length - 1]);
-  emits("columnChange", arr);
+  // 操作,默认需要
+  columns.value.length = 0
+  columns.value.push(...arr);
+  // console.log('handleCheckboxChange', arr)
 };
 // 显示与隐藏 form
 const handleOpenSearch = () => {
@@ -213,12 +214,7 @@ const handleOpenSearch = () => {
 const handleResizeColumn = (w: number, col: any) => {
   col.width = w;
 };
-// 勾选change事件
-const onSelectChange = (changableRowKeys: string[]) => {
-  console.log("selectedRowKeys changed: ", changableRowKeys);
-  selectedRowKeys.value = changableRowKeys;
-  emits("selectChange", changableRowKeys);
-};
+
 /**
  * @description 表格上方搜索框失焦 搜索 input blur 事件
  */
@@ -229,22 +225,25 @@ const handleSearchBlur = () => {
   emits("searchBlur", unref(keyword));
 };
 
-const rowSelection = computed(() => {
+const pagination = computed(() => {
   return {
-    selectedRowKeys: unref(selectedRowKeys), // 指定选中项的 key 数组，需要和 onChange 进行配合
-    onChange: onSelectChange, // 选中项发生变化时的回调
-    hideDefaultSelections: true, // 去掉『全选』『反选』两个默认选项
-    fixed: true, // 把选择框列固定在左边
-  };
-});
+    showQuickJumper: true,
+    showSizeChanger: true,
+    showTotal: showTotal,
+    total: pages.value.total,
+    pageSize: pages.value.size,
+    current: pages.value.page,
+    pagination: props.pagination,
+  }
+})
+
 /**
  * @description 表单搜索配置项
  */
 const formColumns = computed(() => {
-  const columns = props.columns ? props.columns : [];
   const rowColumns: IColumns[][] = [];
   let count = 0;
-  columns
+  columns.value
       .filter((column: IColumns) => column.search)
       .forEach((column: IColumns, index: number) => {
         const _span: number = Number(column.span || 4);
@@ -261,9 +260,7 @@ const formColumns = computed(() => {
  * @description 表格列配置项
  */
 const columnsComputed = computed(() => {
-  const columns = props.columns || [];
-
-  return columns.map((column: IColumns) => {
+  return columns.value.map((column: IColumns) => {
     if (column.minWidth) {
       column.customHeaderCell = () => {
         return {
@@ -471,21 +468,14 @@ defineExpose({
       </div>
       <a-table
           v-model:expanded-row-keys="expandedRowKeys"
-          :row-selection="props.isSelectedRowKeys ? rowSelection : null"
+          :row-key="props.rowKey"
+          :row-selection="props.rowSelection"
           :data-source="dataSource"
           :loading="props.loading"
           :columns="columnsComputed"
           :scroll="props.scroll || { x: true }"
           :size="props.size || 'small'"
-          :pagination="{
-          showQuickJumper: true,
-          showSizeChanger: true,
-          showTotal: showTotal,
-          total: pages.total,
-          pageSize: pages.size,
-          current: pages.page,
-          pagination: props.pagination,
-        }"
+          :pagination="pagination"
           bordered
           @resize-column="handleResizeColumn"
           @change="handlePageSizeChange"

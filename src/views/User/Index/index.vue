@@ -1,9 +1,8 @@
-<!-- 菜单规则管理 -->
-<!-- 角色组管理 -->
+<!-- 用户列表 -->
 <script setup lang="ts">
 import {DeleteOutlined, EditOutlined, PlusOutlined, UserOutlined} from "@ant-design/icons-vue";
-import AddEditModal from "./components/AddEditModal/index.vue";
-import {onMounted, ref, unref} from "vue";
+import AddOrEditModal from "./components/AddOrEditModal/index.vue";
+import {computed, onMounted, ref} from "vue";
 import {IColumns, IPages} from "@/types";
 import {IDataSource} from "./types";
 import {getUserList} from "@/api/user";
@@ -23,7 +22,7 @@ const columns = ref<IColumns[]>([
   },
   {
     title: "昵称",
-    dataIndex: "nickname",
+    dataIndex: "nickName",
     align: "center",
     minWidth: 100,
   },
@@ -46,6 +45,12 @@ const columns = ref<IColumns[]>([
     minWidth: 100,
   },
   {
+    title: "邮箱",
+    dataIndex: "email",
+    align: "center",
+    minWidth: 100,
+  },
+  {
     title: "手机号",
     dataIndex: "phone",
     align: "center",
@@ -53,33 +58,27 @@ const columns = ref<IColumns[]>([
   },
   {
     title: "最后登录IP",
-    dataIndex: "updateip",
+    dataIndex: "lastLoginIp",
     align: "center",
     minWidth: 140,
   },
   {
+    title: "最后登录时间",
+    dataIndex: "lastLoginTime",
+    align: "center",
+    minWidth: 180,
+  },
+  {
     title: "状态",
     dataIndex: "status",
     align: "center",
     minWidth: 100,
-  },
-  {
-    title: "最后登录",
-    dataIndex: "updatetime",
-    align: "center",
-    minWidth: 180,
   },
   {
     title: "创建时间",
-    dataIndex: "createtime",
+    dataIndex: "createTime",
     align: "center",
     minWidth: 180,
-  },
-  {
-    title: "状态",
-    dataIndex: "status",
-    align: "center",
-    minWidth: 100,
   },
   {
     title: "操作",
@@ -97,9 +96,8 @@ const pages = ref<IPages>({
   total: 0,
 });
 const isEdit = ref<boolean>(false); // 是否编辑
-const isDeleteAllVisible = ref<boolean>(false);
 const isTableLoading = ref<boolean>(false); // 表格加载状态
-const isAddEditModal = ref<boolean>(false);
+const isAddOrEditModalVisible = ref<boolean>(false);
 
 onMounted(async () => {
   await getList();
@@ -133,11 +131,11 @@ const getList = async () => {
 // 添加
 const handleAddEdit = (type: number) => {
   isEdit.value = type === 1;
-  isAddEditModal.value = true;
+  isAddOrEditModalVisible.value = true;
 };
 // 添加/编辑 - cancel
 const onAddEditCancel = () => {
-  isAddEditModal.value = false;
+  isAddOrEditModalVisible.value = false;
 };
 // 添加/编辑 - confirm
 const onAddEditConfirm = () => {
@@ -145,22 +143,14 @@ const onAddEditConfirm = () => {
 };
 
 // 删除-确定
-const onDeleteAllConfirm = () => {
-  isDeleteAllVisible.value = false;
+const onDeleteAllConfirm = async () => {
 };
+
 // 删除-取消
 const onDeleteAllCancel = () => {
-  isDeleteAllVisible.value = false;
-};
-// 删除-显示隐藏的回调
-const onDeleteVisibleChange = () => {
-  // selectedRowKeys没有选中时 默认禁用 删除按钮
-  if (!unref(selectedRowKeys).length) {
-    isDeleteAllVisible.value = false;
-  }
 };
 // 删除当前行-确定
-const onDeleteCurrentConfirm = (record: IDataSource) => {
+const handleDeleteRecordConfirm = (record: IDataSource) => {
   console.log(record, "record");
   record.isDeleteVisible = false;
 };
@@ -189,20 +179,28 @@ const genderRender = (record) => {
   };
   return genderObj[record.gender];
 };
+
+const rowSelection = computed(() => {
+  return {
+    selectedRowKeys: selectedRowKeys.value, // 指定选中项的 key 数组，需要和 onChange 进行配合
+    onChange: onSelectChange, // 选中项发生变化时的回调
+    hideDefaultSelections: true, // 去掉『全选』『反选』两个默认选项
+    fixed: true, // 把选择框列固定在左边
+  };
+});
 </script>
 
 <template>
   <div class="default-main">
     <i-table
+        row-key="id"
         :columns="columns"
-        :dataSource="dataSource"
+        :data-source="dataSource"
         :pages="pages"
-        isSelectedRowKeys
         :loading="isTableLoading"
+        :row-selection="rowSelection"
         @reload="getList"
-        @onColumnChange="onColumnChange"
-        @onPagesChange="onPagesChange"
-        @onSelectChange="onSelectChange"
+        @pagesChange="onPagesChange"
     >
       <template #leftBtn>
         <i-tooltip title="添加" content="添加" @click="handleAddEdit(0)">
@@ -214,21 +212,13 @@ const genderRender = (record) => {
           <template #content>
             <a-popconfirm
                 title="确定删除选中记录？"
-                ok-text="删除"
+                placement="right"
                 cancel-text="取消"
+                ok-text="删除"
+                :ok-button-props="{danger:true,loading: false}"
                 @cancel="onDeleteAllCancel"
-                @visibleChange="onDeleteVisibleChange"
-                v-model:visible="isDeleteAllVisible"
+                @confirm="onDeleteAllConfirm"
             >
-              <template #okButton>
-                <a-button
-                    type="danger"
-                    size="small"
-                    @click="onDeleteAllConfirm"
-                >
-                  删除
-                </a-button>
-              </template>
               <a-button type="danger" :disabled="!selectedRowKeys.length">
                 <template #icon>
                   <delete-outlined/>
@@ -247,9 +237,9 @@ const genderRender = (record) => {
           {{ genderRender(record) }}
         </a-tag>
       </template>
-      <template #updateip="{ record }">
-        <a-tag color="success" class="table-tag">
-          {{ record.updateip }}
+      <template #lastLoginIp="{ record }">
+        <a-tag color="processing" class="table-tag">
+          {{ record.lastLoginIp }}
         </a-tag>
       </template>
       <template #status="{ record }">
@@ -283,22 +273,15 @@ const genderRender = (record) => {
               <a-popconfirm
                   title="确定删除选中记录？"
                   ok-text="删除"
+                  ok-type="primary"
+                  :ok-button-props="{danger:true}"
                   cancel-text="取消"
                   placement="left"
-                  v-model:visible="record.isDeleteVisible"
+                  @confirm="handleDeleteRecordConfirm(record)"
               >
-                <template #okButton>
-                  <a-button
-                      type="danger"
-                      size="small"
-                      @click="onDeleteCurrentConfirm(record)"
-                  >
-                    删除
-                  </a-button>
-                </template>
                 <a-button type="danger" size="small">
                   <template #icon>
-                    <DeleteOutlined/>
+                    <delete-outlined/>
                   </template>
                 </a-button>
               </a-popconfirm>
@@ -308,8 +291,8 @@ const genderRender = (record) => {
       </template>
     </i-table>
 
-    <AddEditModal
-        v-model:visible="isAddEditModal"
+    <add-or-edit-modal
+        v-model:visible="isAddOrEditModalVisible"
         :title="isEdit ? '编辑' : '添加'"
         @cancel="onAddEditCancel"
         @confirm="onAddEditConfirm"

@@ -120,6 +120,7 @@ const handleCancel = (): void => {
       <a-form-item label="电子邮箱" name="email">
         <a-input
             v-model:value="formState.email"
+            type="email"
             allow-clear
             placeholder="请输入电子邮箱"
         />
@@ -133,9 +134,9 @@ const handleCancel = (): void => {
       </a-form-item>
       <a-form-item label="性别" name="sex">
         <a-radio-group v-model:value="formState.sex">
-          <a-radio :value="1"> 男</a-radio>
-          <a-radio :value="2"> 女</a-radio>
-          <a-radio :value="3"> 保密</a-radio>
+          <a-radio :value="0">保密</a-radio>
+          <a-radio :value="1">男</a-radio>
+          <a-radio :value="2">女</a-radio>
         </a-radio-group>
       </a-form-item>
       <a-form-item name="date-picker" label="生日">

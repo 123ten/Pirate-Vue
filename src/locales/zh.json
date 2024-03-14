@@ -26,7 +26,8 @@
   },
   "success": {
     "login": "登录成功！",
-    "loginOut": "退出成功！"
+    "loginOut": "退出成功！",
+    "welcome": "欢迎回来！"
   },
   "content": {
     "loginOut": "确定要退出登录吗？"

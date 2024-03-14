@@ -27,8 +27,9 @@
     "captcha": "Please enter the captcha"
   },
   "success": {
-    "login": "Login success！",
-    "loginOut": "Logout success！"
+    "login": "Login success!",
+    "loginOut": "Logout success!",
+    "welcome": "Welcome!"
   },
   "error": {
     "userName": "Please enter the username",
