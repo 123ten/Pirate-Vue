@@ -16,6 +16,7 @@
     "paths": {
       "@/*": ["src/*"]
     },
+    "types": [  "vite/client" ],
     "noImplicitAny": false, // 允许隐式的any
     "strictNullChecks": true, // 严格的null与undefined检查
     "noFallthroughCasesInSwitch": true, // 防止在switch代码块里的两个case之间忘记添加break语句。

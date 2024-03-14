@@ -115,6 +115,7 @@ const getList = async () => {
     size: pages.value.size,
   };
   isTableLoading.value = true;
+  console.log(11111111)
   try {
     const {data} = await getUserList(params);
     console.log(data, "data");

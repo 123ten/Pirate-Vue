@@ -6,7 +6,9 @@
     "loading": "加载中...",
     "noData": "暂无数据！",
     "noMoreData": "没有更多数据了！",
-    "noMore": "没有更多了！"
+    "noMore": "没有更多了！",
+    "noDataTips": "暂无数据！",
+    "loginExpired": "登录已过期，请重新登录！"
   },
   "placeholder": {
     "userName": "请输入用户名",

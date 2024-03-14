@@ -17,7 +17,9 @@
     "language": "Language",
     "zh": "Chinese",
     "en": "English",
-    "search": "Search"
+    "search": "Search",
+    "noDataTips": "No data",
+    "loginExpired": "Login expired, please login again"
   },
   "placeholder": {
     "userName": "Please enter the username",

@@ -14,9 +14,9 @@ import {$local} from "@/utils/storage";
 const {t} = useI18n();
 
 const rules = reactive({
-  username: [{required: true, message: t("login.userNameError")}],
-  password: [{required: true, message: t("login.passwordError")}],
-  captcha: [{required: true, message: t("login.captchaError")}],
+  username: [{required: true, message: t("error.userName")}],
+  password: [{required: true, message: t("error.password")}],
+  captcha: [{required: true, message: t("error.captcha")}],
 });
 
 const loginForm = reactive({

@@ -5,9 +5,9 @@ import {setTimeoutPromise} from "@/utils/common";
 import {refresh} from "@/api/user";
 import {$local} from "@/utils/storage";
 import {RefreshResult} from "@/api/types/user";
+import router from "@/router";
 
 const {t} = i18n.global;
-
 
 interface PendingTask {
   config: AxiosRequestConfig;
@@ -16,12 +16,12 @@ interface PendingTask {
 
 class AxiosUtils {
   private readonly http: AxiosInstance;
+  private refreshing: boolean = false;
+  private readonly subscribers: PendingTask[] = [];
 
   constructor() {
     this.http = axios.create({
-      // 根路径
-      baseURL: import.meta.env.VITE_BASE_API as string,
-      // 请求延迟时间 如果超过这个时间就会断开拦截
+      baseURL: import.meta.env.VITE_BASE_API,
       timeout: 10 * 60,
       headers: {
         Accept: "application/json",
@@ -48,90 +48,140 @@ class AxiosUtils {
 
   // 拦截器
   private interceptors() {
-
-    let refreshing: boolean = false;
-    const subscribers: PendingTask[] = [];
-
     // 请求拦截器
     this.http.interceptors.request.use(
-        (config: any) => {
-          // 在发送请求之前做些什么
-          const accessToken = $local.get('accessToken');
-
-          if (accessToken) {
-            config.headers.Authorization = "Bearer " + $local.get("accessToken"); // 一定要放在请求头里面
-          }
-          return config;
-        },
-        (error: any) => {
-          // 对请求错误做些什么
-          return Promise.reject(error);
-        }
+        this.requestSuccessHandler.bind(this),
+        this.requestErrorHandler.bind(this)
     );
-
-    // 添加响应拦截器
+    // 响应拦截器
     this.http.interceptors.response.use(
-        (response: { data: any }) => {
-          // 2xx 范围内的状态码都会触发该函数。
-          // 对响应数据做点什么
-          //对返回的数据进行筛选
-          //response.data 只取data中的值,其他的属性不要
-          return response.data;
-        },
-        async (error: any) => {
-          const {response} = error;
-          const {data, config} = response;
-
-          if (refreshing) {
-            return new Promise((resolve) => {
-              subscribers.push({config, resolve});
-            })
-          }
-
-          // 超出 2xx 范围的状态码都会触发该函数。
-          // 对响应错误做点什么
-          if (response.status === 401 && !config.url.includes('/user/refresh')) {
-            refreshing = true;
-            const {code, data} = await this.refreshAccessToken()
-            refreshing = false;
-
-            console.log('config', code, config)
-            if (code === 200) {
-              subscribers.forEach(({config, resolve}) => {
-                resolve(this.http(config))
-              });
-
-              // config.headers.Authorization = "Bearer " + data.accessToken;
-              return this.http(config);
-            }
-            // 重新登录
-            console.log("重新登录", data, config);
-            // router.push("/admin/login");
-            await setTimeoutPromise(500); // 等待500ms
-          }
-          // console.log("错误", error, data);
-          notification.error({
-            message: t("message.fail"),
-            description: data.message,
-          });
-          return Promise.reject(error);
-        }
+        this.responseSuccessHandler.bind(this),
+        this.responseErrorHandler.bind(this)
     );
   };
+
+  /**
+   * @description 移除重复请求
+   * @param config
+   * @private
+   */
+  private removePending(config: AxiosRequestConfig) {
+    for (let p in this.subscribers) {
+      let s = this.subscribers[p];
+      if (s.config.url === config.url) {
+        this.subscribers.splice(Number(p), 1);
+      }
+    }
+  }
+
+  /**
+   * @description 请求成功处理
+   * @param config
+   * @private
+   */
+  private requestSuccessHandler(config: any) {
+    // 在发送请求之前做些什么
+    const accessToken = $local.get('accessToken');
+
+    if (accessToken) {
+      config.headers.Authorization = "Bearer " + $local.get("accessToken"); // 一定要放在请求拦截器里
+    }
+    return config;
+  }
+
+  /**
+   * @description 请求错误处理
+   * @param error
+   * @private
+   */
+  private requestErrorHandler(error: any) {
+    // 对请求错误做些什么
+    return Promise.reject(error);
+  }
+
+  /**
+   * @description 响应成功处理 2xx 范围内的状态码都会触发该函数。
+   * @param response
+   * @private
+   */
+  private responseSuccessHandler(response: any) {
+    return response.data;
+  }
+
+  /**
+   * @description 响应错误处理 超出 2xx 范围的状态码都会触发该函数。
+   * @param error
+   * @private
+   */
+  private async responseErrorHandler(error: any) {
+    const {response} = error;
+    const {data, config} = response;
+
+    if (response.status === 401 && config.url.includes('/user/refresh')) {
+      await this.unAuthorizedHandler(response);
+      return Promise.reject(error);
+    }
+
+    if (this.refreshing) {
+      return new Promise((resolve) => {
+        this.subscribers.push({config, resolve});
+      })
+    }
+
+    if (response.status === 401 && !config.url.includes('/user/refresh')) {
+      this.refreshing = true;
+      console.log(config.url)
+      const {code, data} = await this.refreshAccessToken();
+      this.refreshing = false;
+
+      if (code === 200) {
+        this.subscribers.forEach(({config, resolve}) => {
+          resolve(this.http(config))
+        });
+
+        return this.http(config);
+      }
+      // console.log("重新登录", data, config);
+      await this.unAuthorizedHandler(response)
+    }
+    // console.log("错误", error, data);
+    notification.error({
+      message: t("message.fail"),
+      description: data.message,
+    });
+    return Promise.reject(error);
+  }
+
+  /**
+   * @description 重新登录处理
+   * @param response
+   * @private
+   */
+  private async unAuthorizedHandler(response: any) {
+    // 重新登录
+    router.push("/admin/login");
+    this.refreshing = false; // 重置刷新状态
+    this.subscribers.length = 0; // 清空请求队列
+    await setTimeoutPromise(500); // 等待500ms
+    notification.error({
+      message: t("message.fail"),
+      description: t("message.loginExpired"),
+    });
+  }
 
   // 封装一个request方法
   private request(url: string, method: string, data: any = {}) {
     return this.http({
       url,
       method,
-      params: method == "get" ? data : null,
-      data: method == "post" ? data : null,
+      params: method == "get" ? data : undefined,
+      data: method == "post" ? data : undefined,
     });
   };
 
   // 封装get方法
-  public get(url: string, data?: any) {
-    return this.request(url, "get", data);
+  public get(url: string, params?: any) {
+    return this.request(url, "get", params);
   };
 
   // 封装post方法
