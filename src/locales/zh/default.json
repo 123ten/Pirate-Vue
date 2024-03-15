@@ -13,7 +13,8 @@
   "placeholder": {
     "userName": "请输入用户名",
     "password": "请输入密码",
-    "captcha": "验证码"
+    "captcha": "验证码",
+    "keyword": "请输入关键字"
   },
   "error": {
     "userName": "用户名不能为空！",
@@ -22,7 +23,8 @@
     "captchaError": "验证码错误！",
     "userNameError": "用户名错误！",
     "passwordError": "密码错误！",
-    "login": "登录失败！"
+    "login": "登录失败！",
+    "network": "网络异常，请稍后重试！"
   },
   "success": {
     "login": "登录成功！",
@@ -34,7 +36,11 @@
   },
   "title": {
     "login": "登 录",
-    "loginOutTitle": "退出登录"
+    "loginOutTitle": "退出登录",
+    "refresh": "刷新",
+    "filter": "筛选",
+    "expand": "展开",
+    "expandUniversalSearch": "展开通用搜索"
   },
   "login": {
     "login": "登 录",

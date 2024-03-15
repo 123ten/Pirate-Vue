@@ -1,9 +1,9 @@
-import { defineConfig } from "vite";
+import {defineConfig} from "vite";
 import vue from "@vitejs/plugin-vue";
-import { resolve, join } from "path";
+import {join, resolve} from "path";
 import fs from "fs";
 import Components from "unplugin-vue-components/vite";
-import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
+import {AntDesignVueResolver} from "unplugin-vue-components/resolvers";
 import mkcert from "vite-plugin-mkcert";
 
 export default defineConfig({
@@ -46,7 +46,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       less: {
-        modifyVars: { hack: 'true; @import "@/common/less/theme.less"' },
+        modifyVars: {hack: 'true; @import "@/common/less/theme.less"'},
         javascriptEnabled: true,
         fileAsync: true,
       },
@@ -55,7 +55,14 @@ export default defineConfig({
 
   build: {
     assetsInlineLimit: 8192, // 小于 8KB 的图片会被转换成 base64 编码的 Data URI 格式
-    rollupOptions: {},
     assetsDir: "static", // 静态目录
+    rollupOptions: { //解决isCE
+      external: ["vue"],
+      output: {
+        globals: {
+          vue: 'vue'
+        }
+      }
+    },
   },
 });

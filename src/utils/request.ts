@@ -1,4 +1,4 @@
-import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
+import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse} from "axios";
 import {notification} from "ant-design-vue";
 import i18n from "@/locales";
 import {setTimeoutPromise} from "@/utils/common";
@@ -61,20 +61,6 @@ class AxiosUtils {
   };
 
   /**
-   * @description 移除重复请求
-   * @param config
-   * @private
-   */
-  private removePending(config: AxiosRequestConfig) {
-    for (let p in this.subscribers) {
-      let s = this.subscribers[p];
-      if (s.config.url === config.url) {
-        this.subscribers.splice(Number(p), 1);
-      }
-    }
-  }
-
-  /**
    * @description 请求成功处理
    * @param config
    * @private
@@ -113,11 +99,25 @@ class AxiosUtils {
    * @param error
    * @private
    */
-  private async responseErrorHandler(error: any) {
+  private async responseErrorHandler(error: AxiosError) {
     const {response} = error;
-    const {data, config} = response;
 
-    if (response.status === 401 && config.url.includes('/user/refresh')) {
+    if (!response) {
+      notification.error({
+        message: t("message.fail"),
+        description: t("error.network"),
+      });
+      return Promise.reject(error);
+    }
+
+    const {data, config} = response as AxiosResponse;
+
+    if (config.url?.includes('/user/avatar')) {
+      // 上传头像接口不做错误处理
+      return Promise.reject(error);
+    }
+
+    if (response.status === 401 && config.url?.includes('/user/refresh')) {
       await this.unAuthorizedHandler(response);
       return Promise.reject(error);
     }
@@ -128,10 +128,10 @@ class AxiosUtils {
       })
     }
 
-    if (response.status === 401 && !config.url.includes('/user/refresh')) {
+    if (response.status === 401 && !config.url?.includes('/user/refresh')) {
       this.refreshing = true;
       console.log(config.url)
-      const {code, data} = await this.refreshAccessToken();
+      const {code} = await this.refreshAccessToken();
       this.refreshing = false;
 
       if (code === 200) {
@@ -154,12 +154,12 @@ class AxiosUtils {
 
   /**
    * @description 重新登录处理
-   * @param response
+   * @param _response
    * @private
    */
-  private async unAuthorizedHandler(response: any) {
+  private async unAuthorizedHandler(_response: AxiosResponse) {
     // 重新登录
-    router.push("/admin/login");
+    await router.push("/admin/login");
     this.refreshing = false; // 重置刷新状态
     this.subscribers.length = 0; // 清空请求队列
     await setTimeoutPromise(500); // 等待500ms

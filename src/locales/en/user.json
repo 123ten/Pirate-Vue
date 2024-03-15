@@ -1,0 +1,19 @@
+{
+  "table": {
+    "columns": {
+      "number": "Number",
+      "username": "Username",
+      "nickName": "Nickname",
+      "group": "Group",
+      "avatar": "Avatar",
+      "gender": "Gender",
+      "email": "Email",
+      "phone": "Phone",
+      "lastLoginIp": "Last Login Ip",
+      "lastLoginTime": "Last Login Time",
+      "status": "Status",
+      "createTime": "Create Time",
+      "operation": "Operation"
+    }
+  }
+}

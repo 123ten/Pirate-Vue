@@ -14,31 +14,39 @@ import {
   watch,
   withDefaults,
 } from "vue";
-import {ColumnFilterItem} from "ant-design-vue/es/table/interface";
 import Sortable from "sortablejs";
 import {IColumns, IDataSource, IPages, IPagination} from "@/types";
 import {FormInstance, FormProps, TableProps} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 import ITooltip from "@/components/IComponents/ITooltip/index.vue";
-import cloneDeep from "lodash/cloneDeep";
+import {cloneDeep} from "lodash-es";
+
+// 国际化
+const {locale, t} = useI18n();
 
 //#region interface
+interface I18nPrefix {
+  table: string;
+  columns: string;
+}
+
 interface IProps {
   columns: IColumns[]; // 表格列的配置描述
   dataSource: TableProps['dataSource']; // 数据数组
   rowSelection?: TableProps['rowSelection']; // 表格行是否可选择
-  pagination?: IPagination; // 指定每页可以显示多少条
+  pagination?: TableProps['pagination']; // 指定每页可以显示多少条
   pages?: IPages; // 页码
   formOptions?: FormProps;
   tableOptions?: TableProps;
-  size?: "large" | "middle" | "small";
+  size?: TableProps['size']; // 表格大小
   rowKey?: TableProps['rowKey']; // 表格行 key 的取值
   scroll?: TableProps['scroll']; // 设置横向或纵向滚动，也可用于指定滚动区域的宽和高
+  i18nPrefix?: I18nPrefix; // 国际化前缀
   keywordPlaceholder?: string; // 关键字搜索框 占位内容
   keywordVisible?: boolean; // 是否显示关键字搜索框
   loading?: boolean; // 表格加载状态
-  isExpandAllRows?: boolean; // 控制展开所有行
-  isDragVisible?: boolean; // 是否允许拖拽行 搭配 class drop-row-btn
+  defaultExpandAllRows?: boolean; // 控制展开所有行
+  draggable?: boolean; // 是否允许拖拽行 搭配 class drop-row-btn
 }
 
 interface ISortTableEnd {
@@ -63,13 +71,15 @@ const props = withDefaults(defineProps<IProps>(), {
     page: 1,
     total: 0,
   }),
+  size: "small",
   rowKey: "key",
-  scroll: undefined,
-  keywordPlaceholder: "请输入关键字",
+  scroll: () => ({x: true}),
+  i18nPrefix: () => ({table: "table", columns: "columns"}),
+  keywordPlaceholder: undefined, // t("placeholder.keyword")
   keywordVisible: true,
   loading: false,
-  isExpandAllRows: false,
-  isDragVisible: false,
+  defaultExpandAllRows: false,
+  draggable: false,
 });
 const emits = defineEmits([
   "columnChange", // columns 发生变化时
@@ -81,8 +91,6 @@ const emits = defineEmits([
 ]);
 // #endregion
 const columnsCache: IColumns[] = cloneDeep(props.columns); // 缓存 columns
-// 国际化
-const {locale} = useI18n();
 
 // 内置搜索
 const formRef = ref<FormInstance>();
@@ -103,18 +111,18 @@ const isOpenSearch = ref<boolean>(false); // 展开搜索栏区域
 onMounted(() => {
   // 修改 columns
   menuCheckList.value = columns.value.filter(
-      (item) => ![item.dataIndex, item.key].includes("operate")
+      (item) => ![item.dataIndex, item.key].includes("operation")
   );
   menuChecked.value = unref(menuCheckList).map((item) => item.dataIndex);
 
   // 默认是否展开
-  props.isExpandAllRows && expandAllRows();
+  props.defaultExpandAllRows && expandAllRows();
 
-  props.isDragVisible && rowDrop();
+  props.draggable && rowDrop();
 });
 // 监听 展开收起
 watch(
-    () => props.isExpandAllRows,
+    () => props.defaultExpandAllRows,
     () => expandAllRows()
 );
 
@@ -130,7 +138,7 @@ const expandAllRows = () => {
   if (!isChildren) return;
 
   let keys: string[] = [];
-  if (props.isExpandAllRows) {
+  if (props.defaultExpandAllRows) {
     (function childrenFn(list: IDataSource[]) {
       list.forEach((item) => {
         // 是否存在 key
@@ -151,7 +159,6 @@ const rowDrop = () => {
   const tbody = document.querySelector(
       ".ant-table-container .ant-table-content tbody"
   );
-  const _this = this;
   let nowDragRow = 0; // 当前拖拽的索引
   const sortable = Sortable.create(tbody, {
     animation: 200,
@@ -165,7 +172,6 @@ const rowDrop = () => {
     // 开始拖拽的时候
     onStart: function (evt: any) {
       console.log("evt", evt, evt.oldIndex);
-
       nowDragRow = evt.oldIndex;
     },
   });
@@ -173,16 +179,11 @@ const rowDrop = () => {
 
 /** 分页
  * @param {IPagination} pagination 当前分页的所有配置参数
- * @param {ColumnFilterItem} filters 表头的筛选菜单项
- * @param {Function} sorter 排序函数
- * @param {IDataSource}currentDataSource 返回当前的列表数据
  */
 const handlePageSizeChange = (
-    pagination: IPagination,
-    filters: ColumnFilterItem,
-    sorter: Function | boolean,
-    {currentDataSource}: any
+    pagination: TableProps['pagination'],
 ) => {
+  if (!pagination) throw new Error("pagination is undefined");
   pages.value = {
     size: pagination.pageSize,
     page: pagination.current,
@@ -204,7 +205,6 @@ const handleCheckboxChange = () => {
   // 操作,默认需要
   columns.value.length = 0
   columns.value.push(...arr);
-  // console.log('handleCheckboxChange', arr)
 };
 // 显示与隐藏 form
 const handleOpenSearch = () => {
@@ -220,9 +220,9 @@ const handleResizeColumn = (w: number, col: any) => {
  */
 const handleSearchBlur = () => {
   // 当新数据 = 旧数据 不传输事件
-  if (unref(keyword) === unref(oldKeyword)) return;
-  oldKeyword.value = unref(keyword);
-  emits("searchBlur", unref(keyword));
+  if (keyword.value === oldKeyword.value) return;
+  oldKeyword.value = keyword.value;
+  emits("searchBlur", keyword.value);
 };
 
 const pagination = computed(() => {
@@ -292,6 +292,14 @@ const onReset = () => {
   }
 };
 
+const localesNameFn = (column: IColumns) => {
+  if (!props.i18nPrefix) return column.title;
+  const il8nName = (column.dataIndex || column.i18nName) as string;
+  const {table = 'table', columns = 'columns'} = props.i18nPrefix;
+  return table + "." + columns + "." + il8nName
+};
+
+
 /**
  * @description 显示总条数
  * @param total 总条数
@@ -304,6 +312,7 @@ const showTotal = (total: number) => {
 defineExpose({
   formRef,
 });
+
 </script>
 
 <template>
@@ -390,7 +399,7 @@ defineExpose({
                   </a-col>
                 </a-row>
               </a-form>
-              <a-space class="i-form-operate">
+              <a-space class="i-form-operation">
                 <a-button type="primary" @click="onQuery">查询</a-button>
                 <a-button @click="onReset">重置</a-button>
               </a-space>
@@ -400,7 +409,7 @@ defineExpose({
       </transition>
       <div class="table-header">
         <a-space>
-          <i-tooltip title="刷新" type="reload">
+          <i-tooltip :title="$t('title.refresh')" type="reload">
             <template #icon>
               <reload-outlined
                   @click="onReload"
@@ -417,7 +426,7 @@ defineExpose({
           <a-input
               v-if="keywordVisible"
               v-model:value="keyword"
-              :placeholder="props.keywordPlaceholder"
+              :placeholder="props.keywordPlaceholder || $t('placeholder.keyword')"
               allow-clear
               class="table-header_search"
               @blur="handleSearchBlur"
@@ -449,12 +458,12 @@ defineExpose({
                   </label>
                 </a-checkbox-group>
               </template>
-              <a-radio-button value="menu">
-                <table-outlined title="筛选"/>
+              <a-radio-button value="menu" :title="$t('title.filter')">
+                <table-outlined/>
               </a-radio-button>
             </a-popover>
             <a-tooltip>
-              <template #title v-if="!isOpenSearch"> 展开通用搜索</template>
+              <template #title v-if="!isOpenSearch">{{ $t('placeholder.expandUniversalSearch') }}</template>
               <a-radio-button
                   value="search"
                   @click="handleOpenSearch"
@@ -473,13 +482,22 @@ defineExpose({
           :data-source="dataSource"
           :loading="props.loading"
           :columns="columnsComputed"
-          :scroll="props.scroll || { x: true }"
-          :size="props.size || 'small'"
+          :scroll="props.scroll"
+          :size="props.size"
           :pagination="pagination"
           bordered
           @resize-column="handleResizeColumn"
           @change="handlePageSizeChange"
       >
+        <template #headerCell="{column}">
+          <slot name="headerCell">
+            <template v-for="item in columnsComputed" :key="item.dataIndex">
+              <template v-if="item.dataIndex === column.dataIndex && item.isI18n">
+                {{ $t(localesNameFn(item)) }}
+              </template>
+            </template>
+          </slot>
+        </template>
         <template #bodyCell="score">
           <slot name="bodyCell" v-bind="score"></slot>
           <slot :name="score.column.dataIndex" v-bind="score"></slot>

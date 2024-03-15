@@ -10,79 +10,92 @@ import {getUserList} from "@/api/user";
 const columns = ref<IColumns[]>([
   {
     title: "序号",
-    dataIndex: "index",
+    dataIndex: "number",
+    isI18n: true,
     align: "center",
     minWidth: 80,
   },
   {
     title: "用户名",
     dataIndex: "username",
+    isI18n: true,
     align: "center",
     minWidth: 100,
   },
   {
     title: "昵称",
     dataIndex: "nickName",
+    isI18n: true,
     align: "center",
     minWidth: 100,
   },
   {
     title: "分组",
     dataIndex: "group",
+    isI18n: true,
     align: "center",
     minWidth: 100,
   },
   {
     title: "头像",
     dataIndex: "avatar",
+    isI18n: true,
     align: "center",
     minWidth: 100,
   },
   {
     title: "性别",
     dataIndex: "gender",
+    isI18n: true,
     align: "center",
     minWidth: 100,
   },
   {
     title: "邮箱",
     dataIndex: "email",
+    isI18n: true,
     align: "center",
     minWidth: 100,
   },
   {
     title: "手机号",
     dataIndex: "phone",
+    isI18n: true,
     align: "center",
     minWidth: 100,
   },
   {
     title: "最后登录IP",
     dataIndex: "lastLoginIp",
+    isI18n: true,
     align: "center",
     minWidth: 140,
   },
   {
     title: "最后登录时间",
     dataIndex: "lastLoginTime",
+    isI18n: true,
     align: "center",
     minWidth: 180,
   },
   {
     title: "状态",
     dataIndex: "status",
+    isI18n: true,
     align: "center",
     minWidth: 100,
   },
   {
     title: "创建时间",
     dataIndex: "createTime",
+    isI18n: true,
     align: "center",
     minWidth: 180,
   },
   {
     title: "操作",
-    dataIndex: "operate",
+    dataIndex: "operation",
+    isI18n: true,
     align: "center",
     fixed: "right",
     minWidth: 100,
@@ -101,10 +114,6 @@ const isAddOrEditModalVisible = ref<boolean>(false);
 
 onMounted(async () => {
   await getList();
-  // dataSource.value = dataSource.value.map((item) => {
-  //   item.isDeleteVisible = false;
-  //   return item;
-  // });
 });
 
 const getList = async () => {
@@ -113,7 +122,6 @@ const getList = async () => {
     size: pages.value.size,
   };
   isTableLoading.value = true;
-  console.log(11111111)
   try {
     const {data} = await getUserList(params);
     console.log(data, "data");
@@ -188,12 +196,19 @@ const rowSelection = computed(() => {
     fixed: true, // 把选择框列固定在左边
   };
 });
+
+const i18nPrefix = computed(() => {
+  return {
+    table: 'user.table'
+  }
+})
 </script>
 
 <template>
   <div class="default-main">
     <i-table
         row-key="id"
+        :i18n-prefix="i18nPrefix"
         :columns="columns"
         :data-source="dataSource"
         :pages="pages"
@@ -219,7 +234,7 @@ const rowSelection = computed(() => {
                 @cancel="onDeleteAllCancel"
                 @confirm="onDeleteAllConfirm"
             >
-              <a-button type="danger" :disabled="!selectedRowKeys.length">
+              <a-button type="primary" danger :disabled="!selectedRowKeys.length">
                 <template #icon>
                   <delete-outlined/>
                 </template>
@@ -261,7 +276,7 @@ const rowSelection = computed(() => {
         <span v-if="record.menuname">{{ record.menuname }}</span>
         <a-input v-else placeholder="请输入名称"/>
       </template>
-      <template #operate="{ record }">
+      <template #operation="{ record }">
         <a-space>
           <i-tooltip title="编辑" size="small" @click="handleAddEdit(1)">
             <template #icon>
@@ -279,7 +294,7 @@ const rowSelection = computed(() => {
                   placement="left"
                   @confirm="handleDeleteRecordConfirm(record)"
               >
-                <a-button type="danger" size="small">
+                <a-button type="primary" danger size="small">
                   <template #icon>
                     <delete-outlined/>
                   </template>

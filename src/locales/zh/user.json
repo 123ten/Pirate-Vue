@@ -1,0 +1,19 @@
+{
+  "table": {
+    "columns": {
+      "number": "序号",
+      "username": "用户名",
+      "nickName": "昵称",
+      "group": "用户组",
+      "avatar": "头像",
+      "gender": "性别",
+      "email": "邮箱",
+      "phone": "手机号",
+      "lastLoginIp": "最后登录IP",
+      "lastLoginTime": "最后登录时间",
+      "status": "状态",
+      "createTime": "创建时间",
+      "operation": "操作"
+    }
+  }
+}

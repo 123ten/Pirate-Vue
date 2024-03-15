@@ -8,6 +8,9 @@ dependencies:
   '@ant-design/icons-vue':
     specifier: ^7.0.1
     version: 7.0.1(vue@3.4.15)
+  '@types/lodash-es':
+    specifier: ^4.17.12
+    version: 4.17.12
   '@vueuse/core':
     specifier: ^6.1.0
     version: 6.9.2(vue@3.4.15)
@@ -26,7 +29,7 @@ dependencies:
   echarts:
     specifier: ^5.4.2
     version: 5.4.3
-  lodash:
+  lodash-es:
     specifier: ^4.17.21
     version: 4.17.21
   nprogress:
@@ -49,9 +52,6 @@ dependencies:
     version: 4.2.5(vue@3.4.15)
 
 devDependencies:
-  '@types/lodash':
-    specifier: ^4.17.0
-    version: 4.17.0
   '@types/node':
     specifier: ^18.15.11
     version: 18.19.8
@@ -585,9 +585,15 @@ packages:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
     dev: true
 
+  /@types/lodash-es@4.17.12:
+    resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
+    dependencies:
+      '@types/lodash': 4.17.0
+    dev: false
+
   /@types/lodash@4.17.0:
     resolution: {integrity: sha512-t7dhREVv6dbNj0q17X12j7yDG4bD/DHYX7o5/DbDxobP0HnGPgpRz2Ej77aL7TZT3DSw13fqUTj8J4mMnqa7WA==}
-    dev: true
+    dev: false
 
   /@types/node@18.19.20:
     resolution: {integrity: sha512-SKXZvI375jkpvAj8o+5U2518XQv76mAsixqfXiVyWyXZbVWQK25RurFovYpVIxVzul0rZoH58V/3SkEnm7s3qA==}

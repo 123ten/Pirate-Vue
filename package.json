@@ -13,13 +13,14 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@types/lodash-es": "^4.17.12",
     "@vueuse/core": "^6.1.0",
     "ant-design-vue": "^3.2.20",
     "axios": "^1.6.7",
     "countup.js": "^2.6.0",
     "dayjs": "^1.11.9",
     "echarts": "^5.4.2",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.34",
     "sortablejs": "^1.15.0",
@@ -28,7 +29,6 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.0",
     "@types/node": "^18.15.11",
     "@vitejs/plugin-vue": "^4.1.0",
     "less": "^4.1.3",

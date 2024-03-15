@@ -24,7 +24,8 @@
   "placeholder": {
     "userName": "Please enter the username",
     "password": "Please enter the password",
-    "captcha": "Please enter the captcha"
+    "captcha": "Please enter the captcha",
+    "keyword": "Please enter the keyword"
   },
   "success": {
     "login": "Login success!",
@@ -35,7 +36,14 @@
     "userName": "Please enter the username",
     "password": "Please enter the password",
     "captcha": "Please enter the captcha",
-    "login": "Login failed, please try again later"
+    "login": "Login failed, please try again later",
+    "network": "Network error, please try again later"
+  },
+  "title": {
+    "refresh": "Refresh",
+    "filter": "Filter",
+    "expand": "Expand",
+    "expandUniversalSearch": "Expand universal search"
   },
   "login": {
     "login": "Login",
