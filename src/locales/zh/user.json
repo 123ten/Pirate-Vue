@@ -4,7 +4,7 @@
       "number": "序号",
       "username": "用户名",
       "nickName": "昵称",
-      "group": "用户组",
+      "roles": "角色",
       "avatar": "头像",
       "gender": "性别",
       "email": "邮箱",

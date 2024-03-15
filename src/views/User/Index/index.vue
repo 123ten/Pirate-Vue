@@ -31,10 +31,13 @@ const columns = ref<IColumns[]>([
   },
   {
     title: "分组",
-    dataIndex: "group",
+    dataIndex: "roles",
     isI18n: true,
     align: "center",
     minWidth: 100,
+    customRender({text}) {
+      return text?.join(",")
+    }
   },
   {
     title: "头像",
@@ -125,7 +128,8 @@ const getList = async () => {
   try {
     const {data} = await getUserList(params);
     console.log(data, "data");
-    dataSource.value = data.records;
+    dataSource.value = data.records
+
     pages.value = {
       size: data.size,
       page: data.page,
@@ -164,15 +168,11 @@ const handleDeleteRecordConfirm = (record: IDataSource) => {
 };
 
 // 分页
-const onPagesChange = (records: IPages) => {
+const onPagesChange = (value: IPages) => {
   // console.log(records, "records");
-  pages.value = records;
+  pages.value = value;
 };
 
-// 显示与隐藏表头
-const onColumnChange = (newColumns: IColumns[]) => {
-  columns.value = newColumns;
-};
 // 多选
 const onSelectChange = (rowKeys: string[]) => {
   selectedRowKeys.value = rowKeys;
@@ -217,7 +217,7 @@ const i18nPrefix = computed(() => {
         @reload="getList"
         @pagesChange="onPagesChange"
     >
-      <template #leftBtn>
+      <template #leftActions>
         <i-tooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
             <plus-outlined/>
@@ -244,7 +244,7 @@ const i18nPrefix = computed(() => {
           </template>
         </i-tooltip>
       </template>
-      <template #index="{ index }">
+      <template #number="{ index }">
         {{ index + 1 }}
       </template>
       <template #gender="{ record }">

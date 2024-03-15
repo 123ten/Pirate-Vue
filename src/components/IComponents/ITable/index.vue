@@ -42,6 +42,7 @@ interface IProps {
   rowKey?: TableProps['rowKey']; // 表格行 key 的取值
   scroll?: TableProps['scroll']; // 设置横向或纵向滚动，也可用于指定滚动区域的宽和高
   i18nPrefix?: I18nPrefix; // 国际化前缀
+  childrenColumnName?: TableProps['childrenColumnName']; // 指定树形结构的列名 默认 children
   keywordPlaceholder?: string; // 关键字搜索框 占位内容
   keywordVisible?: boolean; // 是否显示关键字搜索框
   loading?: boolean; // 表格加载状态
@@ -73,6 +74,7 @@ const props = withDefaults(defineProps<IProps>(), {
   }),
   size: "small",
   rowKey: "key",
+  childrenColumnName: 'children', // 默认 'children'
   scroll: () => ({x: true}),
   i18nPrefix: () => ({table: "table", columns: "columns"}),
   keywordPlaceholder: undefined, // t("placeholder.keyword")
@@ -226,14 +228,13 @@ const handleSearchBlur = () => {
 };
 
 const pagination = computed(() => {
-  return {
+  return props.pagination === false ? false : {
     showQuickJumper: true,
     showSizeChanger: true,
     showTotal: showTotal,
     total: pages.value.total,
     pageSize: pages.value.size,
     current: pages.value.page,
-    pagination: props.pagination,
   }
 })
 
@@ -419,9 +420,9 @@ defineExpose({
             </template>
           </i-tooltip>
           <!-- 左侧按钮 可自定义左侧按钮内容 -->
-          <slot name="leftBtn"></slot>
+          <slot name="leftActions"></slot>
         </a-space>
-        <!-- 左侧功能区域 -->
+        <!-- 右侧功能区域 -->
         <a-space>
           <a-input
               v-if="keywordVisible"
@@ -482,6 +483,7 @@ defineExpose({
           :data-source="dataSource"
           :loading="props.loading"
           :columns="columnsComputed"
+          :children-column-name="props.childrenColumnName"
           :scroll="props.scroll"
           :size="props.size"
           :pagination="pagination"

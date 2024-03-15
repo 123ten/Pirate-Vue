@@ -1,55 +1,54 @@
 .i-upload {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
+  border: 1px dashed #d9d9d9;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: all .1s;
+
+  .i-upload-select {
+    box-sizing: border-box;
+    padding: 3px 0;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
     border: 1px dashed #d9d9d9;
-    border-radius: 5px;
-    overflow: hidden;
+    border-radius: 0 0 15px 15px;
     transition: all .1s;
-
-    .i-upload-select {
-        box-sizing: border-box;
-        padding: 3px 0;
-        position: absolute;
-        width: 100%;
-        text-align: center;
-        font-size: 12px;
-        border: 1px dashed #d9d9d9;
-        border-radius: 0 0 15px 15px;
-        transition: all .1s;
-        user-select: none;
-        color: #606266;
-
-        &:hover {
-            cursor: pointer;
-            color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-    }
-
-    :deep(.ant-upload) {
-        width: 130px;
-        height: 130px;
-        border: 0;
-        margin: 0;
-
-        .upload-placeholder {
-
-            .upload-icon {
-                font-size: 20px
-            }
-        }
-    }
+    user-select: none;
+    color: #606266;
 
     &:hover {
-        .upload-placeholder {
-            color: var(--primary-color);
-
-            .upload-icon {
-                font-size: 20px
-            }
-        }
-
-        ;
-        border-color: var(--primary-color);
+      cursor: pointer;
+      color: @ant-primary-color;
+      border-color: @ant-primary-color;
     }
+  }
+
+  :deep(.ant-upload) {
+    width: 130px;
+    height: 130px;
+    border: 0;
+    margin: 0;
+
+    .upload-placeholder {
+
+      .upload-icon {
+        font-size: 20px
+      }
+    }
+  }
+
+  &:hover {
+    .upload-placeholder {
+      color: @ant-primary-color;
+
+      .upload-icon {
+        font-size: 20px
+      }
+    }
+
+    border-color: @ant-primary-color;
+  }
 }

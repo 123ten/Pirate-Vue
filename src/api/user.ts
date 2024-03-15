@@ -30,3 +30,9 @@ export const getUserList = (params) => {
 export const refresh = (params): Promise<RefreshResult> => {
   return request.get("/user/refresh", params);
 }
+
+// 分页获取角色列表
+export const getGroupList = (params) => {
+  return request.get("/user/groups", params);
+};
+

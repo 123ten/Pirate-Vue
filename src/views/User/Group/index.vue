@@ -4,6 +4,7 @@ import {DeleteOutlined, EditOutlined, PlusOutlined,} from "@ant-design/icons-vue
 import {onMounted, ref, unref} from "vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
 import {IColumns, IPages} from "@/types";
+import {getGroupList} from "@/api/user";
 
 interface IDataSource {
   key: string;
@@ -13,7 +14,6 @@ interface IDataSource {
   status?: string | number; // 状态 0 禁用 1 启用
   updateTime?: string; // 修改时间
   createTime?: string; // 创建时间
-  isDeleteVisible?: boolean; // 是否显示删除气泡
   children?: IDataSource[]; // 设置 children 务必设置 width 否则可能出现宽度浮动
 }
 
@@ -21,81 +21,46 @@ const columns = ref<IColumns[]>([
   {
     title: "组别名称",
     dataIndex: "name",
-    align: "center",
     minWidth: 200,
   },
   {
     title: "权限",
-    dataIndex: "rules",
+    dataIndex: "code",
     align: "center",
     minWidth: 100,
+  },
+  {
+    title: "描述",
+    dataIndex: "description",
+    minWidth: 300,
   },
   {
     title: "状态",
     dataIndex: "status",
     align: "center",
-    minWidth: 100,
+    minWidth: 80,
   },
   {
     title: "修改时间",
     dataIndex: "updateTime",
     align: "center",
-    minWidth: 180,
+    minWidth: 150,
   },
   {
     title: "创建时间",
     dataIndex: "createTime",
     align: "center",
-    minWidth: 180,
+    minWidth: 150,
   },
   {
     title: "操作",
-    dataIndex: "operate",
+    dataIndex: "operation",
     align: "center",
     fixed: "right",
     minWidth: 100,
   },
 ]);
-const dataSource = ref<IDataSource[]>([
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-    children: [
-      {
-        key: "1-1",
-        name: "胡彦祖1",
-        age: 22,
-        address: "西湖区湖底公园1号",
-        children: [
-          {
-            key: "1-1-1",
-            name: "胡彦祖1",
-            age: 22,
-            address: "西湖区湖底公园1号",
-            children: [
-              {
-                key: "12",
-                name: "胡彦祖1",
-                age: 22,
-                address: "西湖区湖底公园1号",
-                children: [
-                  {
-                    key: "1-1-2",
-                    name: "胡彦祖1",
-                    age: 22,
-                    address: "西湖区湖底公园1号",
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-]);
+const dataSource = ref<IDataSource[]>([]);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
   size: 10,
@@ -108,12 +73,20 @@ const isExpandAllRows = ref<boolean>(false);
 const isTableLoading = ref<boolean>(false); // 表格加载状态
 const isAddEditModal = ref<boolean>(false);
 
-onMounted(() => {
-  dataSource.value = dataSource.value.map((item) => {
-    item.isDeleteVisible = false;
-    return item;
-  });
+onMounted(async () => {
+  await getList()
 });
+
+const getList = async () => {
+  const params = {}
+  isTableLoading.value = true;
+  try {
+    const {data} = await getGroupList(params)
+    dataSource.value = data
+  } finally {
+    isTableLoading.value = false;
+  }
+}
 
 // 添加
 const handleAddEdit = (type: number) => {
@@ -147,7 +120,6 @@ const onDeleteVisibleChange = () => {
 // 删除当前行-确定
 const onDeleteCurrentConfirm = (record: IDataSource) => {
   console.log(record, "record");
-  record.isDeleteVisible = false;
 };
 
 // 分页
@@ -170,20 +142,19 @@ const onSelectChange = (rowKeys: string[]) => {
 <template>
   <div class="default-main">
     <i-table
+        row-key="id"
         :columns="columns"
-        :dataSource="dataSource"
-        :pages="pages"
-        isSelectedRowKeys
-        :isExpandAllRows="isExpandAllRows"
+        :data-source="dataSource"
+        :defaultExpandAllRows="true"
         :loading="isTableLoading"
-        @onColumnChange="onColumnChange"
-        @onPagesChange="onPagesChange"
-        @onSelectChange="onSelectChange"
+        :pagination="false"
+        @columnChange="onColumnChange"
+        @selectChange="onSelectChange"
     >
-      <template #leftBtn>
+      <template #leftActions>
         <i-tooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
-            <PlusOutlined/>
+            <plus-outlined/>
           </template>
         </i-tooltip>
         <i-tooltip title="删除选中行">
@@ -198,16 +169,21 @@ const onSelectChange = (rowKeys: string[]) => {
             >
               <template #okButton>
                 <a-button
-                    type="danger"
+                    type="primary"
+                    danger
                     size="small"
                     @click="onDeleteAllConfirm"
                 >
                   删除
                 </a-button>
               </template>
-              <a-button type="danger" :disabled="!selectedRowKeys.length">
+              <a-button
+                  type="primary"
+                  danger
+                  :disabled="!selectedRowKeys.length"
+              >
                 <template #icon>
-                  <DeleteOutlined/>
+                  <delete-outlined/>
                 </template>
                 删除
               </a-button>
@@ -223,20 +199,15 @@ const onSelectChange = (rowKeys: string[]) => {
         </i-tooltip>
       </template>
       <template #status="{ record }">
-        <a-tag :color="record.status === 1 ? 'success' : 'error'">
+        <a-tag v-if="record.status >= 0" :color="record.status === 1 ? 'success' : 'error'">
           {{ record.status === 1 ? "启用" : "禁用" }}
         </a-tag>
       </template>
-      <template #operate="{ record }">
+      <template #operation="{ record }">
         <a-space>
-          <!-- <ITooltip title="查看详情" size="small">
-              <template #icon>
-                <ZoomInOutlined />
-              </template>
-            </ITooltip> -->
           <i-tooltip title="编辑" size="small" @click="handleAddEdit(1)">
             <template #icon>
-              <EditOutlined/>
+              <edit-outlined/>
             </template>
           </i-tooltip>
           <i-tooltip title="删除">
@@ -244,22 +215,19 @@ const onSelectChange = (rowKeys: string[]) => {
               <a-popconfirm
                   title="确定删除选中记录？"
                   ok-text="删除"
+                  ok-type="primary"
+                  :ok-button-props="{danger:true}"
                   cancel-text="取消"
                   placement="left"
-                  v-model:visible="record.isDeleteVisible"
+                  @confirm="onDeleteCurrentConfirm(record)"
               >
-                <template #okButton>
-                  <a-button
-                      type="danger"
-                      size="small"
-                      @click="onDeleteCurrentConfirm(record)"
-                  >
-                    删除
-                  </a-button>
-                </template>
-                <a-button type="danger" size="small">
+                <a-button
+                    type="primary"
+                    danger
+                    size="small"
+                >
                   <template #icon>
-                    <DeleteOutlined/>
+                    <delete-outlined/>
                   </template>
                 </a-button>
               </a-popconfirm>
@@ -269,7 +237,7 @@ const onSelectChange = (rowKeys: string[]) => {
       </template>
     </i-table>
 
-    <AddEditModal
+    <add-edit-modal
         v-model:visible="isAddEditModal"
         :title="isEdit ? '编辑' : '添加'"
         @cancel="onAddEditCancel"
