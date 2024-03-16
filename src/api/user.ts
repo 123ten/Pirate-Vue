@@ -32,7 +32,7 @@ export const refresh = (params): Promise<RefreshResult> => {
 }
 
 // 分页获取角色列表
-export const getGroupList = (params) => {
-  return request.get("/user/groups", params);
+export const getRoleList = (params) => {
+  return request.get("/user/roles", params);
 };
 

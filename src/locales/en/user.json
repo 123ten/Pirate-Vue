@@ -14,6 +14,17 @@
       "status": "Status",
       "createTime": "Create Time",
       "operation": "Operation"
+    },
+    "rows": {
+      "gender": {
+        "0": "Unknown",
+        "1": "Male",
+        "2": "Female"
+      },
+      "status": {
+        "0": "Disable",
+        "1": "Enable"
+      }
     }
   }
 }

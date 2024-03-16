@@ -1,11 +1,11 @@
 <!-- 用户列表 -->
 <script setup lang="ts">
 import {DeleteOutlined, EditOutlined, PlusOutlined, UserOutlined} from "@ant-design/icons-vue";
-import AddOrEditModal from "./components/AddOrEditModal/index.vue";
 import {computed, onMounted, ref} from "vue";
 import {IColumns, IPages} from "@/types";
 import {IDataSource} from "./types";
 import {getUserList} from "@/api/user";
+import FormModal from "./components/FormModal/index.vue";
 
 const columns = ref<IColumns[]>([
   {
@@ -14,6 +14,9 @@ const columns = ref<IColumns[]>([
     isI18n: true,
     align: "center",
     minWidth: 80,
+    customRender({index}) {
+      return index + 1
+    }
   },
   {
     title: "用户名",
@@ -179,15 +182,6 @@ const onSelectChange = (rowKeys: string[]) => {
   console.log(rowKeys, "rowKeys");
 };
 
-const genderRender = (record) => {
-  const genderObj = {
-    0: "保密",
-    1: "男",
-    2: "女",
-  };
-  return genderObj[record.gender];
-};
-
 const rowSelection = computed(() => {
   return {
     selectedRowKeys: selectedRowKeys.value, // 指定选中项的 key 数组，需要和 onChange 进行配合
@@ -197,11 +191,9 @@ const rowSelection = computed(() => {
   };
 });
 
-const i18nPrefix = computed(() => {
-  return {
-    table: 'user.table'
-  }
-})
+const i18nPrefix = {
+  table: 'user.table'
+}
 </script>
 
 <template>
@@ -244,12 +236,9 @@ const i18nPrefix = computed(() => {
           </template>
         </i-tooltip>
       </template>
-      <template #number="{ index }">
-        {{ index + 1 }}
-      </template>
       <template #gender="{ record }">
         <a-tag color="success" class="table-tag">
-          {{ genderRender(record) }}
+          {{ $t(`user.table.rows.gender.${record.gender}`) }}
         </a-tag>
       </template>
       <template #lastLoginIp="{ record }">
@@ -262,7 +251,7 @@ const i18nPrefix = computed(() => {
             :color="record.status === 1 ? 'success' : 'error'"
             class="table-tag"
         >
-          {{ record.status === 1 ? "启用" : "禁用" }}
+          {{ $t(`user.table.rows.status.${record.status}`) }}
         </a-tag>
       </template>
       <template #avatar="{ record }">
@@ -306,7 +295,7 @@ const i18nPrefix = computed(() => {
       </template>
     </i-table>
 
-    <add-or-edit-modal
+    <form-modal
         v-model:visible="isAddOrEditModalVisible"
         :title="isEdit ? '编辑' : '添加'"
         @cancel="onAddEditCancel"

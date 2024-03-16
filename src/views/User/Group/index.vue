@@ -4,7 +4,7 @@ import {DeleteOutlined, EditOutlined, PlusOutlined,} from "@ant-design/icons-vue
 import {onMounted, ref, unref} from "vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
 import {IColumns, IPages} from "@/types";
-import {getGroupList} from "@/api/user";
+import {getRoleList} from "@/api/user";
 
 interface IDataSource {
   key: string;
@@ -19,13 +19,13 @@ interface IDataSource {
 
 const columns = ref<IColumns[]>([
   {
-    title: "组别名称",
+    title: "角色名称",
     dataIndex: "name",
     minWidth: 200,
   },
   {
-    title: "权限",
-    dataIndex: "code",
+    title: "角色标识",
+    dataIndex: "slug",
     align: "center",
     minWidth: 100,
   },
@@ -53,6 +53,11 @@ const columns = ref<IColumns[]>([
     minWidth: 150,
   },
   {
+    title: "排序",
+    dataIndex: "sort",
+    minWidth: 100,
+  },
+  {
     title: "操作",
     dataIndex: "operation",
     align: "center",
@@ -60,6 +65,7 @@ const columns = ref<IColumns[]>([
     minWidth: 100,
   },
 ]);
+
 const dataSource = ref<IDataSource[]>([]);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
@@ -67,9 +73,8 @@ const pages = ref<IPages>({
   page: 1,
   total: 0,
 });
-const isEdit = ref<boolean>(false); // 是否编辑
 const isDeleteAllVisible = ref<boolean>(false);
-const isExpandAllRows = ref<boolean>(false);
+const defaultExpandAllRows = ref<boolean>(false);
 const isTableLoading = ref<boolean>(false); // 表格加载状态
 const isAddEditModal = ref<boolean>(false);
 
@@ -81,8 +86,9 @@ const getList = async () => {
   const params = {}
   isTableLoading.value = true;
   try {
-    const {data} = await getGroupList(params)
+    const {data} = await getRoleList(params)
     dataSource.value = data
+    defaultExpandAllRows.value = true
   } finally {
     isTableLoading.value = false;
   }
@@ -90,7 +96,6 @@ const getList = async () => {
 
 // 添加
 const handleAddEdit = (type: number) => {
-  isEdit.value = type === 1;
   isAddEditModal.value = true;
 };
 // 添加/编辑 - cancel
@@ -106,10 +111,12 @@ const onAddEditConfirm = () => {
 const onDeleteAllConfirm = () => {
   isDeleteAllVisible.value = false;
 };
+
 // 删除-取消
 const onDeleteAllCancel = () => {
   isDeleteAllVisible.value = false;
 };
+
 // 删除-显示隐藏的回调
 const onDeleteVisibleChange = () => {
   // selectedRowKeys没有选中时 默认禁用 删除按钮
@@ -122,16 +129,12 @@ const onDeleteCurrentConfirm = (record: IDataSource) => {
   console.log(record, "record");
 };
 
-// 分页
-const onPagesChange = (records: IPages) => {
-  // console.log(records, "records");
-  pages.value = records;
-};
 
 // 显示与隐藏表头
 const onColumnChange = (newColumns: IColumns[]) => {
   columns.value = newColumns;
 };
+
 // 多选
 const onSelectChange = (rowKeys: string[]) => {
   selectedRowKeys.value = rowKeys;
@@ -145,9 +148,10 @@ const onSelectChange = (rowKeys: string[]) => {
         row-key="id"
         :columns="columns"
         :data-source="dataSource"
-        :defaultExpandAllRows="true"
         :loading="isTableLoading"
         :pagination="false"
+        :default-expand-all-rows="defaultExpandAllRows"
+        @reload="getList"
         @columnChange="onColumnChange"
         @selectChange="onSelectChange"
     >
@@ -190,13 +194,9 @@ const onSelectChange = (rowKeys: string[]) => {
             </a-popconfirm>
           </template>
         </i-tooltip>
-        <i-tooltip
-            :title="isExpandAllRows ? '收缩所有子菜单' : '展开所有子菜单'"
-            :content="isExpandAllRows ? '收缩所有' : '展开所有'"
-            :type="isExpandAllRows ? 'danger' : 'warning'"
-            @click="isExpandAllRows = !isExpandAllRows"
-        >
-        </i-tooltip>
+        <expand-all-rows-tooltip
+            v-model:expand="defaultExpandAllRows"
+        />
       </template>
       <template #status="{ record }">
         <a-tag v-if="record.status >= 0" :color="record.status === 1 ? 'success' : 'error'">
@@ -236,10 +236,8 @@ const onSelectChange = (rowKeys: string[]) => {
         </a-space>
       </template>
     </i-table>
-
     <add-edit-modal
         v-model:visible="isAddEditModal"
-        :title="isEdit ? '编辑' : '添加'"
         @cancel="onAddEditCancel"
         @confirm="onAddEditConfirm"
     />

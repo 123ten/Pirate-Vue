@@ -1,0 +1,45 @@
+.icons-title {
+  display: flex;
+  justify-content: space-between;
+
+  .icons-tab {
+    .tab-item {
+      margin-left: 8px;
+      cursor: pointer;
+      user-select: none;
+
+      &.active,
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
+}
+
+.icons-content {
+  max-width: 665px;
+  // overflow: hidden;
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-flow: wrap;
+
+  .icons-item {
+    margin-right: 8px;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #eee;
+    transition: all 0.3s;
+
+    &:hover {
+      box-sizing: border-box;
+      border: 1px solid var(--primary-color);
+    }
+  }
+}
+
+.ant-popover-title {
+  display: none !important;
+}

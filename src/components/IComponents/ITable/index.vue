@@ -19,7 +19,7 @@ import {IColumns, IDataSource, IPages, IPagination} from "@/types";
 import {FormInstance, FormProps, TableProps} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 import ITooltip from "@/components/IComponents/ITooltip/index.vue";
-import {cloneDeep} from "lodash-es";
+import {cloneDeep, throttle} from "lodash-es";
 
 // 国际化
 const {locale, t} = useI18n();
@@ -122,32 +122,44 @@ onMounted(() => {
 
   props.draggable && rowDrop();
 });
+
+/**
+ * @description 节流刷新表格
+ */
+const onReload = throttle(() => {
+  emits("reload");
+}, 500);
+
 // 监听 展开收起
 watch(
     () => props.defaultExpandAllRows,
     () => expandAllRows()
 );
 
-// 刷新表格
-const onReload = () => {
-  emits("reload");
-};
+/**
+ * @description 获取行的 key
+ * @param record
+ */
+const getRowKey = (record) => {
+  const rowKey = props.rowKey;
+  if (typeof rowKey === "function") return rowKey(record)
+  return rowKey || "key";
+}
 
 // 展开收起 - 内置 务必添加 key
 const expandAllRows = () => {
-  // 是否存在 children 节点 不包括 [] 空数组
-  const isChildren = unref(dataSource).some((item) => item.children);
-  if (!isChildren) return;
-
+  const childrenColumnName = props.childrenColumnName;
   let keys: string[] = [];
   if (props.defaultExpandAllRows) {
-    (function childrenFn(list: IDataSource[]) {
+    // 递归 children key值
+    void (function childrenFn(list: IDataSource[]) {
       list.forEach((item) => {
+        const rowKey = getRowKey(item)
         // 是否存在 key
-        if (!item.key) throw new Error("no key in" + JSON.stringify(item));
-        keys.push(item.key);
+        if (!item[rowKey]) throw new Error("no key in" + JSON.stringify(item));
+        keys.push(item[rowKey]);
         //若子数组存在 children 继续递归
-        if (item.children) childrenFn(item.children);
+        if (item[childrenColumnName]) childrenFn(item[childrenColumnName]);
       });
     })(unref(dataSource));
   } else {
@@ -266,7 +278,7 @@ const columnsComputed = computed(() => {
       column.customHeaderCell = () => {
         return {
           style: {
-            minWidth: column.minWidth + "px",
+            minWidth: column.minWidth + 'px',
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
@@ -410,10 +422,13 @@ defineExpose({
       </transition>
       <div class="table-header">
         <a-space>
-          <i-tooltip :title="$t('title.refresh')" type="reload">
+          <i-tooltip
+              :title="$t('title.refresh')"
+              type="reload"
+              @click="onReload"
+          >
             <template #icon>
               <reload-outlined
-                  @click="onReload"
                   :spin="props.loading"
                   style="color: #fff; font-size: 14px"
               />
