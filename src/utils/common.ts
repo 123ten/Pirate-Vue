@@ -137,7 +137,7 @@ export function deepChildren<T>(
     return list;
   }
   return list.map((item, index) => {
-    cb && cb(item, index, list, parent);
+    cb && cb(item, index, list, parent!);
     if (item[children] && item[children].length) {
       item[children] = deepChildren(item[children], cb, children, item);
     } else {
