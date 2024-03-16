@@ -54,13 +54,15 @@ const handleChange = (value: ITreeSelectProps['value'], label: string[], extra: 
     if (!spliceParentTitle) {
       tooltipTitle.value = label;
     } else {
+      // 是否需要拼接父级标题
       const labelKey = restProps.fieldNames.label!
       const valueKey = restProps.fieldNames.value!
       const labels: string[] = []
       deepChildren(props.treeData, (item: any, index, arr, parent) => {
-        if (value?.includes(item[valueKey])) {
+        if ((value as (string | number)[])?.includes(item[valueKey])) {
           item.spliceTitle = [parent?.spliceTitle, item[labelKey]].filter(Boolean).join('-');
           labels.push(item.spliceTitle);
+          delete item.spliceTitle;
         }
       })
       tooltipTitle.value = labels;
