@@ -9,7 +9,7 @@ const {isLayoutFullScreen, isCurrentPageReload} = storeToRefs(store);
 
 <template>
   <a-layout class="container d-flex-default">
-    <SideBar v-show="!isLayoutFullScreen"/>
+    <side-bar v-show="!isLayoutFullScreen"/>
 
     <a-layout class="layout">
       <Header v-show="!isLayoutFullScreen"/>

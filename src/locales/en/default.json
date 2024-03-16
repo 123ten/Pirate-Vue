@@ -22,10 +22,13 @@
     "loginExpired": "Login expired, please login again"
   },
   "placeholder": {
-    "userName": "Please enter the username",
-    "password": "Please enter the password",
-    "captcha": "Please enter the captcha",
-    "keyword": "Please enter the keyword"
+    "userName": "Please input the username",
+    "password": "Please input the password",
+    "captcha": "Please input the captcha",
+    "keyword": "Please input the keyword",
+    "nickname": "Please input the nickname",
+    "roles": "Please select the roles",
+    "status": "Please select the status"
   },
   "success": {
     "login": "Login success!",

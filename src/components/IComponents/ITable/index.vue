@@ -102,7 +102,6 @@ const menuChecked = ref<string[]>([]); // 选中显示隐藏表头
 const menuCheckList = ref<IColumns[]>([]); // 表头的数据列
 const pages = toRef(props, "pages"); // 分页
 const columns = toRef(props, "columns"); // 表格列配置项
-const dataSource = toRef(props, "dataSource");
 const expandedRowKeys = ref<string[]>([]);
 const oldKeyword = ref<string>(""); // 旧的 搜索内容 防止重复调用接口
 const keyword = ref<string>(""); // 搜索
@@ -161,7 +160,7 @@ const expandAllRows = () => {
         //若子数组存在 children 继续递归
         if (item[childrenColumnName]) childrenFn(item[childrenColumnName]);
       });
-    })(unref(dataSource));
+    })(props.dataSource);
   } else {
     keys = [];
   }
@@ -495,7 +494,7 @@ defineExpose({
           v-model:expanded-row-keys="expandedRowKeys"
           :row-key="props.rowKey"
           :row-selection="props.rowSelection"
-          :data-source="dataSource"
+          :data-source="props.dataSource"
           :loading="props.loading"
           :columns="columnsComputed"
           :children-column-name="props.childrenColumnName"

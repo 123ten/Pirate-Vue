@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import {reactive, ref, toRaw, withDefaults,} from "vue";
 import {Form} from "ant-design-vue";
+import {getRoleList} from "@/api/user";
 
 interface IPropsModal {
   title?: string; // modal 标题
@@ -11,12 +12,12 @@ interface IPropsModal {
 interface IFormState {
   pid: number | string | undefined; // 上级分组
   username: string; // 登录用户名
-  nickname: string; // 昵称
+  nickName: string; // 昵称
   avatar: string; // 头像
   email: string; // 邮箱
   phone: string; // 手机号
-  sex: string | number; // 性别
-  birthday: string; // 生日
+  gander: 0 | 1 | 2; // 性别
+  roleIds: number[]; // 角色
   password: string; // 密码
   sign: string; // 个性签名
   status: number; // 状态
@@ -32,31 +33,37 @@ const emits = defineEmits([
 ]);
 
 //#region  变量
-// 校验规则
-const useForm = Form.useForm;
-const rules = {
-  username: [{required: true, message: "请输入登录用户名"}],
-  nickname: [{required: true, message: "请输入昵称"}],
-  pid: [{required: true, message: "请选择分组"}],
-  password: [{required: true, message: "请输入密码"}],
-};
+const roleOptions = ref([]);
 const formState = reactive<IFormState>({
   pid: "",
   username: "",
-  nickname: "",
+  nickName: "",
   avatar: "",
   email: "",
   phone: "",
-  sex: 1,
-  birthday: "",
+  gander: 0,
+  roleIds: [],
   password: "",
   sign: "",
-  status: 0,
+  status: 1,
 });
+
 const fileList = ref([]);
 const isUploadAvatarLoading = ref<boolean>(false); // 上传头像加载
-const {resetFields, validate, validateInfos} = useForm(formState, rules);
+const {resetFields, validate} = Form.useForm(formState);
 //#endregion
+
+
+const init = async () => {
+  console.log("init");
+  await getRoleListApi();
+};
+
+const getRoleListApi = async () => {
+  const {data} = await getRoleList({});
+  console.log("getRoleList", data);
+  roleOptions.value = data;
+};
 
 // 确定
 const handleConfirm = async (): Promise<void> => {
@@ -72,6 +79,7 @@ const handleConfirm = async (): Promise<void> => {
 };
 // 取消
 const handleCancel = (): void => {
+  resetFields()
   emits("cancel");
 };
 </script>
@@ -81,6 +89,7 @@ const handleCancel = (): void => {
       :visible="props.visible"
       :title="props.title"
       width="450px"
+      :init="init"
       @confirm="handleConfirm"
       @cancel="handleCancel"
   >
@@ -89,33 +98,43 @@ const handleCancel = (): void => {
         name="admin"
         :label-col="{ span: 4 }"
         autocomplete="off"
-        :rules="rules"
     >
-      <a-form-item label="用户名" v-bind="validateInfos.username">
+      <a-form-item
+          label="用户名"
+          :rules="[{ required: true, message: 'Please input your username!' }]"
+      >
         <a-input
             v-model:value="formState.username"
             allow-clear
             placeholder="请输入管理员用户名"
         />
       </a-form-item>
-      <a-form-item label="昵称" v-bind="validateInfos.nickname">
+      <a-form-item
+          label="昵称"
+          :rules="[{ required: true, message: 'Please input your username!' }]"
+      >
         <a-input
-            v-model:value="formState.nickname"
+            v-model:value="formState.nickName"
             allow-clear
             placeholder="请输入昵称"
         />
       </a-form-item>
-      <a-form-item label="分组" v-bind="validateInfos.pid">
-        <a-select
-            v-model:value="formState.pid"
-            allow-clear
-            placeholder="请选择分组"
-        >
-          <a-select-option :value="0">Zone one</a-select-option>
-        </a-select>
+      <a-form-item
+          label="角色"
+          :rules="[{ required: true, message: 'Please select roles!' }]"
+      >
+        <i-tree-select
+            v-model:value="formState.roleIds"
+            :tree-data="roleOptions"
+            multiple
+            :field-names="{ label: 'name', value: 'id' }"
+            tree-default-expand-all
+            placeholder="Please select"
+            spliceParentTitle
+        />
       </a-form-item>
       <a-form-item label="头像" name="avatar">
-        <i-upload/>
+        <i-upload v-model:file-list="formState.avatar"/>
       </a-form-item>
       <a-form-item label="电子邮箱" name="email">
         <a-input
@@ -125,7 +144,10 @@ const handleCancel = (): void => {
             placeholder="请输入电子邮箱"
         />
       </a-form-item>
-      <a-form-item label="手机号" name="phone">
+      <a-form-item
+          label="手机号"
+          name="phone"
+      >
         <a-input
             v-model:value="formState.phone"
             allow-clear
@@ -133,19 +155,16 @@ const handleCancel = (): void => {
         />
       </a-form-item>
       <a-form-item label="性别" name="sex">
-        <a-radio-group v-model:value="formState.sex">
+        <a-radio-group v-model:value="formState.gander">
           <a-radio :value="0">保密</a-radio>
           <a-radio :value="1">男</a-radio>
           <a-radio :value="2">女</a-radio>
         </a-radio-group>
       </a-form-item>
-      <a-form-item name="date-picker" label="生日">
-        <a-date-picker
-            v-model:value="formState.birthday"
-            value-format="YYYY-MM-DD"
-        />
-      </a-form-item>
-      <a-form-item label="密码" v-bind="validateInfos.password">
+      <a-form-item
+          label="密码"
+          :rules="[{ required: true, message: 'Please input your password!' }]"
+      >
         <a-input-password
             v-model:value="formState.password"
             allow-clear
@@ -162,7 +181,7 @@ const handleCancel = (): void => {
       </a-form-item>
       <a-form-item label="状态" name="status">
         <a-radio-group v-model:value="formState.status">
-          <a-radio :value="0"> 禁用</a-radio>
+          <a-radio :value="0">禁用</a-radio>
           <a-radio :value="1">启用</a-radio>
         </a-radio-group>
       </a-form-item>

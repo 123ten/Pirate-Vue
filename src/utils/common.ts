@@ -118,3 +118,31 @@ export function setTimeoutPromise(time: number) {
     }, time);
   });
 }
+
+/**
+ *
+ * @param list 数据
+ * @param children 子级字段 默认children
+ * @param cb 回调
+ * @param parent 父级 默认null
+ * @returns
+ */
+export function deepChildren<T>(
+    list: T[],
+    cb: (item: T, index: number, list: T[], parent: T) => void,
+    children = 'children',
+    parent: T | null = null,
+) {
+  if (!Array.isArray(list)) {
+    return list;
+  }
+  return list.map((item, index) => {
+    cb && cb(item, index, list, parent);
+    if (item[children] && item[children].length) {
+      item[children] = deepChildren(item[children], cb, children, item);
+    } else {
+      item[children] = null;
+    }
+    return item;
+  });
+}

@@ -33,14 +33,11 @@ const columns = ref<IColumns[]>([
     minWidth: 100,
   },
   {
-    title: "分组",
+    title: "角色",
     dataIndex: "roles",
     isI18n: true,
     align: "center",
     minWidth: 100,
-    customRender({text}) {
-      return text?.join(",")
-    }
   },
   {
     title: "头像",
@@ -236,33 +233,38 @@ const i18nPrefix = {
           </template>
         </i-tooltip>
       </template>
-      <template #gender="{ record }">
+      <template #roles="{ value }">
+        <a-tag v-for="text in value" :key="value" color="processing" class="table-tag">
+          {{ text }}
+        </a-tag>
+      </template>
+      <template #gender="{ value }">
         <a-tag color="success" class="table-tag">
-          {{ $t(`user.table.rows.gender.${record.gender}`) }}
+          {{ $t(`user.table.rows.gender.${value}`) }}
         </a-tag>
       </template>
-      <template #lastLoginIp="{ record }">
+      <template #lastLoginIp="{value}">
         <a-tag color="processing" class="table-tag">
-          {{ record.lastLoginIp }}
+          {{ value }}
         </a-tag>
       </template>
-      <template #status="{ record }">
+      <template #status="{ value }">
         <a-tag
-            :color="record.status === 1 ? 'success' : 'error'"
+            :color="value === 1 ? 'success' : 'error'"
             class="table-tag"
         >
-          {{ $t(`user.table.rows.status.${record.status}`) }}
+          {{ $t(`user.table.rows.status.${value}`) }}
         </a-tag>
       </template>
-      <template #avatar="{ record }">
-        <a-avatar size="large" :src="record.avatar">
+      <template #avatar="{ value }">
+        <a-avatar size="large" :src="value">
           <template #icon>
             <user-outlined/>
           </template>
         </a-avatar>
       </template>
-      <template #menuname="{ record }">
-        <span v-if="record.menuname">{{ record.menuname }}</span>
+      <template #menuname="{ value }">
+        <span v-if="value">{{ value }}</span>
         <a-input v-else placeholder="请输入名称"/>
       </template>
       <template #operation="{ record }">
