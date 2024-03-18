@@ -55,14 +55,14 @@ export default defineConfig({
 
   build: {
     assetsInlineLimit: 8192, // 小于 8KB 的图片会被转换成 base64 编码的 Data URI 格式
-    assetsDir: "static", // 静态目录
-    rollupOptions: { //解决isCE
-      external: ["vue"],
-      output: {
-        globals: {
-          vue: 'vue'
-        }
-      }
-    },
+    // assetsDir: "static", // 静态目录
+    // rollupOptions: { //解决isCE
+    //   external: ["vue"],
+    //   output: {
+    //     globals: {
+    //       vue: 'vue'
+    //     }
+    //   }
+    // },
   },
 });
