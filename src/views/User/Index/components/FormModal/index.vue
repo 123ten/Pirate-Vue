@@ -15,7 +15,7 @@ interface IFormState {
   avatar: string; // 头像
   email: string; // 邮箱
   phone: string; // 手机号
-  gander: 0 | 1 | 2; // 性别
+  gender: 0 | 1 | 2; // 性别
   roleIds: number[]; // 角色
   password: string; // 密码
   sign: string; // 个性签名
@@ -39,7 +39,7 @@ const formState = reactive<IFormState>({
   avatar: "",
   email: "",
   phone: "",
-  gander: 0,
+  gender: 0,
   roleIds: [],
   password: "",
   sign: "",
@@ -151,10 +151,10 @@ const handleCancel = (): void => {
         />
       </a-form-item>
       <a-form-item label="性别" name="sex">
-        <a-radio-group v-model:value="formState.gander">
-          <a-radio :value="0">保密</a-radio>
-          <a-radio :value="1">男</a-radio>
-          <a-radio :value="2">女</a-radio>
+        <a-radio-group v-model:value="formState.gender">
+          <a-radio :value="0">{{ $t('user.rows.gender.0') }}</a-radio>
+          <a-radio :value="1">{{ $t('user.rows.gender.1') }}</a-radio>
+          <a-radio :value="2">{{ $t('user.rows.gender.2') }}</a-radio>
         </a-radio-group>
       </a-form-item>
       <a-form-item

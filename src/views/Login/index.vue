@@ -6,7 +6,9 @@ import * as pageBubble from "@/utils/pageBubble";
 import {debounce, setTimeoutPromise} from "@/utils/common";
 import avatar_default from "@/assets/images/avatar.png";
 import {useI18n} from "vue-i18n";
-import {getAvatar, getSvgCaptcha, login} from "@/api/user";
+import {getAvatar, login} from "@/api/admin";
+import {getSvgCaptcha} from "@/api/common";
+
 import {notification} from "ant-design-vue";
 import router from "@/router";
 import {$local} from "@/utils/storage";
@@ -23,7 +25,6 @@ const loginForm = reactive({
   username: "",
   password: "",
   captcha: "",
-  isAdmin: true,
   remember: false,
 });
 const avatar = ref<string>("");
