@@ -1,14 +1,13 @@
 // main.ts
-import { createApp, createSSRApp } from "vue";
+import {createApp} from "vue";
 import App from "./App.vue";
 import router from "./router/index";
-import { createPinia } from "pinia";
-// import Antd from "ant-design-vue";
+import {createPinia} from "pinia";
 import "ant-design-vue/dist/antd.less";
-// import 'ant-design-vue/dist/antd.dark.less';
 import "./common/css/ant.css";
 import "./common/css/style.css";
 import "./common/css/reset.css";
+import "./common/css/tailwindcss.css";
 // 引入echarts
 import echarts from "@/common/ts/echarts";
 import antdConfig from "@/config/antd.config";
