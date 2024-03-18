@@ -34,9 +34,9 @@ interface IColumns {
 }
 
 interface IPages {
-  size?: number; // 当前页数
-  page?: number; // 当前页码
-  total?: number; // 总条数
+  size: number; // 当前页数
+  page: number; // 当前页码
+  total: number; // 总条数
 }
 
 interface IPagination extends PaginationProps {

@@ -1,9 +1,8 @@
 <!-- MenuItem -->
 <script setup lang="ts">
 import {defineOptions, defineProps, withDefaults} from "vue";
-import {storeToRefs} from "pinia";
-import {useMenuStore} from "@/store";
 import {RouteRecordName, useRouter} from "vue-router";
+import SiderItem from './index.vue'
 
 import data from "../../data.json";
 
@@ -18,8 +17,6 @@ const props = withDefaults(defineProps<IPropsMenuItem>(), {
 });
 
 const router = useRouter();
-const store = useMenuStore();
-const {isMenuOutIn} = storeToRefs(store);
 
 // 跳转
 const toRouter = (name: RouteRecordName) => {
@@ -27,7 +24,6 @@ const toRouter = (name: RouteRecordName) => {
   router.push({
     name,
   });
-  isMenuOutIn.value = false; // 跳转路由默认收起
 };
 
 

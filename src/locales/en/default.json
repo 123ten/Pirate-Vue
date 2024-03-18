@@ -28,7 +28,8 @@
     "keyword": "Please input the keyword",
     "nickname": "Please input the nickname",
     "roles": "Please select the roles",
-    "status": "Please select the status"
+    "status": "Please select the status",
+    "role": "Please input the role"
   },
   "success": {
     "login": "Login success!",

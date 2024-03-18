@@ -1,13 +1,11 @@
 <!-- 权限按钮 -->
-<script lang="ts">
-import { withDefaults, defineProps, defineOptions, defineEmits } from "vue";
-import { TButtonType } from "@/types";
+<script setup lang="ts">
+import {defineEmits, defineOptions, defineProps, withDefaults} from "vue";
+import {TButtonType} from "@/types";
+
 defineOptions({
   name: "IButton",
 });
-</script>
-<script setup lang="ts">
-//#region interface
 
 /**
  * @param type 按钮类型
@@ -24,6 +22,7 @@ interface IProps {
   ghost?: boolean; // 幽灵属性，使按钮背景透明
   class?: ""; // 按钮类名
 }
+
 //#endregion
 const props = withDefaults(defineProps<IProps>(), {
   type: "default",

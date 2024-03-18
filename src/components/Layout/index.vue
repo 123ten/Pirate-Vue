@@ -8,20 +8,22 @@ const {isLayoutFullScreen, isCurrentPageReload} = storeToRefs(store);
 </script>
 
 <template>
-  <a-layout class="container mx-auto pt-4">
+  <a-layout class="pirate-container xl:pt-4">
     <sider v-show="!isLayoutFullScreen"/>
 
     <a-layout class="layout">
       <Header v-show="!isLayoutFullScreen"/>
-      <router-view
-          :class="isLayoutFullScreen ? 'fullScreen' : ''"
-          class="layout-view"
-          v-slot="{ Component }"
-      >
-        <transition name="slide-right" mode="out-in">
-          <component :is="Component" v-if="!isCurrentPageReload"/>
-        </transition>
-      </router-view>
+      <a-layout-content>
+        <router-view
+            :class="isLayoutFullScreen ? 'fullScreen' : ''"
+            class="layout-view"
+            v-slot="{ Component }"
+        >
+          <transition name="slide-right" mode="out-in">
+            <component :is="Component" v-if="!isCurrentPageReload"/>
+          </transition>
+        </router-view>
+      </a-layout-content>
     </a-layout>
   </a-layout>
 </template>

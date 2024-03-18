@@ -5,7 +5,6 @@ import {Form} from "ant-design-vue";
 import {getRoleList} from "@/api/user";
 
 interface IPropsModal {
-  title?: string; // modal 标题
   visible?: boolean; // 控制 modal 开关
 }
 
@@ -24,7 +23,6 @@ interface IFormState {
 }
 
 const props = withDefaults(defineProps<IPropsModal>(), {
-  title: "",
   visible: false,
 });
 const emits = defineEmits([
@@ -87,7 +85,7 @@ const handleCancel = (): void => {
 <template>
   <i-modal
       :visible="props.visible"
-      :title="props.title"
+      :title="'添加'"
       width="450px"
       :init="init"
       @confirm="handleConfirm"
@@ -95,9 +93,7 @@ const handleCancel = (): void => {
   >
     <a-form
         :model="formState"
-        name="admin"
         :label-col="{ span: 4 }"
-        autocomplete="off"
     >
       <a-form-item
           label="用户名"
@@ -120,17 +116,17 @@ const handleCancel = (): void => {
         />
       </a-form-item>
       <a-form-item
-          label="角色"
+          label="角色组"
           :rules="[{ required: true, message: 'Please select roles!' }]"
       >
         <i-tree-select
             v-model:value="formState.roleIds"
             :tree-data="roleOptions"
-            multiple
             :field-names="{ label: 'name', value: 'id' }"
-            tree-default-expand-all
-            placeholder="Please select"
+            :placeholder="$t('placeholder.role')"
+            multiple
             spliceParentTitle
+            tree-default-expand-all
         />
       </a-form-item>
       <a-form-item label="头像" name="avatar">

@@ -1,11 +1,11 @@
 <!-- header 头部 -->
 <script setup lang="ts">
-import { defineOptions, onBeforeMount } from "vue";
-import { storeToRefs } from "pinia";
-import { useMenuStore } from "@/store";
+import {defineOptions, onBeforeMount} from "vue";
+import {storeToRefs} from "pinia";
+import {useMenuStore} from "@/store";
 
 const store = useMenuStore();
-const { isMenuOutIn, isAsideMenu, isLayoutFullScreen } = storeToRefs(store);
+const {isMenuOutIn, isAsideMenu, isLayoutFullScreen} = storeToRefs(store);
 
 onBeforeMount(() => {
   init();
@@ -13,15 +13,9 @@ onBeforeMount(() => {
 
 const init = () => {
   const _innerWidth = window.innerWidth;
-  const is1280 = _innerWidth <= 1280;
-  if (is1280) {
-    // 小于等 1200 mobile 模式 收起侧边栏
-    isAsideMenu.value = true;
+  isMenuOutIn.value = isAsideMenu.value = _innerWidth <= 1200;
+  if (isMenuOutIn.value && isAsideMenu.value) {
     isMenuOutIn.value = false;
-  } else {
-    // 小于等 1200 mobile 模式 展开侧边栏
-    isAsideMenu.value = false;
-    isMenuOutIn.value = _innerWidth > 1280 && _innerWidth < 1500;
   }
 };
 
@@ -32,31 +26,31 @@ defineOptions({
 
 <template>
   <header
-    v-if="!isLayoutFullScreen"
-    class="nav-bar d-flex-sb"
-    :style="{ left: `${isMenuOutIn ? 96 : 232}px` }"
+      v-if="!isLayoutFullScreen"
+      class="nav-bar d-flex-sb"
+      :style="{ left: `${isMenuOutIn ? 96 : 232}px` }"
   >
-    <tags-mobile v-if="isAsideMenu" />
-    <tags-pc v-else />
+    <tags-mobile v-if="isAsideMenu"/>
+    <tags-pc v-else/>
 
     <div class="nav-menus d-flex-center">
       <!-- 首页 -->
-      <nav-home />
+      <nav-home/>
       <!-- 切换主题 -->
-      <nav-theme />
+      <nav-theme/>
       <!-- 语言 -->
-      <nav-language />
+      <nav-language/>
       <!-- 全屏/取消全屏 -->
-      <nav-full-screen :init="init" />
+      <nav-full-screen :init="init"/>
       <!-- 消息 -->
-      <nav-msg />
+      <nav-msg/>
       <!-- 清楚缓存 -->
-      <nav-cache />
+      <nav-cache/>
       <!-- 个人信息 -->
-      <nav-info />
+      <nav-info/>
     </div>
   </header>
-  <tags-pc v-if="isAsideMenu" />
+  <tags-pc v-if="isAsideMenu"/>
 </template>
 
 <style lang="less">

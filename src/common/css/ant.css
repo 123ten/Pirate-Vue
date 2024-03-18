@@ -1,5 +1,4 @@
 /* 按钮 */
-
 :root {
   --ant-success: var(--success-color);
   --ant-error: var(--error-color);
@@ -10,6 +9,10 @@
 
 button.ant-btn {
   border-radius: 4px;
+}
+
+.anticon svg {
+  vertical-align: baseline;
 }
 
 /* btn - warning */
@@ -234,7 +237,8 @@ div.ant-select:not(.ant-select-customize-input) .ant-select-selector,
 div.ant-select-dropdown,
 div.ant-select-item,
 .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active,
-.ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab-active {
+.ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab-active,
+tbody.ant-table-tbody > tr.ant-table-placeholder:hover > td {
   background-color: var(--primary-color);
 }
 
@@ -311,7 +315,8 @@ li.ant-dropdown-menu-item,
 .ant-form .ant-form-item .ant-form-item-label > label,
 .ant-radio-group .ant-radio-wrapper,
 .ant-input-group > .ant-input-group-addon,
-div.ant-tabs {
+div.ant-tabs,
+div.ant-empty-normal {
   color: var(--primary-text-color-sub);
 }
 
@@ -327,6 +332,10 @@ li.ant-dropdown-menu-item-disabled:hover,
 .ant-modal .ant-modal-header,
 .ant-modal .ant-modal-footer {
   border-color: var(--primary-border-color);
+}
+
+div.ant-tabs-top > .ant-tabs-nav::before, .ant-tabs-bottom > .ant-tabs-nav::before, .ant-tabs-top > div > .ant-tabs-nav::before, .ant-tabs-bottom > div > .ant-tabs-nav::before {
+  border-bottom: 1px solid var(--primary-border-color);
 }
 
 /* ant-picker */

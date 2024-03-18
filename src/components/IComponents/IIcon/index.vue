@@ -1,6 +1,7 @@
 <!-- 图标配置 -->
 <script lang="ts">
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
+
 export default defineComponent({
   name: "IIcon",
 });
@@ -18,9 +19,9 @@ import {
   watch,
   nextTick,
 } from "vue";
-import { SyncOutlined } from "@ant-design/icons-vue";
+import {SyncOutlined} from "@ant-design/icons-vue";
 import * as antIcons from "@ant-design/icons-vue";
-import { notification } from "ant-design-vue";
+import {notification} from "ant-design-vue";
 
 const emits = defineEmits(["update:visible"]);
 
@@ -101,21 +102,21 @@ const iconComputed = computed(() => antIcons[unref(currentIcon)]);
 
 <template>
   <a-popover
-    placement="bottom"
-    trigger="click"
-    class="icon"
-    v-model:visible="visible"
+      placement="bottom"
+      trigger="click"
+      class="icon"
+      v-model:visible="visible"
   >
     <template #title>
       <div class="icons-title">
         请选择图标
         <div class="icons-tab">
           <span
-            v-for="item in iconTabs"
-            :key="item"
-            class="tab-item"
-            :class="{ active: item === currentTab }"
-            @click="checkIconTab(item)"
+              v-for="item in iconTabs"
+              :key="item"
+              class="tab-item"
+              :class="{ active: item === currentTab }"
+              @click="checkIconTab(item)"
           >
             {{ item }}
           </span>
@@ -125,21 +126,21 @@ const iconComputed = computed(() => antIcons[unref(currentIcon)]);
     <template #content>
       <div class="icons-content">
         <div
-          class="icons-item"
-          v-for="icon in icons"
-          :key="icon"
-          @click="checkIcon(icon)"
+            class="icons-item"
+            v-for="icon in icons"
+            :key="icon"
+            @click="checkIcon(icon)"
         >
-          <component :is="antIcons[icon]" style="font-size: 20px" />
+          <component :is="antIcons[icon]" style="font-size: 20px"/>
         </div>
       </div>
     </template>
     <a-input placeholder="搜索图标">
       <template #addonBefore>
-        <component :is="iconComputed" />
+        <component :is="iconComputed"/>
       </template>
       <template #addonAfter>
-        <sync-outlined @click="onLoad" />
+        <sync-outlined @click="onLoad"/>
       </template>
     </a-input>
   </a-popover>

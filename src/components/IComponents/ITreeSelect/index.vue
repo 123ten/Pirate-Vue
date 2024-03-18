@@ -45,8 +45,6 @@ const {spliceParentTitle, ...restProps} = toRaw(props);
 const tooltipTitle = ref<undefined | number[] | string[]>(undefined);
 
 const handleChange = (value: ITreeSelectProps['value'], label: string[], extra: any) => {
-  // console.log('restProps', props, restProps)
-  // console.log(value, "value");
   emits("update:value", value);
   emits("change", value, label, extra);
 
@@ -62,7 +60,6 @@ const handleChange = (value: ITreeSelectProps['value'], label: string[], extra: 
         if ((value as (string | number)[])?.includes(item[valueKey])) {
           item.spliceTitle = [parent?.spliceTitle, item[labelKey]].filter(Boolean).join('-');
           labels.push(item.spliceTitle);
-          delete item.spliceTitle;
         }
       })
       tooltipTitle.value = labels;

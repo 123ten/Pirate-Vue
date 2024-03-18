@@ -11,13 +11,14 @@ interface IDataSource {
   isDelVisible?: boolean;
   username?: string;
   nickname?: string;
-  groups?: string;
+  roles?: string;
   avatar?: string;
   email?: string;
   phone?: string;
-  lastlogintime?: string;
-  createTime?: string;
+  lastLoginIp?: string;
+  lastLoginTime?: string;
   status?: number;
+  createTime?: string;
 }
 
 const columns = ref<IColumns[]>([
@@ -26,7 +27,7 @@ const columns = ref<IColumns[]>([
     dataIndex: "index",
     key: "index",
     align: "center",
-    customRender: ({index}) => index + 1,
+    customRender: ({index}) => index + 1 + (unref(pages).page - 1) * unref(pages).size,
   },
   {
     title: "用户名",
@@ -88,7 +89,7 @@ const pages = ref<IPages>({
   page: 1,
   total: 0,
 });
-const formSeach = reactive<any>({});
+const formSearch = reactive<any>({});
 
 const avatarPreviewSrc = ref("");
 const isEdit = ref<boolean>(false); // 是否编辑
@@ -179,7 +180,7 @@ const openAvatarPreviewImage = (src: string) => {
     >
       <template #formSearch>
         <a-form
-            :model="formSeach"
+            :model="formSearch"
             layout="inline"
             name="basic"
             autocomplete="off"
@@ -188,22 +189,22 @@ const openAvatarPreviewImage = (src: string) => {
             <a-row style="width: 100%">
               <a-col :span="6">
                 <a-form-item label="UsernameUsernameUsername" name="username">
-                  <a-input v-model:value="formSeach.username" allow-clear/>
+                  <a-input v-model:value="formSearch.username" allow-clear/>
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="Username" name="nickname">
-                  <a-input v-model:value="formSeach.username" allow-clear/>
+                  <a-input v-model:value="formSearch.username" allow-clear/>
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="Username" name="123">
-                  <a-input v-model:value="formSeach.username" allow-clear/>
+                  <a-input v-model:value="formSearch.username" allow-clear/>
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="Username" name="222">
-                  <a-input v-model:value="formSeach.username" allow-clear/>
+                  <a-input v-model:value="formSearch.username" allow-clear/>
                 </a-form-item>
               </a-col>
             </a-row>
