@@ -40,7 +40,8 @@
     "password": "Please enter the password",
     "captcha": "Please enter the captcha",
     "login": "Login failed, please try again later",
-    "network": "Network error, please try again later"
+    "network": "Network error, please try again later",
+    "server": "Server error, please try again later"
   },
   "title": {
     "refresh": "Refresh",

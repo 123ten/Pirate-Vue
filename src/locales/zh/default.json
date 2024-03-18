@@ -24,7 +24,8 @@
     "userNameError": "用户名错误！",
     "passwordError": "密码错误！",
     "login": "登录失败！",
-    "network": "网络异常，请稍后重试！"
+    "network": "网络异常，请稍后重试！",
+    "server": "服务器异常，请稍后重试！"
   },
   "success": {
     "login": "登录成功！",

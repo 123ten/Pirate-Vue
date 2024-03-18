@@ -4,6 +4,7 @@ header.nav-bar {
   min-height: 50px;
   transition: all 0.2s;
 }
+
 header.nav-bar .nav-menus {
   min-width: 300px;
   justify-content: space-around;
@@ -14,6 +15,7 @@ header.nav-bar .nav-menus {
   overflow: hidden;
   font-size: 18px;
 }
+
 header.nav-bar .nav-menus .nav-menu-item {
   display: flex;
   align-items: center;
@@ -22,6 +24,7 @@ header.nav-bar .nav-menus .nav-menu-item {
   height: 100%;
   cursor: pointer;
 }
+
 header.nav-bar .nav-menus .nav-menu-item .msg-icon {
   animation-name: upAnimation;
   transform-origin: center top;
@@ -30,15 +33,19 @@ header.nav-bar .nav-menus .nav-menu-item .msg-icon {
   animation-iteration-count: infinite;
   animation-delay: 0.5s;
 }
+
 header.nav-bar .nav-menus .nav-menu-item:hover {
   background: var(--primary-bg-color);
 }
+
 header.nav-bar .nav-menus .nav-menu-item:hover .anticon {
   animation: smallToLast 0.3s ease-out forwards;
 }
+
 :deep(.ant-dropdown-menu-item) {
   text-align: center;
 }
+
 @keyframes upAnimation {
   0% {
     transform: rotate(0deg);
@@ -85,6 +92,7 @@ header.nav-bar .nav-menus .nav-menu-item:hover .anticon {
     transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
   }
 }
+
 @keyframes smallToLast {
   0% {
     transform: scale(0);
@@ -96,14 +104,17 @@ header.nav-bar .nav-menus .nav-menu-item:hover .anticon {
     transform: scale(1);
   }
 }
-@media screen and (max-width: 1200px) {
+
+@media screen and (max-width: 1280px) {
   header.nav-bar {
     padding-right: 0;
   }
+
   header.nav-bar .nav-menus {
     box-shadow: none;
     overflow: inherit;
   }
+
   .nav-bar {
     background-color: var(--primary-color);
   }

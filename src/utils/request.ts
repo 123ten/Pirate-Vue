@@ -147,7 +147,7 @@ class AxiosUtils {
     // console.log("错误", error, data);
     notification.error({
       message: t("message.fail"),
-      description: data.message,
+      description: data.message || t("error.server"),
     });
     return Promise.reject(error);
   }

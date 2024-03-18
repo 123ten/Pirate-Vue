@@ -66,7 +66,7 @@ const currentOpenMenu = () => {
   </div>
   <div class="i-menu-content">
     <a-menu mode="inline" :open-keys="openKeys" :selected-keys="selectedKeys">
-      <side-bar-item :menu="menus"/>
+      <sider-item :menu="menus"/>
     </a-menu>
   </div>
 </template>

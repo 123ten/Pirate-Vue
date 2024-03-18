@@ -21,7 +21,7 @@ const onClose = () => {
       class="i-menu-mobile"
       width="200"
   >
-    <side-bar-menu/>
+    <sider-menu/>
   </a-drawer>
   <a-layout-sider
       v-else
@@ -30,7 +30,7 @@ const onClose = () => {
       class="i-menu"
       collapsedWidth="64"
   >
-    <side-bar-menu/>
+    <sider-menu/>
   </a-layout-sider>
 </template>
 

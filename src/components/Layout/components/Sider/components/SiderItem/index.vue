@@ -44,7 +44,7 @@ defineOptions({
         <template #icon>
           <component :is="antIcons[item.icon]" class="fontSize-icon"/>
         </template>
-        <side-bar-item :menu="item.children"/>
+        <sider-item :menu="item.children"/>
       </a-sub-menu>
     </template>
     <template v-else>

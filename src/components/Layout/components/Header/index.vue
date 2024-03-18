@@ -13,15 +13,15 @@ onBeforeMount(() => {
 
 const init = () => {
   const _innerWidth = window.innerWidth;
-  const is1200 = _innerWidth <= 1200;
-  if (is1200) {
+  const is1280 = _innerWidth <= 1280;
+  if (is1280) {
     // 小于等 1200 mobile 模式 收起侧边栏
     isAsideMenu.value = true;
     isMenuOutIn.value = false;
   } else {
     // 小于等 1200 mobile 模式 展开侧边栏
     isAsideMenu.value = false;
-    isMenuOutIn.value = _innerWidth > 1200 && _innerWidth < 1500;
+    isMenuOutIn.value = _innerWidth > 1280 && _innerWidth < 1500;
   }
 };
 
