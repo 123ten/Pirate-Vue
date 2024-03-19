@@ -1,4 +1,6 @@
 // 获取时间状态
+import {IPages} from "@/types";
+
 export const getTimeState = () => {
   // 获取当前时间
   const timeNow = new Date();
@@ -145,4 +147,13 @@ export function deepChildren<T>(
     }
     return item;
   });
+}
+
+/**
+ * @description 获取当前页码 用于序号排序
+ * @param index
+ * @param pages
+ */
+export function sortNumber(index: number, pages: IPages) {
+  return index + 1 + (pages.page - 1) * pages.size
 }

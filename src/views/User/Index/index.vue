@@ -6,6 +6,7 @@ import {IColumns, IPages} from "@/types";
 import {IDataSource} from "./types";
 import {getUserList} from "@/api/user";
 import FormModal from "./components/FormModal/index.vue";
+import {sortNumber} from "@/utils/common";
 
 const columns = ref<IColumns[]>([
   {
@@ -14,9 +15,7 @@ const columns = ref<IColumns[]>([
     isI18n: true,
     align: "center",
     minWidth: 80,
-    customRender({index}) {
-      return index + 1
-    }
+    customRender: ({index}) => sortNumber(index, pages.value),
   },
   {
     title: "用户名",
@@ -169,7 +168,6 @@ const handleDeleteRecordConfirm = (record: IDataSource) => {
 
 // 分页
 const onPagesChange = (value: IPages) => {
-  // console.log(records, "records");
   pages.value = value;
 };
 
@@ -244,7 +242,7 @@ const i18nPrefix = {
         </a-tag>
       </template>
       <template #lastLoginIp="{value}">
-        <a-tag color="processing" class="table-tag">
+        <a-tag v-if="value" color="processing" class="table-tag">
           {{ value }}
         </a-tag>
       </template>

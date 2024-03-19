@@ -315,15 +315,15 @@ li.ant-dropdown-menu-item,
 .ant-form .ant-form-item .ant-form-item-label > label,
 .ant-radio-group .ant-radio-wrapper,
 .ant-input-group > .ant-input-group-addon,
-div.ant-tabs,
-div.ant-empty-normal {
+div.ant-tabs {
   color: var(--primary-text-color-sub);
 }
 
 li.ant-dropdown-menu-item-disabled,
 .ant-dropdown-menu-submenu-title-disabled,
 li.ant-dropdown-menu-item-disabled:hover,
-.ant-dropdown-menu-submenu-title-disabled:hover {
+.ant-dropdown-menu-submenu-title-disabled:hover,
+div.ant-empty-normal {
   color: var(--primary-text-color-disabled);
 }
 

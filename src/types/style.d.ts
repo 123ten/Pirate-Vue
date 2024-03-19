@@ -1,7 +1,7 @@
 type TDisplay = "flex" | "block" | "inline-block" | "inline" | "grid";
 
-type TStyle = {
-  [property: string]: string;
+type TStyle = StyleSheetList & {
+  // [property: string]: string;
   minWidth?: string;
   whiteSpace?: string;
   overflow?: string;
@@ -9,4 +9,4 @@ type TStyle = {
   textOverflow?: string;
 };
 
-export { TStyle };
+export {TStyle};

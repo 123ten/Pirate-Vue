@@ -1,10 +1,11 @@
 <!-- 管理员管理 -->
 <script setup lang="ts">
 import {DeleteOutlined, EditOutlined, PlusOutlined, UserOutlined,} from "@ant-design/icons-vue";
-import {onMounted, reactive, ref, unref} from "vue";
-import AddEditModal from "./components/AddEditModal/index.vue";
-import data from "./data.json";
+import {onMounted, reactive, ref} from "vue";
+import FormModal from "./components/FormModal/index.vue";
 import type {IColumns, IPages} from "@/types";
+import {getAdminList} from "@/api/admin";
+import {sortNumber} from "@/utils/common";
 
 interface IDataSource {
   key?: string | number;
@@ -27,52 +28,67 @@ const columns = ref<IColumns[]>([
     dataIndex: "index",
     key: "index",
     align: "center",
-    customRender: ({index}) => index + 1 + (unref(pages).page - 1) * unref(pages).size,
+    width: 80,
+    customRender: ({index}) => sortNumber(index, pages.value),
   },
   {
     title: "用户名",
     dataIndex: "username",
     align: "center",
+    minWidth: 100,
   },
   {
     title: "昵称",
     dataIndex: "nickname",
     align: "center",
+    minWidth: 100,
   },
   {
-    title: "分组",
-    dataIndex: "groups",
+    title: "角色组",
+    dataIndex: "roles",
     align: "center",
   },
   {
     title: "头像",
     dataIndex: "avatar",
     align: "center",
+    width: 100,
   },
   {
     title: "邮箱",
     dataIndex: "email",
     align: "center",
+    width: 150,
   },
   {
     title: "手机号",
     dataIndex: "phone",
     align: "center",
+    width: 150,
   },
   {
-    title: "最后登录",
-    dataIndex: "lastlogintime",
+    title: "最后登录IP",
+    dataIndex: "lastLoginIp",
     align: "center",
+    width: 100,
+  },
+  {
+    title: "最后登录时间",
+    dataIndex: "lastLoginTime",
+    align: "center",
+    width: 160,
   },
   {
     title: "创建时间",
     dataIndex: "createTime",
     align: "center",
+    width: 160,
   },
   {
     title: "状态",
     dataIndex: "status",
     align: "center",
+    width: 100,
   },
   {
     title: "操作",
@@ -82,7 +98,7 @@ const columns = ref<IColumns[]>([
     width: 100,
   },
 ]);
-const dataSource = ref<IDataSource[]>(data);
+const dataSource = ref<IDataSource[]>([]);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 const pages = ref<IPages>({
   size: 10,
@@ -93,17 +109,35 @@ const formSearch = reactive<any>({});
 
 const avatarPreviewSrc = ref("");
 const isEdit = ref<boolean>(false); // 是否编辑
-const isDeleteAllVisible = ref<boolean>(false);
 const isTableLoading = ref<boolean>(false); // 表格加载状态
 const isAddEditModal = ref<boolean>(false);
-const isAvatarPreviewSrc = ref<boolean>(false);
+const isAvatarPreviewSrcVisible = ref<boolean>(false);
 
-onMounted(() => {
-  dataSource.value = dataSource.value.map((item) => {
-    item.isDelVisible = false;
-    return item;
-  });
+onMounted(async () => {
+  await getList();
 });
+
+const getList = async () => {
+  const params = {
+    page: pages.value.page,
+    size: pages.value.size,
+    ...formSearch,
+  };
+  isTableLoading.value = true;
+  try {
+    const {data} = await getAdminList(params);
+    console.log(data, "getAdminList");
+    dataSource.value = data.records
+
+    pages.value = {
+      size: data.size,
+      page: data.page,
+      total: data.total,
+    };
+  } finally {
+    isTableLoading.value = false;
+  }
+}
 
 // 添加
 const handleAddEdit = (type: number) => {
@@ -119,28 +153,6 @@ const onAddEditConfirm = () => {
   onAddEditCancel();
   return;
 };
-
-// 删除-确定
-const onDeleteAllConfirm = () => {
-  isDeleteAllVisible.value = false;
-};
-// 删除-取消
-const onDeleteAllcancel = () => {
-  isDeleteAllVisible.value = false;
-};
-// 删除-显示隐藏的回调
-const onDeleteVisibleChange = () => {
-  // selectedRowKeys没有选中时 默认禁用 删除按钮
-  if (!unref(selectedRowKeys).length) {
-    isDeleteAllVisible.value = false;
-  }
-};
-// 删除当前行-确定
-const onDeleteCurrentConfirm = (record: IDataSource) => {
-  console.log(record, "record");
-  record.isDelVisible = false;
-};
-
 // 分页
 const onPagesChange = (records: IPages) => {
   // console.log(records, "records");
@@ -159,7 +171,7 @@ const onSelectChange = (rowKeys: string[]) => {
 
 // 显示预览图片
 const openAvatarPreviewImage = (src: string) => {
-  isAvatarPreviewSrc.value = true;
+  isAvatarPreviewSrcVisible.value = true;
   avatarPreviewSrc.value = src;
 };
 </script>
@@ -170,52 +182,13 @@ const openAvatarPreviewImage = (src: string) => {
         :columns="columns"
         :dataSource="dataSource"
         :pages="pages"
-        isSelectedRowKeys
-        isFormSearchBtn
         :loading="isTableLoading"
-        :scroll="{ x: true }"
-        @onColumnChange="onColumnChange"
-        @onPagesChange="onPagesChange"
-        @onSelectChange="onSelectChange"
+        @reload="getList"
+        @columnChange="onColumnChange"
+        @pagesChange="onPagesChange"
+        @selectChange="onSelectChange"
     >
-      <template #formSearch>
-        <a-form
-            :model="formSearch"
-            layout="inline"
-            name="basic"
-            autocomplete="off"
-        >
-          <a-space direction="vertical">
-            <a-row style="width: 100%">
-              <a-col :span="6">
-                <a-form-item label="UsernameUsernameUsername" name="username">
-                  <a-input v-model:value="formSearch.username" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item label="Username" name="nickname">
-                  <a-input v-model:value="formSearch.username" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item label="Username" name="123">
-                  <a-input v-model:value="formSearch.username" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item label="Username" name="222">
-                  <a-input v-model:value="formSearch.username" allow-clear/>
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-space>
-          <a-space>
-            <a-button>查询</a-button>
-            <a-button>重置</a-button>
-          </a-space>
-        </a-form>
-      </template>
-      <template #leftBtn>
+      <template #leftActions>
         <i-tooltip title="添加" content="添加" @click="handleAddEdit(0)">
           <template #icon>
             <plus-outlined/>
@@ -226,29 +199,24 @@ const openAvatarPreviewImage = (src: string) => {
             <a-popconfirm
                 title="确定删除选中记录？"
                 ok-text="删除"
+                ok-button="primary"
+                :ok-button-props="{danger:true}"
                 cancel-text="取消"
-                @cancel="onDeleteAllcancel"
-                @visibleChange="onDeleteVisibleChange"
-                v-model:visible="isDeleteAllVisible"
             >
-              <template #okButton>
-                <a-button
-                    type="danger"
-                    size="small"
-                    @click="onDeleteAllConfirm"
-                >
-                  删除
-                </a-button>
-              </template>
-              <a-button type="danger" :disabled="!selectedRowKeys.length">
+              <a-button type="primary" danger :disabled="!selectedRowKeys.length">
                 <template #icon>
-                  <DeleteOutlined/>
+                  <delete-outlined/>
                 </template>
                 删除
               </a-button>
             </a-popconfirm>
           </template>
         </i-tooltip>
+      </template>
+      <template #roles="{ value }">
+        <a-tag v-for="text in value" :key="value" color="processing" class="table-tag">
+          {{ text }}
+        </a-tag>
       </template>
       <template #avatar="{ record }">
         <a-avatar
@@ -261,9 +229,17 @@ const openAvatarPreviewImage = (src: string) => {
           </template>
         </a-avatar>
       </template>
-      <template #status="{ record }">
-        <a-tag :color="record.status === 1 ? 'success' : 'error'">
-          {{ record.status === 1 ? "启用" : "禁用" }}
+      <template #lastLoginIp="{value}">
+        <a-tag v-if="value" color="processing" class="table-tag">
+          {{ value }}
+        </a-tag>
+      </template>
+      <template #status="{ value }">
+        <a-tag
+            :color="value === 1 ? 'success' : 'error'"
+            class="table-tag"
+        >
+          {{ $t(`user.table.rows.status.${value}`) }}
         </a-tag>
       </template>
       <template #operate="{ record }">
@@ -278,19 +254,11 @@ const openAvatarPreviewImage = (src: string) => {
               <a-popconfirm
                   title="确定删除选中记录？"
                   ok-text="删除"
+                  ok-button="primary"
+                  :ok-button-props="{danger:true}"
                   cancel-text="取消"
                   placement="left"
-                  v-model:visible="record.isDelVisible"
               >
-                <template #okButton>
-                  <a-button
-                      type="danger"
-                      size="small"
-                      @click="onDeleteCurrentConfirm(record)"
-                  >
-                    删除
-                  </a-button>
-                </template>
                 <a-button type="danger" size="small">
                   <template #icon>
                     <delete-outlined/>
@@ -303,15 +271,16 @@ const openAvatarPreviewImage = (src: string) => {
       </template>
     </i-table>
 
-    <add-edit-modal
+    <form-modal
         :visible="isAddEditModal"
         :title="isEdit ? '编辑' : '添加'"
         @cancel="onAddEditCancel"
         @confirm="onAddEditConfirm"
     />
+
     <i-preview-image
+        v-model:visible="isAvatarPreviewSrcVisible"
         :src="avatarPreviewSrc"
-        v-model:visible="isAvatarPreviewSrc"
     />
   </div>
 </template>

@@ -1,7 +1,8 @@
 type TypeSearchType = "input" | "select" | "radio";
-interface IOptions<T> {
+
+interface IOptions {
   label: string;
-  value: T<value>;
+  value: any;
 }
 
-export { TypeSearchType, IOptions };
+export {TypeSearchType, IOptions};

@@ -6,33 +6,27 @@ import type {UploadChangeParam} from "ant-design-vue";
 import request from '@/utils/request'
 
 interface IPropsModal {
-  fileList?: any[]; // 文件列表
   alt?: string; // alt
   title?: string; // title
   placeholder?: string; // upload 占位内容
-  listType: 'picture-card',
-  length?: number; // 上传文件数量
+  listType: 'avatar' | 'picture-card'
 }
 
 const props = withDefaults(defineProps<IPropsModal>(), {
-  fileList: undefined,
   alt: "upload",
   title: "",
   placeholder: "上传",
-  listType: 'picture-card',
-  length: undefined,
+  listType: 'picture-card'
 });
 const emits = defineEmits([
-  "update:fileList", // 文件列表
-  "change",
   "confirm", // 点击确定回调
   "cancel", // 点击遮罩层或右上角叉或取消按钮的回调
 ]);
 
-const fileList = ref<any[]>([]);
+const fileList = ref([]);
+const imgUrl = ref<string>("");
 const isUploadLoading = ref<boolean>(false);
-const isPreviewImageVisible = ref<boolean>(false); // 是否显示预览图片
-const isSelectFileModalVisible = ref<boolean>(false); // 是否显示选择文件 modal
+const isOpenFileModal = ref<boolean>(false);
 
 const listType = computed(() => {
   if (['avatar', 'picture-card'].includes(props.listType)) {
@@ -47,25 +41,26 @@ const handleUploadChange = (info: UploadChangeParam) => {
   }
   if (info.file.status === "done") {
     isUploadLoading.value = false;
+    if (props.listType === 'avatar') {
+      uploadAvatarSuccess(info)
+    }
   } else if (info.file.status === "error") {
     isUploadLoading.value = false;
   }
-  emits("update:fileList", info.fileList);
-  emits("change", info);
 };
 
-const onUploadPreview = (file) => {
-  console.log("onUploadPreview", file);
-  isPreviewImageVisible.value = true;
+const uploadAvatarSuccess = (info) => {
+  const [file] = info.file.response.data
+  imgUrl.value = file.url
 }
 
 // 打开选择文件弹窗
 const openFileModal = () => {
-  isSelectFileModalVisible.value = true;
+  isOpenFileModal.value = true;
 };
 // 取消 - 选择附件
 const onFileModalCancel = () => {
-  isSelectFileModalVisible.value = false;
+  isOpenFileModal.value = false;
 };
 // 确定 - 选择附件
 const onFileModalConfirm = () => {
@@ -74,49 +69,36 @@ const onFileModalConfirm = () => {
 </script>
 
 <template>
-  <div class="i-upload relative inline-block rounded-md transition-all">
+  <div class="i-upload">
+    <div class="i-upload-select" @click.stop="openFileModal">选择</div>
     <a-upload
         v-model:file-list="fileList"
         name="files"
         :list-type="listType"
         class="uploader"
-        multiple
+        :show-upload-list="false"
+        accept="image/png,image/jpeg"
         :action="request.baseUrl+'/common/upload'"
         @change="handleUploadChange"
-        @preview="onUploadPreview"
     >
-      <template v-if="!props.length || fileList.length < props.length">
-        <div class="select-text" @click.stop="openFileModal">选择</div>
-        <div class="h-[100%] flex flex-col justify-center items-center">
-          <loading-outlined v-if="isUploadLoading" class="i-upload-icon"/>
-          <plus-outlined v-else class="i-upload-icon"/>
-          <div class="i-upload-text">
-            {{ props.placeholder }}
-          </div>
+      <img
+          v-if="props.listType==='avatar' && imgUrl"
+          :src="imgUrl"
+          :alt="props.alt"
+          :title="props.title"
+      />
+      <div v-else class="upload-placeholder">
+        <loading-outlined v-if="isUploadLoading" class="upload-icon"/>
+        <plus-outlined v-else class="upload-icon"/>
+        <div class="ant-upload-text">
+          {{ props.placeholder }}
         </div>
-      </template>
+      </div>
     </a-upload>
   </div>
-
-  <div class="hidden">
-    <a-image-preview-group
-        :preview="{
-          visible:isPreviewImageVisible,
-          onVisibleChange: vis => (isPreviewImageVisible = vis),
-          maskClassName: 'i-upload-preview-mask',
-        }"
-    >
-      <a-image
-          v-for="item in fileList"
-          :key="item.uid"
-          :src="item.url || item.thumbUrl"
-      />
-    </a-image-preview-group>
-  </div>
-
   <!-- 选择文件 modal -->
   <select-file-modal
-      :visible="isSelectFileModalVisible"
+      :visible="isOpenFileModal"
       @confirm="onFileModalConfirm"
       @cancel="onFileModalCancel"
   />

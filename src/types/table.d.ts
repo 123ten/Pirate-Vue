@@ -1,4 +1,6 @@
 import {PaginationProps} from "ant-design-vue";
+import {IOptions, TypeSearchType} from "@/types/form";
+import {TStyle} from "@/types/style";
 
 type TCustomHeaderCell = {
   style: TStyle;
@@ -22,6 +24,7 @@ interface IColumns {
   width?: number | string; // 表头宽度
   minWidth?: number; // 拖动列最小宽度，会受到表格自动调整分配宽度影响
   maxWidth?: number; // 拖动列最大宽度，会受到表格自动调整分配宽度影响
+  style?: TStyle; // 表头样式
   isI18n?: boolean; // 是否开始当前列国际化
   search?: boolean; // 是否允许搜索
   hide?: boolean; // 是否隐藏

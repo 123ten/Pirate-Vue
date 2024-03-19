@@ -197,10 +197,11 @@ const handlePageSizeChange = (
     pagination: TableProps['pagination'],
 ) => {
   if (!pagination) throw new Error("pagination is undefined");
+  const {current = 1, pageSize = 10, total = 0} = pagination;
   pages.value = {
-    size: pagination.pageSize,
-    page: pagination.current,
-    total: pagination.total
+    size: pageSize,
+    page: current,
+    total: total
   }
   emits("pagesChange", pages.value);
 };
@@ -273,18 +274,26 @@ const formColumns = computed(() => {
  */
 const columnsComputed = computed(() => {
   return columns.value.map((column: IColumns) => {
-    if (column.minWidth) {
-      column.customHeaderCell = () => {
+    column.customHeaderCell = (column) => {
+      if (column.minWidth) {
         return {
           style: {
-            minWidth: column.minWidth + 'px',
+            ...column.style,
+            minWidth: (column.minWidth) + 'px',
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
           },
         };
-      };
-    }
+      } else {
+        return {
+          style: {
+            ...column.style,
+            width: (column.width) + 'px',
+          },
+        };
+      }
+    };
     return column;
   });
 });

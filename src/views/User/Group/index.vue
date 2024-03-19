@@ -5,6 +5,7 @@ import {onMounted, ref, unref} from "vue";
 import AddEditModal from "./components/AddEditModal/index.vue";
 import {IColumns, IPages} from "@/types";
 import {getRoleList} from "@/api/user";
+import ITooltip from "@/components/IComponents/ITooltip/index.vue";
 
 interface IDataSource {
   key: string;
@@ -194,9 +195,7 @@ const onSelectChange = (rowKeys: string[]) => {
             </a-popconfirm>
           </template>
         </i-tooltip>
-        <expand-all-rows-tooltip
-            v-model:expand="defaultExpandAllRows"
-        />
+        <expand-all-rows-tooltip v-model:expand="defaultExpandAllRows"/>
       </template>
       <template #status="{ record }">
         <a-tag v-if="record.status >= 0" :color="record.status === 1 ? 'success' : 'error'">

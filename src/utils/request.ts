@@ -2,7 +2,7 @@ import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse} fro
 import {notification} from "ant-design-vue";
 import i18n from "@/locales";
 import {setTimeoutPromise} from "@/utils/common";
-import {refresh} from "@/api/user";
+import {refresh} from "@/api/admin";
 import {$local} from "@/utils/storage";
 import {RefreshResult} from "@/api/types/user";
 import router from "@/router";
@@ -15,13 +15,14 @@ interface PendingTask {
 }
 
 class AxiosUtils {
+  public baseUrl: string = import.meta.env.VITE_BASE_API;
   private readonly http: AxiosInstance;
   private refreshing: boolean = false;
   private readonly subscribers: PendingTask[] = [];
 
   constructor() {
     this.http = axios.create({
-      baseURL: import.meta.env.VITE_BASE_API,
+      baseURL: this.baseUrl,
       timeout: 10 * 60,
       headers: {
         Accept: "application/json",
@@ -112,12 +113,12 @@ class AxiosUtils {
 
     const {data, config} = response as AxiosResponse;
 
-    if (config.url?.includes('/user/avatar')) {
+    if (['/user/avatar', '/admin/avatar'].includes(config.url!)) {
       // 上传头像接口不做错误处理
       return Promise.reject(error);
     }
 
-    if (response.status === 401 && config.url?.includes('/user/refresh')) {
+    if (response.status === 401 && ['/user/refresh', '/admin/refresh'].includes(config.url!)) {
       await this.unAuthorizedHandler(response);
       return Promise.reject(error);
     }
@@ -128,7 +129,7 @@ class AxiosUtils {
       })
     }
 
-    if (response.status === 401 && !config.url?.includes('/user/refresh')) {
+    if (response.status === 401 && !['/user/refresh', '/admin/refresh'].includes(config.url!)) {
       this.refreshing = true;
       console.log(config.url)
       const {code} = await this.refreshAccessToken();
@@ -141,7 +142,7 @@ class AxiosUtils {
 
         return this.http(config);
       }
-      // console.log("重新登录", data, config);
+      console.log("重新登录", data, config);
       await this.unAuthorizedHandler(response)
     }
     // console.log("错误", error, data);
