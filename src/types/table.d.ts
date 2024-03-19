@@ -10,13 +10,13 @@ type TDateType = "date" | "week" | "month" | "quarter" | "year";
 
 interface IColumns {
   type?: TypeSearchType;
-  options?: IOptions;
+  options?: IOptions[];
   title: string;
   dataIndex: string;
   key?: string;
   align?: "center" | "left" | "right"; // 表格对齐方式 center | left | right
   fixed?: "left" | "right"; // 表头左右固定 left | right
-  dataType?: TDateType;
+  dateType?: TDateType;
   placeholder?: string; // 占位内容
   i18nName?: string; // 国际化
   // responsive?: string[];

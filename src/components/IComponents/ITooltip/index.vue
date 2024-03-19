@@ -1,14 +1,14 @@
 <!-- a-tooltip 的 常用封装 -->
 <script setup lang="ts">
-import { defineEmits, defineProps, defineOptions, withDefaults } from "vue";
-import { TooltipProps } from "ant-design-vue";
-import { storeToRefs } from "pinia";
-import { useMenuStore } from "@/store";
-import { TButtonType } from "@/types";
-import { TStyle } from "@/types/style";
+import {defineEmits, defineOptions, defineProps, withDefaults} from "vue";
+import {TooltipProps} from "ant-design-vue";
+import {storeToRefs} from "pinia";
+import {useMenuStore} from "@/store";
+import {TButtonType} from "@/types";
+import {TStyle} from "@/types/style";
 
 const store = useMenuStore();
-const { terminalType } = storeToRefs(store);
+const {terminalType} = storeToRefs(store);
 
 interface IProps extends TooltipProps {
   title: string; // tooltip 标题
@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<IProps>(), {
   type: "primary",
   size: "",
   btnClass: "",
-  btnStyle: () => ({}),
+  btnStyle: undefined,
 });
 
 const emits = defineEmits([
@@ -41,18 +41,18 @@ defineOptions({
 
 <template>
   <a-tooltip
-    :disabled="props.disabled"
-    :title="terminalType === 'pc' && props.title"
+      :disabled="props.disabled"
+      :title="terminalType === 'pc' && props.title"
   >
     <!-- 自定义内容 -->
     <slot name="content">
       <i-button
-        :type="props.type"
-        :disabled="props.disabled"
-        :size="props.size"
-        :class="props.btnClass"
-        :style="props.btnStyle"
-        @click="emits('click')"
+          :type="props.type"
+          :disabled="props.disabled"
+          :size="props.size"
+          :class="props.btnClass"
+          :style="props.btnStyle"
+          @click="emits('click')"
       >
         <template #icon>
           <!-- 图标 可自定义 -->
