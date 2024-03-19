@@ -412,7 +412,7 @@ defineExpose({
                         <a-date-picker
                             v-else-if="item.type === 'date'"
                             v-model:value="formSearch[item.dataIndex]"
-                            :picker="item.dataType"
+                            :picker="item.dateType"
                             v-bind="item.propOptions"
                         />
                       </slot>
