@@ -3,6 +3,8 @@
 import {DeleteOutlined, EditOutlined, InfoCircleFilled} from "@ant-design/icons-vue";
 import {onMounted, reactive, ref} from "vue";
 import type {IColumns, IPages} from "@/types";
+import {getFileList} from "@/api/files";
+import {sortNumber} from "@/utils/common";
 
 interface IDataSource {
   key?: string | number;
@@ -18,10 +20,18 @@ interface IDataSource {
 
 const columns = ref<IColumns[]>([
   {
-    title: "ID",
-    dataIndex: "id",
+    title: "序号",
+    dataIndex: "number",
     align: "center",
     minWidth: 80,
+    customRender: ({index}) => sortNumber(index, pages.value),
+  },
+  {
+    title: "附件名称",
+    dataIndex: "name",
+    align: "center",
+    ellipsis: true,
+    minWidth: 100,
   },
   {
     title: "用户名",
@@ -58,19 +68,13 @@ const columns = ref<IColumns[]>([
   },
   {
     title: "预览",
-    dataIndex: "full_url",
+    dataIndex: "url",
     align: "center",
     minWidth: 100,
   },
   {
     title: "上传次数",
-    dataIndex: "upload_count",
-    align: "center",
-    minWidth: 100,
-  },
-  {
-    title: "原始名称",
-    dataIndex: "filename",
+    dataIndex: "uploadCount",
     align: "center",
     minWidth: 100,
   },
@@ -104,13 +108,52 @@ const formSearch = reactive<any>({
   createTime: "",
 });
 
-const avatarPreviewSrc = ref<string>("");
 const isTableLoading = ref<boolean>(false); // 表格加载状态
-const isAvatarPreviewSrc = ref<boolean>(false);
 
-onMounted(() => {
+onMounted(async () => {
+  await getList();
 });
 
+const getList = async () => {
+  const params = {
+    page: pages.value.page,
+    size: pages.value.size,
+  };
+  isTableLoading.value = true;
+  try {
+    const {data} = await getFileList(params);
+    console.log(data, "data");
+    dataSource.value = data.records
+
+    pages.value = {
+      size: data.size,
+      page: data.page,
+      total: data.total,
+    };
+  } finally {
+    isTableLoading.value = false;
+  }
+};
+
+/**
+ * @description 格式化文件大小
+ * @param size
+ */
+const formatFileSize = (size?: number) => {
+  if (!size) return "";
+
+  if (size < 1024) {
+    return size + ' byte';
+  } else if (size < 1024 * 2) {
+    return (size / 1024).toFixed(2) + ' KB';
+  } else if (size < 1024 * 3) {
+    return (size / (1024 * 2)).toFixed(2) + ' MB';
+  } else if (size < 1024 * 4) {
+    return (size / (1024 * 3)).toFixed(2) + ' GB';
+  } else {
+    return (size / (1024 * 4)).toFixed(2) + ' TB';
+  }
+}
 // 分页
 const onPagesChange = (records: IPages) => {
   pages.value = records;
@@ -126,11 +169,6 @@ const onSelectChange = (rowKeys: string[]) => {
   console.log(rowKeys, "rowKeys");
 };
 
-// 显示预览图片
-const openAvatarPreviewImage = (src: string) => {
-  isAvatarPreviewSrc.value = true;
-  avatarPreviewSrc.value = src;
-};
 </script>
 
 <template>
@@ -149,16 +187,14 @@ const openAvatarPreviewImage = (src: string) => {
         :columns="columns"
         :dataSource="dataSource"
         :pages="pages"
-        isSelectedRowKeys
-        isFormSearchBtn
         :loading="isTableLoading"
-        :scroll="{ x: true }"
-        @onColumnChange="onColumnChange"
-        @onPagesChange="onPagesChange"
-        @onSelectChange="onSelectChange"
+        @reload="getList"
+        @columnChange="onColumnChange"
+        @pagesChange="onPagesChange"
+        @selectChange="onSelectChange"
     >
       <!-- <template #usernameSearch> 11111 </template> -->
-      <template #leftBtn>
+      <template #leftActions>
         <i-tooltip
             title="删除"
             content="删除"
@@ -166,9 +202,21 @@ const openAvatarPreviewImage = (src: string) => {
             type="danger"
         >
           <template #icon>
-            <DeleteOutlined/>
+            <delete-outlined/>
           </template>
         </i-tooltip>
+      </template>
+
+      <template #usertype="{value}">
+        <a-tag color="processing">
+          {{ value === 1 ? "管理员" : "普通用户" }}
+        </a-tag>
+      </template>
+      <template #size="{value}">
+        {{ formatFileSize(value) }}
+      </template>
+      <template #url="{value}">
+        <a-image :src="value"/>
       </template>
       <template #operate="{ record }">
         <a-space>
@@ -185,11 +233,6 @@ const openAvatarPreviewImage = (src: string) => {
         </a-space>
       </template>
     </i-table>
-
-    <i-preview-image
-        :src="avatarPreviewSrc"
-        v-model:visible="isAvatarPreviewSrc"
-    />
   </div>
 </template>
 

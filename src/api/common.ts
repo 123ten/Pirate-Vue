@@ -4,3 +4,4 @@ import request from "@/utils/request";
 export const getSvgCaptcha = () => {
   return request.get("/common/svg-captcha");
 };
+

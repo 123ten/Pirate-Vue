@@ -27,6 +27,7 @@ interface IColumns {
   style?: TStyle; // 表头样式
   isI18n?: boolean; // 是否开始当前列国际化
   search?: boolean; // 是否允许搜索
+  ellipsis?: boolean | { showTitle?: boolean }; // 单元格内容根据宽度自动省略
   hide?: boolean; // 是否隐藏
   resizable?: boolean; // 表头是否可伸缩
   propOptions?: any; // 搜索框配置项

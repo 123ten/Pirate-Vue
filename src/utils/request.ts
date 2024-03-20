@@ -24,10 +24,10 @@ class AxiosUtils {
     this.http = axios.create({
       baseURL: this.baseUrl,
       timeout: 10 * 60,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      // headers: {
+      //   Accept: "application/json",
+      //   "Content-Type": "application/json",
+      // },
     });
     // 要在constructor里面进行调用 发请求的时候就要开始调用 就要对请求和响应进行拦截
     this.interceptors();
@@ -171,12 +171,13 @@ class AxiosUtils {
   }
 
   // 封装一个request方法
-  private request(url: string, method: string, data: any = {}) {
+  private request(url: string, method: string, data: any = {}, ...args: any[]) {
     return this.http({
       url,
       method,
       params: method == "get" ? data : undefined,
       data: method == "post" ? data : undefined,
+      ...args
     });
   };
 
@@ -186,8 +187,8 @@ class AxiosUtils {
   };
 
   // 封装post方法
-  public post(url: string, data: any) {
-    return this.request(url, "post", data);
+  public post(url: string, data: any, ...args: any[]) {
+    return this.request(url, "post", data, ...args);
   };
 }
 

@@ -3,7 +3,7 @@
 import {computed, ref, withDefaults,} from "vue";
 import {LoadingOutlined, PlusOutlined} from "@ant-design/icons-vue";
 import type {UploadChangeParam} from "ant-design-vue";
-import request from '@/utils/request'
+import {upload} from "@/api/files";
 
 interface IPropsModal {
   fileList?: any[]; // 文件列表
@@ -30,9 +30,32 @@ const emits = defineEmits([
 ]);
 
 const fileList = ref<any[]>([]);
+const previewCurrent = ref<number>(0);
 const isUploadLoading = ref<boolean>(false);
 const isPreviewImageVisible = ref<boolean>(false); // 是否显示预览图片
 const isSelectFileModalVisible = ref<boolean>(false); // 是否显示选择文件 modal
+
+const customRequest = async (originObject) => {
+  const {file, onSuccess, onError, onProgress} = originObject;
+  console.log("file", originObject);
+  const formData = new FormData();
+  formData.append('files', file);
+  formData.append('uid', file.uid);
+  onProgress({percent: 50});
+  try {
+    const {data} = await upload(formData);
+    onProgress({percent: 100});
+    const [_data] = data || [];
+    const response = {
+      ..._data,
+      ...file,
+      status: 'done'
+    }
+    onSuccess(response, file);
+  } catch (err) {
+    onError(err)
+  }
+};
 
 const listType = computed(() => {
   if (['avatar', 'picture-card'].includes(props.listType)) {
@@ -55,8 +78,11 @@ const handleUploadChange = (info: UploadChangeParam) => {
 };
 
 const onUploadPreview = (file) => {
-  console.log("onUploadPreview", file);
+  // console.log('onUploadPreview', file)
   isPreviewImageVisible.value = true;
+  // 获取预览图片的索引
+  const current = fileList.value.findIndex(f => f.uid === file.uid)
+  previewCurrent.value = current || 0
 }
 
 // 打开选择文件弹窗
@@ -77,11 +103,11 @@ const onFileModalConfirm = () => {
   <div class="i-upload relative inline-block rounded-md transition-all">
     <a-upload
         v-model:file-list="fileList"
+        :custom-request="customRequest"
         name="files"
         :list-type="listType"
         class="uploader"
         multiple
-        :action="request.baseUrl+'/common/upload'"
         @change="handleUploadChange"
         @preview="onUploadPreview"
     >
@@ -104,6 +130,7 @@ const onFileModalConfirm = () => {
           visible:isPreviewImageVisible,
           onVisibleChange: vis => (isPreviewImageVisible = vis),
           maskClassName: 'i-upload-preview-mask',
+          current: previewCurrent
         }"
     >
       <a-image

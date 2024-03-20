@@ -2,11 +2,14 @@
 <script setup lang="ts">
 import {defineOptions, defineProps, withDefaults} from "vue";
 import {RouteRecordName, useRouter} from "vue-router";
+import {storeToRefs} from 'pinia';
+import {useMenuStore} from "@/store";
 import SiderItem from './index.vue'
-
 import data from "../../data.json";
-
 import * as antIcons from "@ant-design/icons-vue";
+
+const store = useMenuStore();
+const {isMenuOutIn} = storeToRefs(store);
 
 interface IPropsMenuItem {
   menu: typeof data.data;
@@ -24,6 +27,8 @@ const toRouter = (name: RouteRecordName) => {
   router.push({
     name,
   });
+  // 调转后收起菜单
+  isMenuOutIn.value = false;
 };
 
 
