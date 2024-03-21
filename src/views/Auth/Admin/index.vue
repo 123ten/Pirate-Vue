@@ -14,7 +14,6 @@ const {t} = useI18n();
 
 interface IDataSource {
   key?: string | number;
-  isDelVisible?: boolean;
   username?: string;
   nickname?: string;
   roles?: string;
@@ -112,7 +111,7 @@ const pages = ref<IPages>({
   total: 0,
 });
 const formSearch = reactive<any>({});
-const recordOptions = ref<IDataSource | null>(null);
+const recordOptions = ref<IDataSource | null | undefined>();
 
 const avatarPreviewSrc = ref("");
 const isTableLoading = ref<boolean>(false); // 表格加载状态
