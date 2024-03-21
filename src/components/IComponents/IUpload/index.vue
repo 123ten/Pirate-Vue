@@ -1,9 +1,13 @@
 <!-- a-upload 封装 upload -->
 <script setup lang="ts">
-import {computed, ref, withDefaults,} from "vue";
+import {ref, watch, withDefaults,} from "vue";
 import {LoadingOutlined, PlusOutlined} from "@ant-design/icons-vue";
-import type {UploadChangeParam} from "ant-design-vue";
+import {notification, UploadChangeParam} from "ant-design-vue";
+import {useI18n} from "vue-i18n";
 import {upload} from "@/api/files";
+import {formatFileSize} from "@/utils/common";
+
+const {t} = useI18n();
 
 interface IPropsModal {
   fileList?: any[]; // 文件列表
@@ -12,15 +16,21 @@ interface IPropsModal {
   placeholder?: string; // upload 占位内容
   listType: 'picture-card',
   length?: number; // 上传文件数量
+  accept?: string; // 接受上传的文件类型 详见 https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept
+  size?: number; // 上传文件大小
+  beforeUpload?: (file) => boolean; // 上传前的钩子函数
 }
 
 const props = withDefaults(defineProps<IPropsModal>(), {
-  fileList: undefined,
   alt: "upload",
   title: "",
   placeholder: "上传",
   listType: 'picture-card',
+  fileList: undefined,
   length: undefined,
+  accept: undefined,
+  size: undefined,
+  beforeUpload: undefined,
 });
 const emits = defineEmits([
   "update:fileList", // 文件列表
@@ -35,6 +45,14 @@ const isUploadLoading = ref<boolean>(false);
 const isPreviewImageVisible = ref<boolean>(false); // 是否显示预览图片
 const isSelectFileModalVisible = ref<boolean>(false); // 是否显示选择文件 modal
 
+
+watch(() => props.fileList, (val) => {
+  fileList.value = val || [];
+});
+/**
+ * 自定义上传请求接口
+ * @param originObject
+ */
 const customRequest = async (originObject) => {
   const {file, onSuccess, onError, onProgress} = originObject;
   console.log("file", originObject);
@@ -52,16 +70,15 @@ const customRequest = async (originObject) => {
       status: 'done'
     }
     onSuccess(response, file);
+    notification.success({
+      message: t('message.success'),
+      description: t('success.upload'),
+    })
   } catch (err) {
     onError(err)
   }
 };
 
-const listType = computed(() => {
-  if (['avatar', 'picture-card'].includes(props.listType)) {
-    return 'picture-card'
-  }
-})
 const handleUploadChange = (info: UploadChangeParam) => {
   console.log("info.file", info);
   if (info.file.status === "uploading") {
@@ -72,9 +89,60 @@ const handleUploadChange = (info: UploadChangeParam) => {
     isUploadLoading.value = false;
   } else if (info.file.status === "error") {
     isUploadLoading.value = false;
+    notification.error({
+      message: t('message.fail'),
+      description: t('error.upload'),
+    })
   }
-  emits("update:fileList", info.fileList);
-  emits("change", info);
+  const _fileList = info.fileList
+      .filter(file => file.status !== 'error' && file.status)
+      .map(file => {
+        if (file.response) {
+          return {
+            ...file,
+            ...file.response,
+          }
+        }
+        return file
+      });
+  fileList.value = _fileList;
+  emits("update:fileList", _fileList);
+  emits("change", info.file, _fileList);
+};
+const generateAcceptRegex = (accept) => {
+  // 将 accept 字符串中的通配符 * 替换为正则表达式中的 .*
+  const regexString = accept
+      .replace(/\./g, '\\.')
+      .replace(/,/g, '|') // 将逗号替换为竖线，表示逻辑或
+      .replace(/\*/g, '.*'); // 将星号替换为匹配任意字符
+  // 构建正则表达式对象
+  return new RegExp(`(${regexString})`);
+}
+// beforeUpload
+const beforeUpload = (file) => {
+  let isAccept = true;
+  let isLtSize = true;
+  if (props.accept) {
+    isAccept = generateAcceptRegex(props.accept).test(file.type);
+    if (!isAccept) {
+      notification.error({
+        message: t('message.fail'),
+        description: t('error.uploadType'),
+      })
+    }
+  }
+  if (props.size) {
+    const MB = Math.pow(1024, 2);
+    isLtSize = file.size / MB > props.size;
+    if (!isLtSize) {
+      notification.error({
+        message: t('message.fail'),
+        description: t('error.uploadSize') + formatFileSize(props.size * MB, 0),
+      })
+    }
+  }
+  const beforeUpload = props.beforeUpload && props.beforeUpload(file) || true;
+  return isAccept && isLtSize && beforeUpload;
 };
 
 const onUploadPreview = (file) => {
@@ -104,8 +172,10 @@ const onFileModalConfirm = () => {
     <a-upload
         v-model:file-list="fileList"
         :custom-request="customRequest"
+        :list-type="props.listType"
+        :accept="props.accept"
+        :before-upload="beforeUpload"
         name="files"
-        :list-type="listType"
         class="uploader"
         multiple
         @change="handleUploadChange"

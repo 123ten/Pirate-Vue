@@ -157,3 +157,25 @@ export function deepChildren<T>(
 export function sortNumber(index: number, pages: IPages) {
   return index + 1 + (pages.page - 1) * pages.size
 }
+
+
+/**
+ * @description 格式化文件大小
+ * @param size 文件大小
+ * @param fixed 保留小数位数 默认2
+ */
+export function formatFileSize(size?: number, fixed = 2) {
+  if (!size) return "";
+
+  if (size < 1024) {
+    return size + ' byte';
+  } else if (size < Math.pow(1024, 2)) {
+    return (size / 1024).toFixed(fixed) + ' KB';
+  } else if (size < Math.pow(1024, 3)) {
+    return (size / Math.pow(1024, 2)).toFixed(fixed) + ' MB';
+  } else if (size < Math.pow(1024, 4)) {
+    return (size / Math.pow(1024, 3)).toFixed(fixed) + ' GB';
+  } else {
+    return (size / Math.pow(1024, 4)).toFixed(fixed) + ' TB';
+  }
+}

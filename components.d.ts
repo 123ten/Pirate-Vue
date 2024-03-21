@@ -96,6 +96,7 @@ declare module '@vue/runtime-core' {
     SiderMenu: typeof import('./src/components/Layout/components/Sider/components/SiderMenu/index.vue')['default']
     SourceCodeOutlined: typeof import('./src/components/IComponents/IIcon/SourceCodeOutlined/index.vue')['default']
     SunOutlined: typeof import('./src/components/IComponents/IIcon/SunOutlined/index.vue')['default']
+    TablePopconfirm: typeof import('./src/components/IComponents/IOther/TablePopconfirm/index.vue')['default']
     TagsMobile: typeof import('./src/components/Layout/components/Header/components/TagsMobile/index.vue')['default']
     TagsPc: typeof import('./src/components/Layout/components/Header/components/TagsPc/index.vue')['default']
     UploadCloud: typeof import('./src/components/SvgIcon/uploadCloud.vue')['default']

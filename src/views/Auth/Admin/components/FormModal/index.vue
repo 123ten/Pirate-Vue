@@ -1,14 +1,19 @@
 <!-- 角色组管理 添加/编辑 -->
 <script setup lang="ts">
-import {reactive, ref, toRaw,} from "vue";
-import {Form} from "ant-design-vue";
-import {getRoleList} from "@/api/admin";
+import {reactive, ref,} from "vue";
+import {Form, notification} from "ant-design-vue";
+import {detail, getRoleList, upsert} from "@/api/admin";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 interface IFormState {
-  roleIds: number[]; // 上级分组
+  id?: number; // 主键 ID
+  roleIds: number[]; // 角色组
   username: string; // 登录用户名
   nickname: string; // 昵称
   avatar: string; // 头像
+  avatarPath?: string; // 头像路径
   email: string; // 邮箱
   phone: string; // 手机号
   password: string; // 密码
@@ -17,13 +22,13 @@ interface IFormState {
 }
 
 const props = defineProps({
-  title: {
-    type: String,
-    default: "",
-  },
   visible: {
     type: Boolean,
     default: false,
+  },
+  options: {
+    type: Object,
+    default: () => ({}),
   },
 })
 
@@ -34,13 +39,8 @@ const emits = defineEmits([
 
 //#region  变量
 // 校验规则
-const rules = reactive({
-  username: [{required: true, message: '请输入登录用户名'}],
-  nickname: [{required: true, message: '请输入登录用户名'}],
-  roleIds: [{required: true, message: '请输入登录用户名'}],
-  password: [{required: true, message: '请输入密码'}],
-})
 const formState = reactive<IFormState>({
+  id: undefined,
   roleIds: [],
   username: "",
   nickname: "",
@@ -51,14 +51,43 @@ const formState = reactive<IFormState>({
   status: 1,
   fileList: [],
 });
-const fileList = ref([]);
+const ruleReactive = reactive({
+  username: [{required: true, message: '请输入用户名'}],
+  nickname: [{required: true, message: '请输入昵称'}],
+  roleIds: [{required: true, message: '请输入选择角色组'}],
+  password: [{required: true, message: '请输入密码'}],
+})
+const {resetFields, validate, validateInfos} = Form.useForm(formState, ruleReactive);
 const roleOptions = ref([]);
-const isUploadAvatarLoading = ref<boolean>(false); // 上传头像加载
-const {resetFields, validate, validateInfos} = Form.useForm(formState, rules);
+const loading = ref<boolean>(false);
 //#endregion
 
 const init = async () => {
+  ruleReactive.password = [{required: !props.options?.id, message: '请输入密码'}];
+  console.log('options', props.options);
+  if (props.options?.id) {
+    await getDetail(props.options.id);
+  }
   await getRoleListApi();
+};
+
+const getDetail = async (id: number) => {
+  loading.value = true;
+  try {
+    const {data} = await detail({id});
+    console.log("getAdminDetail", data);
+    data.roleIds = data.roles.map((item: any) => item.id);
+    data.fileList = data.avatar ? [{
+      // 按照要求乱填即可
+      url: data.avatar,
+      path: data.avatarPath,
+      status: 'done',
+      uid: '1',
+    }] : [];
+    Object.assign(formState, data);
+  } finally {
+    loading.value = false;
+  }
 };
 
 const getRoleListApi = async () => {
@@ -69,28 +98,42 @@ const getRoleListApi = async () => {
 
 // 确定
 const handleConfirm = async (): Promise<void> => {
-  console.log(formState);
+  await validate();
+  loading.value = true;
   try {
-    await validate();
-    console.log(toRaw(formState));
-    resetFields();
+    const [response] = formState.fileList || []
+    const params = {
+      ...formState,
+      fileList: undefined,
+      avatar: response?.path,
+    };
+    console.log(params);
+    await upsert(params)
+    notification.success({
+      message: t("message.success"),
+      description: t(props.options?.id ? "success.update" : "success.create"),
+    })
     emits("confirm");
-  } catch (error) {
-    console.log("error", error);
+    resetFields();
+  } finally {
+    loading.value = false
   }
 };
+
 
 // 取消
 const handleCancel = (): void => {
   emits("cancel");
+  resetFields();
 };
 </script>
 
 <template>
   <i-modal
       :visible="props.visible"
-      :title="props.title"
       :init="init"
+      :loading="loading"
+      title="新增"
       width="500px"
       @confirm="handleConfirm"
       @cancel="handleCancel"
@@ -125,10 +168,11 @@ const handleCancel = (): void => {
             tree-default-expand-all
         />
       </a-form-item>
-      <a-form-item label="头像" name="avatar">
+      <a-form-item label="头像" name="fileList">
         <i-upload
             v-model:file-list="formState.fileList"
             :length="1"
+            accept="image/*"
         />
       </a-form-item>
       <a-form-item label="电子邮箱" name="email">
@@ -145,12 +189,14 @@ const handleCancel = (): void => {
             placeholder="请输入手机号"
         />
       </a-form-item>
-      <a-form-item label="密码" v-bind="validateInfos.password">
+      <a-form-item
+          label="密码"
+          v-bind="validateInfos.password"
+      >
         <a-input-password
             v-model:value="formState.password"
             allow-clear
-            placeholder="请输入密码"
-            autocomplete="off"
+            placeholder="请输入密码（留空时默认使用原密码）"
         />
       </a-form-item>
       <a-form-item label="状态" name="status">

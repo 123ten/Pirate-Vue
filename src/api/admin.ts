@@ -6,9 +6,9 @@ export const getAvatar = (params) => {
   return request.get("/admin/avatar", params);
 };
 
-// 管理员注册
-export const create = (data) => {
-  return request.post("/admin/create", data);
+// 管理员注册/编辑
+export const upsert = (data) => {
+  return request.post("/admin/upsert", data);
 };
 
 // 管理员登录
@@ -30,4 +30,15 @@ export const refresh = (params): Promise<RefreshResult> => {
 export const getRoleList = (params) => {
   return request.get("/admin/roles", params);
 };
+
+// 删除管理员
+export const remove = (data) => {
+  return request.post("/admin/remove", data);
+};
+
+// 获取管理员信息
+export const detail = (params) => {
+  return request.get("/admin/detail", params);
+};
+
 

@@ -4,8 +4,13 @@ import {DeleteOutlined, EditOutlined, PlusOutlined, UserOutlined,} from "@ant-de
 import {onMounted, reactive, ref} from "vue";
 import FormModal from "./components/FormModal/index.vue";
 import type {IColumns, IPages} from "@/types";
-import {getAdminList} from "@/api/admin";
+import {getAdminList, remove} from "@/api/admin";
 import {sortNumber} from "@/utils/common";
+import DeletePopconfirm from "@/components/IComponents/IOther/DeletePopconfirm/index.vue";
+import {notification} from "ant-design-vue";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 interface IDataSource {
   key?: string | number;
@@ -47,6 +52,7 @@ const columns = ref<IColumns[]>([
     title: "角色组",
     dataIndex: "roles",
     align: "center",
+    minWidth: 120,
   },
   {
     title: "头像",
@@ -95,7 +101,7 @@ const columns = ref<IColumns[]>([
     dataIndex: "operate",
     align: "center",
     fixed: "right",
-    width: 100,
+    minWidth: 100,
   },
 ]);
 const dataSource = ref<IDataSource[]>([]);
@@ -106,11 +112,11 @@ const pages = ref<IPages>({
   total: 0,
 });
 const formSearch = reactive<any>({});
+const recordOptions = ref<IDataSource | null>();
 
 const avatarPreviewSrc = ref("");
-const isEdit = ref<boolean>(false); // 是否编辑
 const isTableLoading = ref<boolean>(false); // 表格加载状态
-const isAddEditModal = ref<boolean>(false);
+const isFormModalVisible = ref<boolean>(false);
 const isAvatarPreviewSrcVisible = ref<boolean>(false);
 
 onMounted(async () => {
@@ -139,20 +145,48 @@ const getList = async () => {
   }
 }
 
+const handleQuery = async (options) => {
+  console.log('handleQuery', options)
+  pages.value.page = 1;
+  pages.value.size = 10;
+  await getList();
+}
+
 // 添加
-const handleAddEdit = (type: number) => {
-  isEdit.value = type === 1;
-  isAddEditModal.value = true;
+const handleFormModalOpen = (type: number, record?: IDataSource) => {
+  if (type === 1) {
+    recordOptions.value = record;
+  }
+  isFormModalVisible.value = true;
 };
 // 添加/编辑 - cancel
-const onAddEditCancel = () => {
-  isAddEditModal.value = false;
+const handleFormModalCancel = () => {
+  clearFormModalCache()
 };
+
 // 添加/编辑 - confirm
-const onAddEditConfirm = () => {
-  onAddEditCancel();
-  return;
+const handleFormModalConfirm = async () => {
+  handleFormModalCancel();
+  await handleQuery(formSearch);
+  clearFormModalCache()
 };
+
+const clearFormModalCache = () => {
+  isFormModalVisible.value = false;
+  recordOptions.value = null;
+}
+
+// 删除
+const handleDeletePopconfirmConfirm = async (record) => {
+  console.log("handleDeletePopconfirmConfirm", record);
+  await remove({id: record.id});
+  notification.success({
+    message: t("message.success"),
+    description: t("success.delete"),
+  });
+  await getList();
+};
+
 // 分页
 const onPagesChange = (records: IPages) => {
   // console.log(records, "records");
@@ -189,7 +223,7 @@ const openAvatarPreviewImage = (src: string) => {
         @selectChange="onSelectChange"
     >
       <template #leftActions>
-        <i-tooltip title="添加" content="添加" @click="handleAddEdit(0)">
+        <i-tooltip title="添加" content="添加" @click="handleFormModalOpen(0)">
           <template #icon>
             <plus-outlined/>
           </template>
@@ -244,27 +278,17 @@ const openAvatarPreviewImage = (src: string) => {
       </template>
       <template #operate="{ record }">
         <a-space>
-          <i-tooltip title="编辑" size="small" @click="handleAddEdit(1)">
+          <i-tooltip title="编辑" size="small" @click="handleFormModalOpen(1,record)">
             <template #icon>
               <edit-outlined/>
             </template>
           </i-tooltip>
           <i-tooltip title="删除">
             <template #content>
-              <a-popconfirm
-                  title="确定删除选中记录？"
-                  ok-text="删除"
-                  ok-button="primary"
-                  :ok-button-props="{danger:true}"
-                  cancel-text="取消"
-                  placement="left"
-              >
-                <a-button type="danger" size="small">
-                  <template #icon>
-                    <delete-outlined/>
-                  </template>
-                </a-button>
-              </a-popconfirm>
+              <delete-popconfirm
+                  type="table-row"
+                  @confirm="handleDeletePopconfirmConfirm(record)"
+              />
             </template>
           </i-tooltip>
         </a-space>
@@ -272,10 +296,10 @@ const openAvatarPreviewImage = (src: string) => {
     </i-table>
 
     <form-modal
-        :visible="isAddEditModal"
-        :title="isEdit ? '编辑' : '添加'"
-        @cancel="onAddEditCancel"
-        @confirm="onAddEditConfirm"
+        :visible="isFormModalVisible"
+        :options="recordOptions"
+        @cancel="handleFormModalCancel"
+        @confirm="handleFormModalConfirm"
     />
 
     <i-preview-image

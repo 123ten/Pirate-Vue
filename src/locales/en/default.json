@@ -34,7 +34,11 @@
   "success": {
     "login": "Login success!",
     "loginOut": "Logout success!",
-    "welcome": "Welcome!"
+    "welcome": "Welcome!",
+    "upload": "Upload success!",
+    "delete": "Delete success!",
+    "create": "Create success!",
+    "update": "Update success!"
   },
   "error": {
     "userName": "Please enter the username",
@@ -42,7 +46,10 @@
     "captcha": "Please enter the captcha",
     "login": "Login failed, please try again later",
     "network": "Network error, please try again later",
-    "server": "Server error, please try again later"
+    "server": "Server error, please try again later",
+    "upload": "Upload failed, please try again later",
+    "uploadSize": "The uploaded file cannot exceed ",
+    "uploadType": "The uploaded file type is incorrect"
   },
   "title": {
     "refresh": "Refresh",
@@ -55,5 +62,9 @@
     "userName": "userName",
     "password": "password",
     "remember": "Remember me"
+  },
+  "button": {
+    "confirm": "Confirm",
+    "cancel": "Cancel"
   }
 }

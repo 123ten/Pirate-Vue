@@ -4,7 +4,7 @@ import {DeleteOutlined, EditOutlined, InfoCircleFilled} from "@ant-design/icons-
 import {onMounted, reactive, ref} from "vue";
 import type {IColumns, IPages} from "@/types";
 import {getFileList} from "@/api/files";
-import {sortNumber} from "@/utils/common";
+import {formatFileSize, sortNumber} from "@/utils/common";
 
 interface IDataSource {
   key?: string | number;
@@ -80,6 +80,12 @@ const columns = ref<IColumns[]>([
   },
   {
     title: "最后上传时间",
+    dataIndex: "updateTime",
+    align: "center",
+    minWidth: 180,
+  },
+  {
+    title: "首次上传时间",
     dataIndex: "createTime",
     align: "center",
     minWidth: 180,
@@ -135,25 +141,6 @@ const getList = async () => {
   }
 };
 
-/**
- * @description 格式化文件大小
- * @param size
- */
-const formatFileSize = (size?: number) => {
-  if (!size) return "";
-
-  if (size < 1024) {
-    return size + ' byte';
-  } else if (size < 1024 * 2) {
-    return (size / 1024).toFixed(2) + ' KB';
-  } else if (size < 1024 * 3) {
-    return (size / (1024 * 2)).toFixed(2) + ' MB';
-  } else if (size < 1024 * 4) {
-    return (size / (1024 * 3)).toFixed(2) + ' GB';
-  } else {
-    return (size / (1024 * 4)).toFixed(2) + ' TB';
-  }
-}
 // 分页
 const onPagesChange = (records: IPages) => {
   pages.value = records;

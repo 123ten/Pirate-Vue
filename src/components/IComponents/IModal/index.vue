@@ -10,6 +10,8 @@ interface IPropsModal {
   visible: boolean; // 控制 modal 开关
   maskClosable?: boolean; // 点击蒙层是否允许关闭
   dragModal?: boolean; // 是否允许拖拽 modal 框
+  cancelLoading?: boolean; // 取消按钮 loading
+  loading?: boolean; // modal 加载loading 包括 body 和 确定按钮
   bodyStyle?: CSSProperties; // body 样式
   init?: () => void; // 初始化
 }
@@ -112,7 +114,6 @@ const transformStyle = computed<CSSProperties>(() => {
       :width="props.width"
       :bodyStyle="props.bodyStyle"
       :maskClosable="props.maskClosable"
-      @ok="emits('confirm')"
       @cancel="emits('cancel')"
   >
     <template #title>
@@ -129,7 +130,19 @@ const transformStyle = computed<CSSProperties>(() => {
         <component :is="originVNode"/>
       </div>
     </template>
-    <slot></slot>
+    <a-spin :spinning="props.loading">
+      <slot></slot>
+    </a-spin>
+    <template #footer>
+      <slot name="footer">
+        <a-button key="back" :loading="props.cancelLoading && props.loading" @click="emits('cancel')">
+          {{ $t('button.cancel') }}
+        </a-button>
+        <a-button type="primary" :loading="props.loading" @click="emits('confirm')">
+          {{ $t('button.confirm') }}
+        </a-button>
+      </slot>
+    </template>
   </a-modal>
 </template>
 

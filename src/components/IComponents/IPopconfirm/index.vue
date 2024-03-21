@@ -4,7 +4,7 @@ import {defineEmits, defineOptions, defineProps, withDefaults} from "vue";
 import {PopconfirmProps} from "ant-design-vue";
 
 interface IProps extends PopconfirmProps {
-  visible: boolean; // 是否显示
+  visible?: boolean; // 是否显示
   title?: string; // 气泡框标题
   okText?: string; // 确定按钮文字
   cancelText?: string; // 取消按钮文字
@@ -15,7 +15,7 @@ interface IProps extends PopconfirmProps {
 }
 
 const props = withDefaults(defineProps<IProps>(), {
-  visible: false,
+  visible: undefined,
   title: "标题",
   okText: "确定",
   cancelText: "取消",
@@ -26,6 +26,7 @@ const props = withDefaults(defineProps<IProps>(), {
   placement: "top",
 });
 const emits = defineEmits([
+  "click",
   "confirm",
   "cancel",
   "update:visible",
@@ -54,6 +55,11 @@ const onVisibleChange = (visible: boolean) => {
   emits("visibleChange", visible);
 };
 
+const onClick = () => {
+  emits("update:visible", !props.visible);
+  emits('click')
+};
+
 defineOptions({
   name: "IPopconfirm",
 });
@@ -64,30 +70,21 @@ defineOptions({
       :visible="props.visible"
       :title="props.title"
       :ok-text="props.okText"
+      :ok-button="props.type === 'danger'? 'primary' : props.type"
+      :ok-button-props="{danger: props.type === 'danger'}"
       :cancel-text="props.cancelText"
       :placement="props.placement"
       @cancel="onCancel"
-      @ok="onConfirm"
+      @confirm="onConfirm"
       @visible-change="onVisibleChange"
   >
-    <template #okButton>
-      <slot name="okButton">
-        <a-button
-            :type="props.type || 'primary'"
-            :danger="props.type === 'danger'"
-            size="small"
-            @click="onConfirm"
-        >
-          {{ props.okText }}
-        </a-button>
-      </slot>
-    </template>
     <slot>
       <!-- 默认展示按钮 -->
       <a-button
           :type="props.type"
           :size="props.size"
           :disabled="props.disabled"
+          @click="onClick"
       >
         <template #icon>
           <slot name="icon"/>

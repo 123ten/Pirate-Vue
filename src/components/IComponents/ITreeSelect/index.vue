@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, CSSProperties, ref, toRaw} from "vue";
+import {computed, CSSProperties, ref, toRaw, watch} from "vue";
 import {deepChildren} from "@/utils/common";
 
 interface FieldNames {
@@ -44,7 +44,16 @@ const {spliceParentTitle, ...restProps} = toRaw(props);
 
 const tooltipTitle = ref<undefined | number[] | string[]>(undefined);
 
-const handleChange = (value: ITreeSelectProps['value'], label: string[], extra: any) => {
+watch(
+    () => props.value,
+    (value) => {
+      if (props.multiple && value) {
+        handleChange(value);
+      }
+    }
+);
+
+const handleChange = (value: ITreeSelectProps['value'], label?: string[], extra?: any) => {
   emits("update:value", value);
   emits("change", value, label, extra);
 

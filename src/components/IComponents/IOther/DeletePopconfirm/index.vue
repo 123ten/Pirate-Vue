@@ -1,22 +1,23 @@
 <!-- 删除_气泡确认框 -->
 <script setup lang="ts">
-import { defineEmits, defineProps, defineOptions, withDefaults } from "vue";
-import { DeleteOutlined } from "@ant-design/icons-vue";
-import { PopconfirmProps } from "ant-design-vue";
+import {defineEmits, defineOptions, defineProps, withDefaults} from "vue";
+import {DeleteOutlined} from "@ant-design/icons-vue";
+import {PopconfirmProps} from "ant-design-vue";
 
 interface IProps extends PopconfirmProps {
-  visible: boolean; // 是否显示
+  visible?: boolean; // 是否显示
   disabled?: boolean; // 是否禁用
-  type?: "default" | "table"; // 按钮类型
+  type?: "default" | "table-row"; // 按钮类型
 }
 
 const props = withDefaults(defineProps<IProps>(), {
-  visible: false,
+  visible: undefined,
   disabled: false,
   type: "default",
-  placement: "top",
+  placement: "topLeft",
 });
 const emits = defineEmits([
+  "click",
   "confirm",
   "cancel",
   "update:visible",
@@ -44,6 +45,11 @@ const onVisibleChange = (visible: boolean) => {
   emits("visibleChange", visible);
 };
 
+const onClick = () => {
+  emits("update:visible", !props.visible);
+  emits('click')
+};
+
 defineOptions({
   name: "DeletePopconfirm",
 });
@@ -51,21 +57,22 @@ defineOptions({
 
 <template>
   <i-popconfirm
-    title="确定删除选中记录？"
-    ok-text="删除"
-    cancel-text="取消"
-    type="danger"
-    :placement="props.placement"
-    :visible="props.visible"
-    :disabled="props.disabled"
-    :size="props.type === 'table' ? 'small' : 'middle'"
-    :btn-text="props.type === 'table' ? '' : '删除'"
-    @cancel="onCancel"
-    @confirm="onConfirm"
-    @visibleChange="onVisibleChange"
+      title="确定删除选中记录？"
+      ok-text="删除"
+      cancel-text="取消"
+      type="danger"
+      :placement="props.placement"
+      :visible="props.visible"
+      :disabled="props.disabled"
+      :size="props.type === 'table-row' ? 'small' : 'middle'"
+      :btn-text="props.type === 'table-row' ? '' : '删除'"
+      @cancel="onCancel"
+      @confirm="onConfirm"
+      @visibleChange="onVisibleChange"
+      @click="onClick"
   >
     <template #icon>
-      <delete-outlined />
+      <delete-outlined/>
     </template>
   </i-popconfirm>
 </template>

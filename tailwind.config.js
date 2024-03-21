@@ -15,6 +15,9 @@ export default {
       "2xl": '1600px',
     }
   },
+  corePlugins: {
+    preflight: false, // 删除默认样式
+  },
   plugins: [],
 }
 
