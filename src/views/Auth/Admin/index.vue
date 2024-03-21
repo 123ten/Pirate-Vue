@@ -112,7 +112,7 @@ const pages = ref<IPages>({
   total: 0,
 });
 const formSearch = reactive<any>({});
-const recordOptions = ref<IDataSource | null>();
+const recordOptions = ref<IDataSource | null>(null);
 
 const avatarPreviewSrc = ref("");
 const isTableLoading = ref<boolean>(false); // 表格加载状态
