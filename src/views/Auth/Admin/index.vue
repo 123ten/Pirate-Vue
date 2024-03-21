@@ -111,7 +111,7 @@ const pages = ref<IPages>({
   total: 0,
 });
 const formSearch = reactive<any>({});
-const recordOptions = ref<IDataSource | null | undefined>();
+const recordOptions = ref<Record<string, any> | undefined>();
 
 const avatarPreviewSrc = ref("");
 const isTableLoading = ref<boolean>(false); // 表格加载状态
@@ -172,7 +172,7 @@ const handleFormModalConfirm = async () => {
 
 const clearFormModalCache = () => {
   isFormModalVisible.value = false;
-  recordOptions.value = null;
+  recordOptions.value = undefined;
 }
 
 // 删除
