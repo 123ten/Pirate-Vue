@@ -50,13 +50,13 @@ const onCancel = () => {
  * @description 显示隐藏
  */
 const onVisibleChange = (visible: boolean) => {
-  if (props.disabled) return;
+  // if (props.disabled) return;
   emits("update:visible", visible);
   emits("visibleChange", visible);
 };
 
 const onClick = () => {
-  emits("update:visible", !props.visible);
+  // emits("update:visible", !props.visible);
   emits('click')
 };
 
@@ -66,7 +66,24 @@ defineOptions({
 </script>
 
 <template>
+  <template v-if="props.disabled">
+    <slot>
+      <!-- 默认展示按钮 -->
+      <a-button
+          :type="props.type"
+          :size="props.size"
+          :disabled="props.disabled"
+          @click="onClick"
+      >
+        <template #icon>
+          <slot name="icon"/>
+        </template>
+        {{ props.btnText }}
+      </a-button>
+    </slot>
+  </template>
   <a-popconfirm
+      v-else
       :visible="props.visible"
       :title="props.title"
       :ok-text="props.okText"

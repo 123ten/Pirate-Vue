@@ -182,7 +182,13 @@ ul.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
 
 /* tag */
 .ant-tag.table-tag {
-  margin-right: 0;
+  margin: 4px;
+  /*margin-bottom: 8px;*/
+}
+
+.ant-tag.table-tag:last-child {
+  /*margin-right: 0;*/
+  /*margin-bottom: 0;*/
 }
 
 /* transition */

@@ -84,7 +84,6 @@ const props = withDefaults(defineProps<IProps>(), {
   draggable: false,
 });
 const emits = defineEmits([
-  "columnChange", // columns 发生变化时
   "pagesChange", // 页码发生变化时
   "reload", // 刷新表格
   "searchBlur", // 表格搜索

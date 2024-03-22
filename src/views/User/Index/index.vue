@@ -26,7 +26,7 @@ const columns = ref<IColumns[]>([
   },
   {
     title: "昵称",
-    dataIndex: "nickName",
+    dataIndex: "nickname",
     isI18n: true,
     align: "center",
     minWidth: 100,
@@ -238,7 +238,7 @@ const i18nPrefix = {
       </template>
       <template #gender="{ value }">
         <a-tag color="success" class="table-tag">
-          {{ $t(`user.table.rows.gender.${value}`) }}
+          {{ $t(`user.table.enum.gender.${value}`) }}
         </a-tag>
       </template>
       <template #lastLoginIp="{value}">
@@ -251,7 +251,7 @@ const i18nPrefix = {
             :color="value === 1 ? 'success' : 'error'"
             class="table-tag"
         >
-          {{ $t(`user.table.rows.status.${value}`) }}
+          {{ $t(`user.table.enum.status.${value}`) }}
         </a-tag>
       </template>
       <template #avatar="{ value }">

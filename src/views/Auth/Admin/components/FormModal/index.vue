@@ -52,10 +52,10 @@ const formState = reactive<IFormState>({
   fileList: [],
 });
 const ruleReactive = reactive({
-  username: [{required: true, message: '请输入用户名'}],
-  nickname: [{required: true, message: '请输入昵称'}],
-  roleIds: [{required: true, message: '请输入选择角色组'}],
-  password: [{required: true, message: '请输入密码'}],
+  username: [{required: true, message: t('user.error.username')}],
+  nickname: [{required: true, message: t('user.error.nickname')}],
+  roleIds: [{required: true, message: t('user.error.roles')}],
+  password: [{required: true, message: t('user.error.password')}],
 })
 const {resetFields, validate, validateInfos} = Form.useForm(formState, ruleReactive);
 const roleOptions = ref([]);
@@ -63,7 +63,7 @@ const loading = ref<boolean>(false);
 //#endregion
 
 const init = async () => {
-  ruleReactive.password = [{required: !props.options?.id, message: '请输入密码'}];
+  ruleReactive.password = [{required: !props.options?.id, message: t('user.error.password')}];
   console.log('options', props.options);
   if (props.options?.id) {
     await getDetail(props.options.id);
@@ -74,7 +74,7 @@ const init = async () => {
 const getDetail = async (id: number) => {
   loading.value = true;
   try {
-    const {data} = await detail({id});
+    const {data} = await detail(id);
     console.log("getAdminDetail", data);
     data.roleIds = data.roles.map((item: any) => item.id);
     data.fileList = data.avatar ? [{
@@ -133,8 +133,8 @@ const handleCancel = (): void => {
       :visible="props.visible"
       :init="init"
       :loading="loading"
-      title="新增"
-      width="500px"
+      :title=" $t(props.options?.id ?'title.update': 'title.create') "
+      width="520px"
       @confirm="handleConfirm"
       @cancel="handleCancel"
   >
@@ -143,66 +143,91 @@ const handleCancel = (): void => {
         autocomplete="off"
         :label-col="{ span: 4 }"
     >
-      <a-form-item label="用户名" v-bind="validateInfos.username">
+      <a-form-item
+          :label="$t('user.label.username')"
+          v-bind="validateInfos.username"
+      >
         <a-input
             v-model:value="formState.username"
             allow-clear
-            placeholder="请输入管理员用户名"
+            :placeholder="$t('user.placeholder.admin_username')"
         />
       </a-form-item>
-      <a-form-item label="昵称" v-bind="validateInfos.nickname">
+      <a-form-item
+          :label="$t('user.label.nickname')"
+          v-bind="validateInfos.nickname"
+      >
         <a-input
             v-model:value="formState.nickname"
             allow-clear
-            placeholder="请输入昵称"
+            :placeholder="$t('user.placeholder.nickname')"
         />
       </a-form-item>
-      <a-form-item label="角色组" v-bind="validateInfos.roleIds">
+      <a-form-item
+          :label="$t('user.label.roles')"
+          v-bind="validateInfos.roleIds"
+      >
         <i-tree-select
             v-model:value="formState.roleIds"
             :tree-data="roleOptions"
             :field-names="{ label: 'name', value: 'id' }"
-            :placeholder="$t('placeholder.role')"
+            :placeholder="$t('user.placeholder.roles')"
             multiple
             spliceParentTitle
             tree-default-expand-all
         />
       </a-form-item>
-      <a-form-item label="头像" name="fileList">
+      <a-form-item
+          :label="$t('user.label.avatar')"
+          name="fileList"
+      >
         <i-upload
             v-model:file-list="formState.fileList"
             :length="1"
             accept="image/*"
         />
       </a-form-item>
-      <a-form-item label="电子邮箱" name="email">
+      <a-form-item
+          :label="$t('user.label.email')"
+          name="email"
+      >
         <a-input
             v-model:value="formState.email"
             allow-clear
-            placeholder="请输入电子邮箱"
-        />
-      </a-form-item>
-      <a-form-item label="手机号" name="phone">
-        <a-input
-            v-model:value="formState.phone"
-            allow-clear
-            placeholder="请输入手机号"
+            :placeholder="$t('user.placeholder.email')"
         />
       </a-form-item>
       <a-form-item
-          label="密码"
+          :label="$t('user.label.phone')"
+          name="phone"
+      >
+        <a-input
+            v-model:value="formState.phone"
+            allow-clear
+            :placeholder="$t('user.placeholder.phone')"
+        />
+      </a-form-item>
+      <a-form-item
+          :label="$t('user.label.password')"
           v-bind="validateInfos.password"
       >
         <a-input-password
             v-model:value="formState.password"
             allow-clear
-            placeholder="请输入密码（留空时默认使用原密码）"
+            :placeholder="
+            $t(props.options?.id
+              ? 'user.placeholder.edit_password'
+              : 'user.placeholder.password')
+            "
         />
       </a-form-item>
-      <a-form-item label="状态" name="status">
+      <a-form-item
+          :label="$t('user.label.status')"
+          name="status"
+      >
         <a-radio-group v-model:value="formState.status">
-          <a-radio :value="0">禁用</a-radio>
-          <a-radio :value="1">启用</a-radio>
+          <a-radio :value="0">{{ $t(`user.enum.status.0`) }}</a-radio>
+          <a-radio :value="1">{{ $t(`user.enum.status.1`) }}</a-radio>
         </a-radio-group>
       </a-form-item>
     </a-form>

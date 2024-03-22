@@ -37,8 +37,8 @@ export const remove = (data) => {
 };
 
 // 获取管理员信息
-export const detail = (params) => {
-  return request.get("/admin/detail", params);
+export const detail = (id: number) => {
+  return request.get("/admin/detail/" + id);
 };
 
 

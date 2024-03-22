@@ -16,6 +16,7 @@ const props = withDefaults(defineProps<IProps>(), {
   type: "default",
   placement: "topLeft",
 });
+
 const emits = defineEmits([
   "click",
   "confirm",
@@ -65,7 +66,7 @@ defineOptions({
       :visible="props.visible"
       :disabled="props.disabled"
       :size="props.type === 'table-row' ? 'small' : 'middle'"
-      :btn-text="props.type === 'table-row' ? '' : '删除'"
+      :btn-text="props.type === 'table-row' ? '' : $t('title.delete')"
       @cancel="onCancel"
       @confirm="onConfirm"
       @visibleChange="onVisibleChange"

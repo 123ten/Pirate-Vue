@@ -48,14 +48,19 @@ const svgCaptchaAsync = async () => {
 
 // 登录
 const handleLogin = async () => {
+  console.log(loginForm);
+  const params = {
+    ...loginForm,
+    remember: loginForm.remember ? 1 : 0,
+  }
   spinning.value = true;
   try {
-    const {data} = await login(loginForm);
+    const {data} = await login(params);
     // console.log(data);
     $local.set("accessToken", data.accessToken);
     $local.set("refreshToken", data.refreshToken);
-    $local.set("userInfo", JSON.stringify(data.userInfo));
-    router.push("/");
+    $local.set("userInfo", data.userInfo);
+    await router.push("/");
 
     await setTimeoutPromise(500);
     notification.success({
@@ -108,7 +113,7 @@ const handleUserNameInput = debounce(async () => {
                 <a-input
                     v-model:value="loginForm.username"
                     allow-clear
-                    :placeholder="$t('placeholder.userName')"
+                    :placeholder="$t('placeholder.username')"
                     @input="handleUserNameInput"
                 >
                   <template #prefix>

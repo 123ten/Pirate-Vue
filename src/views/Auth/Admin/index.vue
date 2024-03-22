@@ -1,7 +1,7 @@
 <!-- 管理员管理 -->
 <script setup lang="ts">
-import {DeleteOutlined, EditOutlined, PlusOutlined, UserOutlined,} from "@ant-design/icons-vue";
-import {onMounted, reactive, ref} from "vue";
+import {EditOutlined, PlusOutlined, UserOutlined,} from "@ant-design/icons-vue";
+import {computed, onMounted, reactive, ref, unref} from "vue";
 import FormModal from "./components/FormModal/index.vue";
 import type {IColumns, IPages} from "@/types";
 import {getAdminList, remove} from "@/api/admin";
@@ -9,11 +9,16 @@ import {sortNumber} from "@/utils/common";
 import DeletePopconfirm from "@/components/IComponents/IOther/DeletePopconfirm/index.vue";
 import {notification} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
+import {$local} from "@/utils/storage";
 
 const {t} = useI18n();
 
+const userInfo = $local.get('userInfo');
+console.log('userInfo', userInfo)
+
 interface IDataSource {
   key?: string | number;
+  id: number;
   username?: string;
   nickname?: string;
   roles?: string;
@@ -29,8 +34,8 @@ interface IDataSource {
 const columns = ref<IColumns[]>([
   {
     title: "序号",
-    dataIndex: "index",
-    key: "index",
+    dataIndex: "number",
+    isI18n: true,
     align: "center",
     minWidth: 80,
     customRender: ({index}) => sortNumber(index, pages.value),
@@ -38,73 +43,84 @@ const columns = ref<IColumns[]>([
   {
     title: "用户名",
     dataIndex: "username",
+    isI18n: true,
     align: "center",
     minWidth: 100,
   },
   {
     title: "昵称",
     dataIndex: "nickname",
+    isI18n: true,
     align: "center",
     minWidth: 100,
   },
   {
     title: "角色组",
     dataIndex: "roles",
+    isI18n: true,
     align: "center",
     minWidth: 120,
   },
   {
     title: "头像",
     dataIndex: "avatar",
+    isI18n: true,
     align: "center",
     minWidth: 100,
   },
   {
     title: "邮箱",
     dataIndex: "email",
+    isI18n: true,
     align: "center",
     minWidth: 150,
   },
   {
     title: "手机号",
     dataIndex: "phone",
+    isI18n: true,
     align: "center",
     minWidth: 150,
   },
   {
     title: "最后登录IP",
     dataIndex: "lastLoginIp",
+    isI18n: true,
     align: "center",
     minWidth: 100,
   },
   {
     title: "最后登录时间",
     dataIndex: "lastLoginTime",
+    isI18n: true,
     align: "center",
     minWidth: 160,
   },
   {
     title: "创建时间",
     dataIndex: "createTime",
+    isI18n: true,
     align: "center",
     minWidth: 160,
   },
   {
     title: "状态",
     dataIndex: "status",
+    isI18n: true,
     align: "center",
     minWidth: 100,
   },
   {
     title: "操作",
-    dataIndex: "operate",
+    dataIndex: "operation",
+    isI18n: true,
     align: "center",
     fixed: "right",
     minWidth: 100,
   },
 ]);
 const dataSource = ref<IDataSource[]>([]);
-const selectedRowKeys = ref<IDataSource["key"][]>([]);
+const selectedRowKeys = ref<IDataSource['id'][]>([]);
 const pages = ref<IPages>({
   size: 10,
   page: 1,
@@ -176,9 +192,12 @@ const clearFormModalCache = () => {
 }
 
 // 删除
-const handleDeletePopconfirmConfirm = async (record) => {
+const handleDeletePopconfirmConfirm = async (record: IDataSource | IDataSource['id'][]) => {
   console.log("handleDeletePopconfirmConfirm", record);
-  await remove({id: record.id});
+  const params = {
+    ids: Array.isArray(record) ? record : [record.id],
+  }
+  await remove(params);
   notification.success({
     message: t("message.success"),
     description: t("success.delete"),
@@ -192,57 +211,59 @@ const onPagesChange = (records: IPages) => {
   pages.value = records;
 };
 
-// 显示与隐藏表头
-const onColumnChange = (newColumns: IColumns[]) => {
-  columns.value = newColumns;
-};
 // 多选
-const onSelectChange = (rowKeys: string[]) => {
+const onSelectChange = (rowKeys: IDataSource['id'][]) => {
   selectedRowKeys.value = rowKeys;
   console.log(rowKeys, "rowKeys");
 };
 
 // 显示预览图片
 const openAvatarPreviewImage = (src: string) => {
+  if (!src) return;
   isAvatarPreviewSrcVisible.value = true;
   avatarPreviewSrc.value = src;
 };
+
+const rowSelection = computed(() => ({
+  selectedRowKeys: unref(selectedRowKeys),
+  onChange: onSelectChange,
+  getCheckboxProps: (record: IDataSource) => ({
+    disabled: record.id === userInfo.id,
+  }),
+}))
+
+const i18nPrefix = computed(() => ({
+  table: 'user.table'
+}))
 </script>
 
 <template>
   <div class="default-main">
     <i-table
+        row-key="id"
         :columns="columns"
         :dataSource="dataSource"
         :pages="pages"
         :loading="isTableLoading"
+        :selectedRowKeys="selectedRowKeys"
+        :rowSelection="rowSelection"
+        :i18n-prefix="i18nPrefix"
         @reload="getList"
-        @columnChange="onColumnChange"
         @pagesChange="onPagesChange"
-        @selectChange="onSelectChange"
     >
       <template #leftActions>
-        <i-tooltip title="添加" content="添加" @click="handleFormModalOpen(0)">
+        <i-tooltip :title="$t('title.create')" :content="$t('title.create')" @click="handleFormModalOpen(0)">
           <template #icon>
             <plus-outlined/>
           </template>
         </i-tooltip>
-        <i-tooltip title="删除选中行">
+        <i-tooltip :title="$t('title.remove_selected_row')">
           <template #content>
-            <a-popconfirm
-                title="确定删除选中记录？"
-                ok-text="删除"
-                ok-button="primary"
-                :ok-button-props="{danger:true}"
-                cancel-text="取消"
-            >
-              <a-button type="primary" danger :disabled="!selectedRowKeys.length">
-                <template #icon>
-                  <delete-outlined/>
-                </template>
-                删除
-              </a-button>
-            </a-popconfirm>
+            <delete-popconfirm
+                :disabled="!selectedRowKeys.length"
+                placement="rightTop"
+                @confirm="handleDeletePopconfirmConfirm(selectedRowKeys)"
+            />
           </template>
         </i-tooltip>
       </template>
@@ -272,17 +293,17 @@ const openAvatarPreviewImage = (src: string) => {
             :color="value === 1 ? 'success' : 'error'"
             class="table-tag"
         >
-          {{ $t(`user.table.rows.status.${value}`) }}
+          {{ $t(`user.enum.status.${value}`) }}
         </a-tag>
       </template>
-      <template #operate="{ record }">
+      <template #operation="{ record }">
         <a-space>
-          <i-tooltip title="编辑" size="small" @click="handleFormModalOpen(1,record)">
+          <i-tooltip :title="$t('title.update')" size="small" @click="handleFormModalOpen(1,record)">
             <template #icon>
               <edit-outlined/>
             </template>
           </i-tooltip>
-          <i-tooltip title="删除">
+          <i-tooltip :title="$t('title.delete')">
             <template #content>
               <delete-popconfirm
                   type="table-row"
