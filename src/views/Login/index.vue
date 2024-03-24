@@ -1,24 +1,24 @@
 <!-- 登录 -->
 <script setup lang="ts">
-import {LockOutlined, UserOutlined} from "@ant-design/icons-vue";
-import {onBeforeUnmount, onMounted, reactive, ref} from "vue";
+import { LockOutlined, UserOutlined } from "@ant-design/icons-vue";
+import { onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import * as pageBubble from "@/utils/pageBubble";
-import {debounce, setTimeoutPromise} from "@/utils/common";
+import { debounce, setTimeoutPromise } from "@/utils/common";
 import avatar_default from "@/assets/images/avatar.png";
-import {useI18n} from "vue-i18n";
-import {getAvatar, login} from "@/api/admin";
-import {getSvgCaptcha} from "@/api/common";
+import { useI18n } from "vue-i18n";
+import { getAvatar, login } from "@/api/admin";
+import { getSvgCaptcha } from "@/api/common";
 
-import {notification} from "ant-design-vue";
+import { notification } from "ant-design-vue";
 import router from "@/router";
-import {$local} from "@/utils/storage";
+import { $local } from "@/utils/storage";
 
-const {t} = useI18n();
+const { t } = useI18n();
 
 const rules = reactive({
-  username: [{required: true, message: t("error.userName")}],
-  password: [{required: true, message: t("error.password")}],
-  captcha: [{required: true, message: t("error.captcha")}],
+  username: [{ required: true, message: t("error.userName") }],
+  password: [{ required: true, message: t("error.password") }],
+  captcha: [{ required: true, message: t("error.captcha") }],
 });
 
 const loginForm = reactive({
@@ -42,7 +42,7 @@ onBeforeUnmount(() => {
 });
 
 const svgCaptchaAsync = async () => {
-  const {data} = await getSvgCaptcha();
+  const { data } = await getSvgCaptcha();
   svg_captcha.value = data;
 };
 
@@ -52,10 +52,10 @@ const handleLogin = async () => {
   const params = {
     ...loginForm,
     remember: loginForm.remember ? 1 : 0,
-  }
+  };
   spinning.value = true;
   try {
-    const {data} = await login(params);
+    const { data } = await login(params);
     // console.log(data);
     $local.set("accessToken", data.accessToken);
     $local.set("refreshToken", data.refreshToken);
@@ -65,7 +65,7 @@ const handleLogin = async () => {
     await setTimeoutPromise(500);
     notification.success({
       message: t("success.login"),
-      description: data.userInfo.username + ' ' + t("success.welcome"),
+      description: data.userInfo.username + " " + t("success.welcome"),
     });
   } catch (error) {
     await svgCaptchaAsync();
@@ -78,7 +78,7 @@ const handleLogin = async () => {
 const handleUserNameInput = debounce(async () => {
   // console.log(loginForm.username);
   try {
-    const {data} = await getAvatar({username: loginForm.username});
+    const { data } = await getAvatar({ username: loginForm.username });
     avatar.value = data;
   } catch (error) {
     avatar.value = "";
@@ -94,56 +94,56 @@ const handleUserNameInput = debounce(async () => {
     <div class="login-box">
       <a-spin :spinning="spinning">
         <div class="head">
-          <img src="@/assets/images/login-header.png" alt="avatar"/>
+          <img src="@/assets/images/login-header.png" alt="avatar" v-cloak />
         </div>
         <div class="form">
           <a-avatar
-              :size="100"
-              class="profile-avatar"
-              :src="avatar || avatar_default"
+            :size="100"
+            class="profile-avatar"
+            :src="avatar || avatar_default"
           />
           <div class="content">
             <a-form
-                :model="loginForm"
-                :rules="rules"
-                name="basic"
-                @finish="handleLogin"
+              :model="loginForm"
+              :rules="rules"
+              name="basic"
+              @finish="handleLogin"
             >
               <a-form-item name="username">
                 <a-input
-                    v-model:value="loginForm.username"
-                    allow-clear
-                    :placeholder="$t('placeholder.username')"
-                    @input="handleUserNameInput"
+                  v-model:value="loginForm.username"
+                  allow-clear
+                  :placeholder="$t('placeholder.username')"
+                  @input="handleUserNameInput"
                 >
                   <template #prefix>
-                    <user-outlined class="site-form-item-icon"/>
+                    <user-outlined class="site-form-item-icon" />
                   </template>
                 </a-input>
               </a-form-item>
               <a-form-item name="password">
                 <a-input-password
-                    v-model:value="loginForm.password"
-                    allow-clear
-                    :placeholder="$t('placeholder.password')"
+                  v-model:value="loginForm.password"
+                  allow-clear
+                  :placeholder="$t('placeholder.password')"
                 >
                   <template #prefix>
-                    <lock-outlined class="site-form-item-icon"/>
+                    <lock-outlined class="site-form-item-icon" />
                   </template>
                 </a-input-password>
               </a-form-item>
               <a-form-item name="captcha">
                 <div class="flex">
                   <a-input
-                      v-model:value="loginForm.captcha"
-                      :placeholder="$t('placeholder.captcha')"
+                    v-model:value="loginForm.captcha"
+                    :placeholder="$t('placeholder.captcha')"
                   >
                   </a-input>
                   <a-form-item no-style>
                     <div
-                        class="svg_captcha"
-                        v-html="svg_captcha"
-                        @click="svgCaptchaAsync"
+                      class="svg_captcha"
+                      v-html="svg_captcha"
+                      @click="svgCaptchaAsync"
                     ></div>
                   </a-form-item>
                 </div>
@@ -155,10 +155,10 @@ const handleUserNameInput = debounce(async () => {
               </a-form-item>
               <a-form-item>
                 <a-button
-                    class="submit"
-                    type="primary"
-                    html-type="submit"
-                    :loading="isLoginBtnLoading"
+                  class="submit"
+                  type="primary"
+                  html-type="submit"
+                  :loading="isLoginBtnLoading"
                 >
                   {{ $t("login.login") }}
                 </a-button>
