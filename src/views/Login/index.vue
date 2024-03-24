@@ -93,7 +93,10 @@ const handleUserNameInput = debounce(async () => {
   <div class="login">
     <div class="login-box">
       <a-spin :spinning="spinning">
-        <div class="head">
+        <div
+          class="head img-placeholder"
+          style="--img-placeholder-rate: 35.11%"
+        >
           <img src="@/assets/images/login-header.png" alt="avatar" v-cloak />
         </div>
         <div class="form">
@@ -137,6 +140,7 @@ const handleUserNameInput = debounce(async () => {
                   <a-input
                     v-model:value="loginForm.captcha"
                     :placeholder="$t('placeholder.captcha')"
+                    style="height: 40px"
                   >
                   </a-input>
                   <a-form-item no-style>

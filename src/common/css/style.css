@@ -24,6 +24,8 @@
 
   /* 文本溢出换行 */
   --ellipsis-clamp: 2;
+
+  --img-placeholder-rate: 0;
 }
 
 html,
@@ -358,6 +360,14 @@ button.drop-row-btn {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: var(--ellipsis-clamp);
+}
+
+.img_placeholder {
+  overflow: hidden;
+  height: 0;
+  padding-bottom: var(
+    --img-placeholder-rate
+  ); /** 其中*处填 图片的高宽百分比=高/宽*100% */
 }
 
 /* 移动端 */
