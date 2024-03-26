@@ -109,8 +109,8 @@ const handleAddEditConfirm = async () => {
 
 // 删除-确定
 
-const handleDeletePopconfirmConfirm = (record: IDataSource) => {
-  console.log("handleDeletePopconfirmConfirm", record);
+const handleDeletePopconfirmConfirm = (keys?: IDataSource['id'][]) => {
+  console.log("handleDeletePopconfirmConfirm", keys);
 };
 
 // 规则类型
@@ -174,7 +174,7 @@ const rowSelection = computed(() => ({
             <delete-popconfirm
                 :disabled="!selectedRowKeys.length"
                 placement="rightTop"
-                @confirm="handleDeletePopconfirmConfirm"
+                @confirm="() => handleDeletePopconfirmConfirm()"
             />
           </template>
         </i-tooltip>
@@ -223,7 +223,7 @@ const rowSelection = computed(() => ({
             <template #content>
               <delete-popconfirm
                   type="table-row"
-                  @confirm="handleDeletePopconfirmConfirm(record)"
+                  @confirm="handleDeletePopconfirmConfirm([record.id])"
               />
             </template>
           </i-tooltip>
