@@ -1,7 +1,7 @@
 <!-- MenuItem -->
 <script setup lang="ts">
 import {defineOptions, defineProps, withDefaults} from "vue";
-import {RouteRecordName, useRouter} from "vue-router";
+import {useRouter} from "vue-router";
 import {storeToRefs} from 'pinia';
 import {useMenuStore} from "@/store";
 import SiderItem from './index.vue'
@@ -22,15 +22,14 @@ const props = withDefaults(defineProps<IPropsMenuItem>(), {
 const router = useRouter();
 
 // 跳转
-const toRouter = (name: RouteRecordName) => {
-  console.log(name, "name");
+const toRouter = (item: Record<string, any>) => {
+  // console.log(item, "item");
   router.push({
-    name,
+    name: item.name,
   });
   // 调转后收起菜单
   isMenuOutIn.value = false;
 };
-
 
 defineOptions({
   name: "SideBarItem",
@@ -49,7 +48,7 @@ defineOptions({
       </a-sub-menu>
     </template>
     <template v-else>
-      <a-menu-item :key="item.name" @click="toRouter(item.name)">
+      <a-menu-item :key="item.name" @click="toRouter(item)">
         <template #icon>
           <component :is="antIcons[item.icon]" class="fontSize-icon"/>
         </template>

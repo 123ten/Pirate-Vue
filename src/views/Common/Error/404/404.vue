@@ -1,5 +1,4 @@
 <!-- 404 -->
-
 <template>
   <div class="page">
     <div class="container">
@@ -13,15 +12,15 @@
       </div>
       <div class="details">
         <div class="qr-image">
-          <img src="@/assets/images/qr.png" alt="QR Code" />
+          <img src="@/assets/images/qr.png" alt="QR Code"/>
         </div>
-        <div class="stopcode">
-          <div class="stopcode-text">我们将在完成后自动返回到上一页</div>
-          <div class="stopcode-text">
-            <router-link class="stopcode-a" to="">
+        <div class="stopCode">
+          <div class="stopCode-text">我们将在完成后自动返回到上一页</div>
+          <div class="stopCode-text">
+            <router-link class="stopCode-a" to="">
               <span @click="$router.back()">返回上一页</span>
             </router-link>
-            <router-link class="stopcode-a" to="/">返回首页</router-link>
+            <router-link class="stopCode-a" to="/">返回首页</router-link>
           </div>
         </div>
       </div>
@@ -30,12 +29,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
-import { useRouter } from "vue-router";
+import {onBeforeUnmount, onMounted, ref} from "vue";
+import {useRouter} from "vue-router";
 
 const router = useRouter();
 const complete = ref(0);
-var timer: any = null;
+let timer: number | null;
 
 function process() {
   complete.value += Math.floor(Math.random() * 50);
@@ -55,7 +54,8 @@ onMounted(() => {
   processInterval();
 });
 onBeforeUnmount(() => {
-  clearTimeout(timer);
+  timer && clearTimeout(timer);
+  timer = null
 });
 </script>
 

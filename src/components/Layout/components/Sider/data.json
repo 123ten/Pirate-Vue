@@ -28,13 +28,13 @@
         },
         {
           "path": "/auth/menuRules",
-          "name": "authMenuRules",
+          "name": "menuRules",
           "title": "菜单规则管理",
           "icon": "HomeOutlined"
         },
         {
           "path": "/auth/adminLog",
-          "name": "authAdminLog",
+          "name": "adminLog",
           "title": "管理员日志管理",
           "icon": "HomeOutlined"
         }

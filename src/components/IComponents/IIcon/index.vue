@@ -1,36 +1,33 @@
 <!-- 图标配置 -->
-<script lang="ts">
-import {defineComponent} from "vue";
-
-export default defineComponent({
-  name: "IIcon",
-});
-</script>
 <script setup lang="ts">
-import {
-  computed,
-  onMounted,
-  reactive,
-  ref,
-  toRefs,
-  toRef,
-  unref,
-  withDefaults,
-  watch,
-  nextTick,
-} from "vue";
-import {SyncOutlined} from "@ant-design/icons-vue";
+import {computed, nextTick, onMounted, ref, unref,} from "vue";
 import * as antIcons from "@ant-design/icons-vue";
+import {SyncOutlined} from "@ant-design/icons-vue";
 import {notification} from "ant-design-vue";
+import {cloneDeep, debounce} from 'lodash-es'
 
-const emits = defineEmits(["update:visible"]);
+const props = defineProps({
+  visible: {
+    type: Boolean,
+    default: false
+  },
+  value: {
+    type: String,
+    default: ''
+  }
+})
+const emits = defineEmits(["update:visible", "update:value"]);
+
+defineOptions({
+  name: 'IIcon'
+})
 
 //#region 变量
 const outlinedList = ref<string[]>([]);
 const filledList = ref<string[]>([]);
 const twoToneList = ref<string[]>([]);
 const icons = ref<string[]>([]);
-const iconTabs = ref<string[]>(["line", "fill", "twoTone"]);
+const iconTabs = ref<string[]>(["line", "fill", "twoTone", 'custom']);
 
 const currentTab = ref<string>("");
 const currentIcon = ref<string>("LineOutlined"); // 默认图标
@@ -39,11 +36,12 @@ const visible = ref<boolean>(false);
 //#endregion
 
 onMounted(() => {
+  emits('update:value', currentIcon.value);
   initIcon();
 });
 // 初始化icon
 const initIcon = () => {
-  console.time("initIcon");
+  // console.time("initIcon");
   const _antIcons = Object.keys(antIcons);
   const _outlinedList: string[] = [];
   const _filledList: string[] = [];
@@ -88,24 +86,41 @@ const checkIconTab = (type: string) => {
 };
 // 选择图标 icon
 const checkIcon = (key: string) => {
-  console.log("key", key);
+  // console.log("key", key);
   nextTick(() => {
     currentIcon.value = key;
+    emits('update:value', key);
   });
-  console.log("currentIcon.value", currentIcon.value);
-
   visible.value = false;
 };
+
+const handleSearchInput = debounce((e: KeyboardEvent) => {
+  const value = (e.target as HTMLInputElement).value;
+  const currentTabValue = currentTab.value;
+
+  // 一定要 克隆一份，不然会出现数据污染
+  const listEnum = {
+    line: cloneDeep(outlinedList.value),
+    fill: cloneDeep(filledList.value),
+    twoTone: cloneDeep(twoToneList.value),
+  }
+  if (listEnum[currentTabValue] && value) {
+    icons.value = listEnum[currentTabValue].filter((item) => item.toLocaleLowerCase().includes(value.toLocaleLowerCase()));
+  } else {
+    icons.value = listEnum[currentTabValue];
+  }
+  console.log("handleSearchInput", value);
+}, 300);
 
 const iconComputed = computed(() => antIcons[unref(currentIcon)]);
 </script>
 
 <template>
   <a-popover
+      v-model:visible="visible"
       placement="bottom"
       trigger="click"
       class="icon"
-      v-model:visible="visible"
   >
     <template #title>
       <div class="icons-title">
@@ -127,6 +142,7 @@ const iconComputed = computed(() => antIcons[unref(currentIcon)]);
       <div class="icons-content">
         <div
             class="icons-item"
+            :class="{active:currentIcon === icon}"
             v-for="icon in icons"
             :key="icon"
             @click="checkIcon(icon)"
@@ -135,9 +151,10 @@ const iconComputed = computed(() => antIcons[unref(currentIcon)]);
         </div>
       </div>
     </template>
-    <a-input placeholder="搜索图标">
+    <a-input placeholder="搜索图标" @input="handleSearchInput">
       <template #addonBefore>
         <component :is="iconComputed"/>
+        {{ currentIcon }}
       </template>
       <template #addonAfter>
         <sync-outlined @click="onLoad"/>

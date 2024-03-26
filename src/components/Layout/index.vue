@@ -12,8 +12,8 @@ const {isLayoutFullScreen, isCurrentPageReload} = storeToRefs(store);
     <sider v-show="!isLayoutFullScreen"/>
 
     <a-layout class="layout">
-      <Header v-show="!isLayoutFullScreen"/>
-      <a-layout-content>
+      <Header v-if="!isLayoutFullScreen"/>
+      <a-layout-content class="overflow-y-auto">
         <router-view
             :class="isLayoutFullScreen ? 'fullScreen' : ''"
             class="layout-view"

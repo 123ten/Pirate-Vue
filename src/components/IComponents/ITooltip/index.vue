@@ -41,8 +41,7 @@ defineOptions({
 
 <template>
   <a-tooltip
-      :disabled="props.disabled"
-      :title="terminalType === 'pc' && props.title"
+      :title="!props.disabled && terminalType === 'pc' && props.title"
   >
     <!-- 自定义内容 -->
     <slot name="content">

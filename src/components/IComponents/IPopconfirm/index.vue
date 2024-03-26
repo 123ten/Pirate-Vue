@@ -16,7 +16,7 @@ interface IProps extends PopconfirmProps {
 
 const props = withDefaults(defineProps<IProps>(), {
   visible: undefined,
-  title: "标题",
+  title: undefined,
   okText: "确定",
   cancelText: "取消",
   btnText: "",
@@ -79,6 +79,9 @@ defineOptions({
           <slot name="icon"/>
         </template>
         {{ props.btnText }}
+        <!-- <template v-for="(slot, key) in $slots" v-slot:[key]>
+          <slot :name="key" :slot="slot"></slot>
+        </template> -->
       </a-button>
     </slot>
   </template>

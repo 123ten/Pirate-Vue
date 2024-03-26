@@ -41,4 +41,14 @@ export const detail = (id: number) => {
   return request.get("/admin/detail/" + id);
 };
 
+// 获取管理员菜单列表
+export const getMenuList = (params) => {
+  return request.get("/admin/menus", params);
+};
+
+// 新增/修改菜单
+export const upsertMenu = (data) => {
+  return request.post("/admin/menu/upsert", data);
+}
+
 

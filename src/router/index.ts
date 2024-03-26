@@ -1,14 +1,11 @@
 // index.ts
-import {
-  createRouter,
-  createWebHashHistory,
-  createWebHistory,
-} from "vue-router";
-import { routes } from "./routes";
+import {createRouter, createWebHistory,} from "vue-router";
+import {routes} from "./routes";
 import NProgress from "nprogress";
-import "nprogress/nprogress.css"; // nprogress样式文件
+import "nprogress/nprogress.css"; // nprogress 样式文件
 import GlobalLoading from "@/views/Common/Loading";
-let timer;
+
+let timer: null | number;
 
 // const history = createWebHashHistory(); // hash history
 const history = createWebHistory(); // hash history
@@ -24,6 +21,7 @@ router.beforeEach((to, from, next) => {
   // 开启全局loading 100ms后 如果页面没有加载完毕则显示loading 如果加载完毕则不显示loading 100ms是为了防止页面加载过快loading闪烁
   timer = setTimeout(() => {
     GlobalLoading.show();
+    timer = null;
   }, 100);
   // 这个一定要加，没有next()页面不会跳转的。这部分还不清楚的去翻一下官网就明白了
   next();

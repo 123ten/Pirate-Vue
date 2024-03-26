@@ -245,7 +245,6 @@ const i18nPrefix = computed(() => ({
         :dataSource="dataSource"
         :pages="pages"
         :loading="isTableLoading"
-        :selectedRowKeys="selectedRowKeys"
         :rowSelection="rowSelection"
         :i18n-prefix="i18nPrefix"
         @reload="getList"
