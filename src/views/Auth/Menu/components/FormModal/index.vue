@@ -123,7 +123,7 @@ const replaceFields = computed(() => {
             <a-radio :value="3">iframe</a-radio>
           </a-radio-group>
         </a-form-item>
-        <template v-if="formState.type === 1">
+        <template>
           <a-form-item label="组件路径" name="component">
             <a-input v-model:value="formState.component"/>
           </a-form-item>
