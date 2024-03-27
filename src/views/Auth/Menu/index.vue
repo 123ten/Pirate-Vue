@@ -23,11 +23,6 @@ const columns = ref<IColumns[]>([
     minWidth: 120,
   },
   {
-    title: "排序",
-    dataIndex: "sort",
-    align: "center",
-  },
-  {
     title: "权限标识",
     dataIndex: "code",
     align: "center",
@@ -161,6 +156,7 @@ const rowSelection = computed(() => ({
         :loading="isTableLoading"
         :pagination="false"
         :row-selection="rowSelection"
+        sortable
         @reload="getList"
     >
       <template #leftActions>
@@ -205,10 +201,10 @@ const rowSelection = computed(() => ({
       <template #operation="{ record }">
         <a-space>
           <i-tooltip
-              title="查看详情"
+              title="拖动以排序"
               size="small"
               type="move"
-              btnClass="drop-row-btn"
+              custom-button-class="drop-row-btn"
           >
             <template #icon>
               <drag-outlined/>

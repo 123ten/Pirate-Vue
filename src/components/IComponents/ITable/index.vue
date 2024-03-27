@@ -167,7 +167,7 @@ const expandAllRows = () => {
 };
 
 // 行拖拽
-const rowDrop = () => {
+const rowDrop = (out: number[]) => {
   const tbody = document.querySelector(
       ".ant-table-container .ant-table-content tbody"
   );
@@ -178,6 +178,7 @@ const rowDrop = () => {
     onEnd({newIndex, oldIndex}: ISortTableEnd) {
       console.log("newIndex, oldIndex", newIndex, oldIndex);
       //获取拖动后容器中的每一项的位置排序
+      // const arr = sortable.toArray(out);
       const arr = sortable.toArray();
       console.log("位置排序", arr);
     },
@@ -454,7 +455,7 @@ defineExpose({
               class="table-header_search"
               @blur="handleSearchBlur"
           />
-          <a-radio-group v-model:value="menuOrSearch" style="display: flex">
+          <a-radio-group v-model:value="menuOrSearch" class="flex">
             <a-popover
                 v-model:visible="isDropdownVisible"
                 trigger="click"
@@ -467,7 +468,7 @@ defineExpose({
                     @change="handleCheckboxChange"
                 >
                   <label
-                      class="i-popover-item d-block"
+                      class="i-popover-item block"
                       style="text-align: left"
                       v-for="item in menuCheckList"
                       :key="item.key || item.dataIndex"

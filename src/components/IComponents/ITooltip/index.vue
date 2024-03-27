@@ -6,6 +6,7 @@ import {storeToRefs} from "pinia";
 import {useMenuStore} from "@/store";
 import {TButtonType} from "@/types";
 import {TStyle} from "@/types/style";
+import IButton from "@/components/IComponents/IButton/index.vue";
 
 const store = useMenuStore();
 const {terminalType} = storeToRefs(store);
@@ -16,19 +17,15 @@ interface IProps extends TooltipProps {
   disabled?: boolean; // tooltip 默认按钮 是否禁用 默认 否
   type?: TButtonType; // tooltip 默认按钮 按钮主题色
   size?: string; // size 默认按钮大小
-  btnClass?: ""; // 按钮类名
-  btnStyle?: TStyle | string; // 按钮样式
+  customButtonClass?: ""; // 按钮类名
+  customButtonStyle?: TStyle | string; // 按钮样式
 }
 
 const props = withDefaults(defineProps<IProps>(), {
-  title: "",
-  content: "",
   disabled: false,
   type: "primary",
-  size: "",
-  btnClass: "",
-  btnStyle: undefined,
 });
+
 
 const emits = defineEmits([
   "click", // 表格搜索
@@ -49,9 +46,9 @@ defineOptions({
           :type="props.type"
           :disabled="props.disabled"
           :size="props.size"
-          :class="props.btnClass"
-          :style="props.btnStyle"
-          @click="emits('click')"
+          :class="props.customButtonClass"
+          :style="props.customButtonStyle"
+          @click="emits('click', $event)"
       >
         <template #icon>
           <!-- 图标 可自定义 -->

@@ -40,13 +40,10 @@ const emits = defineEmits([
   "click", // 表格搜索
 ]);
 
-const onClick = () => {
-  emits("click");
-};
 </script>
 
 <template>
-  <a-button v-bind="props" @click="onClick">
+  <a-button v-bind="props" @click="emits('click',$event)">
     <!-- 图标 可自定义 -->
     <slot name="icon"></slot>
     <slot></slot>
