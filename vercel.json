@@ -1,15 +1,12 @@
 {
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "https://pirate-api.bqrlm.cn/api/$1"
+      "src": "/(.*)",
+      "dest": "/index.html"
     },
     {
-      "src": "/(.*)",
-      "headers": {
-        "cache-control": "s-maxage=1000"
-      },
-      "dest": "/index.html"
+      "src": "/api/(.*)",
+      "dest": "https://pirate-api.bqrlm.cn/api/$1"
     }
   ]
 }
