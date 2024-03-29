@@ -167,7 +167,7 @@ const expandAllRows = () => {
 };
 
 // 行拖拽
-const rowDrop = (out: number[]) => {
+const rowDrop = (out?: number[]) => {
   const tbody = document.querySelector(
       ".ant-table-container .ant-table-content tbody"
   );

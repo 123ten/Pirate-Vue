@@ -16,7 +16,6 @@ interface IProps extends TooltipProps {
   content?: string; // tooltip 内容 使用 content 无需此参数
   disabled?: boolean; // tooltip 默认按钮 是否禁用 默认 否
   type?: TButtonType; // tooltip 默认按钮 按钮主题色
-  size?: string; // size 默认按钮大小
   customButtonClass?: ""; // 按钮类名
   customButtonStyle?: TStyle | string; // 按钮样式
 }
