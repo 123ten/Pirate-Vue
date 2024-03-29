@@ -4,5 +4,11 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "https://pirate-api.bqrlm.cn/admin/login/$1"
+    }
   ]
 }
