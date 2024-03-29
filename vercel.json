@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/:match*",
-      "destination": "https://pirate-api.bqrlm.cn/:match*"
+      "source": "/api/(.*)",
+      "destination": "https://pirate-api.bqrlm.cn/$1"
     },
     {
       "source": "/(.*)",
