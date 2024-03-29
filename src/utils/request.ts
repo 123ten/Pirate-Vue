@@ -23,7 +23,7 @@ class AxiosUtils {
   constructor() {
     this.http = axios.create({
       baseURL: this.baseUrl,
-      timeout: 10 * 60,
+      // timeout: 1000 * 60,
       // headers: {
       //   Accept: "application/json",
       //   "Content-Type": "application/json",
