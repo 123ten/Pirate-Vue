@@ -4,11 +4,5 @@
       "src": "/api/(.*)",
       "dest": "https://pirate-api.bqrlm.cn/api/$1"
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
   ]
 }
