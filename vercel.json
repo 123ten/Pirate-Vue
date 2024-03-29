@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/:match*",
+      "destination": "https://pirate-api.bqrlm.cn/:match*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
