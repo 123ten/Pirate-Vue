@@ -1,12 +1,8 @@
 {
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "https://pirate-api.bqrlm.cn/api/$1"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
