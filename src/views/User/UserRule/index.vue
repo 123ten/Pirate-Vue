@@ -226,9 +226,8 @@ const ruleTypeStatus = (type: IDataSource["ruleType"]) => {
         isSelectedRowKeys
         :isExpandAllRows="isExpandAllRows"
         :loading="isTableLoading"
-        @onColumnChange="onColumnChange"
-        @onPagesChange="onPagesChange"
-        @onSelectChange="onSelectChange"
+        @pagesChange="onPagesChange"
+        @selectChange="onSelectChange"
     >
       <template #leftBtn>
         <i-tooltip title="添加" content="添加" @click="handleAddEdit(0)">

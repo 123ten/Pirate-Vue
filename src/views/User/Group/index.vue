@@ -130,12 +130,6 @@ const onDeleteCurrentConfirm = (record: IDataSource) => {
   console.log(record, "record");
 };
 
-
-// 显示与隐藏表头
-const onColumnChange = (newColumns: IColumns[]) => {
-  columns.value = newColumns;
-};
-
 // 多选
 const onSelectChange = (rowKeys: string[]) => {
   selectedRowKeys.value = rowKeys;
@@ -153,7 +147,6 @@ const onSelectChange = (rowKeys: string[]) => {
         :pagination="false"
         :default-expand-all-rows="defaultExpandAllRows"
         @reload="getList"
-        @columnChange="onColumnChange"
         @selectChange="onSelectChange"
     >
       <template #leftActions>

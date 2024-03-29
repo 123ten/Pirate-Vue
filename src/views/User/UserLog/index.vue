@@ -125,9 +125,8 @@ const toUrl = (url: string) => {
         is-selected-row-keys
         :loading="isTableLoading"
         :scroll="{ x: true }"
-        @on-column-change="onColumnChange"
-        @on-pages-change="onPagesChange"
-        @on-select-change="onSelectChange"
+        @pages-change="onPagesChange"
+        @select-change="onSelectChange"
     >
       <template #url="{ record }">
         <a-input-group compact>

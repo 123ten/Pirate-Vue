@@ -489,9 +489,9 @@ defineExpose({
             <a-tooltip>
               <template #title v-if="!isOpenSearch">{{ $t('placeholder.expandUniversalSearch') }}</template>
               <a-radio-button
+                  v-if="formColumns.length"
                   value="search"
                   @click="handleOpenSearch"
-                  v-if="formColumns.length"
               >
                 <search-outlined/>
               </a-radio-button>

@@ -95,20 +95,10 @@ const onPagesChange = (records: IPages) => {
   pages.value = records;
 };
 
-// 显示与隐藏表头
-const onColumnChange = (newColumns: IColumns[]) => {
-  columns.value = newColumns;
-};
 // 多选
 const onSelectChange = (rowKeys: string[]) => {
   selectedRowKeys.value = rowKeys;
   console.log(rowKeys, "rowKeys");
-};
-
-// 显示预览图片
-const openAvatarPreviewImage = (src: string) => {
-  isAvatarPreviewSrc.value = true;
-  avatarPreviewSrc.value = src;
 };
 
 const toUrl = (url: string) => {
@@ -125,9 +115,8 @@ const toUrl = (url: string) => {
         is-selected-row-keys
         :loading="isTableLoading"
         :scroll="{ x: true }"
-        @on-column-change="onColumnChange"
-        @on-pages-change="onPagesChange"
-        @on-select-change="onSelectChange"
+        @pages-change="onPagesChange"
+        @select-change="onSelectChange"
     >
       <template #url="{ record }">
         <a-input-group compact>
