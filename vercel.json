@@ -8,7 +8,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "https://pirate-api.bqrlm.cn/$1"
+      "dest": "https://pirate-api.bqrlm.cn"
     }
   ]
 }
