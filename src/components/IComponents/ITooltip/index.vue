@@ -1,7 +1,7 @@
 <!-- a-tooltip 的 常用封装 -->
 <script setup lang="ts">
 import {defineEmits, defineOptions, defineProps, withDefaults} from "vue";
-import {TooltipProps} from "ant-design-vue";
+import {ButtonProps, TooltipProps} from "ant-design-vue";
 import {storeToRefs} from "pinia";
 import {useMenuStore} from "@/store";
 import {TButtonType} from "@/types";
@@ -11,16 +11,17 @@ import IButton from "@/components/IComponents/IButton/index.vue";
 const store = useMenuStore();
 const {terminalType} = storeToRefs(store);
 
-interface IProps extends TooltipProps {
+interface ITooltipProps extends TooltipProps {
   title: string; // tooltip 标题
   content?: string; // tooltip 内容 使用 content 无需此参数
   disabled?: boolean; // tooltip 默认按钮 是否禁用 默认 否
   type?: TButtonType; // tooltip 默认按钮 按钮主题色
+  size?: ButtonProps['size']; // size 默认按钮大小
   customButtonClass?: ""; // 按钮类名
   customButtonStyle?: TStyle | string; // 按钮样式
 }
 
-const props = withDefaults(defineProps<IProps>(), {
+const props = withDefaults(defineProps<ITooltipProps>(), {
   disabled: false,
   type: "primary",
 });
