@@ -1,13 +1,12 @@
 <!-- 菜单规则管理 -->
 <script setup lang="ts">
-import {DragOutlined, EditOutlined, PlusOutlined,} from "@ant-design/icons-vue";
+import antIcons, {DragOutlined, EditOutlined, PlusOutlined,} from "@ant-design/icons-vue";
 import {computed, onMounted, ref, unref} from "vue";
 import FormModal from "./components/FormModal/index.vue";
-import type {IColumns, IPages} from "@/types";
 import DeletePopconfirm from "@/components/IComponents/IOther/DeletePopconfirm/index.vue";
 import {getMenuList} from "@/api/admin";
+import type {IColumns, IPages} from "@/types";
 import type {IDataSource} from "./types";
-
 
 //#region 变量
 const columns = ref<IColumns[]>([
@@ -68,6 +67,7 @@ const pages = ref<IPages>({
   page: 1,
   total: 0,
 });
+const formOptions = ref<IDataSource | null>()
 const defaultExpandAllRows = ref<boolean>(false);
 const isTableLoading = ref<boolean>(false); // 表格加载状态
 const isFormModalVisible = ref<boolean>(false);
@@ -89,16 +89,20 @@ const getList = async () => {
 };
 
 // 添加
-const handleAddEdit = (type: number) => {
+const handleFormModalOpen = (type: number, record: IDataSource) => {
+  if (record) {
+    formOptions.value = record;
+  }
   isFormModalVisible.value = true;
 };
 // 添加/编辑 - cancel
-const handleAddEditCancel = () => {
+const handleFormModalCancel = () => {
   isFormModalVisible.value = false;
+  formOptions.value = null;
 };
 // 添加/编辑 - confirm
-const handleAddEditConfirm = async () => {
-  handleAddEditCancel();
+const handleFormModalConfirm = async () => {
+  handleFormModalCancel();
   await getList();
 };
 
@@ -160,7 +164,7 @@ const rowSelection = computed(() => ({
         @reload="getList"
     >
       <template #leftActions>
-        <i-tooltip title="添加" content="添加" @click="handleAddEdit(0)">
+        <i-tooltip title="添加" content="添加" @click="handleFormModalOpen(0)">
           <template #icon>
             <plus-outlined/>
           </template>
@@ -178,6 +182,9 @@ const rowSelection = computed(() => ({
             v-model:expand="defaultExpandAllRows"
             :disabled="!dataSource.length"
         />
+      </template>
+      <template #icon="{value}">
+        <component v-if="value" :is="antIcons[value]"/>
       </template>
       <template #type="{ record }">
         <a-tag :color="typeEnum(record.type,'color')">
@@ -210,7 +217,7 @@ const rowSelection = computed(() => ({
               <drag-outlined/>
             </template>
           </i-tooltip>
-          <i-tooltip title="编辑" size="small" @click="handleAddEdit(1)">
+          <i-tooltip title="编辑" size="small" @click="handleFormModalOpen(1,record)">
             <template #icon>
               <edit-outlined/>
             </template>
@@ -229,8 +236,9 @@ const rowSelection = computed(() => ({
 
     <form-modal
         v-model:visible="isFormModalVisible"
-        @cancel="handleAddEditCancel"
-        @confirm="handleAddEditConfirm"
+        :options="formOptions"
+        @cancel="handleFormModalCancel"
+        @confirm="handleFormModalConfirm"
     />
   </div>
 </template>

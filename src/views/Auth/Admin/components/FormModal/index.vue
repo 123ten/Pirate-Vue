@@ -4,6 +4,7 @@ import {reactive, ref,} from "vue";
 import {Form, notification} from "ant-design-vue";
 import {detail, getRoleList, upsert} from "@/api/admin";
 import {useI18n} from "vue-i18n";
+import {Rules} from "@/types/form";
 
 const {t} = useI18n();
 
@@ -51,19 +52,19 @@ const formState = reactive<IFormState>({
   status: 1,
   fileList: [],
 });
-const ruleReactive = reactive({
+const rules = reactive<Rules>({
   username: [{required: true, message: t('user.error.username')}],
   nickname: [{required: true, message: t('user.error.nickname')}],
   roleIds: [{required: true, message: t('user.error.roles')}],
-  password: [{required: true, message: t('user.error.password')}],
+  password: undefined,
 })
-const {resetFields, validate, validateInfos} = Form.useForm(formState, ruleReactive);
+const {resetFields, validate, validateInfos} = Form.useForm(formState, rules);
 const roleOptions = ref([]);
 const loading = ref<boolean>(false);
 //#endregion
 
 const init = async () => {
-  ruleReactive.password = [{required: !props.options?.id, message: t('user.error.password')}];
+  rules.password = [{required: !props.options?.id, message: t('user.error.password')}];
   console.log('options', props.options);
   if (props.options?.id) {
     await getDetail(props.options.id);

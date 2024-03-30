@@ -1,3 +1,5 @@
+import {Rule} from "ant-design-vue/es/form";
+
 type TypeSearchType = "input" | "select" | "radio" | 'date';
 
 interface IOptions {
@@ -5,4 +7,10 @@ interface IOptions {
   value?: any;
 }
 
-export {TypeSearchType, IOptions};
+type Rules = Record<string, Rule[] | undefined>
+
+export {
+  TypeSearchType,
+  IOptions,
+  Rules
+};

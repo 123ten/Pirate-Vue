@@ -1,3 +1,5 @@
+import {ModalProps} from "@/types/modal";
+
 interface DefaultInterface {
   id?: number; // ID
   type: 1 | 2 | 3;  // 1 菜单目录 2 菜单项 3 页面按钮
@@ -16,8 +18,8 @@ export interface IDataSource extends DefaultInterface {
   children?: IDataSource[]; // 设置 children 务必设置 width 否则可能出现宽度浮动
 }
 
-export interface IFormModalProps {
-  visible: boolean; // 显示与隐藏
+export interface IFormModalProps<T> extends ModalProps<T> {
+
 }
 
 export interface IFormState extends DefaultInterface {

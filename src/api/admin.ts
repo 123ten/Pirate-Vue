@@ -51,4 +51,15 @@ export const upsertMenu = (data) => {
   return request.post("/admin/menu/upsert", data);
 }
 
+// 删除菜单
+export const removeMenu = (data) => {
+  return request.post("/admin/menu/remove", data);
+}
+
+// 获取菜单详情
+export const menuDetail = (id: number) => {
+  return request.get("/admin/menu/detail/" + id);
+}
+
+
 

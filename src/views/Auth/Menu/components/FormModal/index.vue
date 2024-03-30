@@ -2,14 +2,22 @@
 <script setup lang="ts">
 import {computed, reactive, ref,} from "vue";
 import type {IDataSource, IFormModalProps, IFormState} from "../../types";
-import {getMenuList, upsertMenu} from "@/api/admin";
-import {message} from "ant-design-vue";
+import {getMenuList, menuDetail, upsertMenu} from "@/api/admin";
+import {Form, message} from "ant-design-vue";
+import {Rules} from "@/types/form";
+import {useI18n} from "vue-i18n";
 
-
-const props = defineProps<IFormModalProps>();
+const {t} = useI18n();
+const props = defineProps<IFormModalProps<any>>();
 
 const emits = defineEmits(["cancel", "confirm"]);
 
+const rules = reactive<Rules>({
+  username: [{required: true, message: t('user.error.username')}],
+  title: [{required: true, message: t('user.error.title')}],
+  roleIds: [{required: true, message: t('user.error.roles')}],
+  password: undefined,
+})
 const formState = reactive<IFormState>({
   title: '',
   name: '',
@@ -20,26 +28,44 @@ const formState = reactive<IFormState>({
   sort: 0,
   cache: 0,
 });
+
 const menuOptions = ref<IDataSource[]>([]);
 const loading = ref<boolean>(false);
 
-const onInit = async () => {
-  console.log('onInit');
-  await getMenuOptions()
-};
+const {resetFields, validate, validateInfos} = Form.useForm(formState, rules);
 
-const getMenuOptions = async () => {
+const onInit = async () => {
+  console.log('onInit', props.options);
   loading.value = true;
   try {
-    const {data} = await getMenuList({});
-    menuOptions.value = data.records;
+    if (props.options) {
+      await getDetail()
+    }
+    await getMenuOptions()
   } finally {
     loading.value = false;
   }
 };
 
+/**
+ * 获取菜单列表
+ */
+const getMenuOptions = async () => {
+  const {data} = await getMenuList({});
+  menuOptions.value = data.records;
+};
+
+const getDetail = async () => {
+  const {data} = await menuDetail(props.options.id)
+  if (data.parentId === 0) {
+    data.parentId = undefined
+  }
+  Object.assign(formState, data)
+}
+
 const handleCancel = () => {
   emits('cancel')
+  resetFields()
 };
 
 const handleConfirm = async () => {
@@ -49,14 +75,12 @@ const handleConfirm = async () => {
     const {data} = await upsertMenu(formState);
     message.success(data);
     emits('confirm');
+    resetFields()
   } finally {
     loading.value = false;
   }
 };
 
-const clearCache = () => {
-
-};
 
 const replaceFields = computed(() => {
   return {
@@ -65,11 +89,13 @@ const replaceFields = computed(() => {
     value: 'id'
   }
 })
+
 </script>
 
 <template>
   <i-modal
       v-model:visible="props.visible"
+      :title="props.options?.id ? '编辑' : '添加'"
       :maskClosable="false"
       width="55%"
       :init="onInit"
@@ -101,14 +127,14 @@ const replaceFields = computed(() => {
           <a-radio-button :value="3">页面按钮</a-radio-button>
         </a-radio-group>
       </a-form-item>
-      <a-form-item label="规则标题" name="title">
+      <a-form-item label="规则标题" name="title" v-bind="validateInfos.title">
         <a-input v-model:value="formState.title"/>
       </a-form-item>
-      <a-form-item label="规则名称" name="name">
+      <a-form-item label="规则名称" name="name" v-bind="validateInfos.name">
         <a-input v-model:value="formState.name"/>
       </a-form-item>
       <template v-if="formState.type !== 3">
-        <a-form-item label="路由路径" name="path">
+        <a-form-item label="路由路径" name="path" v-bind="validateInfos.path">
           <a-input v-model:value="formState.path"/>
         </a-form-item>
         <a-form-item label="规则图标" name="icon">
