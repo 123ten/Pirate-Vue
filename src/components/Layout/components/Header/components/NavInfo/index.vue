@@ -1,8 +1,12 @@
 <!-- 个人信息 -->
 <script setup lang="ts">
-import { ref, defineOptions } from "vue";
-import { UserOutlined, PoweroffOutlined } from "@ant-design/icons-vue";
-import { useRouter } from "vue-router";
+import {defineOptions, ref} from "vue";
+import {PoweroffOutlined, UserOutlined} from "@ant-design/icons-vue";
+import {useRouter} from "vue-router";
+import {useUserStore} from '@/store/user'
+
+const {userInfo} = useUserStore()
+
 const router = useRouter();
 const isInfoPopover = ref(false); // 个人资料
 
@@ -23,20 +27,20 @@ defineOptions({
 
 <template>
   <a-popover
-    v-model:visible="isInfoPopover"
-    placement="bottomRight"
-    trigger="click"
+      v-model:visible="isInfoPopover"
+      placement="bottomRight"
+      trigger="click"
   >
     <template #content>
       <div class="admin-info-base">
-        <a-avatar :size="70">
-          <template #icon>
-            <user-outlined style="font-size: 70px" />
+        <a-avatar :size="70" :src="userInfo.avatar">
+          <template #icon v-if="!userInfo.avatar">
+            <user-outlined style="font-size: 70px"/>
           </template>
         </a-avatar>
         <div class="admin-info-other">
-          <div class="admin-info-name">Admin</div>
-          <div class="admin-info-lasttime">2023-04-18 14:16:38</div>
+          <div class="admin-info-name">{{ userInfo.nickname }}</div>
+          <div class="admin-info-lastTime">{{ userInfo.lastLoginTime }}</div>
         </div>
       </div>
       <div class="d-flex-sb">
@@ -45,20 +49,20 @@ defineOptions({
         </a-button>
         <a-button type="primary" danger ghost @click="onLogout">
           <template #icon>
-            <poweroff-outlined />
+            <poweroff-outlined/>
           </template>
           注销
         </a-button>
       </div>
     </template>
-    <div class="admin-info d-flex-center" title="个人信息">
+    <div class="admin-info d-flex-center" :title="userInfo.nickname">
       <!-- 账号信息 -->
-      <a-avatar :size="26">
-        <template #icon>
-          <user-outlined style="font-size: 26px" />
+      <a-avatar :size="26" :src="userInfo.avatar">
+        <template #icon v-if="!userInfo.avatar">
+          <user-outlined style="font-size: 26px"/>
         </template>
       </a-avatar>
-      <div class="admin-name">Admin</div>
+      <div class="admin-name ellipsis">{{ userInfo.nickname }}</div>
     </div>
   </a-popover>
 </template>

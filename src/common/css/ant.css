@@ -200,22 +200,13 @@ input.ant-input,
 .ant-radio-button-wrapper,
 .ant-table .ant-table-tbody > tr > td.ant-table-cell .ant-table-row-expand-icon,
 .ant-pagination li > .ant-pagination-item-link,
-.ant-pagination
-.ant-pagination-options
-.ant-select:not(.ant-select-customize-input)
-.ant-select-selector,
-.ant-pagination
-.ant-pagination-options
-.ant-select-single
-.ant-select-selector
-.ant-select-selection-item,
-.ant-pagination
-.ant-pagination-options
-.ant-select-single
-.ant-select-selector
-.ant-select-selection-placeholder,
+.ant-pagination .ant-pagination-options .ant-select:not(.ant-select-customize-input) .ant-select-selector,
+.ant-pagination .ant-pagination-options .ant-select-single .ant-select-selector .ant-select-selection-item,
+.ant-pagination .ant-pagination-options .ant-select-single .ant-select-selector .ant-select-selection-placeholder,
 .ant-radio-group .ant-radio-button-wrapper,
-.ant-breadcrumb .ant-breadcrumb-link a {
+.ant-breadcrumb .ant-breadcrumb-link a,
+li.ant-menu-inline.ant-menu-root .ant-menu-item,
+li.ant-menu-inline.ant-menu-root .ant-menu-submenu-title {
   transition-duration: var(--transition-duration_dot3);
 }
 
@@ -231,8 +222,7 @@ input.ant-input,
 .ant-pagination li > .ant-pagination-item-link,
 .ant-pagination .ant-pagination-item-active,
 div.ant-select:not(.ant-select-customize-input) .ant-select-selector,
-.ant-radio-group
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled),
+.ant-radio-group .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled),
 input.ant-input,
 textarea.ant-input,
 div.ant-input-number,
@@ -291,19 +281,14 @@ div.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
 .ant-pagination .ant-pagination-total-text,
 .ant-pagination li > .ant-pagination-item-link,
 .ant-pagination .ant-pagination-item-active,
-.ant-pagination
-.ant-pagination-options
-.ant-select:not(.ant-select-customize-input)
-.ant-select-selector,
+.ant-pagination .ant-pagination-options .ant-select:not(.ant-select-customize-input) .ant-select-selector,
 span.ant-select-arrow,
 input.ant-input,
 textarea.ant-input,
 div.ant-input-number,
 .ant-input-number .ant-input-number-handler,
 .ant-input-number .ant-input-number-handler .ant-input-number-handler-up-inner,
-.ant-input-number
-.ant-input-number-handler
-.ant-input-number-handler-down-inner,
+.ant-input-number .ant-input-number-handler .ant-input-number-handler-down-inner,
 div.ant-select,
 div.ant-select-item,
 div.ant-select-dropdown,
@@ -332,6 +317,7 @@ li.ant-dropdown-menu-item-disabled:hover,
 div.ant-empty-normal {
   color: var(--primary-text-color-disabled);
 }
+
 
 /* border */
 /* border-color */

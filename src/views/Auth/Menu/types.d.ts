@@ -27,4 +27,5 @@ export interface IFormState extends DefaultInterface {
   path?: string; // 路由
   frame: number; // 1 选项卡 2 外链 3 iframe
   description?: string; // 描述
+  component: string
 }

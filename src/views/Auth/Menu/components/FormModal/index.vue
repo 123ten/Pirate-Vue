@@ -19,8 +19,10 @@ const rules = reactive<Rules>({
   password: undefined,
 })
 const formState = reactive<IFormState>({
+  parentId: undefined,
   title: '',
   name: '',
+  path: '',
   component: '',
   frame: 1,
   type: 1,
@@ -73,9 +75,9 @@ const handleConfirm = async () => {
   loading.value = true;
   try {
     const {data} = await upsertMenu(formState);
-    message.success(data);
     emits('confirm');
     resetFields()
+    message.success(data);
   } finally {
     loading.value = false;
   }
@@ -97,7 +99,7 @@ const replaceFields = computed(() => {
       v-model:visible="props.visible"
       :title="props.options?.id ? '编辑' : '添加'"
       :maskClosable="false"
-      width="55%"
+      width="600px"
       :init="onInit"
       @cancel="handleCancel"
       @confirm="handleConfirm"
@@ -149,11 +151,9 @@ const replaceFields = computed(() => {
             <a-radio :value="3">iframe</a-radio>
           </a-radio-group>
         </a-form-item>
-        <template>
-          <a-form-item label="组件路径" name="component">
-            <a-input v-model:value="formState.component"/>
-          </a-form-item>
-        </template>
+        <a-form-item label="组件路径" name="component">
+          <a-input v-model:value="formState.component"/>
+        </a-form-item>
       </template>
       <a-form-item label="规则备注" name="description">
         <a-textarea v-model:value="formState.description"/>
