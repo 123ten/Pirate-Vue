@@ -89,7 +89,7 @@ const getList = async () => {
 };
 
 // 添加
-const handleFormModalOpen = (type: number, record: IDataSource) => {
+const handleFormModalOpen = (type: number, record?: IDataSource) => {
   if (record) {
     formOptions.value = record;
   }
