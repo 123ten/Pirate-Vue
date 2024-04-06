@@ -1,3 +1,6 @@
+/**
+ * 管理员列表
+ */
 import {defineStore} from "pinia";
 import {getAdminList} from "@/api/admin";
 import {AdminStoreState} from "@/store/auth/admin/types";

@@ -1,5 +1,5 @@
 import type {IColumns, IDataSource, IPages, IPagination} from "./table";
-import type {IOptions, TypeSearchType} from "./form";
+import type {IOptions, FormSearchType} from "./form";
 import type {TStyle} from "./style";
 import type {TButtonType} from "./button";
 
@@ -8,7 +8,7 @@ export {
   IPages,
   IPagination,
   IDataSource,
-  TypeSearchType,
+  FormSearchType,
   IOptions,
   TStyle,
   TButtonType,
