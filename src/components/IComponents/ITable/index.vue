@@ -15,41 +15,17 @@ import {
   withDefaults,
 } from "vue";
 import Sortable from "sortablejs";
-import {IColumns, IDataSource, IPages, IPagination} from "@/types";
-import {FormInstance, FormProps, TableProps} from "ant-design-vue";
+import {IColumns, IDataSource, IPagination} from "@/types";
+import {FormInstance} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 import ITooltip from "@/components/IComponents/ITooltip/index.vue";
 import {cloneDeep, throttle} from "lodash-es";
+import type {ITableProps} from "@/types/table";
 
 // 国际化
 const {locale, t} = useI18n();
 
 //#region interface
-interface I18nPrefix {
-  table: string;
-  columns: string;
-}
-
-interface IProps {
-  columns: IColumns[]; // 表格列的配置描述
-  dataSource: TableProps['dataSource']; // 数据数组
-  rowSelection?: TableProps['rowSelection']; // 表格行是否可选择
-  pagination?: TableProps['pagination']; // 指定每页可以显示多少条
-  pages?: IPages; // 页码
-  formOptions?: FormProps;
-  tableOptions?: TableProps;
-  size?: TableProps['size']; // 表格大小
-  rowKey?: TableProps['rowKey']; // 表格行 key 的取值
-  scroll?: TableProps['scroll']; // 设置横向或纵向滚动，也可用于指定滚动区域的宽和高
-  i18nPrefix?: I18nPrefix; // 国际化前缀
-  childrenColumnName?: TableProps['childrenColumnName']; // 指定树形结构的列名 默认 children
-  keywordPlaceholder?: string; // 关键字搜索框 占位内容
-  keywordVisible?: boolean; // 是否显示关键字搜索框
-  loading?: boolean; // 表格加载状态
-  defaultExpandAllRows?: boolean; // 控制展开所有行
-  draggable?: boolean; // 是否允许拖拽行 搭配 class drop-row-btn
-}
-
 interface ISortTableEnd {
   newIndex: number;
   oldIndex: number;
@@ -58,7 +34,7 @@ interface ISortTableEnd {
 //#endregion
 
 // #region props/emits
-const props = withDefaults(defineProps<IProps>(), {
+const props = withDefaults(defineProps<ITableProps>(), {
   columns: () => [],
   dataSource: () => [],
   pagination: () => ({
@@ -97,7 +73,7 @@ const columnsCache: IColumns[] = cloneDeep(props.columns); // 缓存 columns
 const formRef = ref<FormInstance>();
 const formSearch = reactive<any>({});
 
-const menuChecked = ref<string[]>([]); // 选中显示隐藏表头
+const menuChecked = ref<IColumns['dataIndex'][]>([]); // 选中显示隐藏表头
 const menuCheckList = ref<IColumns[]>([]); // 表头的数据列
 const pages = toRef(props, "pages"); // 分页
 const columns = toRef(props, "columns"); // 表格列配置项
@@ -194,7 +170,7 @@ const rowDrop = (out?: number[]) => {
  * @param {IPagination} pagination 当前分页的所有配置参数
  */
 const handlePageSizeChange = (
-    pagination: TableProps['pagination'],
+    pagination: IPagination,
 ) => {
   if (!pagination) throw new Error("pagination is undefined");
   const {current = 1, pageSize = 10, total = 0} = pagination;
@@ -355,39 +331,39 @@ defineExpose({
                   v-bind="props.formOptions"
               >
                 <a-row
-                    v-for="(arr, index) in formColumns"
+                    v-for="(columns, index) in formColumns"
                     :key="index"
-                    style="width: 100%"
+                    class="w-[100%]"
                 >
                   <a-col
-                      v-for="item in arr"
-                      :key="item.dataIndex"
-                      :span="item.span || 6"
+                      v-for="column in columns"
+                      :key="column.dataIndex"
+                      :span="column.span || 6"
                   >
                     <a-form-item
-                        :label="item.title"
-                        :name="item.dataIndex"
+                        :label="column.title"
+                        :name="column.dataIndex"
                         class="i-form-item"
                     >
-                      <slot :name="`${item.dataIndex}Search`">
+                      <slot :name="`${column.dataIndex}Search`">
                         <!-- input 输入框 -->
                         <a-input
-                            v-if="!item.type || item.type === 'input'"
-                            v-model:value="formSearch[item.dataIndex]"
+                            v-if="!column.type || column.type === 'input'"
+                            v-model:value="formSearch[column.dataIndex]"
                             allow-clear
-                            :placeholder="item.title || item.placeholder"
-                            v-bind="item.propOptions"
+                            :placeholder="column.title || column.placeholder"
+                            v-bind="column.propOptions"
                         />
                         <!-- select 下拉框 -->
                         <a-select
-                            v-else-if="item.type === 'select'"
-                            v-model:value="formSearch[item.dataIndex]"
+                            v-else-if="column.type === 'select'"
+                            v-model:value="formSearch[column.dataIndex]"
                             allow-clear
-                            :placeholder="item.title || item.placeholder"
-                            v-bind="item.propOptions"
+                            :placeholder="column.title || column.placeholder"
+                            v-bind="column.propOptions"
                         >
                           <a-select-option
-                              v-for="option in item.options"
+                              v-for="option in column.options"
                               :key="option.value"
                               :value="option.value"
                           >
@@ -396,12 +372,12 @@ defineExpose({
                         </a-select>
                         <!-- radio 单选框 -->
                         <a-radio-group
-                            v-else-if="item.type === 'radio'"
-                            v-model:value="formSearch[item.dataIndex]"
-                            v-bind="item.propOptions"
+                            v-else-if="column.type === 'radio'"
+                            v-model:value="formSearch[column.dataIndex]"
+                            v-bind="column.propOptions"
                         >
                           <a-radio
-                              v-for="option in item.options"
+                              v-for="option in column.options"
                               :key="option.value"
                               :value="option.value"
                           >
@@ -410,10 +386,10 @@ defineExpose({
                         </a-radio-group>
                         <!-- date-picker 日期选择框 -->
                         <a-date-picker
-                            v-else-if="item.type === 'date'"
-                            v-model:value="formSearch[item.dataIndex]"
-                            :picker="item.dateType"
-                            v-bind="item.propOptions"
+                            v-else-if="column.type === 'date'"
+                            v-model:value="formSearch[column.dataIndex]"
+                            :picker="column.dateType"
+                            v-bind="column.propOptions"
                         />
                       </slot>
                     </a-form-item>
@@ -438,7 +414,7 @@ defineExpose({
             <template #icon>
               <reload-outlined
                   :spin="props.loading"
-                  style="color: #fff; font-size: 14px"
+                  class="text-white size-sm"
               />
             </template>
           </i-tooltip>
@@ -464,7 +440,7 @@ defineExpose({
               <template #content>
                 <a-checkbox-group
                     v-model:value="menuChecked"
-                    style="width: 100%"
+                    class="w-[100%]"
                     @change="handleCheckboxChange"
                 >
                   <label
@@ -475,7 +451,7 @@ defineExpose({
                   >
                     <a-checkbox
                         :value="item.key || item.dataIndex"
-                        style="white-space: nowrap"
+                        class="whitespace-nowrap"
                     >
                       {{ item.title }}
                     </a-checkbox>

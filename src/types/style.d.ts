@@ -1,12 +1,11 @@
-type TDisplay = "flex" | "block" | "inline-block" | "inline" | "grid";
+type DisplayType = "flex" | "block" | "inline-block" | "inline" | "grid";
 
-type TStyle = StyleSheetList & {
-  // [property: string]: string;
+export type CSSPropertiesType = {
+  [property: string]: string;
   minWidth?: string;
   whiteSpace?: string;
   overflow?: string;
-  display?: TDisplay;
+  display?: DisplayType;
   textOverflow?: string;
 };
 
-export {TStyle};
