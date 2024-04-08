@@ -1,5 +1,6 @@
 // 获取时间状态
 import {IPages} from "@/types";
+import {TagProps} from "ant-design-vue";
 
 export const getTimeState = () => {
   // 获取当前时间
@@ -178,4 +179,22 @@ export function formatFileSize(size?: number, fixed = 2) {
   } else {
     return (size / Math.pow(1024, 4)).toFixed(fixed) + ' TB';
   }
+}
+
+/**
+ * @description 根据请求方法展示对应颜色
+ * @param value
+ */
+export function methodTagColor(value: string) {
+  if (!value) return
+  value = value.toLocaleUpperCase()
+  const color: Record<string, TagProps['color']> = {
+    'GET': 'success',
+    'POST': 'warning',
+    'DELETE': 'danger',
+    'OPTIONS': 'success',
+    'PATCH': 'warning',
+    'PUT': 'warning'
+  }
+  return color[value]
 }

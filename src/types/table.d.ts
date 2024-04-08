@@ -112,9 +112,13 @@ export interface IPages {
  */
 export type IPagination = PaginationProps
 
-export interface IDataSource {
-  key: string;
-  children?: IDataSource[];
+/**
+ * 默认表格字段
+ */
+export interface RecordType {
+  id?: number;
+  key?: string;
+  createTime?: string;
 }
 
 interface I18nPrefix {
@@ -123,21 +127,76 @@ interface I18nPrefix {
 }
 
 export interface ITableProps {
-  columns: IColumns[]; // 表格列的配置描述
-  dataSource: TableProps['dataSource']; // 数据数组
-  rowSelection?: TableProps['rowSelection']; // 表格行是否可选择
-  pagination?: TableProps['pagination']; // 指定每页可以显示多少条
+  /**
+   * 表格列的配置描述
+   */
+  columns: IColumns[];
+  /**
+   * 数据数组
+   */
+  dataSource: TableProps['dataSource'];
+  /**
+   * 表格行是否可选择
+   */
+  rowSelection?: TableProps['rowSelection'];
+  /**
+   * 指定每页可以显示多少条
+   */
+  pagination?: TableProps['pagination'];
+  /**
+   * 页码
+   */
   pages?: IPages; // 页码
   formOptions?: FormProps;
   tableOptions?: TableProps;
-  size?: TableProps['size']; // 表格大小
-  rowKey?: TableProps['rowKey']; // 表格行 key 的取值
-  scroll?: TableProps['scroll']; // 设置横向或纵向滚动，也可用于指定滚动区域的宽和高
-  i18nPrefix?: I18nPrefix; // 国际化前缀
-  childrenColumnName?: TableProps['childrenColumnName']; // 指定树形结构的列名 默认 children
-  keywordPlaceholder?: string; // 关键字搜索框 占位内容
-  keywordVisible?: boolean; // 是否显示关键字搜索框
-  loading?: boolean; // 表格加载状态
-  defaultExpandAllRows?: boolean; // 控制展开所有行
-  draggable?: boolean; // 是否允许拖拽行 搭配 class drop-row-btn
+  /**
+   * 表格大小
+   */
+  size?: TableProps['size'];
+  /**
+   * 表格行 key 的取值
+   */
+  rowKey?: TableProps['rowKey'];
+  /**
+   * 设置横向或纵向滚动，也可用于指定滚动区域的宽和高
+   */
+  scroll?: TableProps['scroll'];
+  /**
+   * 国际化前缀
+   */
+  i18nPrefix?: I18nPrefix;
+  /**
+   * 指定树形结构的列名 默认 children
+   */
+  childrenColumnName?: TableProps['childrenColumnName'];
+  /**
+   * 关键字搜索框 占位内容
+   */
+  keywordPlaceholder?: string;
+  /**
+   * 是否显示关键字搜索框
+   */
+  keywordVisible?: boolean;
+  /**
+   * 表格加载状态
+   */
+  loading?: boolean;
+  /**
+   * 控制展开所有行
+   */
+  defaultExpandAllRows?: boolean;
+  /**
+   * 是否允许拖拽行 搭配 class drop-row-btn
+   */
+  draggable?: boolean;
+}
+
+/**
+ * @description: 默认列表状态值
+ */
+export interface DefaultTableState<RecordType = DefaultRecordType, FormSearchType = any> {
+  isTableLoading: boolean;
+  pages: IPages
+  formSearch: FormSearchType
+  dataSource: RecordType
 }

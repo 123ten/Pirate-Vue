@@ -2,107 +2,122 @@
 <script setup lang="ts">
 import {SendOutlined, ZoomInOutlined,} from "@ant-design/icons-vue";
 import {onMounted, reactive, ref} from "vue";
-import data from "./data.json";
-import {IColumns, IPages} from "@/types";
+import {useAdminLogStore} from "@/store/auth/adminLog";
+import {storeToRefs} from "pinia";
+import {sortNumber} from "@/utils/common";
+import DetailModal from './components/DetailModal/index.vue'
+import type {IColumns, IPages} from "@/types";
+import {AdminLogDataSource} from "@/store/auth/adminLog/types";
 
-interface IDataSource {
-  key?: string | number;
-  isDelVisible?: boolean;
-  username?: string;
-  nickname?: string;
-  groups?: string;
-  avatar?: string;
-  email?: string;
-  phone?: string;
-  lastlogintime?: string;
-  createTime?: string;
-  status?: boolean;
-}
+const store = useAdminLogStore()
+const {dataSource, formSearch, pages, isTableLoading} = storeToRefs(store);
 
-const columns = ref<IColumns[]>([
+
+const columns = reactive<IColumns[]>([
   {
-    title: "ID",
-    dataIndex: "id",
+    title: "序号",
+    dataIndex: "number",
     align: "center",
+    width: 80,
+    customRender: ({index}) => sortNumber(index, pages.value),
   },
   {
     title: "管理员ID",
-    dataIndex: "adminId",
+    dataIndex: "userId",
     align: "center",
     search: true,
+    width: 100
   },
   {
     title: "管理员用户名",
-    dataIndex: "adminname",
+    dataIndex: "username",
     align: "center",
+    width: 120
   },
   {
     title: "标题",
     dataIndex: "title",
     align: "center",
+    width: 120
   },
   {
     title: "URL",
     dataIndex: "url",
     align: "center",
-    width: 280,
+    width: 200,
   },
   {
     title: "IP",
     dataIndex: "ip",
     align: "center",
+    width: 120,
+  },
+  {
+    title: "请求方式",
+    dataIndex: "method",
+    align: "center",
+    width: 100,
+  },
+  {
+    title: "UserAgent",
+    dataIndex: "userAgent",
+    align: "center",
+    width: 200,
   },
   {
     title: "创建时间",
     dataIndex: "createTime",
     align: "center",
-    width: 180,
-    minWidth: 180,
+    width: 150,
   },
   {
     title: "操作",
     dataIndex: "operate",
     align: "center",
     fixed: "right",
-    width: 100,
+    width: 150,
   },
 ]);
-const dataSource = ref<IDataSource[]>(data);
-const selectedRowKeys = ref<IDataSource["key"][]>([]);
-const pages = ref<IPages>({
-  size: 10,
-  page: 1,
-  total: 0,
-});
-const formSearch = reactive<any>({});
 
+const selectedRowKeys = ref<AdminLogDataSource["key"][]>([]);
 const avatarPreviewSrc = ref("");
-const isEdit = ref<boolean>(false); // 是否编辑
-const isDeleteAllVisible = ref<boolean>(false);
-const isTableLoading = ref<boolean>(false); // 表格加载状态
-const isAvatarPreviewSrc = ref<boolean>(false);
+const detailModalOptions = ref<AdminLogDataSource | null>()
 
-onMounted(() => {
-  dataSource.value = dataSource.value.map((item) => {
-    item.isDelVisible = false;
-    return item;
-  });
+const isAvatarPreviewSrc = ref<boolean>(false);
+const isDetailModalVisible = ref<boolean>(false);
+
+onMounted(async () => {
+  await getList()
 });
+
+const getList = async () => {
+  await store.getAdminLogListRequest()
+}
 
 // 分页
-const onPagesChange = (records: IPages) => {
-  // console.log(records, "records");
+const handlePagesChange = async (records: IPages) => {
   pages.value = records;
+  await getList();
 };
 
 // 多选
-const onSelectChange = (rowKeys: string[]) => {
+const handleSelectChange = (rowKeys: string[]) => {
   selectedRowKeys.value = rowKeys;
   console.log(rowKeys, "rowKeys");
 };
 
+// 详情 - 打开弹窗
+const handleDetailModalOpen = async (record: AdminLogDataSource) => {
+  isDetailModalVisible.value = true
+  await store.getAdminLogByIdRequest(record.id)
+}
+// 详情 - 取消
+const handleDetailModalCancel = () => {
+  isDetailModalVisible.value = false
+}
+
 const toUrl = (url: string) => {
-  window.open("#" + url);
+  window.open(url);
 };
 </script>
 
@@ -112,18 +127,18 @@ const toUrl = (url: string) => {
         :columns="columns"
         :data-source="dataSource"
         :pages="pages"
-        is-selected-row-keys
         :loading="isTableLoading"
         :scroll="{ x: true }"
-        @pages-change="onPagesChange"
-        @select-change="onSelectChange"
+        @reload="getList"
+        @pages-change="handlePagesChange"
+        @select-change="handleSelectChange"
     >
       <template #url="{ record }">
-        <a-input-group compact>
+        <a-input-group compact style="display: flex;">
           <a-input
               v-model:value="record.url"
               readonly
-              style="width: 200px; text-align: left"
+              style="text-align: left"
           >
           </a-input>
           <a-button @click="toUrl(record.url)">
@@ -133,14 +148,17 @@ const toUrl = (url: string) => {
           </a-button>
         </a-input-group>
       </template>
-      <template #ip="{ record }">
+      <template #ip="{ value }">
         <a-tag color="processing">
-          {{ record.ip }}
+          {{ value }}
         </a-tag>
+      </template>
+      <template #method="{ value }">
+        <method-tag :method="value"/>
       </template>
       <template #operate="{ record }">
         <a-space>
-          <i-tooltip title="查看详情" size="small">
+          <i-tooltip title="查看详情" size="small" @click="handleDetailModalOpen(record)">
             <template #icon>
               <zoom-in-outlined/>
             </template>
@@ -148,6 +166,12 @@ const toUrl = (url: string) => {
         </a-space>
       </template>
     </i-table>
+
+    <detail-modal
+        :visible="isDetailModalVisible"
+        @cancel="handleDetailModalCancel"
+    />
+
     <i-preview-image
         :src="avatarPreviewSrc"
         v-model:visible="isAvatarPreviewSrc"

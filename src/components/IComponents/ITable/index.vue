@@ -15,12 +15,12 @@ import {
   withDefaults,
 } from "vue";
 import Sortable from "sortablejs";
-import {IColumns, IDataSource, IPagination} from "@/types";
+import {IColumns, IPagination, RecordType} from "@/types";
 import {FormInstance} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 import ITooltip from "@/components/IComponents/ITooltip/index.vue";
 import {cloneDeep, throttle} from "lodash-es";
-import type {ITableProps} from "@/types/table";
+import {ITableProps} from "@/types/table";
 
 // 国际化
 const {locale, t} = useI18n();
@@ -126,7 +126,7 @@ const expandAllRows = () => {
   let keys: string[] = [];
   if (props.defaultExpandAllRows) {
     // 递归 children key值
-    void (function childrenFn(list: IDataSource[]) {
+    void (function childrenFn(list: RecordType[]) {
       list.forEach((item) => {
         const rowKey = getRowKey(item)
         // 是否存在 key
@@ -174,12 +174,12 @@ const handlePageSizeChange = (
 ) => {
   if (!pagination) throw new Error("pagination is undefined");
   const {current = 1, pageSize = 10, total = 0} = pagination;
-  pages.value = {
+  const pages = {
     size: pageSize,
     page: current,
     total: total
   }
-  emits("pagesChange", pages.value);
+  emits("pagesChange", pages);
 };
 
 // 选中显示表格列
@@ -249,29 +249,7 @@ const formColumns = computed(() => {
  * @description 表格列配置项
  */
 const columnsComputed = computed(() => {
-  return columns.value.map((column: IColumns) => {
-    column.customHeaderCell = (column) => {
-      if (column.minWidth) {
-        return {
-          style: {
-            ...column.style,
-            minWidth: (column.minWidth) + 'px',
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          },
-        };
-      } else {
-        return {
-          style: {
-            ...column.style,
-            width: (column.width) + 'px',
-          },
-        };
-      }
-    };
-    return column;
-  });
+  return columns.value;
 });
 
 /**

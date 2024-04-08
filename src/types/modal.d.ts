@@ -1,4 +1,4 @@
-export interface ModalProps<O> {
+export interface DefaultModalProps<Options = any> {
   /**
    * 显示与隐藏
    */
@@ -6,5 +6,5 @@ export interface ModalProps<O> {
   /**
    * 父级传入数据
    */
-  options?: O;
+  options?: Options;
 }

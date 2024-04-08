@@ -1,15 +1,4 @@
-import type {IColumns, IDataSource, IPages, IPagination} from "./table";
-import type {IOptions, FormSearchType} from "./form";
-import type {TStyle} from "./style";
-import type {TButtonType} from "./button";
-
-export {
-  IColumns,
-  IPages,
-  IPagination,
-  IDataSource,
-  FormSearchType,
-  IOptions,
-  TStyle,
-  TButtonType,
-};
+export type {IColumns, IPages, IPagination, RecordType} from "./table";
+export type {FormSearchType, IOptions} from "./form";
+export type {CSSPropertiesType} from "./style";
+export type {TButtonType} from "./button";

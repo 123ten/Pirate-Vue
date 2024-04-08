@@ -1,4 +1,4 @@
-import {ModalProps} from "@/types/modal";
+import {DefaultModalProps} from "@/types/modal";
 
 interface DefaultInterface {
   id?: number; // ID
@@ -18,7 +18,7 @@ export interface IDataSource extends DefaultInterface {
   children?: IDataSource[]; // 设置 children 务必设置 width 否则可能出现宽度浮动
 }
 
-export interface IFormModalProps<T> extends ModalProps<T> {
+export interface IFormModalProps<Options> extends DefaultModalProps<Options> {
 
 }
 
