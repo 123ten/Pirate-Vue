@@ -20,6 +20,6 @@ export interface AdminLogDetailInfo extends AdminLogDataSource {
 export interface AdminLogStoreState extends DefaultTableState<AdminLogStoreDataSource> {
   /** 详情数据 */
   detailInfo: AdminLogDetailInfo;
-  /** 详情加载 */
-  isDetailModalLoading: boolean;
+  /** modal加载 */
+  isModalLoading: boolean;
 }

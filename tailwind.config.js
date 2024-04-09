@@ -1,11 +1,17 @@
 /** @type {import('tailwindcss').Config} */
+import plugin from "tailwindcss/plugin";
+
 export default {
   content: [
     "./index.html",
     './src/**/*.{vue,js,ts,jsx,tsx}'
   ],
   theme: {
-    extend: {},
+    extend: {
+      zIndex: {
+        1: '1'
+      }
+    },
     screens: {
       xs: '480px',
       sm: '576px',
@@ -18,6 +24,17 @@ export default {
   corePlugins: {
     preflight: false, // 删除默认样式
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({addUtilities}) {
+      addUtilities({
+        '.rotate-x-20': {
+          transform: 'rotateX(20deg)',
+        },
+        '.rotate-x-180': {
+          transform: 'rotateX(180deg)',
+        },
+      })
+    })
+  ],
 }
 

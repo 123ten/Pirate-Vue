@@ -26,16 +26,16 @@ export const getTimeState = () => {
 // 定义一个节流函数
 export function throttled(fn: Function, delay: number) {
   let timer: any = null;
-  let starttime = Date.now();
+  let startTime = Date.now();
   return function () {
     let curTime = Date.now(); // 当前时间
-    let remaining = delay - (curTime - starttime); // 从上一次到现在，还剩下多少多余时间
+    let remaining = delay - (curTime - startTime); // 从上一次到现在，还剩下多少多余时间
     let context = this;
     let args = arguments;
     clearTimeout(timer);
     if (remaining <= 0) {
       fn.apply(context, args);
-      starttime = Date.now();
+      startTime = Date.now();
     } else {
       timer = setTimeout(fn, remaining);
     }
@@ -197,4 +197,41 @@ export function methodTagColor(value: string) {
     'PUT': 'warning'
   }
   return color[value]
+}
+
+/**
+ * @description: 状态码及其描述
+ * @param value {string}
+ */
+export function statusCode(value?: number | string) {
+  if (!value) return
+  const code: Record<string, string> = {
+    200: '200 Ok',
+    201: '201 Created',
+    301: '301 Moved Permanently',
+    302: '302 Found',
+    400: '400 Bad Request',
+    401: '401 Unauthorized',
+    403: '403 Forbidden',
+    404: '404 Not Found',
+    500: '500 Internal Server Error',
+    502: '502 Bad Gateway',
+    504: '504 Gateway Timeout'
+  }
+  return code[value] || value;
+}
+
+/**
+ * @description: 时间转换函数
+ * @param time
+ */
+export function formatTime(time?: number): string {
+  if (!time) return "";
+  if (time < 1000) {
+    return Math.floor(time) + " ms";
+  } else if (time < 60000) {
+    return (time / 1000).toFixed(2) + " s";
+  } else {
+    return (time / 60000).toFixed(2) + " min";
+  }
 }

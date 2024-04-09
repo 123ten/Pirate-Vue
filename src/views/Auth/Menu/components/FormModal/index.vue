@@ -1,11 +1,16 @@
 <!-- 菜单权限 - 添加编辑 -->
 <script setup lang="ts">
-import {computed, reactive, ref,} from "vue";
-import type {IDataSource, IFormModalProps, IFormState} from "../../types";
-import {getMenuList, menuDetail, upsertMenu} from "@/api/admin";
+import {computed, reactive,} from "vue";
+import type {IFormModalProps} from "../../types";
+import {adminMenuUpsert} from "@/api/admin";
 import {Form, message} from "ant-design-vue";
 import {Rules} from "@/types/form";
 import {useI18n} from "vue-i18n";
+import {useAdminMenuStore} from "@/store/auth/menu";
+import {storeToRefs} from "pinia";
+
+const store = useAdminMenuStore()
+const {dataSource, formState, isModalLoading} = storeToRefs(store);
 
 const {t} = useI18n();
 const props = defineProps<IFormModalProps<any>>();
@@ -18,52 +23,21 @@ const rules = reactive<Rules>({
   roleIds: [{required: true, message: t('user.error.roles')}],
   password: undefined,
 })
-const formState = reactive<IFormState>({
-  parentId: undefined,
-  title: '',
-  name: '',
-  path: '',
-  component: '',
-  frame: 1,
-  type: 1,
-  status: 1,
-  sort: 0,
-  cache: 0,
-});
 
-const menuOptions = ref<IDataSource[]>([]);
-const loading = ref<boolean>(false);
+// const formState = reactive<IFormState>({
+//   parentId: undefined,
+//   title: '',
+//   name: '',
+//   path: '',
+//   component: '',
+//   frame: 1,
+//   type: 1,
+//   status: 1,
+//   sort: 0,
+//   cache: 0,
+// });
 
 const {resetFields, validate, validateInfos} = Form.useForm(formState, rules);
-
-const onInit = async () => {
-  console.log('onInit', props.options);
-  loading.value = true;
-  try {
-    if (props.options) {
-      await getDetail()
-    }
-    await getMenuOptions()
-  } finally {
-    loading.value = false;
-  }
-};
-
-/**
- * 获取菜单列表
- */
-const getMenuOptions = async () => {
-  const {data} = await getMenuList({});
-  menuOptions.value = data.records;
-};
-
-const getDetail = async () => {
-  const {data} = await menuDetail(props.options.id)
-  if (data.parentId === 0) {
-    data.parentId = undefined
-  }
-  Object.assign(formState, data)
-}
 
 const handleCancel = () => {
   emits('cancel')
@@ -71,16 +45,11 @@ const handleCancel = () => {
 };
 
 const handleConfirm = async () => {
-  console.log('handleConfirm', formState);
-  loading.value = true;
-  try {
-    const {data} = await upsertMenu(formState);
-    emits('confirm');
-    resetFields()
-    message.success(data);
-  } finally {
-    loading.value = false;
-  }
+  await validate()
+  const {data} = await store.adminMenuUpsertRequest();
+  emits('confirm');
+  resetFields()
+  message.success(data);
 };
 
 
@@ -98,9 +67,9 @@ const replaceFields = computed(() => {
   <i-modal
       v-model:visible="props.visible"
       :title="props.options?.id ? '编辑' : '添加'"
+      :loading="isModalLoading"
       :maskClosable="false"
       width="600px"
-      :init="onInit"
       @cancel="handleCancel"
       @confirm="handleConfirm"
   >
@@ -114,11 +83,11 @@ const replaceFields = computed(() => {
       <a-form-item label="上级菜单" name="parentId">
         <a-tree-select
             v-model:value="formState.parentId"
-            placeholder="please select your zone"
+            placeholder="请选择上级菜单"
             show-search
             allow-clear
             tree-node-filter-prop="title"
-            :tree-data="menuOptions"
+            :tree-data="dataSource"
             :replace-fields="replaceFields"
         />
       </a-form-item>

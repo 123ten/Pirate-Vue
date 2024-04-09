@@ -1,86 +1,71 @@
 .default-main {
   .container-table {
-    // overflow: hidden;
 
-    .table-form,
+    .i-table-form,
     .table-header,
     .ant-table-wrapper {
+      @apply box-border p-4;
       background-color: var(--primary-color);
     }
 
-    .table-header {
-      margin-bottom: 16px;
-      position: relative;
-      z-index: 1;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-sizing: border-box;
-      overflow-x: auto;
-
-      :deep(.anticon-spin) {
-        width: 1em;
-        height: 1em;
-      }
-
-      .table-header_search {
-        background-color: var(--primary-color);
-      }
-    }
-
     .i-table-form {
-      box-sizing: border-box;
-      // padding: 16px;
-      margin-bottom: 16px;
-      transform-style: preserve-3d;
-      transform-origin: bottom;
-      position: relative;
-      z-index: 0; // 层级低于 table-header
-      overflow: hidden;
+      transform-style: preserve-3d; // 3d 旋转
+      // z-0 层级低于 table-header
+      @apply pb-0 origin-bottom relative z-0 overflow-hidden;
 
       .i-table-form-default {
-        display: flex;
-        justify-content: space-between;
-        padding: 12px;
-        // border: 1px solid #d9d9d9;
-        border: 1px solid #f0f0f0;
+        @apply flex justify-between p-3 border border-solid border-[#f0f0f0];
 
         .i-table-form-search {
-          flex: 1;
+          @apply flex-1;
         }
 
         .i-form-item {
-          margin-bottom: 16px;
+          @apply mb-4;
         }
 
         .i-form-operation {
-          margin-left: 16px;
-          align-self: flex-end;
+          @apply ml-4 self-end;
         }
       }
+    }
+
+    .table-header {
+      @apply relative z-1 flex justify-between items-center overflow-auto;
+
+      //:deep(.anticon-spin) {
+      // @apply w-4 h-4;
+      //}
+
+      .table-header_search {
+        //background-color: var(--primary-color);
+      }
+    }
+
+    .ant-table-wrapper {
+      @apply pt-0;
     }
   }
 }
 
 .zoom-in-enter-active,
 .zoom-in-leave-active {
-  transition: all 0.3s ease;
+  @apply transition-all duration-300 ease-in-out;
 }
 
 .zoom-in-enter-from,
 .zoom-in-leave-to {
-  opacity: 0;
-  transform: rotateX(180deg);
+  @apply opacity-0 rotate-x-180;
 }
 
 @media screen and (max-width: 678px) {
   .table-header_search {
-    display: none;
+    @apply hidden;
   }
 }
 
 @media screen and (max-width: 1200px) {
   :deep(.ant-table-wrapper .ant-table-content) {
-    overflow-x: auto;
+    @apply overflow-auto;
   }
 }

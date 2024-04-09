@@ -69,6 +69,7 @@ declare module '@vue/runtime-core' {
     AUpload: typeof import('ant-design-vue/es')['Upload']
     AvatarUpload: typeof import('./src/components/IComponents/IOther/AvatarUpload/index.vue')['default']
     DeletePopconfirm: typeof import('./src/components/IComponents/IOther/DeletePopconfirm/index.vue')['default']
+    Ellipsis: typeof import('./src/components/IComponents/IOther/Ellipsis/index.vue')['default']
     ExpandAllRowsTooltip: typeof import('./src/components/IComponents/IOther/ExpandAllRowsTooltip/index.vue')['default']
     Header: typeof import('./src/components/Layout/components/Header/index.vue')['default']
     IButton: typeof import('./src/components/IComponents/IButton/index.vue')['default']

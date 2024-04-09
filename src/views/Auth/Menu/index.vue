@@ -4,9 +4,13 @@ import antIcons, {DragOutlined, EditOutlined, PlusOutlined,} from "@ant-design/i
 import {computed, onMounted, ref, unref} from "vue";
 import FormModal from "./components/FormModal/index.vue";
 import DeletePopconfirm from "@/components/IComponents/IOther/DeletePopconfirm/index.vue";
-import {getMenuList} from "@/api/admin";
-import type {IColumns, IPages} from "@/types";
+import type {IColumns} from "@/types";
 import type {IDataSource} from "./types";
+import {storeToRefs} from "pinia";
+import {useAdminMenuStore} from "@/store/auth/menu";
+
+const store = useAdminMenuStore()
+const {dataSource, isTableLoading} = storeToRefs(store);
 
 //#region 变量
 const columns = ref<IColumns[]>([
@@ -59,46 +63,30 @@ const columns = ref<IColumns[]>([
     minWidth: 100,
   },
 ]);
-const dataSource = ref<IDataSource[]>([]);
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 
-const pages = ref<IPages>({
-  size: 10,
-  page: 1,
-  total: 0,
-});
-const formOptions = ref<IDataSource | null>()
 const defaultExpandAllRows = ref<boolean>(false);
-const isTableLoading = ref<boolean>(false); // 表格加载状态
 const isFormModalVisible = ref<boolean>(false);
 //#endregion
 
 onMounted(async () => {
-  await getList();
+  await getList()
 });
 
 const getList = async () => {
-  const params = {}
-  isTableLoading.value = true;
-  try {
-    const {data} = await getMenuList(params);
-    dataSource.value = data.records;
-  } finally {
-    isTableLoading.value = false;
-  }
-};
+  await store.getAdminMenuListRequest()
+}
 
 // 添加
-const handleFormModalOpen = (type: number, record?: IDataSource) => {
-  if (record) {
-    formOptions.value = record;
-  }
+const handleFormModalOpen = async (type: number, record?: IDataSource) => {
   isFormModalVisible.value = true;
+  if (record) {
+    await store.getAdminMenuByIdRequest(record.id)
+  }
 };
 // 添加/编辑 - cancel
 const handleFormModalCancel = () => {
   isFormModalVisible.value = false;
-  formOptions.value = null;
 };
 // 添加/编辑 - confirm
 const handleFormModalConfirm = async () => {
@@ -107,7 +95,6 @@ const handleFormModalConfirm = async () => {
 };
 
 // 删除-确定
-
 const handleDeletePopconfirmConfirm = (keys?: IDataSource['id'][]) => {
   console.log("handleDeletePopconfirmConfirm", keys);
 };
@@ -155,7 +142,6 @@ const rowSelection = computed(() => ({
         row-key="id"
         :columns="columns"
         :dataSource="dataSource"
-        :pages="pages"
         :default-expand-all-rows="defaultExpandAllRows"
         :loading="isTableLoading"
         :pagination="false"
@@ -236,7 +222,6 @@ const rowSelection = computed(() => ({
 
     <form-modal
         v-model:visible="isFormModalVisible"
-        :options="formOptions"
         @cancel="handleFormModalCancel"
         @confirm="handleFormModalConfirm"
     />

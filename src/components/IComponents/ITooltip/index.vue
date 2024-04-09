@@ -5,8 +5,8 @@ import {ButtonProps, TooltipProps} from "ant-design-vue";
 import {storeToRefs} from "pinia";
 import {useMenuStore} from "@/store";
 import {TButtonType} from "@/types";
-import {TStyle} from "@/types/style";
 import IButton from "@/components/IComponents/IButton/index.vue";
+import type {CSSPropertiesType} from "@/types/style";
 
 const store = useMenuStore();
 const {terminalType} = storeToRefs(store);
@@ -18,7 +18,7 @@ interface ITooltipProps extends TooltipProps {
   type?: TButtonType; // tooltip 默认按钮 按钮主题色
   size?: ButtonProps['size']; // size 默认按钮大小
   customButtonClass?: ""; // 按钮类名
-  customButtonStyle?: TStyle | string; // 按钮样式
+  customButtonStyle?: CSSPropertiesType | string; // 按钮样式
 }
 
 const props = withDefaults(defineProps<ITooltipProps>(), {

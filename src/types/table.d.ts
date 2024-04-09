@@ -150,6 +150,10 @@ export interface ITableProps {
   formOptions?: FormProps;
   tableOptions?: TableProps;
   /**
+   * 表格操作列默认字段
+   */
+  operationKey?: string;
+  /**
    * 表格大小
    */
   size?: TableProps['size'];

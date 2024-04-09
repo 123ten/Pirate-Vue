@@ -18,7 +18,7 @@ export const useAdminLogStore = defineStore("adminLogStore", {
       dataSource: [],
       detailInfo: {},
       isTableLoading: false,
-      isDetailModalLoading: false,
+      isModalLoading: false,
     };
   },
   getters: {},
@@ -51,12 +51,13 @@ export const useAdminLogStore = defineStore("adminLogStore", {
      * 获取管理员日志详情
      */
     async getAdminLogByIdRequest(id?: number) {
-      this.isDetailModalLoading = true;
+      this.isModalLoading = true;
       try {
         const {data} = await getAdminLogById(id);
+        data.params = data.params && JSON.parse(data.params);
         this.detailInfo = data
       } finally {
-        this.isDetailModalLoading = false;
+        this.isModalLoading = false;
       }
     }
   },

@@ -9,18 +9,29 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
     "skipLibCheck": true,
     "noEmit": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     },
-    "types": [  "vite/client" ],
-    "noImplicitAny": false, // 允许隐式的any
-    "strictNullChecks": true, // 严格的null与undefined检查
-    "noFallthroughCasesInSwitch": true, // 防止在switch代码块里的两个case之间忘记添加break语句。
-    "noImplicitThis": false // 允许this有隐式的any类型
+    "types": [
+      "vite/client"
+    ],
+    "noImplicitAny": false,
+    // 允许隐式的any
+    "strictNullChecks": true,
+    // 严格的null与undefined检查
+    "noFallthroughCasesInSwitch": true,
+    // 防止在switch代码块里的两个case之间忘记添加break语句。
+    "noImplicitThis": false
+    // 允许this有隐式的any类型
   },
   // 读取所有可识别的src目录下的文件
   "include": [
@@ -31,5 +42,9 @@
     "src/**/*.vue",
     "types/env.d.ts"
   ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }

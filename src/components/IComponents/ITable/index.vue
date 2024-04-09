@@ -10,7 +10,6 @@ import {
   reactive,
   ref,
   toRef,
-  unref,
   watch,
   withDefaults,
 } from "vue";
@@ -31,6 +30,9 @@ interface ISortTableEnd {
   oldIndex: number;
 }
 
+// 菜单/搜索
+type MenuOrSearchType = 'menu' | 'search';
+
 //#endregion
 
 // #region props/emits
@@ -48,10 +50,10 @@ const props = withDefaults(defineProps<ITableProps>(), {
     page: 1,
     total: 0,
   }),
+  operationKey: 'operation', // 默认操作列的 Key名
   size: "small",
   rowKey: "key",
   childrenColumnName: 'children', // 默认 'children'
-  scroll: () => ({x: true}),
   i18nPrefix: () => ({table: "table", columns: "columns"}),
   keywordPlaceholder: undefined, // t("placeholder.keyword")
   keywordVisible: true,
@@ -68,28 +70,27 @@ const emits = defineEmits([
 ]);
 // #endregion
 const columnsCache: IColumns[] = cloneDeep(props.columns); // 缓存 columns
+console.log('columnsCache', columnsCache)
+const formRef = ref<FormInstance>();
 
 // 内置搜索
-const formRef = ref<FormInstance>();
 const formSearch = reactive<any>({});
 
-const menuChecked = ref<IColumns['dataIndex'][]>([]); // 选中显示隐藏表头
+const columns = toRef(props, 'columns'); // 表格列配置项
+const menuChecked = ref<(IColumns['dataIndex'] | IColumns['key'])[]>([]); // 选中显示隐藏表头
 const menuCheckList = ref<IColumns[]>([]); // 表头的数据列
-const pages = toRef(props, "pages"); // 分页
-const columns = toRef(props, "columns"); // 表格列配置项
 const expandedRowKeys = ref<string[]>([]);
 const oldKeyword = ref<string>(""); // 旧的 搜索内容 防止重复调用接口
 const keyword = ref<string>(""); // 搜索
-const menuOrSearch = ref<string>("menu");
+const menuOrSearch = ref<MenuOrSearchType | undefined>();
 const isDropdownVisible = ref<boolean>(false);
 const isOpenSearch = ref<boolean>(false); // 展开搜索栏区域
+const menuCheckAll = ref<boolean>(true); // 全选
 
 onMounted(() => {
   // 修改 columns
-  menuCheckList.value = columns.value.filter(
-      (item) => ![item.dataIndex, item.key].includes("operation")
-  );
-  menuChecked.value = unref(menuCheckList).map((item) => item.dataIndex);
+  menuCheckList.value = columnsCache.filter((item) => ![item.dataIndex, item.key].includes(props.operationKey));
+  menuChecked.value = menuCheckList.value.map((item) => item.dataIndex);
 
   // 默认是否展开
   props.defaultExpandAllRows && expandAllRows();
@@ -109,6 +110,33 @@ watch(
     () => props.defaultExpandAllRows,
     () => expandAllRows()
 );
+
+// 监听 menuChecked
+watch(
+    () => menuChecked.value,
+    (menuChecked) => {
+      menuCheckAll.value = menuChecked.length === menuCheckList.value.length;
+    }
+)
+
+/**
+ * @description: 有值置空 没有赋值
+ * @param key
+ */
+const handleMenuOrSearchRadio = (key: MenuOrSearchType) => {
+  menuOrSearch.value = menuOrSearch.value ? undefined : key;
+  if (key === 'search') {
+    isOpenSearch.value = !isOpenSearch.value;
+  }
+}
+
+const handleMenuCheckAll = () => {
+  if (menuCheckAll.value) {
+    menuChecked.value = []
+  } else {
+    menuChecked.value = menuCheckList.value.map((item) => item.dataIndex);
+  }
+}
 
 /**
  * @description 获取行的 key
@@ -182,24 +210,7 @@ const handlePageSizeChange = (
   emits("pagesChange", pages);
 };
 
-// 选中显示表格列
-const handleCheckboxChange = () => {
-  const arr: IColumns[] = []
-  const _columns = cloneDeep(columnsCache);
-  _columns.forEach((item: IColumns) => {
-    if (unref(menuChecked).includes(item.dataIndex)) {
-      arr.push(item);
-    }
-  });
-  arr.push(_columns[_columns.length - 1]);
-  // 操作,默认需要
-  columns.value.length = 0
-  columns.value.push(...arr);
-};
-// 显示与隐藏 form
-const handleOpenSearch = () => {
-  isOpenSearch.value = !unref(isOpenSearch);
-};
+
 // 表格可伸缩
 const handleResizeColumn = (w: number, col: any) => {
   col.width = w;
@@ -220,19 +231,19 @@ const pagination = computed(() => {
     showQuickJumper: true,
     showSizeChanger: true,
     showTotal: showTotal,
-    total: pages.value.total,
-    pageSize: pages.value.size,
-    current: pages.value.page,
+    total: props.pages.total,
+    pageSize: props.pages.size,
+    current: props.pages.page,
   }
 })
 
 /**
- * @description 表单搜索配置项
+ * @description 表单搜索配置项 使用缓存的 columns
  */
 const formColumns = computed(() => {
   const rowColumns: IColumns[][] = [];
   let count = 0;
-  columns.value
+  columnsCache
       .filter((column: IColumns) => column.search)
       .forEach((column: IColumns, index: number) => {
         const _span: number = Number(column.span || 4);
@@ -249,7 +260,7 @@ const formColumns = computed(() => {
  * @description 表格列配置项
  */
 const columnsComputed = computed(() => {
-  return columns.value;
+  return cloneDeep(columnsCache).filter((column: IColumns) => [...menuChecked.value, props.operationKey].includes(column.key || column.dataIndex))
 });
 
 /**
@@ -392,7 +403,7 @@ defineExpose({
             <template #icon>
               <reload-outlined
                   :spin="props.loading"
-                  class="text-white size-sm"
+                  class="w-[1em] h-[1em]"
               />
             </template>
           </i-tooltip>
@@ -416,16 +427,25 @@ defineExpose({
                 overlayClassName="i-popover-menu"
             >
               <template #content>
+                <!--  全选  -->
+                <label
+                    class="i-popover-item block"
+                    style="text-align: left"
+                >
+                  <a-checkbox v-model:checked="menuCheckAll" class="whitespace-nowrap" @click="handleMenuCheckAll">
+                    全选
+                  </a-checkbox>
+                </label>
+                <!--  这是两部分  -->
                 <a-checkbox-group
                     v-model:value="menuChecked"
                     class="w-[100%]"
-                    @change="handleCheckboxChange"
                 >
                   <label
-                      class="i-popover-item block"
-                      style="text-align: left"
                       v-for="item in menuCheckList"
                       :key="item.key || item.dataIndex"
+                      class="i-popover-item block"
+                      style="text-align: left"
                   >
                     <a-checkbox
                         :value="item.key || item.dataIndex"
@@ -436,16 +456,22 @@ defineExpose({
                   </label>
                 </a-checkbox-group>
               </template>
-              <a-radio-button value="menu" :title="$t('title.filter')">
+              <a-radio-button
+                  value="menu"
+                  :title="$t('title.filter')"
+                  @click="handleMenuOrSearchRadio('menu')"
+              >
                 <table-outlined/>
               </a-radio-button>
             </a-popover>
             <a-tooltip>
-              <template #title v-if="!isOpenSearch">{{ $t('placeholder.expandUniversalSearch') }}</template>
+              <template #title v-if="!isOpenSearch">
+                {{ $t('placeholder.expandUniversalSearch') }}
+              </template>
               <a-radio-button
                   v-if="formColumns.length"
                   value="search"
-                  @click="handleOpenSearch"
+                  @click="handleMenuOrSearchRadio('search')"
               >
                 <search-outlined/>
               </a-radio-button>
@@ -478,8 +504,10 @@ defineExpose({
           </slot>
         </template>
         <template #bodyCell="score">
-          <slot name="bodyCell" v-bind="score"></slot>
-          <slot :name="score.column.dataIndex" v-bind="score"></slot>
+          <slot name="bodyCell" v-bind="score"/>
+          <slot :name="score.column.dataIndex" v-bind="score">
+            <ellipsis v-if="score.column.ellipsis" :value="score.value" tooltip/>
+          </slot>
         </template>
       </a-table>
     </div>

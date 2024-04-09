@@ -10,10 +10,9 @@ import type {IColumns, IPages} from "@/types";
 import {AdminLogDataSource} from "@/store/auth/adminLog/types";
 
 const store = useAdminLogStore()
-const {dataSource, formSearch, pages, isTableLoading} = storeToRefs(store);
+const {dataSource, isTableLoading, pages} = storeToRefs(store);
 
-
-const columns = reactive<IColumns[]>([
+const columns: IColumns[] = [
   {
     title: "序号",
     dataIndex: "number",
@@ -63,6 +62,7 @@ const columns = reactive<IColumns[]>([
     dataIndex: "userAgent",
     align: "center",
     width: 200,
+    ellipsis: true
   },
   {
     title: "创建时间",
@@ -72,16 +72,16 @@ const columns = reactive<IColumns[]>([
   },
   {
     title: "操作",
-    dataIndex: "operate",
+    dataIndex: "operation",
     align: "center",
     fixed: "right",
     width: 150,
   },
-]);
+]
 
 const selectedRowKeys = ref<AdminLogDataSource["key"][]>([]);
 const avatarPreviewSrc = ref("");
-const detailModalOptions = ref<AdminLogDataSource | null>()
+const formSearch = reactive({})
 
 const isAvatarPreviewSrc = ref<boolean>(false);
 const isDetailModalVisible = ref<boolean>(false);
@@ -122,13 +122,12 @@ const toUrl = (url: string) => {
 </script>
 
 <template>
-  <div class="default-main">
+  <div class="p-4">
     <i-table
         :columns="columns"
         :data-source="dataSource"
         :pages="pages"
         :loading="isTableLoading"
-        :scroll="{ x: true }"
         @reload="getList"
         @pages-change="handlePagesChange"
         @select-change="handleSelectChange"
@@ -156,7 +155,7 @@ const toUrl = (url: string) => {
       <template #method="{ value }">
         <method-tag :method="value"/>
       </template>
-      <template #operate="{ record }">
+      <template #operation="{ record }">
         <a-space>
           <i-tooltip title="查看详情" size="small" @click="handleDetailModalOpen(record)">
             <template #icon>

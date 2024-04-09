@@ -42,12 +42,12 @@ export const detail = (id: number) => {
 };
 
 // 获取管理员菜单列表
-export const getMenuList = (params) => {
+export const getAdminMenuList = (params) => {
   return request.get("/admin/menus", params);
 };
 
 // 新增/修改菜单
-export const upsertMenu = (data) => {
+export const adminMenuUpsert = (data) => {
   return request.post("/admin/menu/upsert", data);
 }
 
@@ -55,9 +55,8 @@ export const upsertMenu = (data) => {
 export const removeMenu = (data) => {
   return request.post("/admin/menu/remove", data);
 }
-
-// 获取菜单详情
-export const menuDetail = (id: number) => {
+// 根据 Id 获取菜单详情
+export const getAdminMenuById = (id?: number) => {
   return request.get("/admin/menu/detail/" + id);
 }
 
