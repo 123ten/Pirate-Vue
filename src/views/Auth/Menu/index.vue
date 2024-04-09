@@ -7,7 +7,7 @@ import DeletePopconfirm from "@/components/IComponents/IOther/DeletePopconfirm/i
 import type {IColumns} from "@/types";
 import type {IDataSource} from "./types";
 import {storeToRefs} from "pinia";
-import {useAdminMenuStore} from "@/store/auth/menu";
+import {useAdminMenuStore} from "@/store/auth";
 
 const store = useAdminMenuStore()
 const {dataSource, isTableLoading} = storeToRefs(store);
