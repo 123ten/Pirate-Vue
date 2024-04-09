@@ -2,7 +2,6 @@
 <script setup lang="ts">
 import {computed, reactive,} from "vue";
 import type {IFormModalProps} from "../../types";
-import {adminMenuUpsert} from "@/api/admin";
 import {Form, message} from "ant-design-vue";
 import {Rules} from "@/types/form";
 import {useI18n} from "vue-i18n";
@@ -23,19 +22,6 @@ const rules = reactive<Rules>({
   roleIds: [{required: true, message: t('user.error.roles')}],
   password: undefined,
 })
-
-// const formState = reactive<IFormState>({
-//   parentId: undefined,
-//   title: '',
-//   name: '',
-//   path: '',
-//   component: '',
-//   frame: 1,
-//   type: 1,
-//   status: 1,
-//   sort: 0,
-//   cache: 0,
-// });
 
 const {resetFields, validate, validateInfos} = Form.useForm(formState, rules);
 

@@ -9,8 +9,14 @@ import {AdminMenuDataSource, AdminMenuFormState} from "@/store/auth/menu/types";
 
 export const useAdminMenuStore = defineStore("adminLogStore", () => {
   const formSearch = reactive({})
-  const dataSource = ref<AdminMenuDataSource>([])
-  const formState = reactive<AdminMenuFormState>({})
+  const dataSource = ref<AdminMenuDataSource[]>([])
+  const formState = reactive<AdminMenuFormState>({
+    frame: 1,
+    type: 1,
+    status: 1,
+    sort: 0,
+    cache: 0,
+  })
   const isTableLoading = ref<boolean>(false)
   const isModalLoading = ref<boolean>(false)
 
