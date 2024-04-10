@@ -11,6 +11,7 @@ import {AdminLogDataSource} from "@/store/auth/adminLog/types";
 
 const store = useAdminLogStore()
 const {dataSource, isTableLoading, pages} = storeToRefs(store);
+const {getAdminLogListRequest, getAdminLogByIdRequest} = store
 
 const columns: IColumns[] = [
   {
@@ -91,7 +92,7 @@ onMounted(async () => {
 });
 
 const getList = async () => {
-  await store.getAdminLogListRequest()
+  await getAdminLogListRequest()
 }
 
 // 分页
@@ -109,7 +110,7 @@ const handleSelectChange = (rowKeys: string[]) => {
 // 详情 - 打开弹窗
 const handleDetailModalOpen = async (record: AdminLogDataSource) => {
   isDetailModalVisible.value = true
-  await store.getAdminLogByIdRequest(record.id)
+  await getAdminLogByIdRequest(record.id)
 }
 // 详情 - 取消
 const handleDetailModalCancel = () => {
@@ -122,7 +123,7 @@ const toUrl = (url: string) => {
 </script>
 
 <template>
-  <div class="p-4">
+  <div class="box-border p-4">
     <i-table
         :columns="columns"
         :data-source="dataSource"
@@ -178,6 +179,3 @@ const toUrl = (url: string) => {
   </div>
 </template>
 
-<style lang="less" scoped>
-@import "./index.less";
-</style>

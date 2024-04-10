@@ -18,7 +18,7 @@ export interface IDataSource extends DefaultInterface {
   children?: IDataSource[]; // 设置 children 务必设置 width 否则可能出现宽度浮动
 }
 
-export interface IFormModalProps<Options> extends DefaultModalProps<Options> {
+export interface IFormModalProps<Options = any> extends DefaultModalProps<Options> {
 
 }
 

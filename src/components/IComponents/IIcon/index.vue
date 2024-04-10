@@ -1,6 +1,6 @@
 <!-- 图标配置 -->
 <script setup lang="ts">
-import {computed, nextTick, onMounted, ref, unref,} from "vue";
+import {computed, nextTick, onMounted, ref, unref, watch,} from "vue";
 import * as antIcons from "@ant-design/icons-vue";
 import {SyncOutlined} from "@ant-design/icons-vue";
 import {notification} from "ant-design-vue";
@@ -14,6 +14,10 @@ const props = defineProps({
   value: {
     type: String,
     default: ''
+  },
+  defaultValue: {
+    type: String,
+    default: 'LineOutlined'
   }
 })
 const emits = defineEmits(["update:visible", "update:value"]);
@@ -30,7 +34,7 @@ const icons = ref<string[]>([]);
 const iconTabs = ref<string[]>(["line", "fill", "twoTone", 'custom']);
 
 const currentTab = ref<string>("");
-const currentIcon = ref<string>("LineOutlined"); // 默认图标
+const currentIcon = ref<string>(props.defaultValue); // 默认图标
 
 const visible = ref<boolean>(false);
 //#endregion
@@ -39,6 +43,16 @@ onMounted(() => {
   emits('update:value', currentIcon.value);
   initIcon();
 });
+
+watch(
+    () => props.value,
+    (value) => {
+      if (!value) {
+        onLoad()
+      }
+    }
+)
+
 // 初始化icon
 const initIcon = () => {
   // console.time("initIcon");
@@ -67,7 +81,8 @@ const initIcon = () => {
 };
 // 刷新所有图标
 const onLoad = () => {
-  currentIcon.value = "LineOutlined";
+  currentIcon.value = props.defaultValue;
+  emits('update:value', props.defaultValue);
 };
 // 切换图标 tab
 const checkIconTab = (type: string) => {

@@ -1,15 +1,6 @@
 // store/index.ts
-import { getTerminal } from "@/utils/common";
-import { defineStore } from "pinia";
-export const useStore = defineStore("main", {
-  state: () => {
-    return {
-      count: 0,
-    };
-  },
-  getters: {},
-  actions: {},
-});
+import {getTerminal} from "@/utils/common";
+import {defineStore} from "pinia";
 
 interface Menu {
   id?: string;

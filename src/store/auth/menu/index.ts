@@ -3,71 +3,72 @@
  */
 import {defineStore} from "pinia";
 import {adminMenuUpsert, getAdminMenuById, getAdminMenuList} from "@/api/admin";
-import {reactive, ref} from "vue";
-import {AdminMenuDataSource, AdminMenuFormState} from "@/store/auth/menu/types";
+import {AdminMenuStoreState} from "@/store/auth/menu/types";
 
 
-export const useAdminMenuStore = defineStore("adminLogStore", () => {
-  const formSearch = reactive({})
-  const dataSource = ref<AdminMenuDataSource[]>([])
-  const formState = reactive<AdminMenuFormState>({
-    frame: 1,
-    type: 1,
-    status: 1,
-    sort: 0,
-    cache: 0,
-  })
-  const isTableLoading = ref<boolean>(false)
-  const isModalLoading = ref<boolean>(false)
-
-  /**
-   * 获取管理员菜单规则列表
-   */
-  const getAdminMenuListRequest = async () => {
-    isTableLoading.value = true;
-    try {
-      const {data} = await getAdminMenuList(formSearch);
-      console.log(data, "getAdminMenuList");
-      dataSource.value = data.records;
-    } finally {
-      isTableLoading.value = false;
+export const useAdminMenuStore = defineStore("adminMenuStore", {
+  state(): AdminMenuStoreState {
+    return {
+      formSearch: {},
+      dataSource: [],
+      formState: {
+        parentId: undefined,
+        id: undefined,
+        path: undefined,
+        description: undefined,
+        name: undefined,
+        title: undefined,
+        component: undefined,
+        icon: undefined,
+        type: 1,
+        status: 1,
+        cache: 0,
+        frame: 1,
+        sort: 0,
+      },
+      isTableLoading: false,
+      isModalLoading: false,
     }
-  }
-  /**
-   * 获取管理员菜单规则详情
-   */
-  const getAdminMenuByIdRequest = async (id?: number) => {
-    isModalLoading.value = true;
-    try {
-      const {data} = await getAdminMenuById(id);
-      data.parentId = data.parentId || undefined;
-      Object.assign(formState, data)
-    } finally {
-      isModalLoading.value = false;
+  },
+  actions: {
+    /**
+     * 获取管理员菜单规则列表
+     */
+    async getAdminMenuListRequest() {
+      this.isTableLoading = true;
+      try {
+        const {data} = await getAdminMenuList(this.formSearch);
+        console.log(data, "getAdminMenuList");
+        this.dataSource = data.records;
+      } finally {
+        this.isTableLoading = false;
+      }
+    },
+    /**
+     * 获取管理员菜单规则详情
+     */
+    async getAdminMenuByIdRequest(id?: number) {
+      this.isModalLoading = true;
+      try {
+        const {data} = await getAdminMenuById(id);
+        data.parentId = data.parentId || undefined;
+        this.formState = data
+      } finally {
+        this.isModalLoading = false;
+      }
+    },
+    /**
+     * 新增/编辑 管理员菜单规则
+     */
+    async adminMenuUpsertRequest() {
+      this.isModalLoading = true;
+      try {
+        const {data} = await adminMenuUpsert(this.formState);
+        return data;
+      } finally {
+        this.isModalLoading = false;
+      }
     }
-  }
 
-  /**
-   * 新增/编辑 管理员菜单规则
-   */
-  const adminMenuUpsertRequest = async () => {
-    isModalLoading.value = true;
-    try {
-      const {data} = await adminMenuUpsert(formState);
-      return data;
-    } finally {
-      isModalLoading.value = false;
-    }
-  }
-
-  return {
-    formSearch,
-    dataSource,
-    formState,
-    isTableLoading,
-    isModalLoading,
-    getAdminMenuListRequest,
-    getAdminMenuByIdRequest,
-    adminMenuUpsertRequest,
   }
 })

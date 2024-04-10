@@ -3,24 +3,22 @@
 import {computed, reactive,} from "vue";
 import type {IFormModalProps} from "../../types";
 import {Form, message} from "ant-design-vue";
-import {Rules} from "@/types/form";
-import {useI18n} from "vue-i18n";
 import {useAdminMenuStore} from "@/store/auth/menu";
 import {storeToRefs} from "pinia";
+import {Rules} from "@/types/form";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 const store = useAdminMenuStore()
-const {dataSource, formState, isModalLoading} = storeToRefs(store);
+const {dataSource, formState, isModalLoading} = storeToRefs(store)
+const {adminMenuUpsertRequest} = store
 
-const {t} = useI18n();
-const props = defineProps<IFormModalProps<any>>();
+const props = defineProps<IFormModalProps>();
 
 const emits = defineEmits(["cancel", "confirm"]);
 
 const rules = reactive<Rules>({
-  username: [{required: true, message: t('user.error.username')}],
   title: [{required: true, message: t('user.error.title')}],
-  roleIds: [{required: true, message: t('user.error.roles')}],
-  password: undefined,
 })
 
 const {resetFields, validate, validateInfos} = Form.useForm(formState, rules);
@@ -32,14 +30,14 @@ const handleCancel = () => {
 
 const handleConfirm = async () => {
   await validate()
-  const {data} = await store.adminMenuUpsertRequest();
+  const data = await adminMenuUpsertRequest();
   emits('confirm');
   resetFields()
   message.success(data);
 };
 
 
-const replaceFields = computed(() => {
+const fieldNames = computed(() => {
   return {
     label: 'title',
     key: 'id',
@@ -52,7 +50,7 @@ const replaceFields = computed(() => {
 <template>
   <i-modal
       v-model:visible="props.visible"
-      :title="props.options?.id ? '编辑' : '添加'"
+      :title="formState.id ? '编辑' : '添加'"
       :loading="isModalLoading"
       :maskClosable="false"
       width="600px"
@@ -74,7 +72,7 @@ const replaceFields = computed(() => {
             allow-clear
             tree-node-filter-prop="title"
             :tree-data="dataSource"
-            :replace-fields="replaceFields"
+            :field-names="fieldNames"
         />
       </a-form-item>
       <a-form-item label="规则类型" name="type">
@@ -136,6 +134,3 @@ const replaceFields = computed(() => {
   </i-modal>
 </template>
 
-<style lang="less" scoped>
-@import "./index.less";
-</style>

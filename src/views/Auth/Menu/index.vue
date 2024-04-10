@@ -11,9 +11,10 @@ import {useAdminMenuStore} from "@/store/auth";
 
 const store = useAdminMenuStore()
 const {dataSource, isTableLoading} = storeToRefs(store);
+const {getAdminMenuListRequest, getAdminMenuByIdRequest} = store
 
 //#region 变量
-const columns = ref<IColumns[]>([
+const columns: IColumns[] = [
   {
     title: "标题",
     dataIndex: "title",
@@ -62,7 +63,8 @@ const columns = ref<IColumns[]>([
     fixed: "right",
     minWidth: 100,
   },
-]);
+]
+
 const selectedRowKeys = ref<IDataSource["key"][]>([]);
 
 const defaultExpandAllRows = ref<boolean>(false);
@@ -74,14 +76,14 @@ onMounted(async () => {
 });
 
 const getList = async () => {
-  await store.getAdminMenuListRequest()
+  await getAdminMenuListRequest()
 }
 
 // 添加
 const handleFormModalOpen = async (type: number, record?: IDataSource) => {
   isFormModalVisible.value = true;
   if (record) {
-    await store.getAdminMenuByIdRequest(record.id)
+    await getAdminMenuByIdRequest(record.id)
   }
 };
 // 添加/编辑 - cancel
@@ -137,7 +139,7 @@ const rowSelection = computed(() => ({
 </script>
 
 <template>
-  <div class="default-main">
+  <div class="box-border p-4">
     <i-table
         row-key="id"
         :columns="columns"
@@ -228,6 +230,3 @@ const rowSelection = computed(() => ({
   </div>
 </template>
 
-<style lang="less" scoped>
-@import "./index.less";
-</style>

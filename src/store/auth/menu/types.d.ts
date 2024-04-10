@@ -1,4 +1,5 @@
 import {DefaultTableState, type RecordType} from "@/types/table";
+import {Rules} from "@/types/form";
 
 export interface AdminMenuDataSource extends RecordType {
   type?: 1 | 2 | 3;  // 1 菜单目录 2 菜单项 3 页面按钮

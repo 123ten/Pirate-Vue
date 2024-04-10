@@ -19,8 +19,8 @@ const pinia = createPinia();
 const app = createApp(App);
 // const app = createSSRApp(App);
 
+app.use(pinia); // 注意顺序
 app.use(router);
-app.use(pinia);
 app.use(i18n);
 // 挂载到vue实例中
 app.config.globalProperties.$echarts = echarts; //vue3的挂载方式
