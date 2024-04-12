@@ -1,16 +1,20 @@
 <!-- 角色组管理 添加/编辑 -->
 <script setup lang="ts">
-import {reactive, ref,} from "vue";
+import {reactive,} from "vue";
 import {Form, notification} from "ant-design-vue";
-import {getRoleList} from "@/api/auth/admin";
 import {useI18n} from "vue-i18n";
 import {Rules} from "@/types/form";
 import {useAdminStore} from "@/store/auth/admin";
 import {storeToRefs} from "pinia";
+import {useRoleStore} from "@/store/auth/group";
 
 const store = useAdminStore()
+const roleStore = useRoleStore()
 const {isModalLoading, formState} = storeToRefs(store);
+const {dataSource: roleOptions} = storeToRefs(roleStore)
 const {adminUpsertRequest} = store
+const {getRoleListRequest} = roleStore
+
 
 const {t} = useI18n();
 
@@ -36,17 +40,10 @@ const rules = reactive<Rules>({
 })
 
 const {resetFields, validate, validateInfos} = Form.useForm(formState, rules);
-const roleOptions = ref([]);
 //#endregion
 
 const init = async () => {
-  await getRoleListApi();
-};
-
-const getRoleListApi = async () => {
-  const {data} = await getRoleList({});
-  console.log("getRoleList", data);
-  roleOptions.value = data;
+  await getRoleListRequest();
 };
 
 // 确定
