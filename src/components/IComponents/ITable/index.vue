@@ -1,6 +1,6 @@
 <!-- 角色组管理 -->
 <script setup lang="ts">
-import {ReloadOutlined, SearchOutlined, TableOutlined,} from "@ant-design/icons-vue";
+import {InfoCircleFilled, ReloadOutlined, SearchOutlined, TableOutlined,} from "@ant-design/icons-vue";
 import {
   computed,
   defineEmits,
@@ -273,9 +273,7 @@ const onQuery = () => {
 
 const onReset = () => {
   emits("reset");
-  if (formRef.value) {
-    formRef.value.resetFields();
-  }
+  formRef.value?.resetFields();
 };
 
 const localesNameFn = (column: IColumns) => {
@@ -304,6 +302,17 @@ defineExpose({
 <template>
   <div class="default-main">
     <div class="container-table">
+      <a-alert
+          v-if="props.remark"
+          :message="props.remark"
+          type="gray"
+          show-icon
+          closable
+      >
+        <template #icon>
+          <info-circle-filled style="color: #909399"/>
+        </template>
+      </a-alert>
       <!-- formSearch -->
       <transition name="zoom-in">
         <div v-if="isOpenSearch && formColumns.length" class="i-table-form">

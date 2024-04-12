@@ -13,7 +13,7 @@ defineOptions({
 </script>
 
 <template>
-  <a-tooltip placement="topRight">
+  <a-tooltip placement="topLeft">
     <template #title v-if="props.tooltip">
       <slot>
         {{ props.value }}

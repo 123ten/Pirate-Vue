@@ -117,8 +117,10 @@ export type IPagination = PaginationProps
  */
 export interface RecordType {
   id?: number;
-  key?: string;
+  key?: string | number;
+  updateTime?: string;
   createTime?: string;
+  children?: RecordType[]
 }
 
 interface I18nPrefix {
@@ -177,6 +179,8 @@ export interface ITableProps {
    * 关键字搜索框 占位内容
    */
   keywordPlaceholder?: string;
+  /** 注意提示 */
+  remark?: string;
   /**
    * 是否显示关键字搜索框
    */
@@ -200,7 +204,11 @@ export interface ITableProps {
  */
 export interface DefaultTableState<RecordType = DefaultRecordType, FormSearchType = any> {
   isTableLoading: boolean;
-  pages: IPages
-  formSearch: FormSearchType
-  dataSource: RecordType
+  pages: IPages;
+  remark?: string,
+  formSearch?: FormSearchType
+  dataSource: RecordType[]
 }
+
+/** 1 是 0 否 */
+export type DefaultStatus = 0 | 1;

@@ -1,13 +1,13 @@
 /**
- * 管理员日志列表
+ * 角色组
  */
 import {defineStore} from "pinia";
-import {adminMenuStatus, adminMenuUpsert, getAdminMenuById, getAdminMenuList} from "@/api/auth/admin";
-import {AdminMenuStoreState} from "@/store/auth/menu/types";
+import {adminMenuStatus, adminMenuUpsert, getRoleById, getRoleList} from "@/api/auth/admin";
+import {RoleStoreState} from "./types";
 
 
-export const useAdminMenuStore = defineStore("adminMenuStore", {
-  state(): AdminMenuStoreState {
+export const useRoleStore = defineStore("roleStore", {
+  state(): RoleStoreState {
     return {
       formSearch: {},
       dataSource: [],
@@ -32,25 +32,25 @@ export const useAdminMenuStore = defineStore("adminMenuStore", {
   },
   actions: {
     /**
-     * 获取管理员菜单规则列表
+     * 获取角色组列表
      */
-    async getAdminMenuListRequest() {
+    async getRoleListRequest() {
       this.isTableLoading = true;
       try {
-        const {data} = await getAdminMenuList(this.formSearch);
-        console.log(data, "getAdminMenuList");
+        const {data} = await getRoleList(this.formSearch);
+        console.log(data, "getRoleList");
         this.dataSource = data.records;
       } finally {
         this.isTableLoading = false;
       }
     },
     /**
-     * 获取管理员菜单规则详情
+     * 获取角色组详情
      */
-    async getAdminMenuByIdRequest(id?: number) {
+    async getRoleByIdRequest(id?: number) {
       this.isModalLoading = true;
       try {
-        const {data} = await getAdminMenuById(id);
+        const {data} = await getRoleById(id);
         data.parentId = data.parentId || undefined;
         this.formState = data
       } finally {
@@ -58,7 +58,7 @@ export const useAdminMenuStore = defineStore("adminMenuStore", {
       }
     },
     /**
-     * 新增/编辑 管理员菜单规则
+     * 新增/编辑 角色组
      */
     async adminMenuUpsertRequest() {
       this.isModalLoading = true;
@@ -70,7 +70,7 @@ export const useAdminMenuStore = defineStore("adminMenuStore", {
       }
     },
     /**
-     * 管理员菜单规则 修改菜单状态
+     * 角色组 修改状态
      */
     async adminMenuStatusRequest(params) {
       await adminMenuStatus(params);

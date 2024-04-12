@@ -1,6 +1,7 @@
 // 获取时间状态
-import {IPages} from "@/types";
+import {deepArguments, IPages} from "@/types";
 import {TagProps} from "ant-design-vue";
+import {isArray} from "lodash-es";
 
 export const getTimeState = () => {
   // 获取当前时间
@@ -123,22 +124,12 @@ export function setTimeoutPromise(time: number) {
 }
 
 /**
- *
- * @param list 数据
- * @param children 子级字段 默认children
- * @param cb 回调
- * @param parent 父级 默认null
+ * @param args 入参
  * @returns
  */
-export function deepChildren<T>(
-    list: T[],
-    cb: (item: T, index: number, list: T[], parent: T) => void,
-    children = 'children',
-    parent: T | null = null,
-) {
-  if (!Array.isArray(list)) {
-    return list;
-  }
+export function deepChildren<RecordType>(...args: deepArguments<RecordType>) {
+  const [list, cb, children = 'children', parent] = args;
+  if (!isArray(list)) return list;
   return list.map((item, index) => {
     cb && cb(item, index, list, parent!);
     if (item[children] && item[children].length) {
@@ -150,11 +141,24 @@ export function deepChildren<T>(
   });
 }
 
+export function deepForEach<RecordType>(...args: deepArguments<RecordType>) {
+  const [list, cb, children = 'children', parent] = args;
+  if (!isArray(list)) return list;
+  for (let i = 0, len = list.length; i < len; i++) {
+    const item = list[i];
+    cb && cb(item, i, list, parent!);
+    if (item[children] && item[children].length) {
+      deepForEach(item[children], cb, children, item);
+    }
+  }
+}
+
 /**
  * @description 获取当前页码 用于序号排序
  * @param index
  * @param pages
  */
+
 export function sortNumber(index: number, pages: IPages) {
   return index + 1 + (pages.page - 1) * pages.size
 }

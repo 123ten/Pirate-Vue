@@ -76,7 +76,7 @@ const columns: IColumns[] = [
     dataIndex: "operation",
     align: "center",
     fixed: "right",
-    width: 150,
+    width: 60,
   },
 ]
 
@@ -157,13 +157,11 @@ const toUrl = (url: string) => {
         <method-tag :method="value"/>
       </template>
       <template #operation="{ record }">
-        <a-space>
-          <i-tooltip title="查看详情" size="small" @click="handleDetailModalOpen(record)">
-            <template #icon>
-              <zoom-in-outlined/>
-            </template>
-          </i-tooltip>
-        </a-space>
+        <i-tooltip title="查看详情" size="small" @click="handleDetailModalOpen(record)">
+          <template #icon>
+            <zoom-in-outlined/>
+          </template>
+        </i-tooltip>
       </template>
     </i-table>
 

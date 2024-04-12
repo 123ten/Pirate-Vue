@@ -1,20 +1,24 @@
 <!-- 管理员管理 -->
 <script setup lang="ts">
 import {EditOutlined, PlusOutlined, UserOutlined,} from "@ant-design/icons-vue";
-import {computed, onMounted, reactive, ref, unref} from "vue";
+import {computed, onMounted, ref, unref} from "vue";
 import FormModal from "./components/FormModal/index.vue";
 import type {IColumns, IPages} from "@/types";
-import {getAdminList, remove} from "@/api/admin";
+import {remove} from "@/api/auth/admin";
 import {sortNumber} from "@/utils/common";
 import DeletePopconfirm from "@/components/IComponents/IOther/DeletePopconfirm/index.vue";
 import {notification} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
-import {$local} from "@/utils/storage";
+import {storeToRefs} from "pinia";
+import {useAdminStore} from "@/store/auth/admin";
+import ProcessingTag from "@/components/IComponents/IOther/ProcessingTag/index.vue";
+import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
+
+const store = useAdminStore()
+const {formSearch, dataSource, pages, remark, isTableLoading} = storeToRefs(store);
+const {getAdminListRequest, getAdminByIdRequest} = store
 
 const {t} = useI18n();
-
-const userInfo = $local.get('userInfo');
-console.log('userInfo', userInfo)
 
 interface IDataSource {
   key?: string | number;
@@ -31,13 +35,13 @@ interface IDataSource {
   createTime?: string;
 }
 
-const columns = ref<IColumns[]>([
+const columns: IColumns[] = [
   {
     title: "序号",
     dataIndex: "number",
     isI18n: true,
     align: "center",
-    minWidth: 80,
+    width: 80,
     customRender: ({index}) => sortNumber(index, pages.value),
   },
   {
@@ -45,70 +49,70 @@ const columns = ref<IColumns[]>([
     dataIndex: "username",
     isI18n: true,
     align: "center",
-    minWidth: 100,
+    width: 100,
   },
   {
     title: "昵称",
     dataIndex: "nickname",
     isI18n: true,
     align: "center",
-    minWidth: 100,
+    width: 100,
   },
   {
     title: "角色组",
     dataIndex: "roles",
     isI18n: true,
     align: "center",
-    minWidth: 120,
+    width: 120,
   },
   {
     title: "头像",
     dataIndex: "avatar",
     isI18n: true,
     align: "center",
-    minWidth: 100,
+    width: 100,
   },
   {
     title: "邮箱",
     dataIndex: "email",
     isI18n: true,
     align: "center",
-    minWidth: 150,
+    width: 150,
   },
   {
     title: "手机号",
     dataIndex: "phone",
     isI18n: true,
     align: "center",
-    minWidth: 150,
+    width: 150,
   },
   {
     title: "最后登录IP",
     dataIndex: "lastLoginIp",
     isI18n: true,
     align: "center",
-    minWidth: 100,
+    width: 100,
   },
   {
     title: "最后登录时间",
     dataIndex: "lastLoginTime",
     isI18n: true,
     align: "center",
-    minWidth: 160,
+    width: 160,
   },
   {
     title: "创建时间",
     dataIndex: "createTime",
     isI18n: true,
     align: "center",
-    minWidth: 160,
+    width: 160,
   },
   {
     title: "状态",
     dataIndex: "status",
     isI18n: true,
     align: "center",
-    minWidth: 100,
+    width: 100,
   },
   {
     title: "操作",
@@ -116,21 +120,13 @@ const columns = ref<IColumns[]>([
     isI18n: true,
     align: "center",
     fixed: "right",
-    minWidth: 100,
+    width: 100,
   },
-]);
-const dataSource = ref<IDataSource[]>([]);
+];
+
 const selectedRowKeys = ref<IDataSource['id'][]>([]);
-const pages = ref<IPages>({
-  size: 10,
-  page: 1,
-  total: 0,
-});
-const formSearch = reactive<any>({});
-const recordOptions = ref<Record<string, any> | undefined>();
 
 const avatarPreviewSrc = ref("");
-const isTableLoading = ref<boolean>(false); // 表格加载状态
 const isFormModalVisible = ref<boolean>(false);
 const isAvatarPreviewSrcVisible = ref<boolean>(false);
 
@@ -139,40 +135,22 @@ onMounted(async () => {
 });
 
 const getList = async () => {
-  const params = {
-    page: pages.value.page,
-    size: pages.value.size,
-    ...formSearch,
-  };
-  isTableLoading.value = true;
-  try {
-    const {data} = await getAdminList(params);
-    console.log(data, "getAdminList");
-    dataSource.value = data.records
-
-    pages.value = {
-      size: data.size,
-      page: data.page,
-      total: data.total,
-    };
-  } finally {
-    isTableLoading.value = false;
-  }
+  await getAdminListRequest()
 }
 
-const handleQuery = async (options) => {
-  console.log('handleQuery', options)
+const handleQuery = async (values) => {
+  console.log('handleQuery', values)
   pages.value.page = 1;
   pages.value.size = 10;
   await getList();
 }
 
 // 添加
-const handleFormModalOpen = (type: number, record?: IDataSource) => {
-  if (type === 1) {
-    recordOptions.value = record;
-  }
+const handleFormModalOpen = async (_type: number, record?: IDataSource) => {
   isFormModalVisible.value = true;
+  if (record) {
+    await getAdminByIdRequest(record.id)
+  }
 };
 // 添加/编辑 - cancel
 const handleFormModalCancel = () => {
@@ -188,14 +166,13 @@ const handleFormModalConfirm = async () => {
 
 const clearFormModalCache = () => {
   isFormModalVisible.value = false;
-  recordOptions.value = undefined;
 }
 
 // 删除
-const handleDeletePopconfirmConfirm = async (record: IDataSource | IDataSource['id'][]) => {
-  console.log("handleDeletePopconfirmConfirm", record);
+const handleDeletePopconfirmConfirm = async (ids: IDataSource['id'][]) => {
+  console.log("handleDeletePopconfirmConfirm", ids);
   const params = {
-    ids: Array.isArray(record) ? record : [record.id],
+    ids,
   }
   await remove(params);
   notification.success({
@@ -206,9 +183,9 @@ const handleDeletePopconfirmConfirm = async (record: IDataSource | IDataSource['
 };
 
 // 分页
-const onPagesChange = (records: IPages) => {
-  // console.log(records, "records");
-  pages.value = records;
+const onPagesChange = async (value: IPages) => {
+  pages.value = value;
+  await getList()
 };
 
 // 多选
@@ -227,9 +204,6 @@ const openAvatarPreviewImage = (src: string) => {
 const rowSelection = computed(() => ({
   selectedRowKeys: unref(selectedRowKeys),
   onChange: onSelectChange,
-  getCheckboxProps: (record: IDataSource) => ({
-    disabled: record.id === userInfo.id,
-  }),
 }))
 
 const i18nPrefix = computed(() => ({
@@ -238,12 +212,13 @@ const i18nPrefix = computed(() => ({
 </script>
 
 <template>
-  <div class="default-main">
+  <div class="box-border p-4">
     <i-table
         row-key="id"
         :columns="columns"
         :dataSource="dataSource"
         :pages="pages"
+        :remark="remark"
         :loading="isTableLoading"
         :rowSelection="rowSelection"
         :i18n-prefix="i18nPrefix"
@@ -267,9 +242,7 @@ const i18nPrefix = computed(() => ({
         </i-tooltip>
       </template>
       <template #roles="{ value }">
-        <a-tag v-for="text in value" :key="value" color="processing" class="table-tag">
-          {{ text }}
-        </a-tag>
+        <processing-tag v-for="text in value" :key="text" :value="text"/>
       </template>
       <template #avatar="{ record }">
         <a-avatar
@@ -283,17 +256,10 @@ const i18nPrefix = computed(() => ({
         </a-avatar>
       </template>
       <template #lastLoginIp="{value}">
-        <a-tag v-if="value" color="processing" class="table-tag">
-          {{ value }}
-        </a-tag>
+        <processing-tag :value="value"/>
       </template>
       <template #status="{ value }">
-        <a-tag
-            :color="value === 1 ? 'success' : 'error'"
-            class="table-tag"
-        >
-          {{ $t(`user.enum.status.${value}`) }}
-        </a-tag>
+        <status-tag :value="value"/>
       </template>
       <template #operation="{ record }">
         <a-space>
@@ -306,7 +272,7 @@ const i18nPrefix = computed(() => ({
             <template #content>
               <delete-popconfirm
                   type="table-row"
-                  @confirm="handleDeletePopconfirmConfirm(record)"
+                  @confirm="handleDeletePopconfirmConfirm([record.id])"
               />
             </template>
           </i-tooltip>
@@ -316,7 +282,6 @@ const i18nPrefix = computed(() => ({
 
     <form-modal
         :visible="isFormModalVisible"
-        :options="recordOptions"
         @cancel="handleFormModalCancel"
         @confirm="handleFormModalConfirm"
     />
@@ -328,6 +293,3 @@ const i18nPrefix = computed(() => ({
   </div>
 </template>
 
-<style lang="less" scoped>
-@import "./index.less";
-</style>

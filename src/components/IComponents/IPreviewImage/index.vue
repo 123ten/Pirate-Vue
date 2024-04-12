@@ -12,6 +12,7 @@ const props = withDefaults(defineProps<IPropsPreviewImage>(), {
   visible: false,
 });
 const emits = defineEmits(["update:visible"]);
+
 const onVisibleChange = (flag: boolean) => {
   emits("update:visible", flag);
 };

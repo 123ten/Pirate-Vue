@@ -1,71 +1,81 @@
 <!-- 菜单规则管理 -->
 <script setup lang="ts">
-import antIcons, {DragOutlined, EditOutlined, PlusOutlined,} from "@ant-design/icons-vue";
+import * as antIcons from "@ant-design/icons-vue";
+import {DragOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons-vue";
 import {computed, onMounted, ref, unref} from "vue";
 import FormModal from "./components/FormModal/index.vue";
 import DeletePopconfirm from "@/components/IComponents/IOther/DeletePopconfirm/index.vue";
-import type {IColumns} from "@/types";
-import type {IDataSource} from "./types";
 import {storeToRefs} from "pinia";
 import {useAdminMenuStore} from "@/store/auth";
+import {deepForEach} from "@/utils/common";
+import {notification} from "ant-design-vue";
+import {useI18n} from "vue-i18n";
+import type {IColumns} from "@/types";
+import type {AdminMenuDataSource} from "@/store/auth/menu/types";
 
+const {t} = useI18n()
 const store = useAdminMenuStore()
 const {dataSource, isTableLoading} = storeToRefs(store);
-const {getAdminMenuListRequest, getAdminMenuByIdRequest} = store
+const {getAdminMenuListRequest, getAdminMenuByIdRequest, adminMenuStatusRequest} = store
 
 //#region 变量
 const columns: IColumns[] = [
   {
     title: "标题",
     dataIndex: "title",
-    minWidth: 150,
+    width: 120,
   },
   {
     title: "图标",
     dataIndex: "icon",
     align: "center",
-    minWidth: 120,
+    width: 50,
   },
   {
     title: "权限标识",
-    dataIndex: "code",
+    dataIndex: "name",
     align: "center",
+    width: 150,
   },
   {
     title: "组件路径",
     dataIndex: "component",
+    width: 200,
   },
   {
     title: "类型",
     dataIndex: "type",
     align: "center",
+    width: 100,
   },
   {
     title: "缓存",
     dataIndex: "cache",
     align: "center",
+    width: 100,
   },
   {
     title: "状态",
     dataIndex: "status",
     align: "center",
+    width: 100,
   },
   {
     title: "修改时间",
     dataIndex: "updateTime",
     align: "center",
-    minWidth: 100,
+    width: 150,
   },
   {
     title: "操作",
     dataIndex: "operation",
     align: "center",
     fixed: "right",
-    minWidth: 100,
+    width: 100,
   },
 ]
 
-const selectedRowKeys = ref<IDataSource["key"][]>([]);
+const selectedRowKeys = ref<AdminMenuDataSource["key"][]>([]);
 
 const defaultExpandAllRows = ref<boolean>(false);
 const isFormModalVisible = ref<boolean>(false);
@@ -77,10 +87,11 @@ onMounted(async () => {
 
 const getList = async () => {
   await getAdminMenuListRequest()
+  defaultExpandAllRows.value = true
 }
 
 // 添加
-const handleFormModalOpen = async (type: number, record?: IDataSource) => {
+const handleFormModalOpen = async (type: number, record?: AdminMenuDataSource) => {
   isFormModalVisible.value = true;
   if (record) {
     await getAdminMenuByIdRequest(record.id)
@@ -97,12 +108,12 @@ const handleFormModalConfirm = async () => {
 };
 
 // 删除-确定
-const handleDeletePopconfirmConfirm = (keys?: IDataSource['id'][]) => {
+const handleDeletePopconfirmConfirm = (keys?: AdminMenuDataSource['id'][]) => {
   console.log("handleDeletePopconfirmConfirm", keys);
 };
 
 // 规则类型
-const typeEnum = (type: IDataSource["type"], key: string) => {
+const typeEnum = (type: AdminMenuDataSource["type"], key: string) => {
   const typeObj = {
     1: {
       color: "success",
@@ -117,7 +128,7 @@ const typeEnum = (type: IDataSource["type"], key: string) => {
       name: "页面按钮",
     },
   }
-  if (typeObj[type]) {
+  if (type && typeObj[type]) {
     return typeObj[type][key];
   } else {
     return {
@@ -127,7 +138,25 @@ const typeEnum = (type: IDataSource["type"], key: string) => {
   }
 };
 
-const onSelectChange = (keys: IDataSource["key"][]) => {
+const handleStatusChange = async (record: AdminMenuDataSource) => {
+  const ids: (number | undefined)[] = [];
+  deepForEach([record], (item: AdminMenuDataSource) => {
+    ids.push(item.id);
+  })
+  const params = {
+    status: record.status,
+    ids: ids
+  }
+  console.log('handleStatusChange', ids, params);
+  await adminMenuStatusRequest(params);
+  notification.success({
+    message: t("message.success"),
+    description: t("success.update"),
+  })
+  await getList()
+}
+
+const onSelectChange = (keys: AdminMenuDataSource["key"][]) => {
   selectedRowKeys.value = keys;
 };
 
@@ -172,7 +201,7 @@ const rowSelection = computed(() => ({
         />
       </template>
       <template #icon="{value}">
-        <component v-if="value" :is="antIcons[value]"/>
+        <component v-if="value" :is="antIcons[value]" class="text-[18px]"/>
       </template>
       <template #type="{ record }">
         <a-tag :color="typeEnum(record.type,'color')">
@@ -191,6 +220,7 @@ const rowSelection = computed(() => ({
             v-model:checked="record.status"
             :checkedValue="1"
             :unCheckedValue="0"
+            @click="handleStatusChange(record)"
         />
       </template>
       <template #operation="{ record }">

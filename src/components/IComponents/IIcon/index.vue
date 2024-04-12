@@ -5,21 +5,13 @@ import * as antIcons from "@ant-design/icons-vue";
 import {SyncOutlined} from "@ant-design/icons-vue";
 import {notification} from "ant-design-vue";
 import {cloneDeep, debounce} from 'lodash-es'
+import type {IconProps} from "@/types/icon";
 
-const props = defineProps({
-  visible: {
-    type: Boolean,
-    default: false
-  },
-  value: {
-    type: String,
-    default: ''
-  },
-  defaultValue: {
-    type: String,
-    default: 'LineOutlined'
-  }
+const props = withDefaults(defineProps<IconProps>(), {
+  visible: false,
+  defaultValue: 'LineOutlined'
 })
+
 const emits = defineEmits(["update:visible", "update:value"]);
 
 defineOptions({
@@ -87,9 +79,9 @@ const onLoad = () => {
 // 切换图标 tab
 const checkIconTab = (type: string) => {
   const maps = new Map();
-  maps.set("line", unref(outlinedList));
-  maps.set("fill", unref(filledList));
-  maps.set("twoTone", unref(twoToneList));
+  maps.set("line", outlinedList.value);
+  maps.set("fill", filledList.value);
+  maps.set("twoTone", twoToneList.value);
   if (maps.has(type)) {
     currentTab.value = type;
     icons.value = maps.get(type);
@@ -101,16 +93,15 @@ const checkIconTab = (type: string) => {
 };
 // 选择图标 icon
 const checkIcon = (key: string) => {
-  // console.log("key", key);
+  visible.value = false;
   nextTick(() => {
     currentIcon.value = key;
     emits('update:value', key);
   });
-  visible.value = false;
 };
 
 const handleSearchInput = debounce((e: KeyboardEvent) => {
-  const value = (e.target as HTMLInputElement).value;
+  const {value} = e.target as HTMLInputElement;
   const currentTabValue = currentTab.value;
 
   // 一定要 克隆一份，不然会出现数据污染
@@ -120,14 +111,14 @@ const handleSearchInput = debounce((e: KeyboardEvent) => {
     twoTone: cloneDeep(twoToneList.value),
   }
   if (listEnum[currentTabValue] && value) {
-    icons.value = listEnum[currentTabValue].filter((item) => item.toLocaleLowerCase().includes(value.toLocaleLowerCase()));
+    icons.value = listEnum[currentTabValue].filter((item: string) => item.toLocaleLowerCase().includes(value.toLocaleLowerCase()));
   } else {
     icons.value = listEnum[currentTabValue];
   }
   console.log("handleSearchInput", value);
 }, 300);
 
-const iconComputed = computed(() => antIcons[unref(currentIcon)]);
+const antIconComputed = computed(() => antIcons[currentIcon.value]);
 </script>
 
 <template>
@@ -168,7 +159,7 @@ const iconComputed = computed(() => antIcons[unref(currentIcon)]);
     </template>
     <a-input placeholder="搜索图标" @input="handleSearchInput">
       <template #addonBefore>
-        <component :is="iconComputed"/>
+        <component :is="antIconComputed"/>
         {{ currentIcon }}
       </template>
       <template #addonAfter>

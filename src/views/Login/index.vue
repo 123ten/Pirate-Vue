@@ -6,7 +6,7 @@ import * as pageBubble from "@/utils/pageBubble";
 import {setTimeoutPromise} from "@/utils/common";
 import avatar_default from "@/assets/images/avatar.png";
 import {useI18n} from "vue-i18n";
-import {getAvatar, login} from "@/api/admin";
+import {getAvatar, login} from "@/api/auth/admin";
 import {getSvgCaptcha} from "@/api/common";
 import {debounce} from 'lodash-es'
 import {notification} from "ant-design-vue";

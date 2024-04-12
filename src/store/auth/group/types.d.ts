@@ -1,6 +1,6 @@
 import {DefaultTableState, type RecordType} from "@/types/table";
 
-export interface AdminMenuDataSource extends RecordType {
+export interface RoleDataSource extends RecordType {
   parentId?: number; // 父级ID
   type?: 1 | 2 | 3;  // 1 菜单目录 2 菜单项 3 页面按钮
   status?: number; // 状态 0 禁用 1 启用
@@ -12,15 +12,15 @@ export interface AdminMenuDataSource extends RecordType {
   icon?: string; // 图标
 }
 
-export interface AdminMenuFormState extends AdminMenuDataSource {
+export interface RoleFormState extends RoleDataSource {
   path?: string; // 路由
   frame?: number; // 1 选项卡 2 外链 3 iframe
   description?: string; // 描述
 }
 
-export interface AdminMenuStoreState extends Omit<DefaultTableState<AdminMenuStoreDataSource>, 'pages'> {
+export interface RoleStoreState extends Omit<DefaultTableState<RoleStoreDataSource>, 'pages'> {
   /** 详情数据 */
-  formState: AdminMenuFormState;
+  formState: RoleFormState;
   /** modal加载 */
   isModalLoading: boolean;
 }

@@ -2,7 +2,7 @@ import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse} fro
 import {notification} from "ant-design-vue";
 import i18n from "@/locales";
 import {setTimeoutPromise} from "@/utils/common";
-import {refresh} from "@/api/admin";
+import {refresh} from "@/api/auth/admin";
 import {$local} from "@/utils/storage";
 import {RefreshResult} from "@/api/types/user";
 import router from "@/router";

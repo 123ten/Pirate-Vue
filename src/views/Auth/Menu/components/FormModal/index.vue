@@ -1,8 +1,8 @@
 <!-- 菜单权限 - 添加编辑 -->
 <script setup lang="ts">
-import {computed, reactive,} from "vue";
+import {computed, ref,} from "vue";
 import type {IFormModalProps} from "../../types";
-import {Form, message} from "ant-design-vue";
+import {Form, FormInstance, notification} from "ant-design-vue";
 import {useAdminMenuStore} from "@/store/auth/menu";
 import {storeToRefs} from "pinia";
 import {Rules} from "@/types/form";
@@ -17,9 +17,12 @@ const props = defineProps<IFormModalProps>();
 
 const emits = defineEmits(["cancel", "confirm"]);
 
-const rules = reactive<Rules>({
+const rules: Rules = {
   title: [{required: true, message: t('user.error.title')}],
-})
+  name: [{required: true, message: t('user.error.title')}],
+  path: [{required: true, message: t('user.error.title')}],
+}
+const formRef = ref<FormInstance>()
 
 const {resetFields, validate, validateInfos} = Form.useForm(formState, rules);
 
@@ -30,10 +33,13 @@ const handleCancel = () => {
 
 const handleConfirm = async () => {
   await validate()
-  const data = await adminMenuUpsertRequest();
+  await adminMenuUpsertRequest();
   emits('confirm');
   resetFields()
-  message.success(data);
+  notification.success({
+    message: t("message.success"),
+    description: t(formState.value.id ? "success.update" : "success.create"),
+  })
 };
 
 
@@ -58,6 +64,7 @@ const fieldNames = computed(() => {
       @confirm="handleConfirm"
   >
     <a-form
+        ref="formRef"
         :model="formState"
         name="basic"
         :label-col="{ span: 4 }"

@@ -23,6 +23,9 @@ export default defineConfig({
       "@assets": resolve(__dirname, "src/assets"),
       "@components": resolve(__dirname, "src/components"),
     },
+    dedupe: [
+      'vue'
+    ]
   },
   server: {
     host: true, // 指定服务器应该监听哪个 IP 地址。 如果将此设置为 0.0.0.0 或者 true 将监听所有地址，包括局域网和公网地址。

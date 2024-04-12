@@ -2,34 +2,22 @@
 <script setup lang="ts">
 import {reactive, ref,} from "vue";
 import {Form, notification} from "ant-design-vue";
-import {detail, getRoleList, upsert} from "@/api/admin";
+import {getRoleList} from "@/api/auth/admin";
 import {useI18n} from "vue-i18n";
 import {Rules} from "@/types/form";
+import {useAdminStore} from "@/store/auth/admin";
+import {storeToRefs} from "pinia";
+
+const store = useAdminStore()
+const {isModalLoading, formState} = storeToRefs(store);
+const {adminUpsertRequest} = store
 
 const {t} = useI18n();
-
-interface IFormState {
-  id?: number; // 主键 ID
-  roleIds: number[]; // 角色组
-  username: string; // 登录用户名
-  nickname: string; // 昵称
-  avatar: string; // 头像
-  avatarPath?: string; // 头像路径
-  email: string; // 邮箱
-  phone: string; // 手机号
-  password: string; // 密码
-  status: number; // 状态
-  fileList: any[]; // 头像文件
-}
 
 const props = defineProps({
   visible: {
     type: Boolean,
     default: false,
-  },
-  options: {
-    type: Object,
-    default: () => ({}),
   },
 })
 
@@ -40,55 +28,19 @@ const emits = defineEmits([
 
 //#region  变量
 // 校验规则
-const formState = reactive<IFormState>({
-  id: undefined,
-  roleIds: [],
-  username: "",
-  nickname: "",
-  avatar: "",
-  email: "",
-  phone: "",
-  password: "",
-  status: 1,
-  fileList: [],
-});
 const rules = reactive<Rules>({
   username: [{required: true, message: t('user.error.username')}],
   nickname: [{required: true, message: t('user.error.nickname')}],
   roleIds: [{required: true, message: t('user.error.roles')}],
-  password: undefined,
+  password: formState.value.id ? [{required: true, message: t('user.error.password')}] : undefined,
 })
+
 const {resetFields, validate, validateInfos} = Form.useForm(formState, rules);
 const roleOptions = ref([]);
-const loading = ref<boolean>(false);
 //#endregion
 
 const init = async () => {
-  rules.password = [{required: !props.options?.id, message: t('user.error.password')}];
-  console.log('options', props.options);
-  if (props.options?.id) {
-    await getDetail(props.options.id);
-  }
   await getRoleListApi();
-};
-
-const getDetail = async (id: number) => {
-  loading.value = true;
-  try {
-    const {data} = await detail(id);
-    console.log("getAdminDetail", data);
-    data.roleIds = data.roles.map((item: any) => item.id);
-    data.fileList = data.avatar ? [{
-      // 按照要求乱填即可
-      url: data.avatar,
-      path: data.avatarPath,
-      status: 'done',
-      uid: '1',
-    }] : [];
-    Object.assign(formState, data);
-  } finally {
-    loading.value = false;
-  }
 };
 
 const getRoleListApi = async () => {
@@ -100,25 +52,13 @@ const getRoleListApi = async () => {
 // 确定
 const handleConfirm = async (): Promise<void> => {
   await validate();
-  loading.value = true;
-  try {
-    const [response] = formState.fileList || []
-    const params = {
-      ...formState,
-      fileList: undefined,
-      avatar: response?.path,
-    };
-    console.log(params);
-    await upsert(params)
-    notification.success({
-      message: t("message.success"),
-      description: t(props.options?.id ? "success.update" : "success.create"),
-    })
-    emits("confirm");
-    resetFields();
-  } finally {
-    loading.value = false
-  }
+  await adminUpsertRequest()
+  notification.success({
+    message: t("message.success"),
+    description: t(formState.value.id ? "success.update" : "success.create"),
+  })
+  emits("confirm");
+  resetFields();
 };
 
 
@@ -132,9 +72,9 @@ const handleCancel = (): void => {
 <template>
   <i-modal
       :visible="props.visible"
+      :loading="isModalLoading"
+      :title=" $t(formState.id ?'title.update': 'title.create')"
       :init="init"
-      :loading="loading"
-      :title=" $t(props.options?.id ?'title.update': 'title.create') "
       width="520px"
       @confirm="handleConfirm"
       @cancel="handleCancel"
@@ -216,7 +156,7 @@ const handleCancel = (): void => {
             v-model:value="formState.password"
             allow-clear
             :placeholder="
-            $t(props.options?.id
+            $t(formState.id
               ? 'user.placeholder.edit_password'
               : 'user.placeholder.password')
             "
