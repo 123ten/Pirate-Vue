@@ -1,6 +1,6 @@
 import {Rule} from "ant-design-vue/es/form";
 
-export type FormSearchType = "input" | "select" | "radio" | 'date';
+export type QueryFormType = "input" | "select" | "radio" | 'date';
 
 export interface IOptions {
   label?: string;

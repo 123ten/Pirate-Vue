@@ -1,10 +1,17 @@
 /**
  * 管理员列表
  */
-import {defineStore} from "pinia";
-import {adminUpsert, getAdminById, getAdminList} from "@/api/auth/admin";
-import {AdminState} from "./types";
-
+import { defineStore } from "pinia";
+import {
+  adminLogin,
+  adminUpsert,
+  getAdminAvatar,
+  getAdminById,
+  getAdminList,
+} from "@/api/auth/admin";
+import { AdminState } from "./types";
+import { $local } from "@/utils/storage";
+import { UserInfo } from "@/api/types/user";
 
 export const useAdminStore = defineStore("adminStore", {
   state: (): AdminState => {
@@ -12,10 +19,10 @@ export const useAdminStore = defineStore("adminStore", {
       pages: {
         page: 1,
         size: 10,
-        total: 0
+        total: 0,
       },
       dataSource: [],
-      formSearch: {},
+      queryForm: {},
       formState: {
         id: undefined,
         roleIds: [],
@@ -25,16 +32,28 @@ export const useAdminStore = defineStore("adminStore", {
         avatarPath: undefined,
         email: undefined,
         phone: undefined,
+        motto: undefined,
         password: undefined,
+        confirmPassword: undefined,
         status: 1,
         fileList: [],
       },
-      remark: undefined,
+      loginFormState: {
+        username: undefined,
+        password: undefined,
+        captcha: undefined,
+        remember: false,
+      },
+      remark: "",
+      avatar: "",
       isTableLoading: false,
       isModalLoading: false,
+      isLoginFormLoading: false,
     };
   },
-  getters: {},
+  getters: {
+    userInfo: (): UserInfo => $local.get("userInfo"),
+  },
   actions: {
     /**
      * 获取管理员列表
@@ -43,14 +62,14 @@ export const useAdminStore = defineStore("adminStore", {
       const params = {
         page: this.pages.page,
         size: this.pages.size,
-        ...this.formSearch,
+        ...this.queryForm,
       };
       this.isTableLoading = true;
       try {
-        const {data} = await getAdminList(params);
+        const { data } = await getAdminList(params);
         console.log(data, "getAdminList");
         this.remark = data.remark;
-        this.dataSource = data.records
+        this.dataSource = data.records;
 
         this.pages = {
           size: data.size,
@@ -62,40 +81,71 @@ export const useAdminStore = defineStore("adminStore", {
       }
     },
     /**
-     * 获取管理员详情
+     * 获取管理员信息
      */
     async getAdminByIdRequest(id?: number) {
       this.isModalLoading = true;
       try {
-        const {data} = await getAdminById(id);
+        const { data } = await getAdminById(id);
         const file = {
           // 按照要求乱填即可
           url: data.avatar,
           path: data.avatarPath,
-          status: 'done',
-          uid: '1',
-        }
+          status: "done",
+          uid: "1",
+        };
         data.fileList = data.avatar ? [file] : [];
         data.roleIds = data.roles.map((item: any) => item.id);
-        this.formState = data
+        this.formState = data;
       } finally {
         this.isModalLoading = false;
       }
     },
+    /**
+     * 新增/编辑 管理员信息
+     * @returns
+     */
     async adminUpsertRequest() {
       this.isModalLoading = true;
-      const [response] = this.formState.fileList || []
+      const [response] = this.formState.fileList || [];
       const params = {
         ...this.formState,
         fileList: undefined,
         avatar: response?.path,
       };
       try {
-        const {data} = await adminUpsert(params);
+        const { data } = await adminUpsert(params);
         return data;
       } finally {
         this.isModalLoading = false;
       }
-    }
+    },
+    /**
+     * 根据用户名获取管理员头像
+     * @param username
+     */
+    async getAdminAvatarRequest(username?: string) {
+      try {
+        const { data } = await getAdminAvatar({ username: username });
+        this.avatar = data;
+      } catch (error) {
+        this.avatar = "";
+      }
+    },
+    /**
+     * 登录
+     */
+    async adminLoginRequest() {
+      const params = {
+        ...this.loginFormState,
+        remember: this.loginFormState.remember ? 1 : 0,
+      };
+      this.isLoginFormLoading = true;
+      try {
+        return adminLogin(params);
+      } finally {
+        this.isLoginFormLoading = false;
+      }
+    },
   },
 });

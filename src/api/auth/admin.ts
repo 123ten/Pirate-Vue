@@ -1,9 +1,9 @@
 import request from "@/utils/request";
-import {LoginResult, RefreshResult} from "../types/user";
-import {Response, ResponseList} from "@/types/request";
+import { LoginResult, RefreshResult } from "../types/user";
+import { Response, ResponseList } from "@/types/request";
 
 // 获取管理员头像
-export const getAvatar = (params) => {
+export const getAdminAvatar = (params) => {
   return request.get("/admin/avatar", params);
 };
 
@@ -13,7 +13,7 @@ export const adminUpsert = (data) => {
 };
 
 // 管理员登录
-export const login = (data): Promise<LoginResult> => {
+export const adminLogin = (data): Promise<LoginResult> => {
   return request.post("/admin/login", data);
 };
 
@@ -25,7 +25,7 @@ export const getAdminList = (params) => {
 // 刷新access_token
 export const refresh = (params): Promise<RefreshResult> => {
   return request.get("/admin/refresh", params);
-}
+};
 
 // 分页获取角色列表
 export const getRoleList = (params): Promise<Response<ResponseList>> => {
@@ -55,21 +55,18 @@ export const getAdminMenuList = (params) => {
 // 新增/修改菜单
 export const adminMenuUpsert = (data) => {
   return request.post("/admin/menu/upsert", data);
-}
+};
 
 // 删除菜单
 export const removeMenu = (data) => {
   return request.post("/admin/menu/remove", data);
-}
+};
 // 根据 Id 获取菜单详情
 export const getAdminMenuById = (id?: number) => {
   return request.get("/admin/menu/detail/" + id);
-}
+};
 
 // 修改菜单状态
 export const adminMenuStatus = (data) => {
   return request.post("/admin/menu/status", data);
-}
-
-
-
+};

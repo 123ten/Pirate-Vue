@@ -3,11 +3,11 @@
 import {MenuUnfoldOutlined} from "@ant-design/icons-vue";
 import {computed, defineOptions, onMounted} from "vue";
 import {storeToRefs} from "pinia";
-import {useMenuStore} from "@/store";
+import {useLayoutStore} from "@/store";
 import {useRoute} from "vue-router";
 
 const router = useRoute();
-const store = useMenuStore();
+const store = useLayoutStore();
 const {isMenuOutIn, getMenus} = storeToRefs(store);
 
 onMounted(() => {

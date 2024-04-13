@@ -20,9 +20,9 @@ import {
 } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
-import { useMenuStore } from "@/store";
+import { useLayoutStore } from "@/store";
 import { fullScreen } from "@/utils/dom";
-const store = useMenuStore();
+const store = useLayoutStore();
 const { isLayoutFullScreen, isCurrentPageReload, isAsideMenu } =
   storeToRefs(store);
 const router = useRouter();

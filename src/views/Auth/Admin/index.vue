@@ -15,7 +15,7 @@ import ProcessingTag from "@/components/IComponents/IOther/ProcessingTag/index.v
 import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
 
 const store = useAdminStore()
-const {formSearch, dataSource, pages, remark, isTableLoading} = storeToRefs(store);
+const {queryForm, dataSource, pages, remark, isTableLoading} = storeToRefs(store);
 const {getAdminListRequest, getAdminByIdRequest} = store
 
 const {t} = useI18n();
@@ -160,7 +160,7 @@ const handleFormModalCancel = () => {
 // 添加/编辑 - confirm
 const handleFormModalConfirm = async () => {
   handleFormModalCancel();
-  await handleQuery(formSearch);
+  await handleQuery(queryForm);
   clearFormModalCache()
 };
 

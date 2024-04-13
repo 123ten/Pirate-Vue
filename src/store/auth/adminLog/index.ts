@@ -1,10 +1,9 @@
 /**
  * 管理员日志列表
  */
-import {defineStore} from "pinia";
-import {getAdminLogById, getAdminLogList} from "@/api/auth/adminLog";
-import {AdminLogStoreState} from "./types";
-
+import { defineStore } from "pinia";
+import { getAdminLogById, getAdminLogList } from "@/api/auth/adminLog";
+import { AdminLogStoreState } from "./types";
 
 export const useAdminLogStore = defineStore("adminLogStore", {
   state: (): AdminLogStoreState => {
@@ -12,9 +11,9 @@ export const useAdminLogStore = defineStore("adminLogStore", {
       pages: {
         page: 1,
         size: 10,
-        total: 0
+        total: 0,
       },
-      formSearch: {},
+      queryForm: {},
       dataSource: [],
       detailInfo: {},
       isTableLoading: false,
@@ -30,13 +29,13 @@ export const useAdminLogStore = defineStore("adminLogStore", {
       const params = {
         page: this.pages.page,
         size: this.pages.size,
-        ...this.formSearch,
+        ...this.queryForm,
       };
       this.isTableLoading = true;
       try {
-        const {data} = await getAdminLogList(params);
-        console.log(data, "getAdminLogList");
-        this.dataSource = data.records
+        const { data } = await getAdminLogList(params);
+        // console.log(data, "getAdminLogList");
+        this.dataSource = data.records;
 
         this.pages = {
           size: data.size,
@@ -53,12 +52,12 @@ export const useAdminLogStore = defineStore("adminLogStore", {
     async getAdminLogByIdRequest(id?: number) {
       this.isModalLoading = true;
       try {
-        const {data} = await getAdminLogById(id);
+        const { data } = await getAdminLogById(id);
         data.params = data.params && JSON.parse(data.params);
-        this.detailInfo = data
+        this.detailInfo = data;
       } finally {
         this.isModalLoading = false;
       }
-    }
+    },
   },
 });

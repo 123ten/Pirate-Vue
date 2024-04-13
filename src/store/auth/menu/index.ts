@@ -1,15 +1,19 @@
 /**
  * 管理员日志列表
  */
-import {defineStore} from "pinia";
-import {adminMenuStatus, adminMenuUpsert, getAdminMenuById, getAdminMenuList} from "@/api/auth/admin";
-import {AdminMenuStoreState} from "@/store/auth/menu/types";
-
+import { defineStore } from "pinia";
+import {
+  adminMenuStatus,
+  adminMenuUpsert,
+  getAdminMenuById,
+  getAdminMenuList,
+} from "@/api/auth/admin";
+import { AdminMenuStoreState } from "@/store/auth/menu/types";
 
 export const useAdminMenuStore = defineStore("adminMenuStore", {
   state(): AdminMenuStoreState {
     return {
-      formSearch: {},
+      queryForm: {},
       dataSource: [],
       formState: {
         parentId: undefined,
@@ -28,7 +32,7 @@ export const useAdminMenuStore = defineStore("adminMenuStore", {
       },
       isTableLoading: false,
       isModalLoading: false,
-    }
+    };
   },
   actions: {
     /**
@@ -37,7 +41,7 @@ export const useAdminMenuStore = defineStore("adminMenuStore", {
     async getAdminMenuListRequest() {
       this.isTableLoading = true;
       try {
-        const {data} = await getAdminMenuList(this.formSearch);
+        const { data } = await getAdminMenuList(this.queryForm);
         console.log(data, "getAdminMenuList");
         this.dataSource = data.records;
       } finally {
@@ -50,9 +54,9 @@ export const useAdminMenuStore = defineStore("adminMenuStore", {
     async getAdminMenuByIdRequest(id?: number) {
       this.isModalLoading = true;
       try {
-        const {data} = await getAdminMenuById(id);
+        const { data } = await getAdminMenuById(id);
         data.parentId = data.parentId || undefined;
-        this.formState = data
+        this.formState = data;
       } finally {
         this.isModalLoading = false;
       }
@@ -63,7 +67,7 @@ export const useAdminMenuStore = defineStore("adminMenuStore", {
     async adminMenuUpsertRequest() {
       this.isModalLoading = true;
       try {
-        const {data} = await adminMenuUpsert(this.formState);
+        const { data } = await adminMenuUpsert(this.formState);
         return data;
       } finally {
         this.isModalLoading = false;
@@ -74,6 +78,6 @@ export const useAdminMenuStore = defineStore("adminMenuStore", {
      */
     async adminMenuStatusRequest(params) {
       await adminMenuStatus(params);
-    }
-  }
-})
+    },
+  },
+});

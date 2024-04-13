@@ -3,12 +3,12 @@
 import {defineEmits, defineOptions, defineProps, withDefaults} from "vue";
 import {ButtonProps, TooltipProps} from "ant-design-vue";
 import {storeToRefs} from "pinia";
-import {useMenuStore} from "@/store";
+import {useLayoutStore} from "@/store";
 import {TButtonType} from "@/types";
 import IButton from "@/components/IComponents/IButton/index.vue";
 import type {CSSPropertiesType} from "@/types/style";
 
-const store = useMenuStore();
+const store = useLayoutStore();
 const {terminalType} = storeToRefs(store);
 
 interface ITooltipProps extends TooltipProps {

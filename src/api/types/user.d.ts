@@ -1,7 +1,7 @@
-import {Response} from '@/types/request';
+import { Response } from "@/types/request";
 
 export interface UserInfo {
-  id: string;
+  id: number;
   username: string;
   nickname: string;
   avatar: string;
@@ -21,6 +21,5 @@ interface LoginData extends RefreshData {
 }
 
 export type LoginResult = Response<LoginData>;
-
 
 export type RefreshResult = Response<RefreshData>;

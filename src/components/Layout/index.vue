@@ -1,9 +1,9 @@
 <!-- layout 主体 -->
 <script setup lang="ts">
 import {storeToRefs} from "pinia";
-import {useMenuStore} from "@/store";
+import {useLayoutStore} from "@/store";
 
-const store = useMenuStore();
+const store = useLayoutStore();
 const {isLayoutFullScreen, isCurrentPageReload} = storeToRefs(store);
 </script>
 

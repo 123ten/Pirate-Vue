@@ -2,9 +2,9 @@
 <script setup lang="ts">
 import {defineOptions, onBeforeMount} from "vue";
 import {storeToRefs} from "pinia";
-import {useMenuStore} from "@/store";
+import {useLayoutStore} from "@/store";
 
-const store = useMenuStore();
+const store = useLayoutStore();
 const {isMenuOutIn, isAsideMenu, isLayoutFullScreen} = storeToRefs(store);
 
 onBeforeMount(() => {

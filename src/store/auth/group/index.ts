@@ -1,15 +1,19 @@
 /**
  * 角色组
  */
-import {defineStore} from "pinia";
-import {adminMenuStatus, adminMenuUpsert, getRoleById, getRoleList} from "@/api/auth/admin";
-import {RoleStoreState} from "./types";
-
+import { defineStore } from "pinia";
+import {
+  adminMenuStatus,
+  adminMenuUpsert,
+  getRoleById,
+  getRoleList,
+} from "@/api/auth/admin";
+import { RoleStoreState } from "./types";
 
 export const useRoleStore = defineStore("roleStore", {
   state(): RoleStoreState {
     return {
-      formSearch: {},
+      queryForm: {},
       dataSource: [],
       formState: {
         parentId: undefined,
@@ -28,7 +32,7 @@ export const useRoleStore = defineStore("roleStore", {
       },
       isTableLoading: false,
       isModalLoading: false,
-    }
+    };
   },
   actions: {
     /**
@@ -37,7 +41,7 @@ export const useRoleStore = defineStore("roleStore", {
     async getRoleListRequest() {
       this.isTableLoading = true;
       try {
-        const {data} = await getRoleList(this.formSearch);
+        const { data } = await getRoleList(this.queryForm);
         console.log(data, "getRoleList");
         this.dataSource = data.records;
       } finally {
@@ -50,9 +54,9 @@ export const useRoleStore = defineStore("roleStore", {
     async getRoleByIdRequest(id?: number) {
       this.isModalLoading = true;
       try {
-        const {data} = await getRoleById(id);
+        const { data } = await getRoleById(id);
         data.parentId = data.parentId || undefined;
-        this.formState = data
+        this.formState = data;
       } finally {
         this.isModalLoading = false;
       }
@@ -63,7 +67,7 @@ export const useRoleStore = defineStore("roleStore", {
     async adminMenuUpsertRequest() {
       this.isModalLoading = true;
       try {
-        const {data} = await adminMenuUpsert(this.formState);
+        const { data } = await adminMenuUpsert(this.formState);
         return data;
       } finally {
         this.isModalLoading = false;
@@ -74,6 +78,6 @@ export const useRoleStore = defineStore("roleStore", {
      */
     async adminMenuStatusRequest(params) {
       await adminMenuStatus(params);
-    }
-  }
-})
+    },
+  },
+});

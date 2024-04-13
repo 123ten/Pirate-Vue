@@ -3,12 +3,12 @@
 import {defineOptions, defineProps, withDefaults} from "vue";
 import {useRouter} from "vue-router";
 import {storeToRefs} from 'pinia';
-import {useMenuStore} from "@/store";
+import {useLayoutStore} from "@/store";
 import SiderItem from './index.vue'
 import data from "../../data.json";
 import * as antIcons from "@ant-design/icons-vue";
 
-const store = useMenuStore();
+const store = useLayoutStore();
 const {isMenuOutIn} = storeToRefs(store);
 
 interface IPropsMenuItem {

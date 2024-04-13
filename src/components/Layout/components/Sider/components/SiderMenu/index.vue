@@ -5,14 +5,14 @@ import {MenuFoldOutlined, MenuUnfoldOutlined,} from "@ant-design/icons-vue";
 import {onMounted, ref, watch} from "vue";
 import {storeToRefs} from "pinia";
 
-import {useMenuStore} from "@/store";
+import {useLayoutStore} from "@/store";
 
 import {useRoute} from "vue-router";
 
 import data from "../../data.json";
 
 const route = useRoute();
-const store = useMenuStore();
+const store = useLayoutStore();
 const {isMenuOutIn, isAsideMenu, menus} = storeToRefs(store);
 
 const openKeys = ref<string[]>([]);

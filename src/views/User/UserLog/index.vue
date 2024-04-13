@@ -74,7 +74,6 @@ const pages = ref<IPages>({
   page: 1,
   total: 0,
 });
-const formSearch = reactive<any>({});
 
 const avatarPreviewSrc = ref("");
 const isEdit = ref<boolean>(false); // 是否编辑

@@ -1,8 +1,8 @@
-import {FormProps, PaginationProps, TableProps} from "ant-design-vue";
-import {FormSearchType, IOptions} from "@/types/form";
-import {CSSPropertiesType, TStyle} from "@/types/style";
-import {ColumnType} from "ant-design-vue/es/table";
-import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
+import { FormProps, PaginationProps, TableProps } from "ant-design-vue";
+import { QueryFormType, IOptions } from "@/types/form";
+import { CSSPropertiesType, TStyle } from "@/types/style";
+import { ColumnType } from "ant-design-vue/es/table";
+import { DefaultRecordType } from "ant-design-vue/es/vc-table/interface";
 
 type CustomHeaderCellType = {
   style: CSSPropertiesType;
@@ -11,7 +11,8 @@ type CustomHeaderCellType = {
 // 	设置选择器类型
 type DateType = "date" | "week" | "month" | "quarter" | "year";
 
-export interface IColumns<RecordType = DefaultRecordType> extends ColumnType<RecordType> {
+export interface IColumns<RecordType = DefaultRecordType>
+  extends ColumnType<RecordType> {
   /**
    * key 需要必填
    */
@@ -19,7 +20,7 @@ export interface IColumns<RecordType = DefaultRecordType> extends ColumnType<Rec
   /**
    * 表格搜索内容类型
    */
-  type?: FormSearchType;
+  type?: QueryFormType;
   /**
    * select/radio/tree 选择项
    */
@@ -85,7 +86,7 @@ export interface IColumns<RecordType = DefaultRecordType> extends ColumnType<Rec
   /**
    * 设置头部单元格属性
    */
-  customHeaderCell?(column: IColumns): CustomHeaderCellType
+  customHeaderCell?(column: IColumns): CustomHeaderCellType;
 }
 
 /**
@@ -104,13 +105,12 @@ export interface IPages {
    * 总条数
    */
   total: number;
-
 }
 
 /**
  * 分页参数
  */
-export type IPagination = PaginationProps
+export type IPagination = PaginationProps;
 
 /**
  * 默认表格字段
@@ -120,7 +120,7 @@ export interface RecordType {
   key?: string | number;
   updateTime?: string;
   createTime?: string;
-  children?: RecordType[]
+  children?: RecordType[];
 }
 
 interface I18nPrefix {
@@ -136,15 +136,15 @@ export interface ITableProps {
   /**
    * 数据数组
    */
-  dataSource: TableProps['dataSource'];
+  dataSource: TableProps["dataSource"];
   /**
    * 表格行是否可选择
    */
-  rowSelection?: TableProps['rowSelection'];
+  rowSelection?: TableProps["rowSelection"];
   /**
    * 指定每页可以显示多少条
    */
-  pagination?: TableProps['pagination'];
+  pagination?: TableProps["pagination"];
   /**
    * 页码
    */
@@ -158,15 +158,15 @@ export interface ITableProps {
   /**
    * 表格大小
    */
-  size?: TableProps['size'];
+  size?: TableProps["size"];
   /**
    * 表格行 key 的取值
    */
-  rowKey?: TableProps['rowKey'];
+  rowKey?: TableProps["rowKey"];
   /**
    * 设置横向或纵向滚动，也可用于指定滚动区域的宽和高
    */
-  scroll?: TableProps['scroll'];
+  scroll?: TableProps["scroll"];
   /**
    * 国际化前缀
    */
@@ -174,7 +174,7 @@ export interface ITableProps {
   /**
    * 指定树形结构的列名 默认 children
    */
-  childrenColumnName?: TableProps['childrenColumnName'];
+  childrenColumnName?: TableProps["childrenColumnName"];
   /**
    * 关键字搜索框 占位内容
    */
@@ -202,12 +202,15 @@ export interface ITableProps {
 /**
  * @description: 默认列表状态值
  */
-export interface DefaultTableState<RecordType = DefaultRecordType, FormSearchType = any> {
+export interface DefaultTableState<
+  RecordType = DefaultRecordType,
+  QueryFormType = any
+> {
   isTableLoading: boolean;
   pages: IPages;
-  remark?: string,
-  formSearch?: FormSearchType
-  dataSource: RecordType[]
+  remark?: string;
+  queryForm: QueryFormType;
+  dataSource: RecordType[];
 }
 
 /** 1 是 0 否 */

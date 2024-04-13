@@ -82,7 +82,6 @@ const columns: IColumns[] = [
 
 const selectedRowKeys = ref<AdminLogDataSource["key"][]>([]);
 const avatarPreviewSrc = ref("");
-const formSearch = reactive({})
 
 const isAvatarPreviewSrc = ref<boolean>(false);
 const isDetailModalVisible = ref<boolean>(false);

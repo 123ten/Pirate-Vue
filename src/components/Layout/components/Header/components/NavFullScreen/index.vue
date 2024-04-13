@@ -9,10 +9,10 @@ import {
 } from "vue";
 import { CompressOutlined, ExpandOutlined } from "@ant-design/icons-vue";
 import { storeToRefs } from "pinia";
-import { useMenuStore } from "@/store";
+import { useLayoutStore } from "@/store";
 import { fullScreen, exitFullScreen } from "@/utils/dom";
 
-const store = useMenuStore();
+const store = useLayoutStore();
 const { isFullScreen, isLayoutFullScreen } = storeToRefs(store);
 
 interface IProps {

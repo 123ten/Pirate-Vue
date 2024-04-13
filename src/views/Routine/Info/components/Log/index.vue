@@ -1,28 +1,43 @@
 <!-- 个人资料 - 操作日志 -->
 <script setup lang="ts">
-import {reactive} from "vue";
-import {IPages} from "@/types";
+import { onMounted } from "vue";
+import { useAdminLogStore, useAdminStore } from "@/store";
+import { storeToRefs } from "pinia";
+const adminLogStore = useAdminLogStore();
+const adminStore = useAdminStore();
+const { getAdminLogListRequest } = adminLogStore;
+const { userInfo } = adminStore;
+const { queryForm, dataSource, pages, isTableLoading } =
+  storeToRefs(adminLogStore);
 
-const pages = reactive<IPages>({
-  size: 10,
-  page: 1,
-  total: 0,
+onMounted(async () => {
+  queryForm.value.userId = userInfo.id;
+  await getAdminLogListRequest();
 });
 
+const handlePageChange = async (page: number, pageSize: number) => {
+  pages.value.page = page;
+  pages.value.size = pageSize;
+  await getAdminLogListRequest();
+};
 </script>
 
 <template>
-  <a-timeline>
-    <a-timeline-item color="gray">
-      <p>登录</p>
-      <p>2023-01-01 01:01:10</p>
-    </a-timeline-item>
-  </a-timeline>
-  <a-pagination
+  <a-spin :spinning="isTableLoading">
+    <a-timeline>
+      <a-timeline-item v-for="item in dataSource" :key="item.id" color="gray">
+        <p>{{ item.title }}</p>
+        <p>{{ item.createTime }}</p>
+      </a-timeline-item>
+    </a-timeline>
+    <a-pagination
       v-model:current="pages.page"
+      :show-size-changer="false"
       show-quick-jumper
       :total="pages.total"
-  />
+      @change="handlePageChange"
+    />
+  </a-spin>
 </template>
 
 <style lang="less" scoped>

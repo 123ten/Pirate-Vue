@@ -33,7 +33,7 @@ defineOptions({
   >
     <template #content>
       <div class="admin-info-base">
-        <a-avatar :size="70" :src="userInfo.avatar">
+        <a-avatar :size="70" :src="userInfo.avatar" class="avatar-turn">
           <template #icon v-if="!userInfo.avatar">
             <user-outlined style="font-size: 70px"/>
           </template>
