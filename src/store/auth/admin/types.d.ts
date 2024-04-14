@@ -35,7 +35,7 @@ export interface AdminDetailInfo extends AdminDataSource {
   /** 密码 */
   password?: string;
   /** 确认密码 */
-  confirmPassword?: string;
+  checkPassword?: string;
   /** 角色组 */
   fileList?: any[];
 }

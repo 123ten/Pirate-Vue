@@ -23,8 +23,8 @@ export const getAdminList = (params) => {
 };
 
 // 刷新access_token
-export const refresh = (params): Promise<RefreshResult> => {
-  return request.get("/admin/refresh", params);
+export const refresh = (refreshToken: string): Promise<RefreshResult> => {
+  return request.get("/admin/refresh", { refreshToken });
 };
 
 // 分页获取角色列表

@@ -34,7 +34,7 @@ export const useAdminStore = defineStore("adminStore", {
         phone: undefined,
         motto: undefined,
         password: undefined,
-        confirmPassword: undefined,
+        checkPassword: undefined,
         status: 1,
         fileList: [],
       },

@@ -6,22 +6,53 @@ import {
   LoadingOutlined,
   UserOutlined,
 } from "@ant-design/icons-vue";
-import { message, notification } from "ant-design-vue";
+import { FormInstance, notification } from "ant-design-vue";
 import { Form } from "ant-design-vue";
 import { useAdminStore } from "@/store";
 import { storeToRefs } from "pinia";
+import { Rule } from "ant-design-vue/es/form";
+import { Rules } from "@/types/form";
 const store = useAdminStore();
 const { formState } = storeToRefs(store);
 const { userInfo, getAdminByIdRequest } = store;
 
+const formRef = ref<FormInstance>();
 // https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png
+const validatePassword = async (_rule: Rule, value: string) => {
+  if (value) {
+    validateField("checkPassword", formState.value.checkPassword, [
+      { validator: validateCheckPassword },
+    ]);
+  }
+  return Promise.resolve();
+};
+const validateCheckPassword = async (_rule: Rule, value: string) => {
+  if (formState.value.password) {
+    if (!value) {
+      return Promise.reject("Please input the password again");
+    } else if (value !== formState.value.password) {
+      return Promise.reject("Two inputs don't match!");
+    }
+  }
+  return Promise.resolve();
+};
 // 校验规则
-const rules = reactive({
+const rules = reactive<Rules>({
   nickname: [{ required: true, message: "请输入用户昵称" }],
+  password: [{ validator: validatePassword, trigger: "change" }],
+  checkPassword: [
+    {
+      validator: validateCheckPassword,
+      trigger: "change",
+    },
+  ],
 });
 const fileList = ref<object[]>([]);
 const isAvatarUploadLoading = ref<boolean>(false);
-const { resetFields, validate, validateInfos } = Form.useForm(formState, rules);
+const { resetFields, validate, validateInfos, validateField } = Form.useForm(
+  formState,
+  rules
+);
 
 onMounted(async () => {
   await getAdminByIdRequest(userInfo.id);
@@ -53,6 +84,7 @@ const handleAvatarUploadChange = ({ file }: any) => {
 
 const handleSubmit = async () => {
   await validate();
+  console.log("handleSubmit -->", formState.value);
 };
 </script>
 
@@ -98,7 +130,6 @@ const handleSubmit = async () => {
         name="basic"
         autocomplete="off"
         layout="vertical"
-        :rules="rules"
       >
         <a-form-item label="用户名">
           <a-input
@@ -113,7 +144,7 @@ const handleSubmit = async () => {
             placeholder="请输入用户昵称"
           />
         </a-form-item>
-        <a-form-item label="邮箱地址">
+        <a-form-item label="邮箱地址" name="email">
           <a-input-search
             v-model:value="formState.email"
             placeholder="邮箱地址"
@@ -126,7 +157,7 @@ const handleSubmit = async () => {
             </template>
           </a-input-search>
         </a-form-item>
-        <a-form-item label="手机号码">
+        <a-form-item label="手机号码" name="phone">
           <a-input-search
             v-model:value="formState.phone"
             placeholder="手机号码"
@@ -139,21 +170,21 @@ const handleSubmit = async () => {
             </template>
           </a-input-search>
         </a-form-item>
-        <a-form-item label="签名">
+        <a-form-item label="签名" name="motto">
           <a-textarea
             v-model:value="formState.motto"
             placeholder="这家伙很懒，什么都没有留下"
           />
         </a-form-item>
-        <a-form-item label="新密码">
+        <a-form-item label="新密码" v-bind="validateInfos.password">
           <a-input
             v-model:value="formState.password"
             placeholder="不修改请留空"
           />
         </a-form-item>
-        <a-form-item label="确认密码">
+        <a-form-item label="确认密码" v-bind="validateInfos.checkPassword">
           <a-input
-            v-model:value="formState.confirmPassword"
+            v-model:value="formState.checkPassword"
             placeholder="不修改请留空"
           />
         </a-form-item>
