@@ -39,12 +39,8 @@ onBeforeUnmount(() => {
 // 登录
 const handleLogin = async () => {
   try {
-    const { data } = await adminLoginRequest();
-    $local.set("accessToken", data.accessToken);
-    $local.set("refreshToken", data.refreshToken);
-    $local.set("userInfo", data.userInfo);
+    const data = await adminLoginRequest();
     await router.push("/");
-
     await setTimeoutPromise(500);
     notification.success({
       message: t("success.login"),

@@ -44,6 +44,7 @@ export const useAdminStore = defineStore("adminStore", {
         captcha: undefined,
         remember: false,
       },
+      rawUserInfo: {},
       remark: "",
       avatar: "",
       isTableLoading: false,
@@ -52,7 +53,9 @@ export const useAdminStore = defineStore("adminStore", {
     };
   },
   getters: {
-    userInfo: (): UserInfo => $local.get("userInfo"),
+    userInfo(): UserInfo {
+      return this.userInfo || $local.get("userInfo");
+    },
   },
   actions: {
     /**
@@ -142,7 +145,12 @@ export const useAdminStore = defineStore("adminStore", {
       };
       this.isLoginFormLoading = true;
       try {
-        return adminLogin(params);
+        const { data } = await adminLogin(params);
+        this.rawUserInfo = data.userInfo;
+        $local.set("accessToken", data.accessToken);
+        $local.set("refreshToken", data.refreshToken);
+        $local.set("userInfo", data.userInfo);
+        return data;
       } finally {
         this.isLoginFormLoading = false;
       }

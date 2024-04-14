@@ -1,3 +1,4 @@
+import { UserInfo } from "@/api/types/user";
 import {
   DefaultStatus,
   DefaultTableState,
@@ -54,6 +55,8 @@ export interface AdminState extends DefaultTableState<AdminDataSource> {
   loginFormState: LoginFormState;
   /** 头像 */
   avatar?: string;
+  /** 用户信息 */
+  rawUserInfo?: UserInfo;
   /** modal加载 */
   isModalLoading: boolean;
   /** login form表单加载 */

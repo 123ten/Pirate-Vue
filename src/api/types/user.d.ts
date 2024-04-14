@@ -1,14 +1,14 @@
 import { Response } from "@/types/request";
 
 export interface UserInfo {
-  id: number;
-  username: string;
-  nickname: string;
-  avatar: string;
-  email: string;
-  phone: string;
-  roles: string[];
-  permissions: string[];
+  id?: number;
+  username?: string;
+  nickname?: string;
+  avatar?: string;
+  email?: string;
+  phone?: string;
+  roles?: string[];
+  permissions?: string[];
 }
 
 interface RefreshData {
