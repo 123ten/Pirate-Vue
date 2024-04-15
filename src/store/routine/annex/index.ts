@@ -1,21 +1,20 @@
 /**
  * 管理员日志列表
  */
-import { defineStore } from "pinia";
-import { adminMenuUpsert, getAdminMenuById } from "@/api/auth/admin";
-import { getFileList } from "@/api/files";
-import { RoutineAnnexStoreState } from "@/store/routine/annex/types";
+import {defineStore} from "pinia";
+import {adminMenuUpsert, getAdminMenuById} from "@/api/auth/admin";
+import {getFileList} from "@/api/files";
+import {RoutineAnnexStoreState} from "@/store/routine/annex/types";
 
 export const useRoutineAnnexStore = defineStore("routineAnnexStore", {
   state(): RoutineAnnexStoreState {
     return {
       queryForm: {
+        name: "",
         username: "",
-        usertype: "",
+        usertype: '',
         mimetype: "",
-        upload_count: "",
         filename: "",
-        createTime: "",
       },
       dataSource: [],
       formState: {},
@@ -41,7 +40,7 @@ export const useRoutineAnnexStore = defineStore("routineAnnexStore", {
       };
       this.isTableLoading = true;
       try {
-        const { data } = await getFileList(params);
+        const {data} = await getFileList(params);
         console.log(data, "getFileList");
         this.remark = data.remark;
         this.dataSource = data.records;
@@ -61,7 +60,7 @@ export const useRoutineAnnexStore = defineStore("routineAnnexStore", {
     async getAdminMenuByIdRequest(id?: number) {
       this.isModalLoading = true;
       try {
-        const { data } = await getAdminMenuById(id);
+        const {data} = await getAdminMenuById(id);
         data.parentId = data.parentId || undefined;
         this.formState = data;
       } finally {
@@ -74,7 +73,7 @@ export const useRoutineAnnexStore = defineStore("routineAnnexStore", {
     async adminMenuUpsertRequest() {
       this.isModalLoading = true;
       try {
-        const { data } = await adminMenuUpsert(this.formState);
+        const {data} = await adminMenuUpsert(this.formState);
         return data;
       } finally {
         this.isModalLoading = false;

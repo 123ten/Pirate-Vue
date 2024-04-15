@@ -6,6 +6,7 @@ import type {IColumns, IPages} from "@/types";
 import {formatFileSize, sortNumber} from "@/utils/common";
 import {storeToRefs} from "pinia";
 import {useRoutineAnnexStore} from "@/store/routine/annex";
+import ProcessingTag from "@/components/IComponents/IOther/ProcessingTag/index.vue";
 
 const store = useRoutineAnnexStore()
 const {dataSource, isTableLoading, pages, remark} = storeToRefs(store);
@@ -26,6 +27,7 @@ const columns: IColumns[] = [
     align: "center",
     ellipsis: true,
     width: 100,
+    search: true,
   },
   {
     title: "用户名",
@@ -40,11 +42,15 @@ const columns: IColumns[] = [
     align: "center",
     width: 100,
     search: true,
-    type: "date",
+    type: "select",
     options: [
       {
-        label: "测试",
+        label: "管理员",
         value: 1,
+      },
+      {
+        label: "普通用户",
+        value: 2,
       },
     ],
   },
@@ -59,6 +65,7 @@ const columns: IColumns[] = [
     dataIndex: "mimetype",
     align: "center",
     width: 100,
+    search: true
   },
   {
     title: "预览",
@@ -77,12 +84,16 @@ const columns: IColumns[] = [
     dataIndex: "updateTime",
     align: "center",
     width: 180,
+    search: true,
+    type: 'range-picker',
   },
   {
     title: "首次上传时间",
     dataIndex: "createTime",
     align: "center",
     width: 180,
+    search: true,
+    type: 'range-picker',
   },
   {
     title: "操作",
@@ -101,6 +112,10 @@ onMounted(async () => {
 const getList = async () => {
   await getFileListRequest()
 };
+
+const handleQuery = async (query) => {
+  console.log('handleQuery', query)
+}
 
 // 分页
 const onPagesChange = async (records: IPages) => {
@@ -125,6 +140,7 @@ const onSelectChange = (rowKeys: string[]) => {
         :loading="isTableLoading"
         :remark="remark"
         @reload="getList"
+        @query="handleQuery"
         @pagesChange="onPagesChange"
         @selectChange="onSelectChange"
     >
@@ -143,9 +159,7 @@ const onSelectChange = (rowKeys: string[]) => {
       </template>
 
       <template #usertype="{value}">
-        <a-tag color="processing">
-          {{ value === 1 ? "管理员" : "普通用户" }}
-        </a-tag>
+        <processing-tag :value="value === 1 ? '管理员' : '普通用户'"/>
       </template>
       <template #size="{value}">
         {{ formatFileSize(value) }}

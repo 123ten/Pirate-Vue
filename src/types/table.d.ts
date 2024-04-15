@@ -1,18 +1,18 @@
-import { FormProps, PaginationProps, TableProps } from "ant-design-vue";
-import { QueryFormType, IOptions } from "@/types/form";
-import { CSSPropertiesType, TStyle } from "@/types/style";
-import { ColumnType } from "ant-design-vue/es/table";
-import { DefaultRecordType } from "ant-design-vue/es/vc-table/interface";
+import {FormProps, PaginationProps, TableProps} from "ant-design-vue";
+import {IOptions, QueryFormType} from "@/types/form";
+import {CSSPropertiesType, TStyle} from "@/types/style";
+import {ColumnType} from "ant-design-vue/es/table";
+import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
 
 type CustomHeaderCellType = {
   style: CSSPropertiesType;
 };
 
 // 	设置选择器类型
-type DateType = "date" | "week" | "month" | "quarter" | "year";
+type Picker = "date" | "week" | "month" | "quarter" | "year";
 
 export interface IColumns<RecordType = DefaultRecordType>
-  extends ColumnType<RecordType> {
+    extends ColumnType<RecordType> {
   /**
    * key 需要必填
    */
@@ -28,7 +28,7 @@ export interface IColumns<RecordType = DefaultRecordType>
   /**
    * 日期格式
    */
-  dateType?: DateType;
+  picker?: Picker;
   /**
    * 占位内容
    */
@@ -66,10 +66,6 @@ export interface IColumns<RecordType = DefaultRecordType>
    * 是否允许搜索
    */
   search?: boolean;
-  /**
-   * 单元格内容根据宽度自动省略
-   */
-  ellipsis?: boolean | { showTitle?: boolean };
   /**
    * 是否隐藏
    */
@@ -203,8 +199,8 @@ export interface ITableProps {
  * @description: 默认列表状态值
  */
 export interface DefaultTableState<
-  RecordType = DefaultRecordType,
-  QueryFormType = any
+    RecordType = DefaultRecordType,
+    QueryFormType = any
 > {
   isTableLoading: boolean;
   pages: IPages;

@@ -9,7 +9,7 @@ import {
   onMounted,
   reactive,
   ref,
-  toRef,
+  toRaw,
   watch,
   withDefaults,
 } from "vue";
@@ -20,6 +20,8 @@ import {useI18n} from "vue-i18n";
 import ITooltip from "@/components/IComponents/ITooltip/index.vue";
 import {cloneDeep, throttle} from "lodash-es";
 import {ITableProps} from "@/types/table";
+import QueryForm from './components/QueryForm/index.vue'
+import QueryFormItem from './components/QueryFormItem/index.vue'
 
 // 国际化
 const {locale, t} = useI18n();
@@ -74,9 +76,8 @@ console.log('columnsCache', columnsCache)
 const formRef = ref<FormInstance>();
 
 // 内置搜索
-const formSearch = reactive<any>({});
+const queryForm = reactive<any>({});
 
-const columns = toRef(props, 'columns'); // 表格列配置项
 const menuChecked = ref<(IColumns['dataIndex'] | IColumns['key'])[]>([]); // 选中显示隐藏表头
 const menuCheckList = ref<IColumns[]>([]); // 表头的数据列
 const expandedRowKeys = ref<string[]>([]);
@@ -267,13 +268,13 @@ const columnsComputed = computed(() => {
  * @description 搜索查询
  */
 const onQuery = () => {
-  console.log("formSearch", formSearch);
-  emits("query", formSearch);
+  console.log("queryForm", queryForm);
+  emits("query", toRaw(queryForm));
 };
 
 const onReset = () => {
   emits("reset");
-  formRef.value?.resetFields();
+  formRef.value?.resetFields()
 };
 
 const localesNameFn = (column: IColumns) => {
@@ -313,92 +314,29 @@ defineExpose({
           <info-circle-filled style="color: #909399"/>
         </template>
       </a-alert>
-      <!-- formSearch -->
+      <!-- queryForm -->
       <transition name="zoom-in">
-        <div v-if="isOpenSearch && formColumns.length" class="i-table-form">
-          <slot name="formSearch">
-            <div class="i-table-form-default">
-              <a-form
-                  ref="formRef"
-                  :model="formSearch"
-                  layout="inline"
-                  name="basic"
-                  autocomplete="off"
-                  class="i-table-form-search"
-                  @keyup.enter.native="onQuery"
-                  v-bind="props.formOptions"
-              >
-                <a-row
-                    v-for="(columns, index) in formColumns"
-                    :key="index"
-                    class="w-[100%]"
-                >
-                  <a-col
-                      v-for="column in columns"
-                      :key="column.dataIndex"
-                      :span="column.span || 6"
-                  >
-                    <a-form-item
-                        :label="column.title"
-                        :name="column.dataIndex"
-                        class="i-form-item"
-                    >
-                      <slot :name="`${column.dataIndex}Search`">
-                        <!-- input 输入框 -->
-                        <a-input
-                            v-if="!column.type || column.type === 'input'"
-                            v-model:value="formSearch[column.dataIndex]"
-                            allow-clear
-                            :placeholder="column.title || column.placeholder"
-                            v-bind="column.propOptions"
-                        />
-                        <!-- select 下拉框 -->
-                        <a-select
-                            v-else-if="column.type === 'select'"
-                            v-model:value="formSearch[column.dataIndex]"
-                            allow-clear
-                            :placeholder="column.title || column.placeholder"
-                            v-bind="column.propOptions"
-                        >
-                          <a-select-option
-                              v-for="option in column.options"
-                              :key="option.value"
-                              :value="option.value"
-                          >
-                            {{ option.label }}
-                          </a-select-option>
-                        </a-select>
-                        <!-- radio 单选框 -->
-                        <a-radio-group
-                            v-else-if="column.type === 'radio'"
-                            v-model:value="formSearch[column.dataIndex]"
-                            v-bind="column.propOptions"
-                        >
-                          <a-radio
-                              v-for="option in column.options"
-                              :key="option.value"
-                              :value="option.value"
-                          >
-                            {{ option.label }}
-                          </a-radio>
-                        </a-radio-group>
-                        <!-- date-picker 日期选择框 -->
-                        <a-date-picker
-                            v-else-if="column.type === 'date'"
-                            v-model:value="formSearch[column.dataIndex]"
-                            :picker="column.dateType"
-                            v-bind="column.propOptions"
-                        />
-                      </slot>
-                    </a-form-item>
-                  </a-col>
-                </a-row>
-              </a-form>
-              <a-space class="i-form-operation">
-                <a-button type="primary" @click="onQuery">查询</a-button>
-                <a-button @click="onReset">重置</a-button>
-              </a-space>
-            </div>
+        <!-- z-0 层级低于 table-header -->
+        <div
+            v-if="isOpenSearch && formColumns.length"
+            class="i-table-form relative z-0 pb-0 origin-bottom overflow-hidden"
+        >
+          <slot name="queryForm">
+            <query-form
+                ref="formRef"
+                :model="queryForm"
+                :columns="formColumns"
+                @keyup.enter.native="onQuery"
+                @query="onQuery"
+                @reset="onReset"
+                v-bind="props.formOptions"
+            >
+              <template #default="scope">
+                <slot v-bind="scope">
+                  <query-form-item :column="scope.column" :model="queryForm"/>
+                </slot>
+              </template>
+            </query-form>
           </slot>
         </div>
       </transition>
