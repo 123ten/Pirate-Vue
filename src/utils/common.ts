@@ -2,6 +2,8 @@
 import {deepArguments, IPages} from "@/types";
 import {TagProps} from "ant-design-vue";
 import {isArray} from "lodash-es";
+import dayjs, {Dayjs} from "dayjs";
+import {DateRangeTuple} from "@/types/form";
 
 export const getTimeState = () => {
   // 获取当前时间
@@ -238,4 +240,15 @@ export function formatTime(time?: number): string {
   } else {
     return (time / 60000).toFixed(2) + " min";
   }
+}
+
+/**
+ * @description: 日期格式化函数
+ * @param value
+ */
+export function formatDateRange(value: DateRangeTuple) {
+  if (value && isArray(value)) {
+    return value.filter(Boolean).map((date: Dayjs) => dayjs(date).format("YYYY-MM-DD")).join(',')
+  }
+  return undefined
 }

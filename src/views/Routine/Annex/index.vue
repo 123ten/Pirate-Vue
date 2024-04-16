@@ -9,7 +9,7 @@ import {useRoutineAnnexStore} from "@/store/routine/annex";
 import ProcessingTag from "@/components/IComponents/IOther/ProcessingTag/index.vue";
 
 const store = useRoutineAnnexStore()
-const {dataSource, isTableLoading, pages, remark} = storeToRefs(store);
+const {queryForm, dataSource, isTableLoading, pages, remark} = storeToRefs(store);
 const {getFileListRequest} = store
 
 
@@ -86,6 +86,7 @@ const columns: IColumns[] = [
     width: 180,
     search: true,
     type: 'range-picker',
+    searchValueProp: 'updateRange'
   },
   {
     title: "首次上传时间",
@@ -94,6 +95,7 @@ const columns: IColumns[] = [
     width: 180,
     search: true,
     type: 'range-picker',
+    searchValueProp: 'createRange'
   },
   {
     title: "操作",
@@ -112,10 +114,6 @@ onMounted(async () => {
 const getList = async () => {
   await getFileListRequest()
 };
-
-const handleQuery = async (query) => {
-  console.log('handleQuery', query)
-}
 
 // 分页
 const onPagesChange = async (records: IPages) => {
@@ -139,8 +137,10 @@ const onSelectChange = (rowKeys: string[]) => {
         :pages="pages"
         :loading="isTableLoading"
         :remark="remark"
+        :model="queryForm"
         @reload="getList"
-        @query="handleQuery"
+        @query="getList"
+        @reset="getList"
         @pagesChange="onPagesChange"
         @selectChange="onSelectChange"
     >

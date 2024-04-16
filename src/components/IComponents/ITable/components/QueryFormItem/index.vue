@@ -3,28 +3,34 @@ import {IColumns} from "@/types";
 
 interface QueryFormItemProps {
   column: IColumns
-  model: object
+  model: Record<string, any>
 }
 
 withDefaults(defineProps<QueryFormItemProps>(), {
   column: () => ({
     dataIndex: 'default'
-  })
+  }),
+  model: () => ({})
 })
+
+const valueProp = (column: IColumns) => {
+  return column.searchValueProp || column.dataIndex
+}
 
 </script>
 
 <template>
   <a-form-item
-      :label="column.title"
-      :name="column.dataIndex"
+      v-bind="$attrs"
+      :label="column.searchLabelProp || column.title"
+      :name="valueProp(column)"
       class="i-form-item"
   >
     <slot :name="`${column.dataIndex}Search`">
       <!-- input 输入框 -->
       <a-input
           v-if="!column.type || column.type === 'input'"
-          v-model:value="model[column.dataIndex]"
+          v-model:value="model[valueProp(column)]"
           allow-clear
           :placeholder="column.title || column.placeholder"
           v-bind="column.propOptions"
@@ -32,7 +38,7 @@ withDefaults(defineProps<QueryFormItemProps>(), {
       <!-- select 下拉框 -->
       <a-select
           v-else-if="column.type === 'select'"
-          v-model:value="model[column.dataIndex]"
+          v-model:value="model[valueProp(column)]"
           allow-clear
           :placeholder="column.title || column.placeholder"
           v-bind="column.propOptions"
@@ -48,7 +54,7 @@ withDefaults(defineProps<QueryFormItemProps>(), {
       <!-- radio 单选框 -->
       <a-radio-group
           v-else-if="column.type === 'radio'"
-          v-model:value="model[column.dataIndex]"
+          v-model:value="model[valueProp(column)]"
           v-bind="column.propOptions"
       >
         <a-radio
@@ -62,13 +68,13 @@ withDefaults(defineProps<QueryFormItemProps>(), {
       <!-- date-picker 日期选择框 -->
       <a-date-picker
           v-else-if="column.type === 'date-picker'"
-          v-model:value="model[column.dataIndex]"
+          v-model:value="model[valueProp(column)]"
           :picker="column.picker"
           v-bind="column.propOptions"
       />
       <a-range-picker
           v-else-if="column.type === 'range-picker'"
-          v-model:value="model[column.dataIndex]"
+          v-model:value="model[valueProp(column)]"
           :picker="column.picker"
           v-bind="column.propOptions"
       />

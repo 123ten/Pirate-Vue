@@ -5,16 +5,13 @@ import {defineStore} from "pinia";
 import {adminMenuUpsert, getAdminMenuById} from "@/api/auth/admin";
 import {getFileList} from "@/api/files";
 import {RoutineAnnexStoreState} from "@/store/routine/annex/types";
+import {formatDateRange} from "@/utils/common";
 
 export const useRoutineAnnexStore = defineStore("routineAnnexStore", {
   state(): RoutineAnnexStoreState {
     return {
       queryForm: {
-        name: "",
-        username: "",
-        usertype: '',
-        mimetype: "",
-        filename: "",
+        // updateRange: []
       },
       dataSource: [],
       formState: {},
@@ -37,7 +34,10 @@ export const useRoutineAnnexStore = defineStore("routineAnnexStore", {
         page: this.pages.page,
         size: this.pages.size,
         ...this.queryForm,
+        createRange: formatDateRange(this.queryForm.createRange),
+        updateRange: formatDateRange(this.queryForm.updateRange),
       };
+      console.log('getFileListRequest', params, this.queryForm)
       this.isTableLoading = true;
       try {
         const {data} = await getFileList(params);

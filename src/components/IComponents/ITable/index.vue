@@ -1,18 +1,7 @@
 <!-- 角色组管理 -->
 <script setup lang="ts">
 import {InfoCircleFilled, ReloadOutlined, SearchOutlined, TableOutlined,} from "@ant-design/icons-vue";
-import {
-  computed,
-  defineEmits,
-  defineExpose,
-  defineProps,
-  onMounted,
-  reactive,
-  ref,
-  toRaw,
-  watch,
-  withDefaults,
-} from "vue";
+import {computed, defineEmits, defineExpose, defineProps, onMounted, ref, toRaw, watch, withDefaults,} from "vue";
 import Sortable from "sortablejs";
 import {IColumns, IPagination, RecordType} from "@/types";
 import {FormInstance} from "ant-design-vue";
@@ -22,9 +11,10 @@ import {cloneDeep, throttle} from "lodash-es";
 import {ITableProps} from "@/types/table";
 import QueryForm from './components/QueryForm/index.vue'
 import QueryFormItem from './components/QueryFormItem/index.vue'
+import Ellipsis from "@/components/IComponents/IOther/Ellipsis/index.vue";
 
 // 国际化
-const {locale, t} = useI18n();
+const {locale} = useI18n();
 
 //#region interface
 interface ISortTableEnd {
@@ -33,7 +23,7 @@ interface ISortTableEnd {
 }
 
 // 菜单/搜索
-type MenuOrSearchType = 'menu' | 'search';
+type OperationRadioType = 'menu' | 'search';
 
 //#endregion
 
@@ -75,16 +65,12 @@ const columnsCache: IColumns[] = cloneDeep(props.columns); // 缓存 columns
 console.log('columnsCache', columnsCache)
 const formRef = ref<FormInstance>();
 
-// 内置搜索
-const queryForm = reactive<any>({});
-
 const menuChecked = ref<(IColumns['dataIndex'] | IColumns['key'])[]>([]); // 选中显示隐藏表头
 const menuCheckList = ref<IColumns[]>([]); // 表头的数据列
 const expandedRowKeys = ref<string[]>([]);
 const oldKeyword = ref<string>(""); // 旧的 搜索内容 防止重复调用接口
 const keyword = ref<string>(""); // 搜索
-const menuOrSearch = ref<MenuOrSearchType | undefined>();
-const isDropdownVisible = ref<boolean>(false);
+const operationRadio = ref<OperationRadioType | undefined>();
 const isOpenSearch = ref<boolean>(false); // 展开搜索栏区域
 const menuCheckAll = ref<boolean>(true); // 全选
 
@@ -124,8 +110,8 @@ watch(
  * @description: 有值置空 没有赋值
  * @param key
  */
-const handleMenuOrSearchRadio = (key: MenuOrSearchType) => {
-  menuOrSearch.value = menuOrSearch.value ? undefined : key;
+const handleMenuOrSearchRadio = (key: OperationRadioType) => {
+  operationRadio.value = operationRadio.value === key ? undefined : key;
   if (key === 'search') {
     isOpenSearch.value = !isOpenSearch.value;
   }
@@ -143,7 +129,7 @@ const handleMenuCheckAll = () => {
  * @description 获取行的 key
  * @param record
  */
-const getRowKey = (record) => {
+const getRowKey = (record: RecordType) => {
   const rowKey = props.rowKey;
   if (typeof rowKey === "function") return rowKey(record)
   return rowKey || "key";
@@ -268,13 +254,12 @@ const columnsComputed = computed(() => {
  * @description 搜索查询
  */
 const onQuery = () => {
-  console.log("queryForm", queryForm);
-  emits("query", toRaw(queryForm));
+  emits("query", toRaw(props.model));
 };
 
 const onReset = () => {
-  emits("reset");
   formRef.value?.resetFields()
+  emits("reset");
 };
 
 const localesNameFn = (column: IColumns) => {
@@ -324,7 +309,7 @@ defineExpose({
           <slot name="queryForm">
             <query-form
                 ref="formRef"
-                :model="queryForm"
+                :model="model"
                 :columns="formColumns"
                 @keyup.enter.native="onQuery"
                 @query="onQuery"
@@ -333,7 +318,7 @@ defineExpose({
             >
               <template #default="scope">
                 <slot v-bind="scope">
-                  <query-form-item :column="scope.column" :model="queryForm"/>
+                  <query-form-item :column="scope.column" :model="model"/>
                 </slot>
               </template>
             </query-form>
@@ -367,9 +352,8 @@ defineExpose({
               class="table-header_search"
               @blur="handleSearchBlur"
           />
-          <a-radio-group v-model:value="menuOrSearch" class="flex">
+          <a-radio-group v-model:value="operationRadio" class="flex">
             <a-popover
-                v-model:visible="isDropdownVisible"
                 trigger="click"
                 overlayClassName="i-popover-menu"
             >
@@ -411,7 +395,7 @@ defineExpose({
                 <table-outlined/>
               </a-radio-button>
             </a-popover>
-            <a-tooltip>
+            <a-tooltip placement="bottomRight">
               <template #title v-if="!isOpenSearch">
                 {{ $t('placeholder.expandUniversalSearch') }}
               </template>

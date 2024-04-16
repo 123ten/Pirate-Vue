@@ -1,4 +1,5 @@
 import {DefaultTableState, type RecordType} from "@/types/table";
+import {DateRangeTuple} from "@/types/form";
 
 export interface RoutineAnnexDataSource extends RecordType {
   username?: string; // 用户名
@@ -17,7 +18,17 @@ export interface RoutineAnnexFormState extends RoutineAnnexDataSource {
   description?: string; // 描述
 }
 
-export interface RoutineAnnexStoreState extends DefaultTableState<RoutineAnnexStoreDataSource> {
+interface QueryFormType {
+  name?: string;
+  username?: string;
+  usertype?: number;
+  mimetype?: string;
+  filename?: string;
+  createRange?: DateRangeTuple
+  updateRange?: DateRangeTuple
+}
+
+export interface RoutineAnnexStoreState extends DefaultTableState<RoutineAnnexStoreDataSource, QueryFormType> {
   /** 详情数据 */
   formState: RoutineAnnexFormState;
   /** modal加载 */
