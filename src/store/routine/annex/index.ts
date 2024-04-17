@@ -2,10 +2,10 @@
  * 管理员日志列表
  */
 import {defineStore} from "pinia";
-import {adminMenuUpsert, getAdminMenuById} from "@/api/auth/admin";
-import {getFileList} from "@/api/files";
+import {getFileList, removeFile} from "@/api/routine/files";
 import {RoutineAnnexStoreState} from "@/store/routine/annex/types";
-import {formatDateRange} from "@/utils/common";
+import {calculateNextPage, formatDateRange} from "@/utils/common";
+import {notification} from "ant-design-vue";
 
 export const useRoutineAnnexStore = defineStore("routineAnnexStore", {
   state(): RoutineAnnexStoreState {
@@ -27,11 +27,11 @@ export const useRoutineAnnexStore = defineStore("routineAnnexStore", {
   },
   actions: {
     /**
-     * 获取管理员菜单规则列表
+     * 获取附件列表
      */
     async getFileListRequest() {
       const params = {
-        page: this.pages.page,
+        page: calculateNextPage(this.pages),
         size: this.pages.size,
         ...this.queryForm,
         createRange: formatDateRange(this.queryForm.createRange),
@@ -54,30 +54,15 @@ export const useRoutineAnnexStore = defineStore("routineAnnexStore", {
         this.isTableLoading = false;
       }
     },
-    /**
-     * 获取管理员菜单规则详情
-     */
-    async getAdminMenuByIdRequest(id?: number) {
-      this.isModalLoading = true;
-      try {
-        const {data} = await getAdminMenuById(id);
-        data.parentId = data.parentId || undefined;
-        this.formState = data;
-      } finally {
-        this.isModalLoading = false;
-      }
-    },
-    /**
-     * 新增/编辑 管理员菜单规则
-     */
-    async adminMenuUpsertRequest() {
-      this.isModalLoading = true;
-      try {
-        const {data} = await adminMenuUpsert(this.formState);
-        return data;
-      } finally {
-        this.isModalLoading = false;
-      }
-    },
+    /** 删除附件 */
+    async removeFileRequest(ids: number[]) {
+      await removeFile(ids);
+      this.pages.total -= ids.length;
+      console.log('this.pages', this.pages)
+      notification.success({
+        message: "Success",
+        description: "Success"
+      })
+    }
   },
 });

@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<IProps>(), {
   visible: undefined,
   disabled: false,
   type: "default",
-  placement: "topLeft",
+  placement: "leftTop",
 });
 
 const emits = defineEmits([

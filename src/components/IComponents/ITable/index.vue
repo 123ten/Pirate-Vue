@@ -412,14 +412,14 @@ defineExpose({
       </div>
       <a-table
           v-model:expanded-row-keys="expandedRowKeys"
-          :row-key="props.rowKey"
-          :row-selection="props.rowSelection"
-          :data-source="props.dataSource"
-          :loading="props.loading"
+          :row-key="rowKey"
+          :row-selection="rowSelection"
+          :data-source="dataSource"
+          :loading="loading"
           :columns="columnsComputed"
-          :children-column-name="props.childrenColumnName"
-          :scroll="props.scroll"
-          :size="props.size"
+          :children-column-name="childrenColumnName"
+          :scroll="scroll"
+          :size="size"
           :pagination="pagination"
           bordered
           @resize-column="handleResizeColumn"

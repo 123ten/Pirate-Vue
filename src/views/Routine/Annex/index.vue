@@ -7,10 +7,11 @@ import {formatFileSize, sortNumber} from "@/utils/common";
 import {storeToRefs} from "pinia";
 import {useRoutineAnnexStore} from "@/store/routine/annex";
 import ProcessingTag from "@/components/IComponents/IOther/ProcessingTag/index.vue";
+import DeletePopconfirm from "@/components/IComponents/IOther/DeletePopconfirm/index.vue";
 
 const store = useRoutineAnnexStore()
 const {queryForm, dataSource, isTableLoading, pages, remark} = storeToRefs(store);
-const {getFileListRequest} = store
+const {getFileListRequest, removeFileRequest} = store
 
 
 const columns: IColumns[] = [
@@ -115,6 +116,11 @@ const getList = async () => {
   await getFileListRequest()
 };
 
+const handleDeletePopconfirmConfirm = async (ids: number[]) => {
+  await removeFileRequest(ids)
+  await getList();
+}
+
 // 分页
 const onPagesChange = async (records: IPages) => {
   pages.value = records;
@@ -169,9 +175,12 @@ const onSelectChange = (rowKeys: string[]) => {
       </template>
       <template #operation="{ record }">
         <a-space>
-          <i-tooltip title="删除" size="small" type="danger">
-            <template #icon>
-              <delete-outlined/>
+          <i-tooltip :title="$t('title.delete')">
+            <template #content>
+              <delete-popconfirm
+                  type="table-row"
+                  @confirm="handleDeletePopconfirmConfirm([record.id])"
+              />
             </template>
           </i-tooltip>
         </a-space>

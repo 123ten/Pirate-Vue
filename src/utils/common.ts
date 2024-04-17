@@ -244,11 +244,31 @@ export function formatTime(time?: number): string {
 
 /**
  * @description: 日期格式化函数
- * @param value
+ * @param values
  */
-export function formatDateRange(value: DateRangeTuple) {
-  if (value && isArray(value)) {
-    return value.filter(Boolean).map((date: Dayjs) => dayjs(date).format("YYYY-MM-DD")).join(',')
+export function formatDateRange(values: DateRangeTuple) {
+  if (values && isArray(values)) {
+    return values.filter(Boolean).map((date?: Dayjs) => dayjs(date).format("YYYY-MM-DD")).join(',')
   }
   return undefined
+}
+
+/**
+ * @description 根据total 计算 当前最大页 得出下一页
+ * @param pages
+ */
+export function calculateNextPage(pages: IPages) {
+  const {
+    page: currentPage,
+    size: pageSize,
+    total: totalItems,
+  } = pages;
+
+  if (currentPage <= 0 || totalItems <= 0) {
+    return 1
+  }
+
+  const totalPages = Math.ceil(totalItems / pageSize);
+
+  return Math.ceil(currentPage <= totalPages ? currentPage : totalPages)
 }

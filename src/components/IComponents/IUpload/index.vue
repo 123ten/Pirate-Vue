@@ -4,7 +4,7 @@ import {ref, watch, withDefaults,} from "vue";
 import {LoadingOutlined, PlusOutlined} from "@ant-design/icons-vue";
 import {notification, UploadChangeParam} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
-import {upload} from "@/api/files";
+import {upload} from "@/api/routine/files";
 import {formatFileSize} from "@/utils/common";
 
 const {t} = useI18n();
