@@ -33,7 +33,7 @@ const valueProp = (column: IColumns) => {
           v-model:value="model[valueProp(column)]"
           allow-clear
           :placeholder="column.title || column.placeholder"
-          v-bind="column.propOptions"
+          v-bind="column.queryConfig"
       />
       <!-- select 下拉框 -->
       <a-select
@@ -41,7 +41,7 @@ const valueProp = (column: IColumns) => {
           v-model:value="model[valueProp(column)]"
           allow-clear
           :placeholder="column.title || column.placeholder"
-          v-bind="column.propOptions"
+          v-bind="column.queryConfig"
       >
         <a-select-option
             v-for="option in column.options"
@@ -55,7 +55,7 @@ const valueProp = (column: IColumns) => {
       <a-radio-group
           v-else-if="column.type === 'radio'"
           v-model:value="model[valueProp(column)]"
-          v-bind="column.propOptions"
+          v-bind="column.queryConfig"
       >
         <a-radio
             v-for="option in column.options"
@@ -70,13 +70,13 @@ const valueProp = (column: IColumns) => {
           v-else-if="column.type === 'date-picker'"
           v-model:value="model[valueProp(column)]"
           :picker="column.picker"
-          v-bind="column.propOptions"
+          v-bind="column.queryConfig"
       />
       <a-range-picker
           v-else-if="column.type === 'range-picker'"
           v-model:value="model[valueProp(column)]"
           :picker="column.picker"
-          v-bind="column.propOptions"
+          v-bind="column.queryConfig"
       />
 
     </slot>

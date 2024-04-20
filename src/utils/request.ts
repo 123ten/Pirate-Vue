@@ -25,7 +25,7 @@ class AxiosUtils {
   private readonly http: AxiosInstance;
   private refreshing: boolean = false;
   private readonly subscribers: PendingTask[] = [];
-  private errorCache: Set<string>;
+  private readonly errorCache: Set<string>;
 
   constructor() {
     this.http = axios.create({

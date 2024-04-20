@@ -1,6 +1,6 @@
 <!-- 快捷配置入口 -->
 <script setup lang="ts">
-import { reactive, ref, unref, toRaw } from "vue";
+import { ref } from "vue";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons-vue";
 import useArray from "@/hooks/useArray";
 
@@ -60,7 +60,8 @@ const onSubmit = async (): Promise<void> => {
           </a-col>
           <a-col :span="4">
             <a-button
-              type="danger"
+              type="primary"
+              danger
               shape="circle"
               size="small"
               @click="removeItem(index)"

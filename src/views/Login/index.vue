@@ -1,7 +1,7 @@
 <!-- 登录 -->
 <script setup lang="ts">
 import { LockOutlined, UserOutlined } from "@ant-design/icons-vue";
-import { onBeforeUnmount, onMounted, reactive, ref } from "vue";
+import { onBeforeUnmount, onMounted, reactive } from "vue";
 import * as pageBubble from "@/utils/pageBubble";
 import { setTimeoutPromise } from "@/utils/common";
 import avatar_default from "@/assets/images/avatar.png";
@@ -9,7 +9,6 @@ import { useI18n } from "vue-i18n";
 import { debounce } from "lodash-es";
 import { notification } from "ant-design-vue";
 import router from "@/router";
-import { $local } from "@/utils/storage";
 import { useCaptchaStore, useAdminStore } from "@/store";
 import { storeToRefs } from "pinia";
 

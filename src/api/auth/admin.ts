@@ -38,7 +38,7 @@ export const getRoleById = (id?: number) => {
 };
 
 // 删除管理员
-export const remove = (data) => {
+export const removeAdmin = (data) => {
   return request.post("/admin/remove", data);
 };
 

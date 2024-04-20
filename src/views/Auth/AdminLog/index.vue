@@ -1,7 +1,7 @@
 <!-- 管理员日志管理 -->
 <script setup lang="ts">
 import {SendOutlined, ZoomInOutlined,} from "@ant-design/icons-vue";
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, ref} from "vue";
 import {useAdminLogStore} from "@/store/auth/adminLog";
 import {storeToRefs} from "pinia";
 import {sortNumber} from "@/utils/common";

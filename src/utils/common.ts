@@ -161,7 +161,8 @@ export function deepForEach<RecordType>(...args: deepArguments<RecordType>) {
  * @param pages
  */
 
-export function sortNumber(index: number, pages: IPages) {
+export function sortNumber(index: number, pages?: IPages) {
+  if (!pages) return index + 1
   return index + 1 + (pages.page - 1) * pages.size
 }
 

@@ -20,7 +20,7 @@ const formRef = ref<FormInstance>();
 // https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png
 const validatePassword = async (_rule: Rule, value: string) => {
   if (value) {
-    validateField("checkPassword", formState.value.checkPassword, [
+    await validateField("checkPassword", formState.value.checkPassword, [
       { validator: validateCheckPassword },
     ]);
   }

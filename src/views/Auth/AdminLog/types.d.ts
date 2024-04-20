@@ -1,4 +1,4 @@
-import {DefaultTableState, type RecordType} from "@/types/table";
+import {type RecordType} from "@/types/table";
 
 export interface AdminLogDataSource extends RecordType {
   userId?: number;

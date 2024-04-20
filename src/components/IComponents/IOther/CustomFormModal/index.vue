@@ -1,33 +1,18 @@
-<!-- 角色组管理 添加/编辑 -->
 <script setup lang="ts">
-import {inject} from "vue";
-import {storeToRefs} from "pinia";
-import {useRoleStore} from "@/store/auth/group";
-import {tableSettingKey} from "@/utils/tableSettings";
-import {AdminTableSettingsType} from "@/views/Auth/Admin/types";
-
-
-const roleStore = useRoleStore()
-const {dataSource: roleOptions} = storeToRefs(roleStore)
-const {getRoleListRequest} = roleStore
-
-const tableSettings = inject<AdminTableSettingsType>(tableSettingKey)
-
-const init = async () => {
-  await getRoleListRequest();
-};
+defineOptions({
+  name: 'CustomFormModel'
+})
 </script>
 
 <template>
   <i-modal
-      v-if="tableSettings"
-      :visible="tableSettings.form.visible"
-      :loading="tableSettings.form.loading"
-      :title=" $t(tableSettings.form.fields.id ?'title.update': 'title.create')"
+      :visible="tableSettings?.form.visible"
+      :loading="tableSettings?.form.loading"
+      :title=" $t(tableSettings?.form.fields.id ?'title.update': 'title.create')"
       :init="init"
       width="520px"
-      @cancel="tableSettings.cancelForm"
-      @confirm="tableSettings.confirmForm"
+      @confirm="handleConfirm"
+      @cancel="handleCancel"
   >
     <a-form
         name="admin"
@@ -36,30 +21,30 @@ const init = async () => {
     >
       <a-form-item
           :label="$t('user.label.username')"
-          v-bind="tableSettings.formRefs?.validateInfos.username"
+          v-bind="tableSettings?.formRefs.validateInfos.username"
       >
         <a-input
-            v-model:value="tableSettings.form.fields.username"
+            v-model:value="formState.username"
             allow-clear
             :placeholder="$t('user.placeholder.admin_username')"
         />
       </a-form-item>
       <a-form-item
           :label="$t('user.label.nickname')"
-          v-bind="tableSettings.formRefs?.validateInfos.nickname"
+          v-bind="tableSettings?.formRefs.validateInfos.nickname"
       >
         <a-input
-            v-model:value="tableSettings.form.fields.nickname"
+            v-model:value="formState.nickname"
             allow-clear
             :placeholder="$t('user.placeholder.nickname')"
         />
       </a-form-item>
       <a-form-item
           :label="$t('user.label.roles')"
-          v-bind="tableSettings.formRefs?.validateInfos.roleIds"
+          v-bind="tableSettings?.formRefs.validateInfos.roleIds"
       >
         <i-tree-select
-            v-model:value="tableSettings.form.fields.roleIds"
+            v-model:value="formState.roleIds"
             :tree-data="roleOptions"
             :field-names="{ label: 'name', value: 'id' }"
             :placeholder="$t('user.placeholder.roles')"
@@ -73,7 +58,7 @@ const init = async () => {
           name="fileList"
       >
         <i-upload
-            v-model:file-list="tableSettings.form.fields.fileList"
+            v-model:file-list="formState.fileList"
             :length="1"
             accept="image/*"
         />
@@ -83,7 +68,7 @@ const init = async () => {
           name="email"
       >
         <a-input
-            v-model:value="tableSettings.form.fields.email"
+            v-model:value="formState.email"
             allow-clear
             :placeholder="$t('user.placeholder.email')"
         />
@@ -93,20 +78,20 @@ const init = async () => {
           name="phone"
       >
         <a-input
-            v-model:value="tableSettings.form.fields.phone"
+            v-model:value="formState.phone"
             allow-clear
             :placeholder="$t('user.placeholder.phone')"
         />
       </a-form-item>
       <a-form-item
           :label="$t('user.label.password')"
-          v-bind="tableSettings.formRefs?.validateInfos.password"
+          v-bind="tableSettings?.formRefs.validateInfos.password"
       >
         <a-input-password
-            v-model:value="tableSettings.form.fields.password"
+            v-model:value="formState.password"
             allow-clear
             :placeholder="
-            $t(tableSettings.form.fields.id
+            $t(formState.id
               ? 'user.placeholder.edit_password'
               : 'user.placeholder.password')
             "
@@ -116,7 +101,7 @@ const init = async () => {
           :label="$t('user.label.status')"
           name="status"
       >
-        <a-radio-group v-model:value="tableSettings.form.fields.status">
+        <a-radio-group v-model:value="formState.status">
           <a-radio :value="0">{{ $t(`user.enum.status.0`) }}</a-radio>
           <a-radio :value="1">{{ $t(`user.enum.status.1`) }}</a-radio>
         </a-radio-group>
@@ -125,4 +110,6 @@ const init = async () => {
   </i-modal>
 </template>
 
-<style lang="less" scoped></style>
+<style scoped lang="less">
+
+</style>

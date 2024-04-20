@@ -62,6 +62,7 @@
     "update": "Update",
     "delete": "Delete",
     "remove": "Remove",
+    "detail": "Detail",
     "remove_selected_row": "Remove selected rows"
   },
   "login": {

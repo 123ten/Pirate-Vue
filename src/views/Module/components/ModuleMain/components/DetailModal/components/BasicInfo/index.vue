@@ -1,15 +1,4 @@
 <!-- 详情 -基本信息 -->
-<script lang="ts">
-import {
-  computed,
-  ref,
-  unref,
-  withDefaults,
-  watch,
-  defineExpose,
-  defineComponent,
-} from "vue";
-</script>
 <script setup lang="ts">
 import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
 
@@ -66,7 +55,7 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
         <label>开发者主页</label>
         <span>-</span>
       </div>
-      <a-button class="mt_8" type="danger">立即购买</a-button>
+      <a-button class="mt_8" type="primary" danger>立即购买</a-button>
     </div>
   </div>
 </template>

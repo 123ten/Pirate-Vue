@@ -1,6 +1,6 @@
 <!-- 角色组管理 -->
 <script setup lang="ts">
-import {InfoCircleFilled, ReloadOutlined, SearchOutlined, TableOutlined,} from "@ant-design/icons-vue";
+import {ReloadOutlined, SearchOutlined, TableOutlined,} from "@ant-design/icons-vue";
 import {computed, defineEmits, defineExpose, defineProps, onMounted, ref, toRaw, watch, withDefaults,} from "vue";
 import Sortable from "sortablejs";
 import {IColumns, IPagination, RecordType} from "@/types";
@@ -9,6 +9,7 @@ import {useI18n} from "vue-i18n";
 import ITooltip from "@/components/IComponents/ITooltip/index.vue";
 import {cloneDeep, throttle} from "lodash-es";
 import {ITableProps} from "@/types/table";
+import CloseAlert from "../IOther/CloseAlert/index.vue";
 import QueryForm from './components/QueryForm/index.vue'
 import QueryFormItem from './components/QueryFormItem/index.vue'
 import Ellipsis from "@/components/IComponents/IOther/Ellipsis/index.vue";
@@ -52,17 +53,18 @@ const props = withDefaults(defineProps<ITableProps>(), {
   loading: false,
   defaultExpandAllRows: false,
   draggable: false,
+  refresh: true
 });
 const emits = defineEmits([
   "pagesChange", // 页码发生变化时
-  "reload", // 刷新表格
+  "refresh", // 刷新表格
   "searchBlur", // 表格搜索
   "query",
   "reset",
 ]);
 // #endregion
 const columnsCache: IColumns[] = cloneDeep(props.columns); // 缓存 columns
-console.log('columnsCache', columnsCache)
+// console.log('columnsCache', columnsCache)
 const formRef = ref<FormInstance>();
 
 const menuChecked = ref<(IColumns['dataIndex'] | IColumns['key'])[]>([]); // 选中显示隐藏表头
@@ -88,8 +90,8 @@ onMounted(() => {
 /**
  * @description 节流刷新表格
  */
-const onReload = throttle(() => {
-  emits("reload");
+const onRefresh = throttle(() => {
+  emits("refresh");
 }, 500);
 
 // 监听 展开收起
@@ -288,17 +290,7 @@ defineExpose({
 <template>
   <div class="default-main">
     <div class="container-table">
-      <a-alert
-          v-if="props.remark"
-          :message="props.remark"
-          type="gray"
-          show-icon
-          closable
-      >
-        <template #icon>
-          <info-circle-filled style="color: #909399"/>
-        </template>
-      </a-alert>
+      <close-alert :message="remark"/>
       <!-- queryForm -->
       <transition name="zoom-in">
         <!-- z-0 层级低于 table-header -->
@@ -314,7 +306,7 @@ defineExpose({
                 @keyup.enter.native="onQuery"
                 @query="onQuery"
                 @reset="onReset"
-                v-bind="props.formOptions"
+                v-bind="formOptions"
             >
               <template #default="scope">
                 <slot v-bind="scope">
@@ -328,13 +320,14 @@ defineExpose({
       <div class="table-header">
         <a-space>
           <i-tooltip
+              v-if="refresh"
               :title="$t('title.refresh')"
               type="reload"
-              @click="onReload"
+              @click="onRefresh"
           >
             <template #icon>
               <reload-outlined
-                  :spin="props.loading"
+                  :spin="loading"
                   class="w-[1em] h-[1em]"
               />
             </template>
@@ -347,7 +340,7 @@ defineExpose({
           <a-input
               v-if="keywordVisible"
               v-model:value="keyword"
-              :placeholder="props.keywordPlaceholder || $t('placeholder.keyword')"
+              :placeholder="keywordPlaceholder || $t('placeholder.keyword')"
               allow-clear
               class="table-header_search"
               @blur="handleSearchBlur"
@@ -397,7 +390,7 @@ defineExpose({
             </a-popover>
             <a-tooltip placement="bottomRight">
               <template #title v-if="!isOpenSearch">
-                {{ $t('placeholder.expandUniversalSearch') }}
+                {{ $t('title.expandUniversalSearch') }}
               </template>
               <a-radio-button
                   v-if="formColumns.length"

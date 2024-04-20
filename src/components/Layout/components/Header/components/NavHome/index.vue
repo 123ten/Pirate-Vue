@@ -1,6 +1,6 @@
 <!-- 语言 -->
 <script setup lang="ts">
-import { ref, defineOptions } from "vue";
+import { defineOptions } from "vue";
 import { DesktopOutlined } from "@ant-design/icons-vue";
 
 defineOptions({

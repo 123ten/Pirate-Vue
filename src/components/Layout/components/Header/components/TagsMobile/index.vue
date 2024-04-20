@@ -11,9 +11,9 @@ const store = useLayoutStore();
 const {isMenuOutIn, getMenus} = storeToRefs(store);
 
 onMounted(() => {
-  console.log(router, "router");
-  console.log(getMenus.value);
-  console.log("routes", routes);
+  // console.log(router, "router");
+  // console.log(getMenus.value);
+  // console.log("routes", routes);
 });
 
 // 面包屑

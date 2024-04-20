@@ -103,7 +103,3 @@ const onFileModalConfirm = () => {
       @cancel="onFileModalCancel"
   />
 </template>
-
-<style lang="less" scoped>
-@import "index.less";
-</style>

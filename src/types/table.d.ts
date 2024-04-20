@@ -3,6 +3,7 @@ import {IOptions, QueryFormType} from "@/types/form";
 import {CSSPropertiesType, TStyle} from "@/types/style";
 import {ColumnType} from "ant-design-vue/es/table";
 import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
+import {TableRowSelection} from "ant-design-vue/es/table/interface";
 
 type CustomHeaderCellType = {
   style: CSSPropertiesType;
@@ -49,8 +50,7 @@ export interface IColumns<RecordType = DefaultRecordType>
   /** 表头是否可伸缩 */
   resizable?: boolean;
   /** 搜索框配置项 */
-  propOptions?: any;
-
+  queryConfig?: any;
   /** 设置头部单元格属性 */
   customHeaderCell?(column: IColumns): CustomHeaderCellType;
 }
@@ -94,7 +94,7 @@ export interface ITableProps {
   /** 数据数组 */
   dataSource: TableProps["dataSource"];
   /** 表格行是否可选择 */
-  rowSelection?: TableProps["rowSelection"];
+  rowSelection?: TableRowSelection;
   /** 指定每页可以显示多少条 */
   pagination?: TableProps["pagination"];
   /** 页码 */
@@ -129,6 +129,8 @@ export interface ITableProps {
   defaultExpandAllRows?: boolean;
   /**是否允许拖拽行 搭配 class drop-row-btn */
   draggable?: boolean;
+  /** 是否展示刷新列表按钮 */
+  refresh?: boolean
 }
 
 /**

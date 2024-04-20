@@ -10,7 +10,6 @@ import {
 } from "@ant-design/icons-vue";
 import { onMounted, ref } from "vue";
 import { CountUp } from "countup.js";
-import { DataIndex } from "ant-design-vue/lib/vc-table/interface";
 interface IPanelList {
   title: string;
   icon: any;
