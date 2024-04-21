@@ -92,7 +92,7 @@ export interface IColumns<RecordType = DefaultRecordType>
   formValueProp?: string;
 
   /** 表单item配置 */
-  formItemConfig?: FormItemProps;
+  formItemConfig?: any;
 
   /** 表单内容配置 */
   formFieldConfig?: FormFieldProps;

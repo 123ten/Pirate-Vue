@@ -127,6 +127,7 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
       {
         title: "上级分组",
         dataIndex: "parentId",
+        type: "tree-select",
         form: true,
         hide: true,
       },

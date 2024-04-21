@@ -54,6 +54,14 @@ const valueProp = (column: IColumns) => {
           {{ option.label }}
         </a-select-option>
       </a-select>
+      <a-cascader
+        v-else-if="typeProp(column) === 'cascader'"
+        v-model:value="model[valueProp(column)]"
+        :options="column.options"
+        :placeholder="column.title || column.placeholder"
+        allow-clear
+        v-bind="column.formFieldConfig"
+      />
       <!-- radio 单选框 -->
       <a-radio-group
         v-else-if="typeProp(column) === 'radio'"

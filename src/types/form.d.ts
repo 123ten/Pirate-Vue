@@ -8,6 +8,7 @@ export type FormType =
   | "textarea"
   | "select"
   | "tree-select"
+  | "cascader"
   | "radio"
   | "date-picker"
   | "range-picker"
