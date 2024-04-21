@@ -74,6 +74,9 @@ const formState = reactive<IFormState>({
 </script>
 
 <template>
+  <custom-form-modal>
+    
+  </custom-form-modal>
   <i-modal
       :visible="props.visible"
       :title="props.title"

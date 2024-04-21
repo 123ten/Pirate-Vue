@@ -26,8 +26,8 @@ const init = async () => {
       :title=" $t(tableSettings.form.fields.id ?'title.update': 'title.create')"
       :init="init"
       width="520px"
-      @cancel="tableSettings.cancelForm"
-      @confirm="tableSettings.confirmForm"
+      @cancel="tableSettings?.cancelForm"
+      @confirm="tableSettings?.confirmForm"
   >
     <a-form
         name="admin"

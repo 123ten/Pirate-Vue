@@ -186,16 +186,13 @@ const rowSelection = computed(() => {
   };
 });
 
-const i18nPrefix = {
-  table: 'user.table'
-}
 </script>
 
 <template>
   <div class="default-main">
     <i-table
         row-key="id"
-        :i18n-prefix="i18nPrefix"
+        i18n-prefix="user"
         :columns="columns"
         :data-source="dataSource"
         :pages="pages"

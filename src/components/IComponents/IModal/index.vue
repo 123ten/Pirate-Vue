@@ -2,33 +2,17 @@
 <script setup lang="ts">
 import {computed, CSSProperties, ref, unref, watch, watchEffect, withDefaults,} from "vue";
 import {useDraggable} from "@vueuse/core";
-import type {IDragRect} from "./index";
+import type {IDragRect, IModalProps} from "./types";
 
-interface IPropsModal {
-  title: string; // modal 标题
-  width?: string | number; // modal 宽度
-  visible: boolean; // 控制 modal 开关
-  maskClosable?: boolean; // 点击蒙层是否允许关闭
-  dragModal?: boolean; // 是否允许拖拽 modal 框
-  cancelLoading?: boolean; // 取消按钮 loading
-  loading?: boolean; // modal 加载loading 包括 body 和 确定按钮
-  bodyStyle?: CSSProperties; // body 样式
-  init?: () => void; // 初始化
-}
 
-const props = withDefaults(defineProps<IPropsModal>(), {
-  title: "",
-  width: "",
+const props = withDefaults(defineProps<IModalProps>(), {
   visible: false,
   maskClosable: false,
-  // isDraw: true,
   dragModal: true,
   bodyStyle: () => ({
     maxHeight: "60vh",
     overflowY: "auto",
   }),
-  init: () => {
-  },
 });
 
 const emits = defineEmits([
@@ -51,7 +35,7 @@ const dragRect = ref<IDragRect>({left: 0, right: 0, top: 0, bottom: 0});
 
 watch(() => props.visible, (val) => {
   if (val) {
-    props.init && props.init();
+    props.init?.();
   } else {
     if (props.dragModal) {
       initDrag();

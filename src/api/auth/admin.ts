@@ -29,12 +29,22 @@ export const refresh = (refreshToken: string): Promise<RefreshResult> => {
 
 // 分页获取角色列表
 export const getRoleList = (params): Promise<Response<ResponseList>> => {
-  return request.get("/admin/roles", params);
+  return request.get("/admin/role", params);
 };
 
 // 角色详情
 export const getRoleById = (id?: number) => {
-  return request.get("/admin/roles/:", id);
+  return request.get("/admin/role/:", id);
+};
+
+// 新增/修改角色
+export const adminRoleUpsert = (data) => {
+  return request.post("/admin/role/upsert", data);
+};
+
+// 删除角色
+export const removeAdminRole = (data) => {
+  return request.post("/admin/role/remove", data);
 };
 
 // 删除管理员

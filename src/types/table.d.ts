@@ -1,9 +1,22 @@
-import {FormProps, PaginationProps, TableProps} from "ant-design-vue";
-import {IOptions, QueryFormType} from "@/types/form";
-import {CSSPropertiesType, TStyle} from "@/types/style";
-import {ColumnType} from "ant-design-vue/es/table";
-import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
-import {TableRowSelection} from "ant-design-vue/es/table/interface";
+import {
+  DatePickerProps,
+  FormItemProps,
+  FormProps,
+  InputProps,
+  PaginationProps,
+  RadioProps,
+  SelectProps,
+  TableProps,
+  TextAreaProps,
+  TreeSelectProps,
+  UploadProps,
+} from "ant-design-vue";
+import { IOptions, FormType } from "@/types/form";
+import { CSSPropertiesType, TStyle } from "@/types/style";
+import { ColumnType } from "ant-design-vue/es/table";
+import { DefaultRecordType } from "ant-design-vue/es/vc-table/interface";
+import { TableRowSelection } from "ant-design-vue/es/table/interface";
+import { RangePickerProps } from "ant-design-vue/lib/date-picker";
 
 type CustomHeaderCellType = {
   style: CSSPropertiesType;
@@ -12,12 +25,33 @@ type CustomHeaderCellType = {
 // 	设置选择器类型
 type Picker = "date" | "week" | "month" | "quarter" | "year";
 
+export type FormFieldProps<T extends FormType = "input"> = T extends
+  | "input"
+  | "input-password"
+  | "input-number"
+  ? InputProps
+  : T extends "textarea"
+  ? TextAreaProps
+  : T extends "select"
+  ? SelectProps
+  : T extends "tree-select"
+  ? TreeSelectProps
+  : T extends "radio"
+  ? RadioProps
+  : T extends "date-picker"
+  ? DatePickerProps
+  : T extends "range-picker"
+  ? RangePickerProps
+  : T extends "upload"
+  ? UploadProps
+  : never;
+
 export interface IColumns<RecordType = DefaultRecordType>
-    extends ColumnType<RecordType> {
+  extends ColumnType<RecordType> {
   /** key 需要必填 */
   dataIndex: Required<string>;
-  /** 表格搜索内容类型 */
-  type?: QueryFormType;
+  /** 默认表单内容类型 */
+  type?: FormType;
   /** select/radio/tree 选择项 */
   options?: IOptions[];
   /** 日期格式 */
@@ -41,10 +75,28 @@ export interface IColumns<RecordType = DefaultRecordType>
   isI18n?: boolean;
   /** 是否允许搜索 */
   search?: boolean;
-  /** 回填到表单展示的属性名称，默认是 column 的title值。比如表单展示不同名称，此值可以更换名称。 */
+  /** 表格搜索内容类型 */
+  searchType?: FormType;
+  /** 回填到查询表单展示的属性名称，默认是 column 的label值。比如表单展示不同名称，此值可以更换名称。 */
   searchLabelProp?: string;
-  /** 回填到表单数据 Value 的属性值，默认是 column 的 dataIndex 值。比如表单展示不同字段，此值可以更换字段。 */
+  /** 回填到查询表单数据 Value 的属性值，默认是 column 的 dataIndex 值。比如表单展示不同字段，此值可以更换字段。 */
   searchValueProp?: string;
+
+  /** 是否显示表单 */
+  form?: boolean;
+  /** 表单内容类型 */
+  formType?: FormType;
+  /** 回填到表单展示的属性名称，默认是 column 的label值。比如表单展示不同名称，此值可以更换名称。 */
+  formLabelProp?: string;
+  /** 回填到表单数据 Value 的属性值，默认是 column 的 dataIndex 值。比如表单展示不同字段，此值可以更换字段。 */
+  formValueProp?: string;
+
+  /** 表单item配置 */
+  formItemConfig?: FormItemProps;
+
+  /** 表单内容配置 */
+  formFieldConfig?: FormFieldProps;
+
   /** 是否隐藏 */
   hide?: boolean;
   /** 表头是否可伸缩 */
@@ -86,6 +138,7 @@ export interface RecordType {
 interface I18nPrefix {
   table: string;
   columns: string;
+  form: string;
 }
 
 export interface ITableProps {
@@ -114,7 +167,7 @@ export interface ITableProps {
   /**设置横向或纵向滚动，也可用于指定滚动区域的宽和高 */
   scroll?: TableProps["scroll"];
   /**国际化前缀 */
-  i18nPrefix?: I18nPrefix;
+  i18nPrefix?: string;
   /**指定树形结构的列名 默认 children */
   childrenColumnName?: TableProps["childrenColumnName"];
   /**关键字搜索框 占位内容 */
@@ -130,15 +183,15 @@ export interface ITableProps {
   /**是否允许拖拽行 搭配 class drop-row-btn */
   draggable?: boolean;
   /** 是否展示刷新列表按钮 */
-  refresh?: boolean
+  refresh?: boolean;
 }
 
 /**
  * @description: 默认列表状态值
  */
 export interface DefaultTableState<
-    RecordType = DefaultRecordType,
-    QueryFormType = any
+  RecordType = DefaultRecordType,
+  QueryFormType = any
 > {
   isTableLoading: boolean;
   pages: IPages;

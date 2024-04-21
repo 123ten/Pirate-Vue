@@ -1,20 +1,19 @@
 <!-- 管理员管理 -->
 <script setup lang="ts">
-import {UserOutlined,} from "@ant-design/icons-vue";
-import {provide, ref} from "vue";
+import { UserOutlined } from "@ant-design/icons-vue";
+import { provide, ref } from "vue";
 import FormModal from "./components/FormModal/index.vue";
-import {getAdminById, getAdminList, removeAdmin} from "@/api/auth/admin";
+import { getAdminById, getAdminList, removeAdmin } from "@/api/auth/admin";
 import ProcessingTag from "@/components/IComponents/IOther/ProcessingTag/index.vue";
 import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
-import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
-import {useI18n} from "vue-i18n";
-import {AdminTableSettingsType} from "@/views/Auth/Admin/types";
+import TableSettings, { tableSettingKey } from "@/utils/tableSettings";
+import { useI18n } from "vue-i18n";
+import { AdminTableSettingsType } from "@/views/Auth/Admin/types";
 
-const {t} = useI18n();
+const { t } = useI18n();
 
 const avatarPreviewSrc = ref("");
 const isAvatarPreviewSrcVisible = ref<boolean>(false);
-
 
 // 显示预览图片
 const openAvatarPreviewImage = (src: string) => {
@@ -23,15 +22,14 @@ const openAvatarPreviewImage = (src: string) => {
   avatarPreviewSrc.value = src;
 };
 
-
 const tableSettings = new TableSettings<AdminTableSettingsType>({
   api: {
     request: getAdminList,
     detailRequest: getAdminById,
-    deleteRequest: removeAdmin
+    deleteRequest: removeAdmin,
   },
   table: {
-    operations: ['refresh', 'create', 'delete', 'row-update', 'row-delete'],
+    operations: ["refresh", "create", "delete", "row-update", "row-delete"],
     columns: [
       {
         title: "序号",
@@ -119,9 +117,7 @@ const tableSettings = new TableSettings<AdminTableSettingsType>({
         width: 100,
       },
     ],
-    i18nPrefix: {
-      table: 'user.table'
-    }
+    i18nPrefix: "user",
   },
   form: {
     fields: {
@@ -139,46 +135,60 @@ const tableSettings = new TableSettings<AdminTableSettingsType>({
       status: 1,
       fileList: [],
     },
-    rules: {
-      username: [{required: true, message: t('user.error.username')}],
-      nickname: [{required: true, message: t('user.error.nickname')}],
-      roleIds: [{required: true, message: t('user.error.roles')}],
+    rules(isEditing: boolean) {
+      return {
+        username: [{ required: true, message: t("user.error.username") }],
+        nickname: [{ required: true, message: t("user.error.nickname") }],
+        roleIds: [{ required: true, message: t("user.error.roles") }],
+        password: !isEditing
+          ? [{ required: true, message: t("user.error.password") }]
+          : undefined,
+      };
     },
   },
-})
+  customParams: {
+    confirmForm(params) {
+      const [response] = params.fileList || [];
+      return {
+        ...params,
+        fileList: undefined,
+        avatar: response?.path,
+      };
+    },
+  },
+});
 
-provide(tableSettingKey, tableSettings)
+provide(tableSettingKey, tableSettings);
 </script>
 
 <template>
   <custom-i-table>
     <template #roles="{ value }">
-      <processing-tag v-for="text in value" :key="text" :value="text"/>
+      <processing-tag v-for="text in value" :key="text" :value="text" />
     </template>
     <template #avatar="{ record }">
       <a-avatar
-          size="large"
-          :src="record.avatar"
-          @click="openAvatarPreviewImage(record.avatar)"
+        size="large"
+        :src="record.avatar"
+        @click="openAvatarPreviewImage(record.avatar)"
       >
         <template #icon>
-          <user-outlined/>
+          <user-outlined />
         </template>
       </a-avatar>
     </template>
-    <template #lastLoginIp="{value}">
-      <processing-tag :value="value"/>
+    <template #lastLoginIp="{ value }">
+      <processing-tag :value="value" />
     </template>
     <template #status="{ value }">
-      <status-tag :value="value"/>
+      <status-tag :value="value" />
     </template>
   </custom-i-table>
 
-  <form-modal/>
+  <form-modal />
 
   <i-preview-image
-      v-model:visible="isAvatarPreviewSrcVisible"
-      :src="avatarPreviewSrc"
+    v-model:visible="isAvatarPreviewSrcVisible"
+    :src="avatarPreviewSrc"
   />
 </template>
-

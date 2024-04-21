@@ -1,57 +1,78 @@
-import {IColumns, IPages, ITableProps} from "@/types/table";
-import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
-import {Key} from "ant-design-vue/lib/table/interface";
-import {type Ref, UnwrapNestedRefs} from "vue";
-import {FormInstance} from "ant-design-vue";
-import {Props, ValidateInfo, validateOptions} from "ant-design-vue/lib/form/useForm";
-import type {RuleError} from "ant-design-vue/lib/form/interface";
-import {Rules} from "@/types/form";
+import { IColumns, IPages, ITableProps } from "@/types/table";
+import { DefaultRecordType } from "ant-design-vue/es/vc-table/interface";
+import { Key } from "ant-design-vue/lib/table/interface";
+import { type Ref, UnwrapNestedRefs } from "vue";
+import { FormInstance, PaginationProps } from "ant-design-vue";
+import {
+  Props,
+  ValidateInfo,
+  validateOptions,
+} from "ant-design-vue/lib/form/useForm";
+import type { RuleError } from "ant-design-vue/lib/form/interface";
+import { Rules } from "@/types/form";
 
 /**
  * 表示操作按钮或操作类型的枚举。
  * @typedef {('refresh' | 'delete' | 'create' | 'expand' | 'row-detail' | 'row-update' | 'row-delete')} Operation
  */
-export declare type Operation = 'refresh' | 'delete' | 'create' | 'expand' | 'row-detail' | 'row-update' | 'row-delete'
+export declare type Operation =
+  | "refresh"
+  | "delete"
+  | "create"
+  | "expand"
+  | "row-detail"
+  | "row-update"
+  | "row-delete";
 
-export declare type DefaultQueryFormType = Record<string, any> | undefined
+/**
+ * 自定义 params 入参
+ */
+export declare type CustomParamsKey = "queryAll" | "confirmForm";
+
+export declare type DefaultQueryFormType = Record<string, any> | undefined;
 
 export declare type DefaultFieldsType = {
-  id?: number
-}
+  id?: number;
+};
 
 export interface PrivateApi {
-  request: Function
-  deleteRequest: Function
-  detailRequest: Function
-  upsertRequest: Function
+  request: Function;
+  deleteRequest: Function;
+  detailRequest: Function;
+  upsertRequest: Function;
 }
 
-export interface TableReactive<RecordType = DefaultRecordType, QueryForm = DefaultQueryFormType> {
-  columns: IColumns<RecordType>[]
-  dataSource: RecordType[]
-  operations: Operation[]
-  selectedRowKeys: Key[]
-  pages: IPages
+export interface TableReactive<
+  RecordType = DefaultRecordType,
+  QueryForm = DefaultQueryFormType
+> {
+  columns: IColumns<RecordType>[];
+  dataSource: RecordType[];
+  operations: Operation[];
+  selectedRowKeys: Key[];
+  pages: IPages;
+  pagination: PaginationProps;
   queryForm: QueryForm;
-  i18nPrefix: ITableProps['i18nPrefix']
+  i18nPrefix: ITableProps["i18nPrefix"];
   rowKey: string;
-  remark?: string
+  remark?: string;
   /** 表格 loading */
-  loading: boolean
+  loading: boolean;
+  /** 初始时，是否展开所有行 */
+  defaultExpandAllRows?: boolean;
 }
-
 
 export interface FormReactive<Fields extends DefaultFieldsType> {
   /** 表单数据对象 */
-  fields: Fields
+  fields: Fields;
   /** 表单验证规则 */
-  rules?: Rules
+  rules?: Rules;
   /** 表单名称，会作为表单字段 id 前缀使用 */
-  name?: string
+  name?: string;
   /** 对话框是否可见 */
-  visible: boolean
+  visible: boolean;
   /** 对话框 loading */
-  loading: boolean
+  loading: boolean;
 }
 
 declare type namesType = string | string[];
@@ -59,30 +80,42 @@ declare type namesType = string | string[];
 /**
  * 表单 ref
  */
-export interface FormRefs extends Pick<FormInstance, 'validate' | 'resetFields'> {
+export interface FormRefs
+  extends Pick<FormInstance, "validate" | "resetFields"> {
   modelRef: Props | Ref<Props>;
   rulesRef: Props | Ref<Props>;
   initialModel: Props;
   validateInfos: validateInfos;
   resetFields: (newValues?: Props) => void;
-  validate: <T = any>(names?: namesType, option?: validateOptions) => Promise<T>;
+  validate: <T = any>(
+    names?: namesType,
+    option?: validateOptions
+  ) => Promise<T>;
   /** This is an internal usage. Do not use in your prod */
-  validateField: (name: string, value: any, rules: Record<string, unknown>[], option?: validateOptions) => Promise<RuleError[]>;
+  validateField: (
+    name: string,
+    value: any,
+    rules: Record<string, unknown>[],
+    option?: validateOptions
+  ) => Promise<RuleError[]>;
   mergeValidateInfo: (items: ValidateInfo | ValidateInfo[]) => ValidateInfo;
   clearValidate: (names?: namesType) => void;
 }
 
+export declare interface TableSettingsType<
+  RecordType = DefaultRecordType,
+  QueryForm = DefaultQueryFormType,
+  Fields extends DefaultFieldsType = DefaultFieldsType
+> {
+  _api?: PrivateApi;
 
-export declare interface TableSettingsType<RecordType = DefaultRecordType, QueryForm = DefaultQueryFormType, Fields extends DefaultFieldsType = DefaultFieldsType> {
-  _api?: PrivateApi
+  readonly table: UnwrapNestedRefs<TableReactive<RecordType, QueryForm>>;
 
-  readonly table: UnwrapNestedRefs<TableReactive<RecordType, QueryForm>>
+  readonly form: UnwrapNestedRefs<FormReactive<Fields>>;
 
-  readonly form: UnwrapNestedRefs<FormReactive<Fields>>
+  formRefs?: FormRefs;
 
-  formRefs?: FormRefs
-
-  customParams?: (type: string, params: Record<string, any>) => Record<string, any>
+  customParams?: Record<CustomParamsKey, Function>;
 
   /**
    * 表格数据查询
@@ -94,7 +127,10 @@ export declare interface TableSettingsType<RecordType = DefaultRecordType, Query
    * @param type {string} delete 表格头部多选删除 row-delete 单行数据杉删除
    * @param ids {(string | number)[]}
    */
-  deleteByIds(type: Extract<Operation, 'delete' | 'row-delete'>, ids: Key[]): Promise<void> | void;
+  deleteByIds(
+    type: Extract<Operation, "delete" | "row-delete">,
+    ids: Key[]
+  ): Promise<void> | void;
 
   /**
    * 获取详情接口
@@ -126,12 +162,12 @@ export declare interface TableSettingsType<RecordType = DefaultRecordType, Query
   /**
    * 关闭表单
    */
-  cancelForm(): Promise<void> | void
+  cancelForm(): Promise<void> | void;
 
   /**
    * 确认表单
    */
-  confirmForm(): Promise<void> | void
+  confirmForm(): Promise<void> | void;
 
   /**
    * 打开详情弹窗
@@ -143,5 +179,5 @@ export declare interface TableSettingsType<RecordType = DefaultRecordType, Query
   /**
    * 功能接口 转换 queryParams 为接口所需要的数据
    */
-  transformParams(): QueryForm | undefined
+  transformParams(): QueryForm | undefined;
 }

@@ -1,115 +1,166 @@
+<!-- 角色组管理 添加/编辑 -->
 <script setup lang="ts">
-defineOptions({
-  name: 'CustomFormModel'
-})
+import { computed, inject, toRefs, useAttrs } from "vue";
+import { tableSettingKey } from "@/utils/tableSettings";
+import { IModalProps } from "@/components/IComponents/IModal/types";
+import { FormItemProps, FormProps } from "ant-design-vue";
+import { TableSettingsType } from "@/types/tableSettingsType";
+import { useI18n } from "vue-i18n";
+import { IColumns } from "@/types";
+
+interface CustomFormModalProps extends IModalProps {
+  formConfig: FormProps;
+  formItemConfig: FormItemProps;
+}
+
+const { t } = useI18n();
+
+const props = withDefaults(defineProps<CustomFormModalProps>(), {});
+const { formConfig, formItemConfig, ...resetAttrs } = useAttrs();
+
+const tableSettings = inject<TableSettingsType>(tableSettingKey);
+
+const filterFormColumns = computed(() => {
+  return (
+    tableSettings?.table.columns.filter((column: IColumns) => column.form) || []
+  );
+});
+
+const i18nPrefix = computed(() => tableSettings?.table.i18nPrefix);
+
+const il8nProp = (key: string, column: IColumns) => {
+  const value = [
+    i18nPrefix.value,
+    "form",
+    key,
+    column.i18nName || valueProp(column),
+  ]
+    .filter(Boolean)
+    .join(".");
+  return t(value);
+};
+
+const typeProp = (column: IColumns) => {
+  return column.formType || column.type;
+};
+
+const valueProp = (column: IColumns) => {
+  return column.formValueProp || column.dataIndex;
+};
+
+const labelProp = (column: IColumns) => {
+  return column.formLabelProp || il8nProp("label", column);
+};
+
+const placeholder = (column: IColumns) => {
+  return column.placeholder || il8nProp("placeholder", column);
+};
+
+const formItemAttrs = (column: IColumns) => ({
+  ...tableSettings?.formRefs?.validateInfos[valueProp(column)],
+  ...column.formItemConfig,
+});
 </script>
 
 <template>
   <i-modal
-      :visible="tableSettings?.form.visible"
-      :loading="tableSettings?.form.loading"
-      :title=" $t(tableSettings?.form.fields.id ?'title.update': 'title.create')"
-      :init="init"
-      width="520px"
-      @confirm="handleConfirm"
-      @cancel="handleCancel"
+    v-if="tableSettings"
+    :visible="tableSettings.form.visible"
+    :loading="tableSettings.form.loading"
+    :title="$t(tableSettings.form.fields.id ? 'title.update' : 'title.create')"
+    :maskClosable="false"
+    @cancel="tableSettings?.cancelForm"
+    @confirm="tableSettings?.confirmForm"
+    v-bind="resetAttrs"
   >
     <a-form
-        name="admin"
-        autocomplete="off"
-        :label-col="{ span: 4 }"
+      :name="tableSettings.form.name"
+      autocomplete="off"
+      :label-col="{ span: 4 }"
+      v-bind="props.formConfig"
     >
-      <a-form-item
-          :label="$t('user.label.username')"
-          v-bind="tableSettings?.formRefs.validateInfos.username"
-      >
-        <a-input
-            v-model:value="formState.username"
-            allow-clear
-            :placeholder="$t('user.placeholder.admin_username')"
-        />
-      </a-form-item>
-      <a-form-item
-          :label="$t('user.label.nickname')"
-          v-bind="tableSettings?.formRefs.validateInfos.nickname"
-      >
-        <a-input
-            v-model:value="formState.nickname"
-            allow-clear
-            :placeholder="$t('user.placeholder.nickname')"
-        />
-      </a-form-item>
-      <a-form-item
-          :label="$t('user.label.roles')"
-          v-bind="tableSettings?.formRefs.validateInfos.roleIds"
-      >
-        <i-tree-select
-            v-model:value="formState.roleIds"
-            :tree-data="roleOptions"
-            :field-names="{ label: 'name', value: 'id' }"
-            :placeholder="$t('user.placeholder.roles')"
-            multiple
-            spliceParentTitle
-            tree-default-expand-all
-        />
-      </a-form-item>
-      <a-form-item
-          :label="$t('user.label.avatar')"
-          name="fileList"
-      >
-        <i-upload
-            v-model:file-list="formState.fileList"
-            :length="1"
-            accept="image/*"
-        />
-      </a-form-item>
-      <a-form-item
-          :label="$t('user.label.email')"
-          name="email"
-      >
-        <a-input
-            v-model:value="formState.email"
-            allow-clear
-            :placeholder="$t('user.placeholder.email')"
-        />
-      </a-form-item>
-      <a-form-item
-          :label="$t('user.label.phone')"
-          name="phone"
-      >
-        <a-input
-            v-model:value="formState.phone"
-            allow-clear
-            :placeholder="$t('user.placeholder.phone')"
-        />
-      </a-form-item>
-      <a-form-item
-          :label="$t('user.label.password')"
-          v-bind="tableSettings?.formRefs.validateInfos.password"
-      >
-        <a-input-password
-            v-model:value="formState.password"
-            allow-clear
-            :placeholder="
-            $t(formState.id
-              ? 'user.placeholder.edit_password'
-              : 'user.placeholder.password')
-            "
-        />
-      </a-form-item>
-      <a-form-item
-          :label="$t('user.label.status')"
-          name="status"
-      >
-        <a-radio-group v-model:value="formState.status">
-          <a-radio :value="0">{{ $t(`user.enum.status.0`) }}</a-radio>
-          <a-radio :value="1">{{ $t(`user.enum.status.1`) }}</a-radio>
-        </a-radio-group>
-      </a-form-item>
+      <slot>
+        <template v-for="column in filterFormColumns" :key="column.dataIndex">
+          <a-form-item
+            :label="labelProp(column)"
+            :name="valueProp(column)"
+            v-bind="formItemAttrs(column)"
+          >
+            <a-input
+              v-if="typeProp(column) === 'input' || !typeProp(column)"
+              v-model:value="tableSettings.form.fields[valueProp(column)]"
+              allow-clear
+              :placeholder="placeholder(column)"
+            />
+            <a-input
+              v-if="typeProp(column) === 'input-number'"
+              v-model:value="tableSettings.form.fields[valueProp(column)]"
+              allow-clear
+              :placeholder="placeholder(column)"
+            />
+            <a-input-password
+              v-else-if="typeProp(column) === 'input-password'"
+              v-model:value="tableSettings.form.fields[valueProp(column)]"
+              allow-clear
+              :placeholder="placeholder(column)"
+            />
+            <a-textarea
+              v-else-if="typeProp(column) === 'textarea'"
+              v-model:value="tableSettings.form.fields[valueProp(column)]"
+              allow-clear
+              :placeholder="placeholder(column)"
+            />
+            <i-tree-select
+              v-else-if="typeProp(column) === 'tree-select'"
+              v-model:value="tableSettings.form.fields[valueProp(column)]"
+              :tree-data="column.options"
+              :placeholder="placeholder(column)"
+            />
+            <a-select
+              v-else-if="typeProp(column) === 'select'"
+              v-model:value="tableSettings.form.fields[valueProp(column)]"
+              allow-clear
+              :placeholder="placeholder(column)"
+            >
+              <a-select-option
+                v-for="option in column.options"
+                :key="option.value"
+                :value="option.value"
+              >
+                {{ option.label }}
+              </a-select-option>
+            </a-select>
+            <i-upload
+              v-else-if="typeProp(column) === 'upload'"
+              v-model:value="tableSettings.form.fields[valueProp(column)]"
+            />
+            <a-radio-group
+              v-else-if="typeProp(column) === 'radio'"
+              v-model:value="tableSettings.form.fields[valueProp(column)]"
+            >
+              <a-radio
+                v-for="option in column.options"
+                :key="option.value"
+                :value="option.value"
+              >
+                {{ option.label }}
+              </a-radio>
+            </a-radio-group>
+            <a-date-picker
+              v-else-if="typeProp(column) === 'date-picker'"
+              v-model:value="tableSettings.form.fields[valueProp(column)]"
+              :picker="column.picker"
+            />
+            <a-range-picker
+              v-else-if="typeProp(column) === 'range-picker'"
+              v-model:value="tableSettings.form.fields[valueProp(column)]"
+              :picker="column.picker"
+            />
+          </a-form-item>
+        </template>
+      </slot>
     </a-form>
   </i-modal>
 </template>
 
-<style scoped lang="less">
-
-</style>
+<style lang="less" scoped></style>

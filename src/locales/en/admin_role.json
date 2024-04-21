@@ -1,0 +1,16 @@
+{
+  "table": {
+    "columns": {}
+  },
+  "form": {
+    "label": {
+      "name": "Name"
+    },
+    "placeholder": {
+      "name": "Please input the name"
+    }
+  },
+  "error": {
+    "name": "Please input the name"
+  }
+}
