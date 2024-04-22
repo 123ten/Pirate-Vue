@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IColumns } from "@/types";
+import {IColumns} from "@/types";
 
 interface QueryFormItemProps {
   column: IColumns;
@@ -12,6 +12,10 @@ withDefaults(defineProps<QueryFormItemProps>(), {
   }),
   model: () => ({}),
 });
+
+const getOptions = (column: IColumns) => {
+  return column.options;
+};
 
 const typeProp = (column: IColumns) => {
   return column.searchType || column.type;
@@ -47,7 +51,7 @@ const valueProp = (column: IColumns) => {
         v-bind="column.queryConfig"
       >
         <a-select-option
-          v-for="option in column.options"
+          v-for="option in getOptions(column)"
           :key="option.value"
           :value="option.value"
         >
@@ -69,7 +73,7 @@ const valueProp = (column: IColumns) => {
         v-bind="column.queryConfig"
       >
         <a-radio
-          v-for="option in column.options"
+          v-for="option in getOptions(column)"
           :key="option.value"
           :value="option.value"
         >

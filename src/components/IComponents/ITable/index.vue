@@ -1,35 +1,21 @@
 <!-- 角色组管理 -->
 <script setup lang="ts">
-import {
-  ReloadOutlined,
-  SearchOutlined,
-  TableOutlined,
-} from "@ant-design/icons-vue";
-import {
-  computed,
-  defineEmits,
-  defineExpose,
-  defineProps,
-  onMounted,
-  ref,
-  toRaw,
-  watch,
-  withDefaults,
-} from "vue";
+import {ReloadOutlined, SearchOutlined, TableOutlined,} from "@ant-design/icons-vue";
+import {computed, defineEmits, defineExpose, defineProps, onMounted, ref, toRaw, watch, withDefaults,} from "vue";
 import Sortable from "sortablejs";
-import { IColumns, IPagination, RecordType } from "@/types";
-import { FormInstance } from "ant-design-vue";
-import { useI18n } from "vue-i18n";
+import {IColumns, IPagination, RecordType} from "@/types";
+import {FormInstance} from "ant-design-vue";
+import {useI18n} from "vue-i18n";
 import ITooltip from "@/components/IComponents/ITooltip/index.vue";
-import { cloneDeep, throttle } from "lodash-es";
-import { ITableProps } from "@/types/table";
+import {cloneDeep, throttle} from "lodash-es";
+import {ITableProps} from "@/types/table";
 import CloseAlert from "../IOther/CloseAlert/index.vue";
 import QueryForm from "./components/QueryForm/index.vue";
 import QueryFormItem from "./components/QueryFormItem/index.vue";
 import Ellipsis from "@/components/IComponents/IOther/Ellipsis/index.vue";
 
 // 国际化
-const { locale } = useI18n();
+const {locale} = useI18n();
 
 //#region interface
 interface ISortTableEnd {
@@ -76,7 +62,7 @@ const emits = defineEmits([
   "reset",
 ]);
 // #endregion
-const columnsCache: IColumns[] = cloneDeep(props.columns); // 缓存 columns
+const columnsCache: IColumns[] = cloneDeep(props.columns).filter(column => !column.hide); // 缓存 columns
 // console.log('columnsCache', columnsCache)
 const formRef = ref<FormInstance>();
 
@@ -183,7 +169,7 @@ const rowDrop = (out?: number[]) => {
   const sortable = Sortable.create(tbody, {
     animation: 200,
     handle: ".drop-row-btn", // 指定只能选中 drop-row-btn
-    onEnd({ newIndex, oldIndex }: ISortTableEnd) {
+    onEnd({newIndex, oldIndex}: ISortTableEnd) {
       console.log("newIndex, oldIndex", newIndex, oldIndex);
       //获取拖动后容器中的每一项的位置排序
       // const arr = sortable.toArray(out);
@@ -203,7 +189,7 @@ const rowDrop = (out?: number[]) => {
  */
 const handlePageSizeChange = (pagination: IPagination) => {
   if (!pagination) throw new Error("pagination is undefined");
-  const { current = 1, pageSize = 10, total = 0 } = pagination;
+  const {current = 1, pageSize = 10, total = 0} = pagination;
   const pages = {
     size: pageSize,
     page: current,
@@ -231,13 +217,13 @@ const pagination = computed(() => {
   return props.pagination === false
     ? false
     : {
-        showQuickJumper: true,
-        showSizeChanger: true,
-        showTotal: showTotal,
-        total: props.pages.total,
-        pageSize: props.pages.size,
-        current: props.pages.page,
-      };
+      showQuickJumper: true,
+      showSizeChanger: true,
+      showTotal: showTotal,
+      total: props.pages.total,
+      pageSize: props.pages.size,
+      current: props.pages.page,
+    };
 });
 
 /**
@@ -248,6 +234,7 @@ const formColumns = computed(() => {
   let count = 0;
   columnsCache
     .filter((column: IColumns) => column.search)
+    .sort((a, b) => (a.sort || 0) - (b.sort || 0))
     .forEach((column: IColumns, index: number) => {
       const _span: number = Number(column.span || 4);
       if (index % _span === 0) {
@@ -263,11 +250,12 @@ const formColumns = computed(() => {
  * @description 表格列配置项
  */
 const columnsComputed = computed(() => {
-  return cloneDeep(columnsCache).filter((column: IColumns) =>
-    [...menuChecked.value, props.operationKey].includes(
-      column.key || column.dataIndex
-    )
-  );
+  return cloneDeep(columnsCache)
+    .filter((column: IColumns) =>
+      [...menuChecked.value, props.operationKey].includes(
+        column.key || column.dataIndex
+      )
+    );
 });
 
 /**
@@ -306,7 +294,7 @@ defineExpose({
 <template>
   <div class="default-main">
     <div class="container-table">
-      <close-alert :message="remark" />
+      <close-alert :message="remark"/>
       <!-- queryForm -->
       <transition name="zoom-in">
         <!-- z-0 层级低于 table-header -->
@@ -326,7 +314,7 @@ defineExpose({
             >
               <template #default="scope">
                 <slot v-bind="scope">
-                  <query-form-item :column="scope.column" :model="model" />
+                  <query-form-item :column="scope.column" :model="model"/>
                 </slot>
               </template>
             </query-form>
@@ -342,7 +330,7 @@ defineExpose({
             @click="onRefresh"
           >
             <template #icon>
-              <reload-outlined :spin="loading" class="w-[1em] h-[1em]" />
+              <reload-outlined :spin="loading" class="w-[1em] h-[1em]"/>
             </template>
           </i-tooltip>
           <!-- 左侧按钮 可自定义左侧按钮内容 -->
@@ -393,7 +381,7 @@ defineExpose({
                 :title="$t('title.filter')"
                 @click="handleMenuOrSearchRadio('menu')"
               >
-                <table-outlined />
+                <table-outlined/>
               </a-radio-button>
             </a-popover>
             <a-tooltip placement="bottomRight">
@@ -405,7 +393,7 @@ defineExpose({
                 value="search"
                 @click="handleMenuOrSearchRadio('search')"
               >
-                <search-outlined />
+                <search-outlined/>
               </a-radio-button>
             </a-tooltip>
           </a-radio-group>
@@ -436,7 +424,7 @@ defineExpose({
           </slot>
         </template>
         <template #bodyCell="score">
-          <slot name="bodyCell" v-bind="score" />
+          <slot name="bodyCell" v-bind="score"/>
           <slot :name="score.column.dataIndex" v-bind="score">
             <ellipsis
               v-if="score.column.ellipsis"

@@ -4,6 +4,7 @@ import {TagProps} from "ant-design-vue";
 import {isArray} from "lodash-es";
 import dayjs, {Dayjs} from "dayjs";
 import {DateRangeTuple} from "@/types/form";
+import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
 
 export const getTimeState = () => {
   // 获取当前时间
@@ -94,14 +95,14 @@ export function getTerminal() {
   const windows_mobile = terminal.match(/windows mobile/i);
 
   if (
-      (ipad && ipad[0] === "ipad") ||
-      (iphone_os && iphone_os[0] === "iphone os") ||
-      (midp && midp[0] === "midp") ||
-      (uc7 && uc7[0] === "rv:1.2.3.4") ||
-      (ucweb && ucweb[0] === "ucweb") ||
-      (android && android[0] === "android") ||
-      (windows_ce && windows_ce[0] === "windows ce") ||
-      (windows_mobile && windows_mobile[0] === "windows mobile")
+    (ipad && ipad[0] === "ipad") ||
+    (iphone_os && iphone_os[0] === "iphone os") ||
+    (midp && midp[0] === "midp") ||
+    (uc7 && uc7[0] === "rv:1.2.3.4") ||
+    (ucweb && ucweb[0] === "ucweb") ||
+    (android && android[0] === "android") ||
+    (windows_ce && windows_ce[0] === "windows ce") ||
+    (windows_mobile && windows_mobile[0] === "windows mobile")
   ) {
     // 移动端浏览器
     return "mobile";
@@ -129,7 +130,7 @@ export function setTimeoutPromise(time: number) {
  * @param args 入参
  * @returns
  */
-export function deepChildren<RecordType>(...args: deepArguments<RecordType>) {
+export function deepChildren<RecordType = DefaultRecordType>(...args: deepArguments<RecordType>) {
   const [list, cb, children = 'children', parent] = args;
   if (!isArray(list)) return list;
   return list.map((item, index) => {
@@ -143,7 +144,7 @@ export function deepChildren<RecordType>(...args: deepArguments<RecordType>) {
   });
 }
 
-export function deepForEach<RecordType>(...args: deepArguments<RecordType>) {
+export function deepForEach<RecordType = DefaultRecordType>(...args: deepArguments<RecordType>) {
   const [list, cb, children = 'children', parent] = args;
   if (!isArray(list)) return list;
   for (let i = 0, len = list.length; i < len; i++) {
@@ -153,6 +154,23 @@ export function deepForEach<RecordType>(...args: deepArguments<RecordType>) {
       deepForEach(item[children], cb, children, item);
     }
   }
+}
+
+/**
+ * @param args 入参
+ * @returns
+ */
+export function deepFilter<RecordType = DefaultRecordType>(...args: deepArguments<RecordType>) {
+  const [list, cb, children = 'children', parent] = args;
+  if (!isArray(list)) return list;
+  return list.filter((item, index) => {
+    if (item[children] && item[children].length) {
+      item[children] = deepChildren(item[children], cb, children, item);
+    } else {
+      item[children] = null;
+    }
+    return cb && cb(item, index, list, parent!);
+  });
 }
 
 /**

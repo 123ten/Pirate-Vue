@@ -1,8 +1,8 @@
-import { onMounted, reactive } from "vue";
-import { calculateNextPage, formatDateRange } from "@/utils/common";
-import { Form, notification } from "ant-design-vue";
+import {onMounted, reactive} from "vue";
+import {calculateNextPage, formatDateRange} from "@/utils/common";
+import {Form, notification} from "ant-design-vue";
 import i18n from "@/locales";
-import type { IPages } from "@/types";
+import type {IPages} from "@/types";
 import {
   CustomParamsKey,
   DefaultFieldsType,
@@ -13,13 +13,13 @@ import {
   TableReactive,
   TableSettingsType,
 } from "@/types/tableSettingsType";
-import type { Key } from "ant-design-vue/lib/table/interface";
-import type { DefaultRecordType } from "ant-design-vue/es/vc-table/interface";
-import { isArray } from "lodash-es";
+import type {Key} from "ant-design-vue/lib/table/interface";
+import type {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
+import {isArray} from "lodash-es";
 import dayjs from "dayjs";
-import { DateRangeTuple, Rules } from "@/types/form";
+import {DateRangeTuple, Rules} from "@/types/form";
 
-const { t } = i18n.global;
+const {t} = i18n.global;
 
 export const tableSettingKey = Symbol("tableSettings");
 
@@ -27,8 +27,7 @@ export default class TableSettings<
   RecordType = DefaultRecordType,
   QueryForm = DefaultRecordType,
   Fields extends DefaultFieldsType = DefaultFieldsType
-> implements TableSettingsType<RecordType, QueryForm, Fields>
-{
+> implements TableSettingsType<RecordType, QueryForm, Fields> {
   private api: PrivateApi;
 
   public readonly table = reactive<TableReactive<RecordType, QueryForm>>({
@@ -57,6 +56,7 @@ export default class TableSettings<
 
   public readonly form = reactive<FormReactive<Fields>>({
     fields: {} as Fields,
+    formConfig: undefined,
     rules: undefined,
     visible: false,
     loading: false,
@@ -67,7 +67,7 @@ export default class TableSettings<
   public customParams?: TableSettingsType["customParams"];
 
   constructor(options: any) {
-    const { api, table, form, customParams } = options;
+    const {api, table, form, customParams} = options;
 
     this.api = api;
     this.customParams = customParams;
@@ -104,9 +104,9 @@ export default class TableSettings<
   public queryAll = async () => {
     const pages = this.table.pagination
       ? {
-          page: calculateNextPage(this.table.pages),
-          size: this.table.pages.size,
-        }
+        page: calculateNextPage(this.table.pages),
+        size: this.table.pages.size,
+      }
       : undefined;
     const query = {
       ...pages,
@@ -115,7 +115,7 @@ export default class TableSettings<
     const params = this.getParams("queryAll", query);
     this.table.loading = true;
     try {
-      const { data } = await this.api?.request(params);
+      const {data} = await this.api?.request(params);
       console.log("queryAll -->", data);
       this.table.remark = data.remark;
       this.table.dataSource = data.records;
@@ -134,7 +134,7 @@ export default class TableSettings<
     type: Extract<Operation, "delete" | "row-delete">,
     ids: Key[]
   ) => {
-    await this.api?.deleteRequest(ids);
+    await this.api?.deleteRequest({ids});
     notification.success({
       message: t("message.success"),
       description: t("success.delete"),
@@ -147,11 +147,10 @@ export default class TableSettings<
     await this.queryAll();
   };
 
-  public detailById = async (id: Key, success?: Function) => {
+  public detailById = async (id: Key) => {
     this.form.loading = true;
     try {
-      const { data } = await this.api?.detailRequest(id);
-      success?.(data);
+      const {data} = await this.api?.detailRequest(id);
       Object.assign(this.form.fields, data);
     } finally {
       this.form.loading = false;
@@ -168,15 +167,17 @@ export default class TableSettings<
     await this.queryAll();
   };
 
-  public openForm = async (type: 0 | 1, id?: Key, success?: Function) => {
+  public openForm = async (type: 0 | 1, id?: Key) => {
     this.form.visible = true;
     const isEditing = type === 1; // 是否编辑
     // 当 rules 的类型为 function 默认认为需要动态修改校验
     if (typeof this.form.rules === "function") {
       this.initFormRefs(isEditing);
     }
+    console.log('this.form', this.form)
     if (isEditing && id) {
-      await this.detailById(id, success);
+      this.form.fields.id = id;
+      await this.detailById(id);
     }
   };
 
@@ -187,7 +188,7 @@ export default class TableSettings<
 
   public confirmForm = async () => {
     await this.formRefs?.validate();
-    const { fields } = this.form;
+    const {fields} = this.form;
     const params = this.getParams("confirmForm", fields);
     console.log("confirmForm --> params", params);
     this.form.loading = true;
@@ -204,9 +205,9 @@ export default class TableSettings<
     }
   };
 
-  public openDetail = async (id: Key, success?: Function) => {
+  public openDetail = async (id: Key) => {
     this.form.visible = true;
-    await this.detailById(id, success);
+    await this.detailById(id);
   };
 
   /**

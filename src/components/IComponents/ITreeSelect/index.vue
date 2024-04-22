@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import {computed, CSSProperties, ref, toRaw, watch} from "vue";
+import {computed, CSSProperties, defineProps, ref, toRaw, watch, withDefaults} from "vue";
 import {deepChildren} from "@/utils/common";
+import {TreeSelect, TreeSelectProps} from "ant-design-vue";
 
 interface FieldNames {
   label?: string;
@@ -21,6 +22,8 @@ interface ITreeSelectProps {
   allowClear?: boolean;
   spliceParentTitle?: boolean;
   treeDefaultExpandAll?: boolean;
+  treeCheckable?: boolean
+  showCheckedStrategy: TreeSelectProps['showCheckedStrategy']
 }
 
 const props = withDefaults(defineProps<ITreeSelectProps>(), {
@@ -34,9 +37,11 @@ const props = withDefaults(defineProps<ITreeSelectProps>(), {
   spliceParentTitle: false,
   treeDefaultExpandAll: false,
   maxTagCount: 1,
+  showCheckedStrategy: TreeSelect.SHOW_ALL,
   dropdownStyle: () => ({maxHeight: "400px", overflow: "auto"}),
   fieldNames: () => ({label: "label", value: "value", children: "children"}),
 });
+console.log('props', props)
 
 const emits = defineEmits(["update:value", 'change']);
 
@@ -45,12 +50,12 @@ const {spliceParentTitle, ...restProps} = toRaw(props);
 const tooltipTitle = ref<undefined | number[] | string[]>(undefined);
 
 watch(
-    () => props.value,
-    (value) => {
-      if (props.multiple && value) {
-        handleChange(value);
-      }
+  () => props.value,
+  (value) => {
+    if (props.multiple && value) {
+      handleChange(value);
     }
+  }
 );
 
 const handleChange = (value: ITreeSelectProps['value'], label?: string[], extra?: any) => {
@@ -65,7 +70,7 @@ const handleChange = (value: ITreeSelectProps['value'], label?: string[], extra?
       const labelKey = restProps.fieldNames.label!
       const valueKey = restProps.fieldNames.value!
       const labels: string[] = []
-      deepChildren(props.treeData, (item: any, index, arr, parent) => {
+      deepChildren(props.treeData, (item: any, _index, _arr, parent) => {
         if ((value as (string | number)[])?.includes(item[valueKey])) {
           item.spliceTitle = [parent?.spliceTitle, item[labelKey]].filter(Boolean).join('-');
           labels.push(item.spliceTitle);
@@ -77,20 +82,20 @@ const handleChange = (value: ITreeSelectProps['value'], label?: string[], extra?
 };
 
 const title = computed(() => {
-  return tooltipTitle.value?.join("，");
+  return props.multiple && tooltipTitle.value?.join("，");
 });
 </script>
 
 <template>
   <a-tooltip
-      placement="topLeft"
-      color='#fff'
-      :title="props.multiple && title"
-      overlayClassName="i-treeSelect-tooltip"
+    placement="topLeft"
+    color='#fff'
+    :title="title"
+    overlayClassName="i-treeSelect-tooltip"
   >
     <a-tree-select
-        v-bind="props"
-        @change="handleChange"
+      v-bind="props"
+      @change="handleChange"
     />
   </a-tooltip>
 </template>

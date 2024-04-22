@@ -1,12 +1,14 @@
 {
   "table": {
-    "columns": {}
+    "columns": {
+    }
   },
   "form": {
     "label": {
       "name": "组别名称"
     },
     "placeholder": {
+      "parentId": "请选择上级分组",
       "name": "请输入组别名称"
     }
   },

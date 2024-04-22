@@ -1,6 +1,5 @@
 import {
   DatePickerProps,
-  FormItemProps,
   FormProps,
   InputProps,
   PaginationProps,
@@ -11,12 +10,12 @@ import {
   TreeSelectProps,
   UploadProps,
 } from "ant-design-vue";
-import { IOptions, FormType } from "@/types/form";
-import { CSSPropertiesType, TStyle } from "@/types/style";
-import { ColumnType } from "ant-design-vue/es/table";
-import { DefaultRecordType } from "ant-design-vue/es/vc-table/interface";
-import { TableRowSelection } from "ant-design-vue/es/table/interface";
-import { RangePickerProps } from "ant-design-vue/lib/date-picker";
+import {FormType, IOptions} from "@/types/form";
+import {CSSPropertiesType, TStyle} from "@/types/style";
+import {ColumnType} from "ant-design-vue/es/table";
+import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
+import {TableRowSelection} from "ant-design-vue/es/table/interface";
+import {RangePickerProps} from "ant-design-vue/lib/date-picker";
 
 type CustomHeaderCellType = {
   style: CSSPropertiesType;
@@ -25,26 +24,25 @@ type CustomHeaderCellType = {
 // 	设置选择器类型
 type Picker = "date" | "week" | "month" | "quarter" | "year";
 
-export type FormFieldProps<T extends FormType = "input"> = T extends
-  | "input"
+export type FormFieldProps<T extends FormType = "input"> = T extends | "input"
   | "input-password"
   | "input-number"
   ? InputProps
   : T extends "textarea"
-  ? TextAreaProps
-  : T extends "select"
-  ? SelectProps
-  : T extends "tree-select"
-  ? TreeSelectProps
-  : T extends "radio"
-  ? RadioProps
-  : T extends "date-picker"
-  ? DatePickerProps
-  : T extends "range-picker"
-  ? RangePickerProps
-  : T extends "upload"
-  ? UploadProps
-  : never;
+    ? TextAreaProps
+    : T extends "select"
+      ? SelectProps
+      : T extends "tree-select"
+        ? TreeSelectProps
+        : T extends "radio"
+          ? RadioProps
+          : T extends "date-picker"
+            ? DatePickerProps
+            : T extends "range-picker"
+              ? RangePickerProps
+              : T extends "upload"
+                ? UploadProps
+                : never;
 
 export interface IColumns<RecordType = DefaultRecordType>
   extends ColumnType<RecordType> {
@@ -53,7 +51,7 @@ export interface IColumns<RecordType = DefaultRecordType>
   /** 默认表单内容类型 */
   type?: FormType;
   /** select/radio/tree 选择项 */
-  options?: IOptions[];
+  options?: IOptions[] | ((dataSource: RecordType[], fields?: Record<string, any>) => IOptions[]);
   /** 日期格式 */
   picker?: Picker;
   /** 占位内容 */
@@ -99,10 +97,13 @@ export interface IColumns<RecordType = DefaultRecordType>
 
   /** 是否隐藏 */
   hide?: boolean;
+  /** 排序 */
+  sort?: number;
   /** 表头是否可伸缩 */
   resizable?: boolean;
   /** 搜索框配置项 */
   queryConfig?: any;
+
   /** 设置头部单元格属性 */
   customHeaderCell?(column: IColumns): CustomHeaderCellType;
 }

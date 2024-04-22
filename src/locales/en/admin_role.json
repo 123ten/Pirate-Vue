@@ -1,12 +1,14 @@
 {
   "table": {
-    "columns": {}
+    "columns": {
+    }
   },
   "form": {
     "label": {
       "name": "Name"
     },
     "placeholder": {
+      "parentId": "Please select parent",
       "name": "Please input the name"
     }
   },

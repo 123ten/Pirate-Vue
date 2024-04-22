@@ -1,6 +1,6 @@
 import request from "@/utils/request";
-import { LoginResult, RefreshResult } from "../types/user";
-import { Response, ResponseList } from "@/types/request";
+import {LoginResult, RefreshResult} from "../types/user";
+import {Response, ResponseList} from "@/types/request";
 
 // 获取管理员头像
 export const getAdminAvatar = (params) => {
@@ -24,17 +24,17 @@ export const getAdminList = (params) => {
 
 // 刷新access_token
 export const refresh = (refreshToken: string): Promise<RefreshResult> => {
-  return request.get("/admin/refresh", { refreshToken });
+  return request.get("/admin/refresh", {refreshToken});
 };
 
 // 分页获取角色列表
-export const getRoleList = (params): Promise<Response<ResponseList>> => {
+export const getAdminRoleList = (params): Promise<Response<ResponseList>> => {
   return request.get("/admin/role", params);
 };
 
 // 角色详情
-export const getRoleById = (id?: number) => {
-  return request.get("/admin/role/:", id);
+export const getAdminRoleById = (id?: number) => {
+  return request.get("/admin/role/" + id);
 };
 
 // 新增/修改角色
@@ -73,7 +73,7 @@ export const removeMenu = (data) => {
 };
 // 根据 Id 获取菜单详情
 export const getAdminMenuById = (id?: number) => {
-  return request.get("/admin/menu/detail/" + id);
+  return request.get("/admin/menu/" + id);
 };
 
 // 修改菜单状态

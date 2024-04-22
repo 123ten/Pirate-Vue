@@ -110,7 +110,7 @@ provide(tableSettingKey, tableSettings)
 </script>
 
 <template>
-  <custom-i-table>
+  <custom-table>
     <template #usertype="{value}">
       <processing-tag :value="value === 1 ? '管理员' : '普通用户'"/>
     </template>
@@ -120,6 +120,6 @@ provide(tableSettingKey, tableSettings)
     <template #url="{value}">
       <a-image :src="value" class="max-h-[100px]"/>
     </template>
-  </custom-i-table>
+  </custom-table>
 </template>
 

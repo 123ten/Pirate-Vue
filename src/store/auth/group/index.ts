@@ -1,14 +1,9 @@
 /**
  * 角色组
  */
-import { defineStore } from "pinia";
-import {
-  adminMenuStatus,
-  adminMenuUpsert,
-  getRoleById,
-  getRoleList,
-} from "@/api/auth/admin";
-import { RoleStoreState } from "./types";
+import {defineStore} from "pinia";
+import {adminMenuStatus, adminMenuUpsert, getAdminRoleById, getAdminRoleList,} from "@/api/auth/admin";
+import {RoleStoreState} from "./types";
 
 export const useRoleStore = defineStore("roleStore", {
   state(): RoleStoreState {
@@ -41,7 +36,7 @@ export const useRoleStore = defineStore("roleStore", {
     async getRoleListRequest() {
       this.isTableLoading = true;
       try {
-        const { data } = await getRoleList(this.queryForm);
+        const {data} = await getAdminRoleList(this.queryForm);
         console.log(data, "getRoleList");
         this.dataSource = data.records;
       } finally {
@@ -54,7 +49,7 @@ export const useRoleStore = defineStore("roleStore", {
     async getRoleByIdRequest(id?: number) {
       this.isModalLoading = true;
       try {
-        const { data } = await getRoleById(id);
+        const {data} = await getAdminRoleById(id);
         data.parentId = data.parentId || undefined;
         this.formState = data;
       } finally {
@@ -67,7 +62,7 @@ export const useRoleStore = defineStore("roleStore", {
     async adminMenuUpsertRequest() {
       this.isModalLoading = true;
       try {
-        const { data } = await adminMenuUpsert(this.formState);
+        const {data} = await adminMenuUpsert(this.formState);
         return data;
       } finally {
         this.isModalLoading = false;

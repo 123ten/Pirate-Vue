@@ -1,25 +1,19 @@
-import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from "axios";
-import { notification } from "ant-design-vue";
+import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse,} from "axios";
+import {notification} from "ant-design-vue";
 import i18n from "@/locales";
-import { setTimeoutPromise } from "@/utils/common";
-import { refresh } from "@/api/auth/admin";
-import { $local } from "@/utils/storage";
-import { RefreshResult } from "@/api/types/user";
+import {setTimeoutPromise} from "@/utils/common";
+import {refresh} from "@/api/auth/admin";
+import {$local} from "@/utils/storage";
+import {RefreshResult} from "@/api/types/user";
 import router from "@/router";
 
-const { t } = i18n.global;
+const {t} = i18n.global;
 
 interface PendingTask {
   config: AxiosRequestConfig;
   resolve: Function;
 }
 
-const { CancelToken } = axios;
 class AxiosUtils {
   public baseUrl: string = import.meta.env.VITE_BASE_API;
   private readonly http: AxiosInstance;
@@ -44,12 +38,12 @@ class AxiosUtils {
    */
   private async refreshAccessToken(): Promise<RefreshResult> {
     const refreshToken = $local.get("refreshToken");
-    const { data, code } = await refresh(refreshToken);
+    const {data, code} = await refresh(refreshToken);
 
     console.log("refresh", code, data);
     $local.set("accessToken", data.accessToken);
     $local.set("refreshToken", data.refreshToken);
-    return { data, code };
+    return {data, code};
   }
 
   // 拦截器
@@ -106,7 +100,7 @@ class AxiosUtils {
    * @private
    */
   private async responseErrorHandler(error: AxiosError) {
-    const { response } = error;
+    const {response} = error;
 
     if (!response) {
       notification.error({
@@ -116,7 +110,7 @@ class AxiosUtils {
       return Promise.reject(error);
     }
 
-    const { data, config } = response as AxiosResponse;
+    const {data, config} = response as AxiosResponse;
 
     if (["/user/avatar", "/admin/avatar"].includes(config.url!)) {
       // 上传头像接口不做错误处理
@@ -133,7 +127,7 @@ class AxiosUtils {
 
     if (this.refreshing) {
       return new Promise((resolve) => {
-        this.subscribers.push({ config, resolve });
+        this.subscribers.push({config, resolve});
       });
     }
 
@@ -143,11 +137,11 @@ class AxiosUtils {
     ) {
       this.refreshing = true;
       // console.log(config.url);
-      const { code } = await this.refreshAccessToken();
+      const {code} = await this.refreshAccessToken();
       this.refreshing = false;
 
       if (code === 200) {
-        this.subscribers.forEach(({ config, resolve }) => {
+        this.subscribers.forEach(({config, resolve}) => {
           resolve(this.http(config));
         });
 
@@ -158,16 +152,12 @@ class AxiosUtils {
       return Promise.reject(error);
     }
     console.log("错误", error, data);
+    // this.errorCacheHandler(error, data)
     // 生成错误缓存键
-    const errorKey = `${error.response?.status}:${error.message}`;
-    // 如果之前没有弹出过相同的错误提示，则弹出提示
-    if (!this.errorCache.has(errorKey)) {
-      this.errorCache.add(errorKey);
-      notification.error({
-        message: t("message.fail"),
-        description: data.message || t("error.server"),
-      });
-    }
+    notification.error({
+      message: t("message.fail"),
+      description: data.message || t("error.server"),
+    });
     return Promise.reject(error);
   }
 
@@ -186,6 +176,25 @@ class AxiosUtils {
       message: t("message.fail"),
       description: t("message.loginExpired"),
     });
+  }
+
+  /**
+   * 错误缓存处理
+   * @param error
+   * @param data
+   * @private
+   */
+  private errorCacheHandler(error: AxiosError, data: AxiosResponse['data']) {
+    // 错误缓存处理
+    const errorKey = `${error.response?.status}:${error.message}`;
+    // 如果之前没有弹出过相同的错误提示，则弹出提示
+    if (!this.errorCache.has(errorKey)) {
+      this.errorCache.add(errorKey);
+      notification.error({
+        message: t("message.fail"),
+        description: data.message || t("error.server"),
+      });
+    }
   }
 
   /**

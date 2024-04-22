@@ -2,7 +2,7 @@ import { IColumns, IPages, ITableProps } from "@/types/table";
 import { DefaultRecordType } from "ant-design-vue/es/vc-table/interface";
 import { Key } from "ant-design-vue/lib/table/interface";
 import { type Ref, UnwrapNestedRefs } from "vue";
-import { FormInstance, PaginationProps } from "ant-design-vue";
+import {FormInstance, FormProps, PaginationProps} from "ant-design-vue";
 import {
   Props,
   ValidateInfo,
@@ -32,7 +32,7 @@ export declare type CustomParamsKey = "queryAll" | "confirmForm";
 export declare type DefaultQueryFormType = Record<string, any> | undefined;
 
 export declare type DefaultFieldsType = {
-  id?: number;
+  id?: Key;
 };
 
 export interface PrivateApi {
@@ -65,6 +65,8 @@ export interface TableReactive<
 export interface FormReactive<Fields extends DefaultFieldsType> {
   /** 表单数据对象 */
   fields: Fields;
+  /** 表单配置 */
+  formConfig?: FormProps;
   /** 表单验证规则 */
   rules?: Rules;
   /** 表单名称，会作为表单字段 id 前缀使用 */

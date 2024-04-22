@@ -1,47 +1,46 @@
 <!-- 通用表格 -->
 <script setup lang="ts">
-import { computed, inject } from "vue";
-import {
-  EditOutlined,
-  PlusOutlined,
-  ZoomInOutlined,
-} from "@ant-design/icons-vue";
-import { sortNumber } from "@/utils/common";
-import { TableSettingsType } from "@/types/tableSettingsType";
-import { tableSettingKey } from "@/utils/tableSettings";
+import {computed, inject} from "vue";
+import {EditOutlined, PlusOutlined, ZoomInOutlined,} from "@ant-design/icons-vue";
+import {sortNumber} from "@/utils/common";
+import {TableSettingsType} from "@/types/tableSettingsType";
+import {tableSettingKey} from "@/utils/tableSettings";
 
 const tableSettings = inject<TableSettingsType>(tableSettingKey);
 
-const operations = computed(() => tableSettings?.table.operations || []);
+const table = computed(() => tableSettings?.table)
+
+const operations = computed(() => table.value?.operations || []);
 
 const selectedRowKeys = computed(
-  () => tableSettings?.table.selectedRowKeys || []
+  () => table.value?.selectedRowKeys || []
 );
 
 const rowSelection = computed(() => ({
-  selectedRowKeys: tableSettings?.table.selectedRowKeys,
+  selectedRowKeys: table.value?.selectedRowKeys,
   onChange: tableSettings?.selectChange,
 }));
 
 defineOptions({
-  name: "CustomITable",
+  name: "CustomTable",
 });
 </script>
 
 <template>
   <div class="box-border p-4">
     <i-table
-      v-if="tableSettings"
-      :row-key="tableSettings.table.rowKey"
-      :columns="tableSettings.table.columns"
-      :dataSource="tableSettings.table.dataSource"
-      :pages="tableSettings.table.pages"
-      :loading="tableSettings.table.loading"
-      :remark="tableSettings.table.remark"
-      :model="tableSettings.table.queryForm"
-      :i18n-prefix="tableSettings.table.i18nPrefix"
+      v-if="table"
+      :row-key="table.rowKey"
+      :columns="table.columns"
+      :dataSource="table.dataSource"
+      :pages="table.pages"
+      :loading="table.loading"
+      :remark="table.remark"
+      :model="table.queryForm"
+      :i18n-prefix="table.i18nPrefix"
       :row-selection="rowSelection"
-      :default-expand-all-rows="tableSettings.table.defaultExpandAllRows"
+      :pagination="table.pagination"
+      :default-expand-all-rows="table.defaultExpandAllRows"
       :refresh="operations.includes('refresh')"
       @refresh="tableSettings?.queryAll"
       @query="tableSettings?.queryAll"
@@ -56,7 +55,7 @@ defineOptions({
           @click="tableSettings?.openForm(0)"
         >
           <template #icon>
-            <plus-outlined />
+            <plus-outlined/>
           </template>
         </i-tooltip>
         <i-tooltip
@@ -73,16 +72,16 @@ defineOptions({
         </i-tooltip>
         <expand-all-rows-tooltip
           v-if="operations.includes('expand')"
-          v-model:expand="tableSettings.table.defaultExpandAllRows"
-          :disabled="!tableSettings.table.dataSource.length"
+          v-model:expand="table.defaultExpandAllRows"
+          :disabled="!table.dataSource.length"
         />
       </template>
       <template #number="{ index }">
-        {{ sortNumber(index, tableSettings.table.pages) }}
+        {{ sortNumber(index, table.pages) }}
       </template>
       <template #bodyCell="score">
-        <slot name="bodyCell" v-bind="score" />
-        <slot :name="score.column.dataIndex" v-bind="score"> </slot>
+        <slot name="bodyCell" v-bind="score"/>
+        <slot :name="score.column.dataIndex" v-bind="score"></slot>
       </template>
       <template #operation="{ record }">
         <a-space>
@@ -91,11 +90,11 @@ defineOptions({
             :title="$t('title.detail')"
             size="small"
             @click="
-              tableSettings?.openDetail(record[tableSettings.table.rowKey])
+              tableSettings?.openDetail(record[table.rowKey])
             "
           >
             <template #icon>
-              <zoom-in-outlined />
+              <zoom-in-outlined/>
             </template>
           </i-tooltip>
           <i-tooltip
@@ -105,7 +104,7 @@ defineOptions({
             @click="tableSettings?.openForm(1, record.id)"
           >
             <template #icon>
-              <edit-outlined />
+              <edit-outlined/>
             </template>
           </i-tooltip>
           <i-tooltip
