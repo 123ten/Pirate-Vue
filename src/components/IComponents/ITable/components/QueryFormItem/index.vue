@@ -14,7 +14,7 @@ withDefaults(defineProps<QueryFormItemProps>(), {
 });
 
 const getOptions = (column: IColumns) => {
-  return column.options;
+  return typeof column.options === 'function' ? column.options() : column.options || [];
 };
 
 const typeProp = (column: IColumns) => {
@@ -24,6 +24,10 @@ const typeProp = (column: IColumns) => {
 const valueProp = (column: IColumns) => {
   return column.searchValueProp || column.dataIndex;
 };
+
+defineOptions({
+  name: 'QueryFormItem'
+})
 </script>
 
 <template>

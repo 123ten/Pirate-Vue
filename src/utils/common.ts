@@ -1,7 +1,7 @@
 // 获取时间状态
 import {deepArguments, IPages} from "@/types";
 import {TagProps} from "ant-design-vue";
-import {isArray} from "lodash-es";
+import {cloneDeep, isArray} from "lodash-es";
 import dayjs, {Dayjs} from "dayjs";
 import {DateRangeTuple} from "@/types/form";
 import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
@@ -163,7 +163,7 @@ export function deepForEach<RecordType = DefaultRecordType>(...args: deepArgumen
 export function deepFilter<RecordType = DefaultRecordType>(...args: deepArguments<RecordType>) {
   const [list, cb, children = 'children', parent] = args;
   if (!isArray(list)) return list;
-  return list.filter((item, index) => {
+  return cloneDeep(list).filter((item, index) => {
     if (item[children] && item[children].length) {
       item[children] = deepChildren(item[children], cb, children, item);
     } else {

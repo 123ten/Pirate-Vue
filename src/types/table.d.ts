@@ -51,7 +51,7 @@ export interface IColumns<RecordType = DefaultRecordType>
   /** 默认表单内容类型 */
   type?: FormType;
   /** select/radio/tree 选择项 */
-  options?: IOptions[] | ((dataSource: RecordType[], fields?: Record<string, any>) => IOptions[]);
+  options?: IOptions[] | ((dataSource?: RecordType[], fields?: Record<string, any>) => IOptions[]);
   /** 日期格式 */
   picker?: Picker;
   /** 占位内容 */
@@ -81,7 +81,7 @@ export interface IColumns<RecordType = DefaultRecordType>
   searchValueProp?: string;
 
   /** 是否显示表单 */
-  form?: boolean;
+  form?: boolean | ((fields?: Record<string, any>) => boolean)
   /** 表单内容类型 */
   formType?: FormType;
   /** 回填到表单展示的属性名称，默认是 column 的label值。比如表单展示不同名称，此值可以更换名称。 */
@@ -144,9 +144,9 @@ interface I18nPrefix {
 
 export interface ITableProps {
   /** 表格列的配置描述 */
-  columns: IColumns[];
+  columns?: IColumns[];
   /** 数据数组 */
-  dataSource: TableProps["dataSource"];
+  dataSource?: TableProps["dataSource"];
   /** 表格行是否可选择 */
   rowSelection?: TableRowSelection;
   /** 指定每页可以显示多少条 */

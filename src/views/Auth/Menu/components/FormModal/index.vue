@@ -10,85 +10,29 @@ import {useI18n} from "vue-i18n";
 
 const {t} = useI18n()
 const store = useAdminMenuStore()
-const {dataSource, formState, isModalLoading} = storeToRefs(store)
-const {adminMenuUpsertRequest} = store
-
-const props = defineProps<IFormModalProps>();
+const {formState} = storeToRefs(store)
 
 const emits = defineEmits(["cancel", "confirm"]);
 
 const rules: Rules = {
-  title: [{required: true, message: t('user.error.title')}],
-  name: [{required: true, message: t('user.error.title')}],
-  path: [{required: true, message: t('user.error.title')}],
 }
 const formRef = ref<FormInstance>()
 
-const {resetFields, validate, validateInfos} = Form.useForm(formState, rules);
-
-const handleCancel = () => {
-  emits('cancel')
-  resetFields()
-};
-
-const handleConfirm = async () => {
-  await validate()
-  await adminMenuUpsertRequest();
-  emits('confirm');
-  resetFields()
-  notification.success({
-    message: t("message.success"),
-    description: t(formState.value.id ? "success.update" : "success.create"),
-  })
-};
-
-
-const fieldNames = computed(() => {
-  return {
-    label: 'title',
-    key: 'id',
-    value: 'id'
-  }
-})
+const {validateInfos} = Form.useForm(formState, rules);
 
 </script>
 
 <template>
   <i-modal
-      v-model:visible="props.visible"
-      :title="formState.id ? '编辑' : '添加'"
-      :loading="isModalLoading"
-      :maskClosable="false"
-      width="600px"
-      @cancel="handleCancel"
-      @confirm="handleConfirm"
   >
     <a-form
-        ref="formRef"
-        :model="formState"
-        name="basic"
-        :label-col="{ span: 4 }"
-        :wrapper-col="{ span: 18 }"
-        autocomplete="off"
+      ref="formRef"
+      :model="formState"
+      name="basic"
+      :label-col="{ span: 4 }"
+      :wrapper-col="{ span: 18 }"
+      autocomplete="off"
     >
-      <a-form-item label="上级菜单" name="parentId">
-        <a-tree-select
-            v-model:value="formState.parentId"
-            placeholder="请选择上级菜单"
-            show-search
-            allow-clear
-            tree-node-filter-prop="title"
-            :tree-data="dataSource"
-            :field-names="fieldNames"
-        />
-      </a-form-item>
-      <a-form-item label="规则类型" name="type">
-        <a-radio-group v-model:value="formState.type" button-style="solid">
-          <a-radio-button :value="1">菜单目录</a-radio-button>
-          <a-radio-button :value="2">菜单项</a-radio-button>
-          <a-radio-button :value="3">页面按钮</a-radio-button>
-        </a-radio-group>
-      </a-form-item>
       <a-form-item label="规则标题" name="title" v-bind="validateInfos.title">
         <a-input v-model:value="formState.title"/>
       </a-form-item>
@@ -120,9 +64,9 @@ const fieldNames = computed(() => {
       </a-form-item>
       <a-form-item label="排序" name="sort">
         <a-input-number
-            v-model:value="formState.sort"
-            :min="0"
-            style="width: 100%"
+          v-model:value="formState.sort"
+          :min="0"
+          style="width: 100%"
         />
       </a-form-item>
       <a-form-item label="缓存" name="cache">

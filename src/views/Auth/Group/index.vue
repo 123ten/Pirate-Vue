@@ -1,21 +1,24 @@
 <!-- 角色组管理 -->
 <script setup lang="ts">
-import {provide, ref} from "vue";
+import {provide} from "vue";
 import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
-import FormModal from './components/FormModal/index.vue'
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
 import {adminRoleUpsert, getAdminRoleById, getAdminRoleList, removeAdminRole,} from "@/api/auth/admin";
 import {AdminRoleTableSettingsType} from "./types";
 import {useI18n} from "vue-i18n";
-import {deepFilter} from "@/utils/common";
+import {useAdminMenuStore} from '@/store'
+import {storeToRefs} from "pinia";
 
 const {t} = useI18n();
 
-const defaultExpandAllRows = ref<boolean>(false);
+const adminMenuSore = useAdminMenuStore()
+const {dataSource: permissionTreeData} = storeToRefs(adminMenuSore)
+const {getAdminMenuListRequest} = adminMenuSore
 
-const getList = async () => {
-  defaultExpandAllRows.value = true;
-};
+// 初始化菜单权限数据源
+const onInit = async () => {
+  await getAdminMenuListRequest()
+}
 
 const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
   api: {
@@ -40,16 +43,15 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
         type: "tree-select",
         form: true,
         hide: true,
-        options: (dataSource, fields) => {
-          return deepFilter(dataSource, (item) => {
-            return item.id !== fields.id
-          })
+        options: (dataSource) => {
+          return dataSource
         },
         formFieldConfig: {
           fieldNames: {
             label: 'name',
             value: 'id'
-          }
+          },
+          treeDefaultExpandAll: true
         }
       },
       {
@@ -68,10 +70,10 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
       },
       {
         title: "权限",
-        dataIndex: "permissions",
+        dataIndex: "permissionIds",
         align: "center",
         form: true,
-        formValueProp: 'permissionIds'
+        hide: true,
       },
       {
         title: "描述",
@@ -145,12 +147,16 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
     rules: {
       name: [{required: true, message: t("admin_role.error.name")}],
       slug: [{required: true, message: t("admin_role.error.slug")}],
-      // permissions: [{required: true, message: t("admin_role.error.permissions")}],
+      permissionIds: [{required: true, message: t("admin_role.error.permissionIds")}],
     },
   },
+  modal: {
+    init: onInit,
+  }
 });
 
 provide(tableSettingKey, tableSettings);
+
 </script>
 
 <template>
@@ -158,7 +164,18 @@ provide(tableSettingKey, tableSettings);
     <template #status="{ value }">
       <status-tag :value="value"/>
     </template>
+    <!--  表单自定义  -->
+    <template #form-permissionIds="{fields,field,placeholder}">
+      <i-tree-select
+        v-model:value="fields[field]"
+        tree-checkable
+        allow-clear
+        multiple
+        tree-default-expand-all
+        :field-names="{label: 'title', value: 'id'}"
+        :tree-data="permissionTreeData"
+        :placeholder="placeholder"
+      />
+    </template>
   </custom-table>
-
-  <form-modal/>
 </template>

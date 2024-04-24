@@ -1,4 +1,4 @@
-import {onMounted, reactive} from "vue";
+import {onBeforeUnmount, onMounted, reactive} from "vue";
 import {calculateNextPage, formatDateRange} from "@/utils/common";
 import {Form, notification} from "ant-design-vue";
 import i18n from "@/locales";
@@ -8,6 +8,7 @@ import {
   DefaultFieldsType,
   FormReactive,
   FormRefs,
+  ModalReactive,
   Operation,
   PrivateApi,
   TableReactive,
@@ -29,6 +30,9 @@ export default class TableSettings<
   Fields extends DefaultFieldsType = DefaultFieldsType
 > implements TableSettingsType<RecordType, QueryForm, Fields> {
   private api: PrivateApi;
+
+  /** @type {boolean} 保存初始化时的 默认展开表格 */
+  private defaultExpandAllRows: boolean = false;
 
   public readonly table = reactive<TableReactive<RecordType, QueryForm>>({
     columns: [],
@@ -52,27 +56,39 @@ export default class TableSettings<
     remark: undefined,
     loading: false,
     defaultExpandAllRows: false,
+    fieldModalVisible: true,
   });
 
   public readonly form = reactive<FormReactive<Fields>>({
     fields: {} as Fields,
     formConfig: undefined,
     rules: undefined,
+  });
+
+  public readonly modal = reactive<ModalReactive>({
+    init: undefined,
     visible: false,
     loading: false,
-  });
+    maskClosable: false,
+  })
 
   public formRefs?: FormRefs;
 
   public customParams?: TableSettingsType["customParams"];
 
   constructor(options: any) {
-    const {api, table, form, customParams} = options;
+    const {api, table, form, modal, customParams} = options;
 
     this.api = api;
     this.customParams = customParams;
+
+    if (table.defaultExpandAllRows) {
+      this.defaultExpandAllRows = table.defaultExpandAllRows
+      table.defaultExpandAllRows = false;
+    }
     Object.assign(this.table, table);
     Object.assign(this.form, form);
+    Object.assign(this.modal, modal)
 
     this.initFormRefs();
     this.mounted();
@@ -100,16 +116,24 @@ export default class TableSettings<
     return this.customParams?.[key]?.(params) || params;
   }
 
-  // region API请求方法
-  public queryAll = async () => {
-    const pages = this.table.pagination
-      ? {
+  /**
+   * 获取分页参数
+   * @private
+   */
+  private getPagesParams() {
+    if (this.table.pagination) {
+      return {
         page: calculateNextPage(this.table.pages),
         size: this.table.pages.size,
       }
-      : undefined;
+    }
+    return undefined
+  }
+
+  // region API请求方法
+  public queryAll = async () => {
     const query = {
-      ...pages,
+      ...this.getPagesParams(),
       ...this.transformParams(),
     };
     const params = this.getParams("queryAll", query);
@@ -125,6 +149,10 @@ export default class TableSettings<
         page: data.page,
         total: data.total,
       };
+
+      if (this.defaultExpandAllRows) { // 当默认值有值时，才会赋值 必须异步赋值
+        this.table.defaultExpandAllRows = this.defaultExpandAllRows
+      }
     } finally {
       this.table.loading = false;
     }
@@ -148,12 +176,12 @@ export default class TableSettings<
   };
 
   public detailById = async (id: Key) => {
-    this.form.loading = true;
+    this.modal.loading = true;
     try {
       const {data} = await this.api?.detailRequest(id);
       Object.assign(this.form.fields, data);
     } finally {
-      this.form.loading = false;
+      this.modal.loading = false;
     }
   };
   // endregion
@@ -168,7 +196,7 @@ export default class TableSettings<
   };
 
   public openForm = async (type: 0 | 1, id?: Key) => {
-    this.form.visible = true;
+    this.modal.visible = true;
     const isEditing = type === 1; // 是否编辑
     // 当 rules 的类型为 function 默认认为需要动态修改校验
     if (typeof this.form.rules === "function") {
@@ -182,7 +210,7 @@ export default class TableSettings<
   };
 
   public cancelForm = () => {
-    this.form.visible = false;
+    this.modal.visible = false;
     this.formRefs?.resetFields();
   };
 
@@ -191,7 +219,7 @@ export default class TableSettings<
     const {fields} = this.form;
     const params = this.getParams("confirmForm", fields);
     console.log("confirmForm --> params", params);
-    this.form.loading = true;
+    this.modal.loading = true;
     try {
       await this.api.upsertRequest(params);
       notification.success({
@@ -201,12 +229,12 @@ export default class TableSettings<
       this.cancelForm();
       await this.queryAll();
     } finally {
-      this.form.loading = false;
+      this.modal.loading = false;
     }
   };
 
   public openDetail = async (id: Key) => {
-    this.form.visible = true;
+    this.modal.visible = true;
     await this.detailById(id);
   };
 
@@ -240,11 +268,11 @@ export default class TableSettings<
    * @param isEditing {boolean} 是否编辑 默认 非编辑
    */
   private transformRules = (
-    rules?: Rules | ((isEditing: boolean, fields: Fields) => Rules),
+    rules?: Rules | ((fields: Fields, isEditing: boolean) => Rules),
     isEditing: boolean = false
   ) => {
     if (typeof rules === "function") {
-      return rules(isEditing, this.form.fields as Fields);
+      return rules(this.form.fields as Fields, isEditing);
     }
     return rules;
   };

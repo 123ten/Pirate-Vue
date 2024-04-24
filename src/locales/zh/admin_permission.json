@@ -5,7 +5,8 @@
   },
   "form": {
     "label": {
-      "name": "组别名称"
+      "title": "规则标题",
+      "type": "规则类型"
     },
     "placeholder": {
       "parentId": "请选择上级分组",

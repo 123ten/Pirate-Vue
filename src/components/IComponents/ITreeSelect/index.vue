@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, CSSProperties, defineProps, ref, toRaw, watch, withDefaults} from "vue";
-import {deepChildren} from "@/utils/common";
+import {deepForEach} from "@/utils/common";
 import {TreeSelect, TreeSelectProps} from "ant-design-vue";
 
 interface FieldNames {
@@ -23,7 +23,7 @@ interface ITreeSelectProps {
   spliceParentTitle?: boolean;
   treeDefaultExpandAll?: boolean;
   treeCheckable?: boolean
-  showCheckedStrategy: TreeSelectProps['showCheckedStrategy']
+  showCheckedStrategy?: TreeSelectProps['showCheckedStrategy']
 }
 
 const props = withDefaults(defineProps<ITreeSelectProps>(), {
@@ -51,9 +51,17 @@ const tooltipTitle = ref<undefined | number[] | string[]>(undefined);
 
 watch(
   () => props.value,
-  (value) => {
-    if (props.multiple && value) {
-      handleChange(value);
+  (value: any) => {
+    if (props.multiple && Array.isArray(value)) {
+      const labelKey = restProps.fieldNames.label!
+      const valueKey = restProps.fieldNames.value!
+      const labels: string[] = []
+      deepForEach(props.treeData, (item: any) => {
+        if (value.includes(item[valueKey])) {
+          labels.push(item[labelKey])
+        }
+      })
+      calculateTitle(props.value, labels)
     }
   }
 );
@@ -62,7 +70,11 @@ const handleChange = (value: ITreeSelectProps['value'], label?: string[], extra?
   emits("update:value", value);
   emits("change", value, label, extra);
 
-  if (props.multiple) {
+  calculateTitle(value, label)
+};
+
+const calculateTitle = (value: ITreeSelectProps['value'], label?: string[]) => {
+  if (props.multiple && value) {
     if (!spliceParentTitle) {
       tooltipTitle.value = label;
     } else {
@@ -70,7 +82,7 @@ const handleChange = (value: ITreeSelectProps['value'], label?: string[], extra?
       const labelKey = restProps.fieldNames.label!
       const valueKey = restProps.fieldNames.value!
       const labels: string[] = []
-      deepChildren(props.treeData, (item: any, _index, _arr, parent) => {
+      deepForEach(props.treeData, (item: any, _index, _arr, parent) => {
         if ((value as (string | number)[])?.includes(item[valueKey])) {
           item.spliceTitle = [parent?.spliceTitle, item[labelKey]].filter(Boolean).join('-');
           labels.push(item.spliceTitle);
@@ -79,7 +91,7 @@ const handleChange = (value: ITreeSelectProps['value'], label?: string[], extra?
       tooltipTitle.value = labels;
     }
   }
-};
+}
 
 const title = computed(() => {
   return props.multiple && tooltipTitle.value?.join("，");
@@ -104,6 +116,7 @@ const title = computed(() => {
 .i-treeSelect-tooltip {
   .ant-tooltip-inner {
     color: #000;
+    width: 300px;
   }
 }
 </style>

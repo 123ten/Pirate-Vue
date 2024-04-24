@@ -289,6 +289,9 @@ const showTotal = (total: number) => {
 defineExpose({
   formRef,
 });
+defineOptions({
+  name: 'ITable'
+})
 </script>
 
 <template>
@@ -314,7 +317,7 @@ defineExpose({
             >
               <template #default="scope">
                 <slot v-bind="scope">
-                  <query-form-item :column="scope.column" :model="model"/>
+                  <query-form-item :column="scope.column" :model="model" />
                 </slot>
               </template>
             </query-form>

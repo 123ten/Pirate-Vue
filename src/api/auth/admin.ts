@@ -68,7 +68,7 @@ export const adminMenuUpsert = (data) => {
 };
 
 // 删除菜单
-export const removeMenu = (data) => {
+export const removeAdminMenu = (data) => {
   return request.post("/admin/menu/remove", data);
 };
 // 根据 Id 获取菜单详情

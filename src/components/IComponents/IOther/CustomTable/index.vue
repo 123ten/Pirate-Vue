@@ -6,7 +6,7 @@ import {sortNumber} from "@/utils/common";
 import {TableSettingsType} from "@/types/tableSettingsType";
 import {tableSettingKey} from "@/utils/tableSettings";
 
-const tableSettings = inject<TableSettingsType>(tableSettingKey);
+const tableSettings = inject<TableSettingsType>(tableSettingKey, {} as any);
 
 const table = computed(() => tableSettings?.table)
 
@@ -29,18 +29,9 @@ defineOptions({
 <template>
   <div class="box-border p-4">
     <i-table
-      v-if="table"
-      :row-key="table.rowKey"
-      :columns="table.columns"
-      :dataSource="table.dataSource"
-      :pages="table.pages"
-      :loading="table.loading"
-      :remark="table.remark"
+      v-bind="table"
       :model="table.queryForm"
-      :i18n-prefix="table.i18nPrefix"
       :row-selection="rowSelection"
-      :pagination="table.pagination"
-      :default-expand-all-rows="table.defaultExpandAllRows"
       :refresh="operations.includes('refresh')"
       @refresh="tableSettings?.queryAll"
       @query="tableSettings?.queryAll"
@@ -122,4 +113,10 @@ defineOptions({
       </template>
     </i-table>
   </div>
+  <!--  表单自定义 需要带上 form 前缀  -->
+  <custom-form-modal v-if="table?.fieldModalVisible">
+    <template #formItem="score">
+      <slot :name="`form-${score.column.dataIndex}`" v-bind="score"/>
+    </template>
+  </custom-form-modal>
 </template>

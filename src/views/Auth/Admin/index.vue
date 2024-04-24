@@ -1,16 +1,16 @@
 <!-- 管理员管理 -->
 <script setup lang="ts">
-import { UserOutlined } from "@ant-design/icons-vue";
-import { provide, ref } from "vue";
+import {UserOutlined} from "@ant-design/icons-vue";
+import {provide, ref} from "vue";
 import FormModal from "./components/FormModal/index.vue";
-import { getAdminById, getAdminList, removeAdmin } from "@/api/auth/admin";
+import {getAdminById, getAdminList, removeAdmin} from "@/api/auth/admin";
 import ProcessingTag from "@/components/IComponents/IOther/ProcessingTag/index.vue";
 import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
-import TableSettings, { tableSettingKey } from "@/utils/tableSettings";
-import { useI18n } from "vue-i18n";
-import { AdminTableSettingsType } from "@/views/Auth/Admin/types";
+import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
+import {useI18n} from "vue-i18n";
+import {AdminTableSettingsType} from "@/views/Auth/Admin/types";
 
-const { t } = useI18n();
+const {t} = useI18n();
 
 const avatarPreviewSrc = ref("");
 const isAvatarPreviewSrcVisible = ref<boolean>(false);
@@ -135,13 +135,13 @@ const tableSettings = new TableSettings<AdminTableSettingsType>({
       status: 1,
       fileList: [],
     },
-    rules(isEditing: boolean) {
+    rules(_fields: any, isEditing: boolean) {
       return {
-        username: [{ required: true, message: t("user.error.username") }],
-        nickname: [{ required: true, message: t("user.error.nickname") }],
-        roleIds: [{ required: true, message: t("user.error.roles") }],
+        username: [{required: true, message: t("user.error.username")}],
+        nickname: [{required: true, message: t("user.error.nickname")}],
+        roleIds: [{required: true, message: t("user.error.roles")}],
         password: !isEditing
-          ? [{ required: true, message: t("user.error.password") }]
+          ? [{required: true, message: t("user.error.password")}]
           : undefined,
       };
     },
@@ -162,9 +162,9 @@ provide(tableSettingKey, tableSettings);
 </script>
 
 <template>
-  <custom-i-table>
+  <custom-table>
     <template #roles="{ value }">
-      <processing-tag v-for="text in value" :key="text" :value="text" />
+      <processing-tag v-for="text in value" :key="text" :value="text"/>
     </template>
     <template #avatar="{ record }">
       <a-avatar
@@ -173,19 +173,19 @@ provide(tableSettingKey, tableSettings);
         @click="openAvatarPreviewImage(record.avatar)"
       >
         <template #icon>
-          <user-outlined />
+          <user-outlined/>
         </template>
       </a-avatar>
     </template>
     <template #lastLoginIp="{ value }">
-      <processing-tag :value="value" />
+      <processing-tag :value="value"/>
     </template>
     <template #status="{ value }">
-      <status-tag :value="value" />
+      <status-tag :value="value"/>
     </template>
-  </custom-i-table>
+  </custom-table>
 
-  <form-modal />
+  <form-modal/>
 
   <i-preview-image
     v-model:visible="isAvatarPreviewSrcVisible"

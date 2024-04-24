@@ -1,5 +1,5 @@
-import { Rule } from "ant-design-vue/es/form";
-import { Dayjs } from "dayjs";
+import {Rule} from "ant-design-vue/es/form";
+import {Dayjs} from "dayjs";
 
 export type FormType =
   | "input"
@@ -10,6 +10,7 @@ export type FormType =
   | "tree-select"
   | "cascader"
   | "radio"
+  | 'radio-button'
   | "date-picker"
   | "range-picker"
   | "upload";

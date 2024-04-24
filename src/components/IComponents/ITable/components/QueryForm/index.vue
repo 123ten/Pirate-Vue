@@ -36,6 +36,10 @@ defineExpose({
     formRef.value?.validateFields(...args)
   },
 } as FormExpose)
+
+defineOptions({
+  name: 'QueryForm'
+})
 </script>
 
 <template>

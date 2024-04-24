@@ -1,15 +1,12 @@
-import { IColumns, IPages, ITableProps } from "@/types/table";
-import { DefaultRecordType } from "ant-design-vue/es/vc-table/interface";
-import { Key } from "ant-design-vue/lib/table/interface";
-import { type Ref, UnwrapNestedRefs } from "vue";
+import {IColumns, IPages, ITableProps} from "@/types/table";
+import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
+import {Key} from "ant-design-vue/lib/table/interface";
+import {type Ref, UnwrapNestedRefs} from "vue";
 import {FormInstance, FormProps, PaginationProps} from "ant-design-vue";
-import {
-  Props,
-  ValidateInfo,
-  validateOptions,
-} from "ant-design-vue/lib/form/useForm";
-import type { RuleError } from "ant-design-vue/lib/form/interface";
-import { Rules } from "@/types/form";
+import {Props, ValidateInfo, validateOptions,} from "ant-design-vue/lib/form/useForm";
+import type {RuleError} from "ant-design-vue/lib/form/interface";
+import {Rules} from "@/types/form";
+import {IModalProps} from "@/components/IComponents/IModal/types";
 
 /**
  * 表示操作按钮或操作类型的枚举。
@@ -60,6 +57,8 @@ export interface TableReactive<
   loading: boolean;
   /** 初始时，是否展开所有行 */
   defaultExpandAllRows?: boolean;
+  /** 控制表格字段下的 form-modal 对话框的可见性，默认为 true */
+  fieldModalVisible?: boolean;
 }
 
 export interface FormReactive<Fields extends DefaultFieldsType> {
@@ -71,10 +70,12 @@ export interface FormReactive<Fields extends DefaultFieldsType> {
   rules?: Rules;
   /** 表单名称，会作为表单字段 id 前缀使用 */
   name?: string;
-  /** 对话框是否可见 */
-  visible: boolean;
-  /** 对话框 loading */
-  loading: boolean;
+}
+
+/**
+ * 对话框
+ */
+export interface ModalReactive extends IModalProps {
 }
 
 declare type namesType = string | string[];
@@ -114,6 +115,8 @@ export declare interface TableSettingsType<
   readonly table: UnwrapNestedRefs<TableReactive<RecordType, QueryForm>>;
 
   readonly form: UnwrapNestedRefs<FormReactive<Fields>>;
+
+  readonly modal: UnwrapNestedRefs<ModalReactive>
 
   formRefs?: FormRefs;
 

@@ -13,7 +13,7 @@ const props = defineProps<ProcessingTag>()
 
 const {
   value,
-  color = props.value === 1 ? 'success' : 'error',
+  color,
   ...resetProps
 } = toRefs(props)
 
@@ -24,10 +24,10 @@ defineOptions({
 
 <template>
   <a-tag
-      v-if="value"
-      :color="color"
-      class="table-tag"
-      v-bind="resetProps"
+    v-if="value && value >= 0"
+    :color="color || (value === 1 ? 'success' : 'error')"
+    class="table-tag"
+    v-bind="resetProps"
   >
     {{ $t(`enum.status.${value}`) }}
   </a-tag>
