@@ -229,10 +229,11 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
 provide(tableSettingKey, tableSettings);
 
 watchEffect(() => {
-  if (tableSettings.form.fields.type === 3) {
-    tableSettings.form.rules.path = undefined
-  } else {
-    tableSettings.form.rules.path = [{required: true, message: t('admin_permission.error.path')}]
+  if (tableSettings.form.rules) {
+    tableSettings.form.rules.path = [{
+      required: tableSettings.form.fields?.type === 3,
+      message: t('admin_permission.error.path')
+    }]
   }
 })
 
