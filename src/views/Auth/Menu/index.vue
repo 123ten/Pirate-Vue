@@ -1,7 +1,7 @@
 <!-- 菜单规则管理 -->
 <script setup lang="ts">
 import * as antIcons from "@ant-design/icons-vue";
-import {provide} from "vue";
+import {provide, watchEffect} from "vue";
 import {useAdminMenuStore} from "@/store/auth";
 import {deepForEach} from "@/utils/common";
 import {notification} from "ant-design-vue";
@@ -55,6 +55,7 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
       "create",
       "delete",
       "expand",
+      'row-sortable',
       "row-update",
       "row-delete",
     ],
@@ -79,7 +80,7 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
       {
         title: "标题",
         dataIndex: "title",
-        width: 120,
+        width: 200,
         sort: 2,
         form: true,
       },
@@ -88,9 +89,12 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
         dataIndex: "icon",
         align: "center",
         width: 50,
+        form: (fields: any) => fields.type !== 3,
+        sort: 5,
+        type: 'icon',
       },
       {
-        title: "规则名称",
+        title: "名称",
         dataIndex: "name",
         width: 150,
         sort: 3,
@@ -101,12 +105,46 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
         dataIndex: "path",
         sort: 4,
         hide: true,
-        form: true,
+        form: (fields: any) => fields.type !== 3,
+      },
+      {
+        title: "菜单项类型",
+        dataIndex: "frame",
+        sort: 6,
+        hide: true,
+        form: (fields: any) => fields.type === 2,
+        type: 'radio-button',
+        options: [
+          {label: '选项卡', value: 1},
+          {label: '链接（站外）', value: 2},
+          {label: 'iframe', value: 3}
+        ],
+        formFieldConfig: {
+          buttonStyle: "solid"
+        }
       },
       {
         title: "组件路径",
         dataIndex: "component",
         width: 200,
+        sort: 7,
+        form: (fields: any) => fields.type === 2,
+      },
+      {
+        title: "规则描述",
+        dataIndex: "description",
+        sort: 8,
+        hide: true,
+        form: true,
+        type: 'textarea'
+      },
+      {
+        title: "排序",
+        dataIndex: "sort",
+        sort: 9,
+        hide: true,
+        form: true,
+        type: 'input-number'
       },
       {
         title: "类型",
@@ -130,12 +168,18 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
         dataIndex: "cache",
         align: "center",
         width: 100,
+        sort: 10,
+        form: true,
+        type: 'radio'
       },
       {
         title: "状态",
         dataIndex: "status",
         align: "center",
         width: 100,
+        sort: 11,
+        form: true,
+        type: 'radio'
       },
       {
         title: "修改时间",
@@ -171,13 +215,11 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
       frame: 1,
       sort: 0,
     },
-    rules(fields: any) {
-      return {
-        title: [{required: true, message: t('admin_permission.error.title')}],
-        name: [{required: true, message: t('admin_permission.error.name')}],
-        path: [{required: true, message: t('admin_permission.error.path')}],
-      }
-    },
+    rules: {
+      title: [{required: true, message: t('admin_permission.error.title')}],
+      name: [{required: true, message: t('admin_permission.error.name')}],
+      path: [{required: true, message: t('admin_permission.error.path')}],
+    }
   },
   modal: {
     width: '600px'
@@ -185,6 +227,14 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
 });
 
 provide(tableSettingKey, tableSettings);
+
+watchEffect(() => {
+  if (tableSettings.form.fields.type === 3) {
+    tableSettings.form.rules.path = undefined
+  } else {
+    tableSettings.form.rules.path = [{required: true, message: t('admin_permission.error.path')}]
+  }
+})
 
 const handleStatusChange = async (record: AdminMenuDataSource) => {
   const ids: (number | undefined)[] = [];
@@ -231,15 +281,5 @@ const handleStatusChange = async (record: AdminMenuDataSource) => {
       />
     </template>
   </custom-table>
-  <!--  <i-tooltip-->
-  <!--    title="拖动以排序"-->
-  <!--    size="small"-->
-  <!--    type="move"-->
-  <!--    custom-button-class="drop-row-btn"-->
-  <!--  >-->
-  <!--    <template #icon>-->
-  <!--      <drag-outlined/>-->
-  <!--    </template>-->
-  <!--  </i-tooltip>-->
 </template>
 

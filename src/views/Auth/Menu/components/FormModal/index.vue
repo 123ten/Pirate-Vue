@@ -33,20 +33,6 @@ const {validateInfos} = Form.useForm(formState, rules);
       :wrapper-col="{ span: 18 }"
       autocomplete="off"
     >
-      <a-form-item label="规则标题" name="title" v-bind="validateInfos.title">
-        <a-input v-model:value="formState.title"/>
-      </a-form-item>
-      <a-form-item label="规则名称" name="name" v-bind="validateInfos.name">
-        <a-input v-model:value="formState.name"/>
-      </a-form-item>
-      <template v-if="formState.type !== 3">
-        <a-form-item label="路由路径" name="path" v-bind="validateInfos.path">
-          <a-input v-model:value="formState.path"/>
-        </a-form-item>
-        <a-form-item label="规则图标" name="icon">
-          <i-icon v-model:value="formState.icon"/>
-        </a-form-item>
-      </template>
       <template v-if="formState.type === 2">
         <a-form-item label="菜单类型" name="frame">
           <a-radio-group v-model:value="formState.frame">

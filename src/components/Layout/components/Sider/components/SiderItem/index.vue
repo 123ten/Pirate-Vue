@@ -32,7 +32,7 @@ const toRouter = (item: Record<string, any>) => {
 };
 
 defineOptions({
-  name: "SideBarItem",
+  name: "SideItem",
 });
 </script>
 

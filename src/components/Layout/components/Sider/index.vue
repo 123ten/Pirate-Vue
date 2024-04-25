@@ -9,6 +9,10 @@ const {isMenuOutIn, isAsideMenu} = storeToRefs(store);
 const onClose = () => {
   isMenuOutIn.value = false;
 };
+
+defineOptions({
+  name: 'Sider'
+})
 </script>
 
 <template>

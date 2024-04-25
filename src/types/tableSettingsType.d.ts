@@ -17,6 +17,7 @@ export declare type Operation =
   | "delete"
   | "create"
   | "expand"
+  | 'row-sortable'
   | "row-detail"
   | "row-update"
   | "row-delete";

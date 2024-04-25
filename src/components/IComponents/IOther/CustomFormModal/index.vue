@@ -45,7 +45,12 @@ const labelProp = (column: IColumns) => {
 
 const getPlaceholder = (column: IColumns) => {
   const il8nName = getI18nName("placeholder", column);
-  return column.placeholder || (te(il8nName) ? t(il8nName) : undefined);
+  return (
+      typeof column.placeholder === 'function'
+        ? column.placeholder(form.value?.fields)
+        : column.placeholder
+    )
+    || (te(il8nName) ? t(il8nName) : undefined);
 };
 
 const defaultOptions = [
@@ -206,6 +211,11 @@ defineOptions({
                   v-else-if="typeProp(column) === 'range-picker'"
                   v-model:value="form.fields[valueProp(column)]"
                   :picker="column.picker"
+                  v-bind="column.formFieldConfig"
+                />
+                <i-icon
+                  v-else-if="typeProp(column) === 'icon'"
+                  v-model:value="form.fields[valueProp(column)]"
                   v-bind="column.formFieldConfig"
                 />
               </slot>

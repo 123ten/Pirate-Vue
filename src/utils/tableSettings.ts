@@ -1,4 +1,4 @@
-import {onBeforeUnmount, onMounted, reactive} from "vue";
+import {onMounted, reactive} from "vue";
 import {calculateNextPage, formatDateRange} from "@/utils/common";
 import {Form, notification} from "ant-design-vue";
 import i18n from "@/locales";
@@ -105,10 +105,10 @@ export default class TableSettings<
    * 给formRefs赋值
    * @param isEditing {boolean} 是否编辑
    */
-  private initFormRefs = (isEditing?: boolean) => {
+  private initFormRefs = () => {
     this.formRefs = Form.useForm(
       this.form.fields,
-      this.transformRules(this.form.rules, isEditing)
+      this.transformRules(this.form.rules)
     );
   };
 
@@ -196,15 +196,14 @@ export default class TableSettings<
   };
 
   public openForm = async (type: 0 | 1, id?: Key) => {
-    this.modal.visible = true;
-    const isEditing = type === 1; // 是否编辑
+    this.form.fields.id = id;
     // 当 rules 的类型为 function 默认认为需要动态修改校验
     if (typeof this.form.rules === "function") {
-      this.initFormRefs(isEditing);
+      this.initFormRefs();
     }
+    this.modal.visible = true;
     console.log('this.form', this.form)
-    if (isEditing && id) {
-      this.form.fields.id = id;
+    if (type === 1 && id) {
       await this.detailById(id);
     }
   };
@@ -267,12 +266,9 @@ export default class TableSettings<
    * @param rules 校验规则
    * @param isEditing {boolean} 是否编辑 默认 非编辑
    */
-  private transformRules = (
-    rules?: Rules | ((fields: Fields, isEditing: boolean) => Rules),
-    isEditing: boolean = false
-  ) => {
+  private transformRules = (rules?: Rules | ((fields: Fields) => Rules)) => {
     if (typeof rules === "function") {
-      return rules(this.form.fields as Fields, isEditing);
+      return rules(this.form.fields as Fields);
     }
     return rules;
   };

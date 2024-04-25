@@ -7,11 +7,6 @@ export const getAdminAvatar = (params) => {
   return request.get("/admin/avatar", params);
 };
 
-// 管理员注册/编辑
-export const adminUpsert = (data) => {
-  return request.post("/admin/upsert", data);
-};
-
 // 管理员登录
 export const adminLogin = (data): Promise<LoginResult> => {
   return request.post("/admin/login", data);
@@ -20,6 +15,16 @@ export const adminLogin = (data): Promise<LoginResult> => {
 // 获取管理员列表
 export const getAdminList = (params) => {
   return request.get("/admin/list", params);
+};
+
+// 管理员注册/编辑
+export const adminUpsert = (data) => {
+  return request.post("/admin/upsert", data);
+};
+
+// 删除管理员
+export const removeAdmin = (data) => {
+  return request.post("/admin/remove", data);
 };
 
 // 刷新access_token
@@ -47,10 +52,6 @@ export const removeAdminRole = (data) => {
   return request.post("/admin/role/remove", data);
 };
 
-// 删除管理员
-export const removeAdmin = (data) => {
-  return request.post("/admin/remove", data);
-};
 
 // 获取管理员信息
 export const getAdminById = (id?: number) => {

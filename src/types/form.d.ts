@@ -13,7 +13,8 @@ export type FormType =
   | 'radio-button'
   | "date-picker"
   | "range-picker"
-  | "upload";
+  | "upload"
+  | 'icon'
 
 export interface IOptions {
   label?: string;

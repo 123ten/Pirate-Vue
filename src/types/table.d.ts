@@ -55,7 +55,7 @@ export interface IColumns<RecordType = DefaultRecordType>
   /** 日期格式 */
   picker?: Picker;
   /** 占位内容 */
-  placeholder?: string;
+  placeholder?: string | ((fields: Record<string, any>) => string);
   /** 国际化 */
   i18nName?: string;
   // responsive?: string[];

@@ -2,19 +2,28 @@
 <script setup lang="ts">
 import {UserOutlined} from "@ant-design/icons-vue";
 import {provide, ref} from "vue";
-import FormModal from "./components/FormModal/index.vue";
-import {getAdminById, getAdminList, removeAdmin} from "@/api/auth/admin";
+import {adminUpsert, getAdminById, getAdminList, removeAdmin} from "@/api/auth/admin";
 import ProcessingTag from "@/components/IComponents/IOther/ProcessingTag/index.vue";
 import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
 import {useI18n} from "vue-i18n";
 import {AdminTableSettingsType} from "@/views/Auth/Admin/types";
+import {useRoleStore} from "@/store";
+import {storeToRefs} from "pinia";
 
 const {t} = useI18n();
+
+const roleStore = useRoleStore()
+const {dataSource: roleOptions} = storeToRefs(roleStore)
+
+const {getRoleListRequest} = roleStore
 
 const avatarPreviewSrc = ref("");
 const isAvatarPreviewSrcVisible = ref<boolean>(false);
 
+const onInit = async () => {
+  await getRoleListRequest();
+};
 // 显示预览图片
 const openAvatarPreviewImage = (src: string) => {
   if (!src) return;
@@ -27,6 +36,7 @@ const tableSettings = new TableSettings<AdminTableSettingsType>({
     request: getAdminList,
     detailRequest: getAdminById,
     deleteRequest: removeAdmin,
+    upsertRequest: adminUpsert,
   },
   table: {
     operations: ["refresh", "create", "delete", "row-update", "row-delete"],
@@ -44,6 +54,7 @@ const tableSettings = new TableSettings<AdminTableSettingsType>({
         isI18n: true,
         align: "center",
         width: 100,
+        form: true,
       },
       {
         title: "昵称",
@@ -51,6 +62,7 @@ const tableSettings = new TableSettings<AdminTableSettingsType>({
         isI18n: true,
         align: "center",
         width: 100,
+        form: true,
       },
       {
         title: "角色组",
@@ -58,6 +70,16 @@ const tableSettings = new TableSettings<AdminTableSettingsType>({
         isI18n: true,
         align: "center",
         width: 120,
+        type: 'tree-select',
+        form: true,
+        formValueProp: "roleIds",
+        options: roleOptions,
+        formFieldConfig: {
+          fieldNames: {label: 'name', value: 'id'},
+          multiple: true,
+          spliceParentTitle: true,
+          treeDefaultExpandAll: true
+        }
       },
       {
         title: "头像",
@@ -65,6 +87,13 @@ const tableSettings = new TableSettings<AdminTableSettingsType>({
         isI18n: true,
         align: "center",
         width: 100,
+        form: true,
+        formValueProp: 'fileList',
+        type: 'upload',
+        formFieldConfig: {
+          length: 1,
+          accept: "image/*"
+        }
       },
       {
         title: "邮箱",
@@ -72,6 +101,7 @@ const tableSettings = new TableSettings<AdminTableSettingsType>({
         isI18n: true,
         align: "center",
         width: 150,
+        form: true
       },
       {
         title: "手机号",
@@ -79,6 +109,19 @@ const tableSettings = new TableSettings<AdminTableSettingsType>({
         isI18n: true,
         align: "center",
         width: 150,
+        form: true
+      },
+      {
+        title: "密码",
+        dataIndex: "password",
+        type: 'input-password',
+        form: true,
+        placeholder(fields) {
+          return t(fields.id
+            ? 'user.placeholder.edit_password'
+            : 'user.placeholder.password'
+          )
+        },
       },
       {
         title: "最后登录IP",
@@ -107,6 +150,12 @@ const tableSettings = new TableSettings<AdminTableSettingsType>({
         isI18n: true,
         align: "center",
         width: 100,
+        form: true,
+        type: 'radio',
+        options: [
+          {label: t("enum.status.0"), value: 0},
+          {label: t("enum.status.1"), value: 1},
+        ],
       },
       {
         title: "操作",
@@ -135,16 +184,18 @@ const tableSettings = new TableSettings<AdminTableSettingsType>({
       status: 1,
       fileList: [],
     },
-    rules(_fields: any, isEditing: boolean) {
+    rules(fields: any) {
+      console.log('fields', fields)
       return {
         username: [{required: true, message: t("user.error.username")}],
         nickname: [{required: true, message: t("user.error.nickname")}],
         roleIds: [{required: true, message: t("user.error.roles")}],
-        password: !isEditing
-          ? [{required: true, message: t("user.error.password")}]
-          : undefined,
+        password: [{required: !fields.id, message: t("user.error.password")}]
       };
     },
+  },
+  modal: {
+    init: onInit
   },
   customParams: {
     confirmForm(params) {
@@ -185,7 +236,7 @@ provide(tableSettingKey, tableSettings);
     </template>
   </custom-table>
 
-  <form-modal/>
+  <!--  <form-modal/>-->
 
   <i-preview-image
     v-model:visible="isAvatarPreviewSrcVisible"

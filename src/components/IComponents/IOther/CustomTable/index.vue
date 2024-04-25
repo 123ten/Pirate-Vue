@@ -1,7 +1,7 @@
 <!-- 通用表格 -->
 <script setup lang="ts">
 import {computed, inject} from "vue";
-import {EditOutlined, PlusOutlined, ZoomInOutlined,} from "@ant-design/icons-vue";
+import {DragOutlined, EditOutlined, PlusOutlined, ZoomInOutlined} from "@ant-design/icons-vue";
 import {sortNumber} from "@/utils/common";
 import {TableSettingsType} from "@/types/tableSettingsType";
 import {tableSettingKey} from "@/utils/tableSettings";
@@ -76,6 +76,17 @@ defineOptions({
       </template>
       <template #operation="{ record }">
         <a-space>
+          <i-tooltip
+            v-if="operations.includes('row-sortable')"
+            title="拖动以排序"
+            size="small"
+            type="move"
+            custom-button-class="drop-row-btn"
+          >
+            <template #icon>
+              <drag-outlined/>
+            </template>
+          </i-tooltip>
           <i-tooltip
             v-if="operations.includes('row-detail')"
             :title="$t('title.detail')"

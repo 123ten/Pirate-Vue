@@ -43,6 +43,11 @@ const currentOpenMenu = () => {
   }
   selectedKeys.value = [route.name as string];
 };
+
+
+defineOptions({
+  name: 'SiderMenu'
+})
 </script>
 
 <template>
@@ -50,7 +55,7 @@ const currentOpenMenu = () => {
     <template v-if="!isMenuOutIn || isAsideMenu">
       <div class="logo-name d-flex-center">
         <img class="logo-img" src="@/assets/images/logo_piece.png" alt=""/>
-        <div class="website-name">Pirate Vue</div>
+        <div class="website-name">Pirate Admin</div>
       </div>
     </template>
     <!-- 点击展开收起菜单 -->
