@@ -1,26 +1,30 @@
 import {FormInstance} from "ant-design-vue";
 import {FormExpose} from "ant-design-vue/lib/form/Form";
-import {Ref} from "vue";
+import {Ref, ref} from "vue";
 
-export default function useFormInstance(ref: Ref<FormInstance | undefined>) {
-  return {
-    clearValidate(...args) {
-      ref.value?.clearValidate(...args)
-    },
-    getFieldsValue(...args) {
-      ref.value?.getFieldsValue(...args)
-    },
-    resetFields(...args) {
-      ref.value?.resetFields(...args)
-    },
-    scrollToField(...args) {
-      ref.value?.scrollToField(...args)
-    },
-    validate(...args) {
-      ref.value?.validate(...args)
-    },
-    validateFields(...args) {
-      ref.value?.validateFields(...args)
-    },
-  } as FormExpose
+export default function useFormInstance() {
+  const formRef = ref<FormInstance>()
+  return [
+    formRef as Ref<FormInstance | undefined>,
+    {
+      clearValidate(...args) {
+        formRef.value?.clearValidate(...args)
+      },
+      getFieldsValue(...args) {
+        formRef.value?.getFieldsValue(...args)
+      },
+      resetFields(...args) {
+        formRef.value?.resetFields(...args)
+      },
+      scrollToField(...args) {
+        formRef.value?.scrollToField(...args)
+      },
+      validate(...args) {
+        formRef.value?.validate(...args)
+      },
+      validateFields(...args) {
+        formRef.value?.validateFields(...args)
+      },
+    } as FormExpose
+  ] as [Ref<FormInstance | undefined>, FormExpose]
 }

@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import {IColumns} from "@/types";
-import {ref} from "vue";
-import {FormInstance} from "ant-design-vue";
 import useFormInstance from "@/hooks/useFormInstance";
 
 interface QueryFormProps {
@@ -15,9 +13,7 @@ withDefaults(defineProps<QueryFormProps>(), {
   defaultSpan: 24
 })
 
-const formRef = ref<FormInstance>()
-
-const formInstance = useFormInstance(formRef)
+const [formRef, formInstance] = useFormInstance()
 
 defineExpose(formInstance)
 defineOptions({

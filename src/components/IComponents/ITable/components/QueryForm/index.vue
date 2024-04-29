@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import {IColumns} from "@/types";
-import {FormInstance} from "ant-design-vue";
-import {ref} from "vue";
 import useFormInstance from "@/hooks/useFormInstance";
 import CustomForm from "@/components/IComponents/IOther/CustomForm/index.vue";
 
@@ -17,10 +15,7 @@ withDefaults(defineProps<QueryFormProps>(), {
 
 const emits = defineEmits(['query', 'reset'])
 
-const formRef = ref<FormInstance>()
-
-const formInstance = useFormInstance(formRef)
-
+const [formRef, formInstance] = useFormInstance()
 defineExpose(formInstance)
 
 defineOptions({

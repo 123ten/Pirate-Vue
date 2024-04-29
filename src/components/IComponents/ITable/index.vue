@@ -4,7 +4,6 @@ import {ReloadOutlined, SearchOutlined, TableOutlined,} from "@ant-design/icons-
 import {computed, defineEmits, defineExpose, defineProps, onMounted, ref, toRaw, watch, withDefaults,} from "vue";
 import Sortable from "sortablejs";
 import {IColumns, IPagination, RecordType} from "@/types";
-import {FormInstance} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 import ITooltip from "@/components/IComponents/ITooltip/index.vue";
 import {cloneDeep, throttle} from "lodash-es";
@@ -13,6 +12,7 @@ import CloseAlert from "../IOther/CloseAlert/index.vue";
 import QueryForm from "./components/QueryForm/index.vue";
 import QueryFormItem from "./components/QueryFormItem/index.vue";
 import Ellipsis from "@/components/IComponents/IOther/Ellipsis/index.vue";
+import useFormInstance from "@/hooks/useFormInstance";
 
 // 国际化
 const {locale} = useI18n();
@@ -63,9 +63,9 @@ const emits = defineEmits([
   "reset",
 ]);
 // #endregion
+const [formRef, formInstance] = useFormInstance()
+
 const columnsCache: IColumns[] = cloneDeep(props.columns).filter(column => !column.hide); // 缓存 columns
-// console.log('columnsCache', columnsCache)
-const formRef = ref<FormInstance>();
 
 const menuChecked = ref<(IColumns["dataIndex"] | IColumns["key"])[]>([]); // 选中显示隐藏表头
 const menuCheckList = ref<IColumns[]>([]); // 表头的数据列
@@ -296,9 +296,7 @@ const showTotal = (total: number) => {
   return `共 ${total} 条`;
 };
 
-defineExpose({
-  formRef,
-});
+defineExpose(formInstance);
 defineOptions({
   name: 'ITable'
 })
