@@ -79,6 +79,8 @@ export interface IColumns<RecordType = DefaultRecordType>
   searchLabelProp?: string;
   /** 回填到查询表单数据 Value 的属性值，默认是 column 的 dataIndex 值。比如表单展示不同字段，此值可以更换字段。 */
   searchValueProp?: string;
+  /** 查询表单排序 */
+  searchSort?: number;
 
   /** 是否显示表单 */
   form?: boolean | ((fields?: Record<string, any>) => boolean)
@@ -88,6 +90,8 @@ export interface IColumns<RecordType = DefaultRecordType>
   formLabelProp?: string;
   /** 回填到表单数据 Value 的属性值，默认是 column 的 dataIndex 值。比如表单展示不同字段，此值可以更换字段。 */
   formValueProp?: string;
+  /** 表单排序 */
+  formSort?: number;
 
   /** 表单item配置 */
   formItemConfig?: any;
@@ -97,7 +101,7 @@ export interface IColumns<RecordType = DefaultRecordType>
 
   /** 是否隐藏 */
   hide?: boolean;
-  /** 排序 */
+  /** 默认排序 */
   sort?: number;
   /** 表头是否可伸缩 */
   resizable?: boolean;
@@ -175,6 +179,8 @@ export interface ITableProps {
   keywordPlaceholder?: string;
   /** 注意提示 */
   remark?: string;
+  /** 查询表单展示行列 */
+  defaultSpan?: number;
   /**是否显示关键字搜索框 */
   keywordVisible?: boolean;
   /**表格加载状态 */

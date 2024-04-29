@@ -48,6 +48,7 @@ const props = withDefaults(defineProps<ITableProps>(), {
   rowKey: "key",
   childrenColumnName: "children", // 默认 'children'
   keywordPlaceholder: undefined, // t("placeholder.keyword")
+  defaultSpan: 6,
   keywordVisible: true,
   loading: false,
   defaultExpandAllRows: false,
@@ -226,6 +227,15 @@ const pagination = computed(() => {
     };
 });
 
+// 获取排序字段
+const getSort = (column: IColumns) => {
+  return column.searchSort || column.sort || 0;
+};
+
+// 获取列的 span
+const getSpan = (column: IColumns) => {
+  return Number(column.span || props.defaultSpan || 6);
+};
 /**
  * @description 表单搜索配置项 使用缓存的 columns
  */
@@ -234,10 +244,10 @@ const formColumns = computed(() => {
   let count = 0;
   columnsCache
     .filter((column: IColumns) => column.search)
-    .sort((a, b) => (a.sort || 0) - (b.sort || 0))
+    .sort((a, b) => getSort(a) - getSort(b))
     .forEach((column: IColumns, index: number) => {
-      const _span: number = Number(column.span || 4);
-      if (index % _span === 0) {
+      const _span: number = getSpan(column);
+      if (index % (24 / _span) === 0) {
         rowColumns[count] = [];
         count++;
       }
@@ -310,6 +320,7 @@ defineOptions({
               ref="formRef"
               :model="model"
               :columns="formColumns"
+              :default-span="defaultSpan"
               @keyup.enter.native="onQuery"
               @query="onQuery"
               @reset="onReset"
@@ -317,7 +328,7 @@ defineOptions({
             >
               <template #default="scope">
                 <slot v-bind="scope">
-                  <query-form-item :column="scope.column" :model="model" />
+                  <query-form-item :column="scope.column" :model="model"/>
                 </slot>
               </template>
             </query-form>
@@ -407,7 +418,7 @@ defineOptions({
         :row-key="rowKey"
         :row-selection="rowSelection"
         :data-source="dataSource"
-        :loading="loading"
+        :loading="{ spinning: loading, tip: $t('title.loading') }"
         :columns="columnsComputed"
         :children-column-name="childrenColumnName"
         :scroll="scroll"

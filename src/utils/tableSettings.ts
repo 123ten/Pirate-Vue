@@ -51,9 +51,10 @@ export default class TableSettings<
       total: 0,
     },
     queryForm: {} as QueryForm,
-    i18nPrefix: undefined,
     rowKey: "id",
+    i18nPrefix: undefined,
     remark: undefined,
+    defaultSpan: 6,
     loading: false,
     defaultExpandAllRows: false,
     fieldModalVisible: true,
@@ -63,6 +64,7 @@ export default class TableSettings<
     fields: {} as Fields,
     formConfig: undefined,
     rules: undefined,
+    defaultSpan: 24
   });
 
   public readonly modal = reactive<ModalReactive>({
@@ -124,7 +126,7 @@ export default class TableSettings<
     if (this.table.pagination) {
       return {
         page: calculateNextPage(this.table.pages),
-        size: this.table.pages.size,
+        size: this.table.pages?.size,
       }
     }
     return undefined
@@ -171,7 +173,7 @@ export default class TableSettings<
       this.table.selectedRowKeys = [];
     }
     // 用于计算最大页数
-    this.table.pages.total -= ids.length;
+    this.table.pages!.total -= ids.length;
     await this.queryAll();
   };
 

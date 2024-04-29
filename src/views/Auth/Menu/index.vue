@@ -231,7 +231,7 @@ provide(tableSettingKey, tableSettings);
 watch(
   () => tableSettings.form.fields?.type,
   (type) => {
-    tableSettings.form.rules!.path = [{required: type === 3, message: t('admin_permission.error.path')}]
+    tableSettings.form.rules!.path = [{required: type !== 3, message: t('admin_permission.error.path')}]
   }
 )
 

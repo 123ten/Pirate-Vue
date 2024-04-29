@@ -1,8 +1,7 @@
 <!-- 菜单权限 - 添加编辑 -->
 <script setup lang="ts">
-import {computed, ref,} from "vue";
-import type {IFormModalProps} from "../../types";
-import {Form, FormInstance, notification} from "ant-design-vue";
+import {ref,} from "vue";
+import {Form, FormInstance} from "ant-design-vue";
 import {useAdminMenuStore} from "@/store/auth/menu";
 import {storeToRefs} from "pinia";
 import {Rules} from "@/types/form";
@@ -14,8 +13,7 @@ const {formState} = storeToRefs(store)
 
 const emits = defineEmits(["cancel", "confirm"]);
 
-const rules: Rules = {
-}
+const rules: Rules = {}
 const formRef = ref<FormInstance>()
 
 const {validateInfos} = Form.useForm(formState, rules);

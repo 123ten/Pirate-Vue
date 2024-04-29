@@ -33,6 +33,7 @@ defineOptions({
       :model="table.queryForm"
       :row-selection="rowSelection"
       :refresh="operations.includes('refresh')"
+      :default-span="table.defaultSpan"
       @refresh="tableSettings?.queryAll"
       @query="tableSettings?.queryAll"
       @reset="tableSettings?.queryAll"
@@ -64,7 +65,7 @@ defineOptions({
         <expand-all-rows-tooltip
           v-if="operations.includes('expand')"
           v-model:expand="table.defaultExpandAllRows"
-          :disabled="!table.dataSource.length"
+          :disabled="!table.dataSource?.length"
         />
       </template>
       <template #number="{ index }">
@@ -92,7 +93,7 @@ defineOptions({
             :title="$t('title.detail')"
             size="small"
             @click="
-              tableSettings?.openDetail(record[table.rowKey])
+              tableSettings?.openDetail(record[table.rowKey!])
             "
           >
             <template #icon>
@@ -123,11 +124,11 @@ defineOptions({
         </a-space>
       </template>
     </i-table>
+    <!--  表单自定义 需要带上 form 前缀  -->
+    <custom-form-modal v-if="table?.fieldModalVisible">
+      <template #formItem="score">
+        <slot :name="`form-${score.column.dataIndex}`" v-bind="score"/>
+      </template>
+    </custom-form-modal>
   </div>
-  <!--  表单自定义 需要带上 form 前缀  -->
-  <custom-form-modal v-if="table?.fieldModalVisible">
-    <template #formItem="score">
-      <slot :name="`form-${score.column.dataIndex}`" v-bind="score"/>
-    </template>
-  </custom-form-modal>
 </template>

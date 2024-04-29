@@ -59,7 +59,8 @@
     "delete": "删除",
     "remove": "消除",
     "detail": "查看详情",
-    "remove_selected_row": "删除选中行"
+    "remove_selected_row": "删除选中行",
+    "loading": "加载中..."
   },
   "login": {
     "login": "登 录",

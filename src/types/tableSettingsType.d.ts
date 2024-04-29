@@ -44,18 +44,30 @@ export interface TableReactive<
   RecordType = DefaultRecordType,
   QueryForm = DefaultQueryFormType
 > {
-  columns: IColumns<RecordType>[];
-  dataSource: RecordType[];
-  operations: Operation[];
-  selectedRowKeys: Key[];
-  pages: IPages;
-  pagination: PaginationProps;
-  queryForm: QueryForm;
-  i18nPrefix: ITableProps["i18nPrefix"];
-  rowKey: string;
+  /** 表格列配置 */
+  columns?: IColumns<RecordType>[];
+  /** 查询表单数据 */
+  dataSource?: RecordType[];
+  /** 操作按钮 */
+  operations?: Operation[];
+  /** 选中的行 */
+  selectedRowKeys?: Key[];
+  /** 分页信息 */
+  pages?: IPages;
+  /** 分页配置 */
+  pagination?: PaginationProps;
+  /** 查询表单 */
+  queryForm?: QueryForm;
+  /** 国际化前缀 */
+  i18nPrefix?: ITableProps["i18nPrefix"];
+  /** 表格行 key 的取值 */
+  rowKey?: string;
+  /** 表格备注 */
   remark?: string;
+  /** 表单布局 */
+  defaultSpan?: number;
   /** 表格 loading */
-  loading: boolean;
+  loading?: boolean;
   /** 初始时，是否展开所有行 */
   defaultExpandAllRows?: boolean;
   /** 控制表格字段下的 form-modal 对话框的可见性，默认为 true */
@@ -71,6 +83,8 @@ export interface FormReactive<Fields = DefaultFieldsType> {
   rules?: Rules;
   /** 表单名称，会作为表单字段 id 前缀使用 */
   name?: string;
+  /** 表单布局 */
+  defaultSpan?: number;
 }
 
 /**

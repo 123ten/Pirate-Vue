@@ -276,7 +276,8 @@ export function formatDateRange(values: DateRangeTuple) {
  * @description 根据total 计算 当前最大页 得出下一页
  * @param pages
  */
-export function calculateNextPage(pages: IPages) {
+export function calculateNextPage(pages: IPages | undefined) {
+  if (!pages) return 1
   const {
     page: currentPage,
     size: pageSize,

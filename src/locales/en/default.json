@@ -63,7 +63,8 @@
     "delete": "Delete",
     "remove": "Remove",
     "detail": "Detail",
-    "remove_selected_row": "Remove selected rows"
+    "remove_selected_row": "Remove selected rows",
+    "loading": "Loading..."
   },
   "login": {
     "login": "Login",

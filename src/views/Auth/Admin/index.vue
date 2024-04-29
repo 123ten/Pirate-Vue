@@ -1,7 +1,7 @@
 <!-- 管理员管理 -->
 <script setup lang="ts">
 import {UserOutlined} from "@ant-design/icons-vue";
-import {provide, ref} from "vue";
+import {provide, ref, watch} from "vue";
 import {adminUpsert, getAdminById, getAdminList, removeAdmin} from "@/api/auth/admin";
 import ProcessingTag from "@/components/IComponents/IOther/ProcessingTag/index.vue";
 import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
@@ -184,15 +184,11 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
       status: 1,
       fileList: [],
     },
-    rules(fields: any) {
-      console.log('fields', fields)
-      return {
-        username: [{required: true, message: t("user.error.username")}],
-        nickname: [{required: true, message: t("user.error.nickname")}],
-        roleIds: [{required: true, message: t("user.error.roles")}],
-        password: [{required: !fields.id, message: t("user.error.password")}]
-      };
-    },
+    rules: {
+      username: [{required: true, message: t("user.error.username")}],
+      nickname: [{required: true, message: t("user.error.nickname")}],
+      roleIds: [{required: true, message: t("user.error.roles")}],
+    }
   },
   modal: {
     init: onInit
@@ -210,6 +206,14 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
 });
 
 provide(tableSettingKey, tableSettings);
+
+
+watch(
+  () => tableSettings.form.fields?.id,
+  (id) => {
+    tableSettings.form.rules!.password = [{required: !id, message: t("user.error.password")}]
+  }
+)
 </script>
 
 <template>
@@ -234,12 +238,10 @@ provide(tableSettingKey, tableSettings);
     <template #status="{ value }">
       <status-tag :value="value"/>
     </template>
+
+    <i-preview-image
+      v-model:visible="isAvatarPreviewSrcVisible"
+      :src="avatarPreviewSrc"
+    />
   </custom-table>
-
-  <!--  <form-modal/>-->
-
-  <i-preview-image
-    v-model:visible="isAvatarPreviewSrcVisible"
-    :src="avatarPreviewSrc"
-  />
 </template>

@@ -5,6 +5,7 @@ import {tableSettingKey} from "@/utils/tableSettings";
 import {TableSettingsType} from "@/types/tableSettingsType";
 import {useI18n} from "vue-i18n";
 import {IColumns} from "@/types";
+import CustomForm from "@/components/IComponents/IOther/CustomForm/index.vue";
 
 const {t, te} = useI18n();
 
@@ -13,13 +14,33 @@ const tableSettings = inject<TableSettingsType>(tableSettingKey, {} as any);
 const form = computed(() => tableSettings?.form)
 const modal = computed(() => tableSettings?.modal)
 
-const filterFormColumns = computed(() => {
-  return (
-    tableSettings?.table.columns
-      .filter((column: IColumns) => typeof column.form === 'function' ? column.form?.(form.value?.fields) : column.form)
-      .sort((a, b) => (a.sort || 0) - (b.sort || 0))
-    || []
-  );
+// 获取排序字段
+const getSort = (column: IColumns) => {
+  return column.formSort || column.sort || 0;
+};
+
+// 获取列的 span
+const getSpan = (column: IColumns) => {
+  return Number(column.span || form.value?.defaultSpan || 24);
+};
+
+// 24 / span
+const formColumns = computed(() => {
+  if(!tableSettings?.table.columns) return [];
+  const rowColumns: IColumns[][] = [];
+  let count = 0;
+  tableSettings?.table.columns
+    .filter((column: IColumns) => typeof column.form === 'function' ? column.form(form.value!.fields) : column.form)
+    .sort((a, b) => getSort(a) - getSort(b))
+    .forEach((column: IColumns, index: number) => {
+      const _span: number = getSpan(column);
+      if (index % (24 / _span) === 0) {
+        rowColumns[count] = [];
+        count++;
+      }
+      rowColumns[count - 1].push(column);
+    })
+  return rowColumns
 });
 
 const i18nPrefix = computed(() => tableSettings?.table.i18nPrefix);
@@ -86,14 +107,15 @@ defineOptions({
     @cancel="tableSettings?.cancelForm"
     @confirm="tableSettings?.confirmForm"
   >
-    <a-form
-      :name="form.name"
-      autocomplete="off"
-      :label-col="{ span: 4 }"
-      v-bind="form.formConfig"
-    >
-      <slot>
-        <template v-for="column in filterFormColumns" :key="column.dataIndex">
+    <slot>
+      <custom-form
+        :name="form.name"
+        :columns="formColumns"
+        :label-col="{ span: 4 }"
+        :default-span="form.defaultSpan"
+        v-bind="form.formConfig"
+      >
+        <template #col="{column}">
           <a-form-item
             :label="labelProp(column)"
             :name="valueProp(column)"
@@ -222,7 +244,7 @@ defineOptions({
             </slot>
           </a-form-item>
         </template>
-      </slot>
-    </a-form>
+      </custom-form>
+    </slot>
   </i-modal>
 </template>

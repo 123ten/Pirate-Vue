@@ -15,9 +15,9 @@ const {isLayoutFullScreen, isCurrentPageReload} = storeToRefs(store);
       <Header v-if="!isLayoutFullScreen"/>
       <a-layout-content class="overflow-y-auto">
         <router-view
-            :class="isLayoutFullScreen ? 'fullScreen' : ''"
-            class="layout-view"
-            v-slot="{ Component }"
+          :class="isLayoutFullScreen ? 'fullScreen' : ''"
+          class="layout-view"
+          v-slot="{ Component }"
         >
           <transition name="slide-right" mode="out-in">
             <component :is="Component" v-if="!isCurrentPageReload"/>
