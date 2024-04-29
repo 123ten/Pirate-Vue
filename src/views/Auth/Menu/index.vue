@@ -1,7 +1,7 @@
 <!-- 菜单规则管理 -->
 <script setup lang="ts">
 import * as antIcons from "@ant-design/icons-vue";
-import {provide, watchEffect} from "vue";
+import {provide, watch} from "vue";
 import {useAdminMenuStore} from "@/store/auth";
 import {deepForEach} from "@/utils/common";
 import {notification} from "ant-design-vue";
@@ -42,7 +42,7 @@ const typeEnum = (type: AdminMenuDataSource["type"], key: string) => {
 };
 
 
-const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
+const tableSettings: AdminRoleTableSettingsType = new TableSettings({
   api: {
     request: getAdminMenuList,
     detailRequest: getAdminMenuById,
@@ -75,7 +75,7 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
           treeDefaultExpandAll: true,
           treeNodeFilterProp: "title"
         },
-        options: (dataSource) => dataSource
+        options: (dataSource: AdminRoleTableSettingsType['table']['dataSource']) => dataSource
       },
       {
         title: "标题",
@@ -228,14 +228,12 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
 
 provide(tableSettingKey, tableSettings);
 
-watchEffect(() => {
-  if (tableSettings.form.rules) {
-    tableSettings.form.rules.path = [{
-      required: tableSettings.form.fields?.type === 3,
-      message: t('admin_permission.error.path')
-    }]
+watch(
+  () => tableSettings.form.fields?.type,
+  (type) => {
+    tableSettings.form.rules!.path = [{required: type === 3, message: t('admin_permission.error.path')}]
   }
-})
+)
 
 const handleStatusChange = async (record: AdminMenuDataSource) => {
   const ids: (number | undefined)[] = [];

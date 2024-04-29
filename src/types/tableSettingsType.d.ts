@@ -62,7 +62,7 @@ export interface TableReactive<
   fieldModalVisible?: boolean;
 }
 
-export interface FormReactive<Fields extends DefaultFieldsType> {
+export interface FormReactive<Fields = DefaultFieldsType> {
   /** 表单数据对象 */
   fields: Fields;
   /** 表单配置 */
@@ -109,7 +109,7 @@ export interface FormRefs
 export declare interface TableSettingsType<
   RecordType = DefaultRecordType,
   QueryForm = DefaultQueryFormType,
-  Fields extends DefaultFieldsType = DefaultFieldsType
+  Fields = DefaultFieldsType
 > {
   _api?: PrivateApi;
 

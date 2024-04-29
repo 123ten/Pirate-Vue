@@ -31,7 +31,7 @@ const openAvatarPreviewImage = (src: string) => {
   avatarPreviewSrc.value = src;
 };
 
-const tableSettings = new TableSettings<AdminTableSettingsType>({
+const tableSettings: AdminTableSettingsType = new TableSettings({
   api: {
     request: getAdminList,
     detailRequest: getAdminById,
@@ -116,7 +116,7 @@ const tableSettings = new TableSettings<AdminTableSettingsType>({
         dataIndex: "password",
         type: 'input-password',
         form: true,
-        placeholder(fields) {
+        placeholder(fields: AdminTableSettingsType['form']['fields']) {
           return t(fields.id
             ? 'user.placeholder.edit_password'
             : 'user.placeholder.password'
@@ -198,7 +198,7 @@ const tableSettings = new TableSettings<AdminTableSettingsType>({
     init: onInit
   },
   customParams: {
-    confirmForm(params) {
+    confirmForm(params: any) {
       const [response] = params.fileList || [];
       return {
         ...params,
