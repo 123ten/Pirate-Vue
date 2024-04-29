@@ -61,6 +61,7 @@ declare module 'vue' {
     AvatarUpload: typeof import('./src/components/IComponents/IOther/AvatarUpload/index.vue')['default']
     CloseAlert: typeof import('./src/components/IComponents/IOther/CloseAlert/index.vue')['default']
     CustomForm: typeof import('./src/components/IComponents/IOther/CustomForm/index.vue')['default']
+    CustomFormItem: typeof import('./src/components/IComponents/IOther/CustomFormItem/index.vue')['default']
     CustomFormModal: typeof import('./src/components/IComponents/IOther/CustomFormModal/index.vue')['default']
     CustomITable: typeof import('./src/components/IComponents/IOther/CustomITable/index.vue')['default']
     CustomTable: typeof import('./src/components/IComponents/IOther/CustomTable/index.vue')['default']

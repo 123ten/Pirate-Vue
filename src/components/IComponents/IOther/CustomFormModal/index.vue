@@ -6,6 +6,7 @@ import {TableSettingsType} from "@/types/tableSettingsType";
 import {useI18n} from "vue-i18n";
 import {IColumns} from "@/types";
 import CustomForm from "@/components/IComponents/IOther/CustomForm/index.vue";
+import CustomFormItem from "@/components/IComponents/IOther/CustomFormItem/index.vue";
 
 const {t, te} = useI18n();
 
@@ -26,7 +27,7 @@ const getSpan = (column: IColumns) => {
 
 // 24 / span
 const formColumns = computed(() => {
-  if(!tableSettings?.table.columns) return [];
+  if (!tableSettings?.table.columns) return [];
   const rowColumns: IColumns[][] = [];
   let count = 0;
   tableSettings?.table.columns
@@ -51,27 +52,8 @@ const getI18nName = (key: string, column: IColumns) => {
     .join(".");
 };
 
-const typeProp = (column: IColumns) => {
-  return column.formType || column.type;
-};
-
 const valueProp = (column: IColumns) => {
   return column.formValueProp || column.dataIndex;
-};
-
-const labelProp = (column: IColumns) => {
-  const il8nName = getI18nName("label", column);
-  return column.formLabelProp || (te(il8nName) ? t(il8nName) : column.title);
-};
-
-const getPlaceholder = (column: IColumns) => {
-  const il8nName = getI18nName("placeholder", column);
-  return (
-      typeof column.placeholder === 'function'
-        ? column.placeholder(form.value?.fields)
-        : column.placeholder
-    )
-    || (te(il8nName) ? t(il8nName) : undefined);
 };
 
 const defaultOptions = [
@@ -116,133 +98,19 @@ defineOptions({
         v-bind="form.formConfig"
       >
         <template #col="{column}">
-          <a-form-item
-            :label="labelProp(column)"
-            :name="valueProp(column)"
+          <custom-form-item
+            :column="column"
+            :form="form"
+            :options="getOptions(column)"
+            :i18n-prefix="i18nPrefix"
+            i18n-prop-prefix="form"
+            type-prop="formType"
             v-bind="formItemAttrs(column)"
           >
-            <slot
-              name="formItem"
-              :column="column"
-              :fields="form.fields"
-              :field="valueProp(column)"
-              :placeholder="getPlaceholder(column)"
-            >
-              <slot
-                :name="column.dataIndex"
-                :fields="form.fields"
-                :field="valueProp(column)"
-                :placeholder="getPlaceholder(column)"
-              >
-                <a-input
-                  v-if="typeProp(column) === 'input' || !typeProp(column)"
-                  v-model:value="form.fields[valueProp(column)]"
-                  allow-clear
-                  :placeholder="getPlaceholder(column)"
-                  v-bind="column.formFieldConfig"
-                />
-                <a-input
-                  v-if="typeProp(column) === 'input-number'"
-                  v-model:value="form.fields[valueProp(column)]"
-                  allow-clear
-                  :placeholder="getPlaceholder(column)"
-                  v-bind="column.formFieldConfig"
-                />
-                <a-input-password
-                  v-else-if="typeProp(column) === 'input-password'"
-                  v-model:value="form.fields[valueProp(column)]"
-                  allow-clear
-                  :placeholder="getPlaceholder(column)"
-                  v-bind="column.formFieldConfig"
-                />
-                <a-textarea
-                  v-else-if="typeProp(column) === 'textarea'"
-                  v-model:value="form.fields[valueProp(column)]"
-                  allow-clear
-                  :placeholder="getPlaceholder(column)"
-                  v-bind="column.formFieldConfig"
-                />
-                <i-tree-select
-                  v-else-if="typeProp(column) === 'tree-select'"
-                  v-model:value="form.fields[valueProp(column)]"
-                  :tree-data="getOptions(column)"
-                  :placeholder="getPlaceholder(column)"
-                  v-bind="column.formFieldConfig"
-                />
-                <a-select
-                  v-else-if="typeProp(column) === 'select'"
-                  v-model:value="form.fields[valueProp(column)]"
-                  allow-clear
-                  :placeholder="getPlaceholder(column)"
-                  v-bind="column.formFieldConfig"
-                >
-                  <a-select-option
-                    v-for="option in getOptions(column)"
-                    :key="option.value"
-                    :value="option.value"
-                  >
-                    {{ option.label }}
-                  </a-select-option>
-                </a-select>
-                <a-cascader
-                  v-else-if="typeProp(column) === 'cascader'"
-                  v-model:value="form.fields[valueProp(column)]"
-                  :options="column.options"
-                  :placeholder="getPlaceholder(column)"
-                  allow-clear
-                  v-bind="column.formFieldConfig"
-                />
-                <i-upload
-                  v-else-if="typeProp(column) === 'upload'"
-                  v-model:value="form.fields[valueProp(column)]"
-                  v-bind="column.formFieldConfig"
-                />
-                <a-radio-group
-                  v-else-if="typeProp(column) === 'radio'"
-                  v-model:value="form.fields[valueProp(column)]"
-                  v-bind="column.formFieldConfig"
-                >
-                  <a-radio
-                    v-for="option in getOptions(column)"
-                    :key="option.value"
-                    :value="option.value"
-                  >
-                    {{ option.label }}
-                  </a-radio>
-                </a-radio-group>
-                <a-radio-group
-                  v-else-if="typeProp(column) === 'radio-button'"
-                  v-model:value="form.fields[valueProp(column)]"
-                  v-bind="column.formFieldConfig"
-                >
-                  <a-radio-button
-                    v-for="option in getOptions(column)"
-                    :key="option.value"
-                    :value="option.value"
-                  >
-                    {{ option.label }}
-                  </a-radio-button>
-                </a-radio-group>
-                <a-date-picker
-                  v-else-if="typeProp(column) === 'date-picker'"
-                  v-model:value="form.fields[valueProp(column)]"
-                  :picker="column.picker"
-                  v-bind="column.formFieldConfig"
-                />
-                <a-range-picker
-                  v-else-if="typeProp(column) === 'range-picker'"
-                  v-model:value="form.fields[valueProp(column)]"
-                  :picker="column.picker"
-                  v-bind="column.formFieldConfig"
-                />
-                <i-icon
-                  v-else-if="typeProp(column) === 'icon'"
-                  v-model:value="form.fields[valueProp(column)]"
-                  v-bind="column.formFieldConfig"
-                />
-              </slot>
-            </slot>
-          </a-form-item>
+            <template #default="scope">
+              <slot name="formItem" v-bind="scope"></slot>
+            </template>
+          </custom-form-item>
         </template>
       </custom-form>
     </slot>
