@@ -16,7 +16,7 @@ import {
 } from "@/types/tableSettingsType";
 import type {Key} from "ant-design-vue/lib/table/interface";
 import type {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
-import {isArray} from "lodash-es";
+import {cloneDeep, isArray} from "lodash-es";
 import dayjs from "dayjs";
 import {DateRangeTuple, Rules} from "@/types/form";
 
@@ -33,6 +33,9 @@ export default class TableSettings<
 
   /** @type {boolean} 保存初始化时的 默认展开表格 */
   private defaultExpandAllRows: boolean = false;
+
+  /** @type {Fields} 保存初始化时的 form fields */
+  private cacheFields: Fields | null = null;
 
   public readonly table = reactive<TableReactive<RecordType, QueryForm>>({
     columns: [],
@@ -88,6 +91,7 @@ export default class TableSettings<
       this.defaultExpandAllRows = table.defaultExpandAllRows
       table.defaultExpandAllRows = false;
     }
+    this.cacheFields = cloneDeep(form.fields)
     Object.assign(this.table, table);
     Object.assign(this.form, form);
     Object.assign(this.modal, modal)
@@ -142,7 +146,6 @@ export default class TableSettings<
     this.table.loading = true;
     try {
       const {data} = await this.api?.request(params);
-      console.log("queryAll -->", data);
       this.table.remark = data.remark;
       this.table.dataSource = data.records;
 
@@ -204,7 +207,6 @@ export default class TableSettings<
       this.initFormRefs();
     }
     this.modal.visible = true;
-    console.log('this.form', this.form)
     if (type === 1 && id) {
       await this.detailById(id);
     }
@@ -213,13 +215,13 @@ export default class TableSettings<
   public cancelForm = () => {
     this.modal.visible = false;
     this.formRefs?.resetFields();
+    this.resetFields()
   };
 
   public confirmForm = async () => {
     await this.formRefs?.validate();
     const {fields} = this.form;
     const params = this.getParams("confirmForm", fields);
-    console.log("confirmForm --> params", params);
     this.modal.loading = true;
     try {
       await this.api.upsertRequest(params);
@@ -238,6 +240,24 @@ export default class TableSettings<
     this.modal.visible = true;
     await this.detailById(id);
   };
+
+  /**
+   * 根据缓存数据重置表单
+   */
+  private resetFields = () => {
+    if (!this.cacheFields) return;
+    const _cacheFields = cloneDeep(this.cacheFields)
+    // 先赋值缓存数据，确保跟缓存数据key保持一致，再删除多余数据
+    Object.assign(this.form.fields, _cacheFields)
+    // 获取缓存数据的key
+    const cacheKeys = Object.keys(_cacheFields)
+    Object.keys(this.form.fields)
+      .forEach(key => {
+        if (!cacheKeys.includes(key)) {
+          delete this.form.fields[key]
+        }
+      })
+  }
 
   /**
    * 转换列表查询参数

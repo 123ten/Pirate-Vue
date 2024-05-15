@@ -31,7 +31,7 @@ export const routes: Array<RouteRecordRaw> = [
     redirect: "/404",
   },
   {
-    path: "",
+    path: "/home",
     meta: {
       name: "layout",
       title: "首页",

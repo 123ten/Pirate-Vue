@@ -44,8 +44,7 @@ export type FormFieldProps<T extends FormType = "input"> = T extends | "input"
                 ? UploadProps
                 : never;
 
-export interface IColumns<RecordType = DefaultRecordType>
-  extends ColumnType<RecordType> {
+export interface IColumns<RecordType = DefaultRecordType> extends ColumnType<RecordType> {
   /** key 需要必填 */
   dataIndex: Required<string>;
   /** 默认表单内容类型 */
@@ -169,10 +168,12 @@ export interface ITableProps {
   size?: TableProps["size"];
   /** 表格行 key 的取值 */
   rowKey?: TableProps["rowKey"];
-  /**设置横向或纵向滚动，也可用于指定滚动区域的宽和高 */
+  /** 设置横向或纵向滚动，也可用于指定滚动区域的宽和高 */
   scroll?: TableProps["scroll"];
-  /**国际化前缀 */
+  /** 国际化前缀 */
   i18nPrefix?: string;
+  /** 是否全局开启国际化 */
+  isI18nGlobal?: boolean;
   /**指定树形结构的列名 默认 children */
   childrenColumnName?: TableProps["childrenColumnName"];
   /**关键字搜索框 占位内容 */

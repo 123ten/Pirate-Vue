@@ -9,7 +9,7 @@
     }
 
     .i-table-form {
-      transform-style: preserve-3d; // 3d 旋转
+      @apply style-preserve-3d;
     }
 
     .table-header {
@@ -19,6 +19,10 @@
 
     .ant-table-wrapper {
       @apply pt-0;
+    }
+
+    .ant-table-cell {
+      @apply whitespace-pre;
     }
   }
 }

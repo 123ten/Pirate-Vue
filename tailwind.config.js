@@ -27,12 +27,9 @@ export default {
   plugins: [
     plugin(function ({addUtilities}) {
       addUtilities({
-        '.rotate-x-20': {
-          transform: 'rotateX(20deg)',
-        },
-        '.rotate-x-180': {
-          transform: 'rotateX(180deg)',
-        },
+        '.rotate-x-20': {transform: 'rotateX(20deg)',},
+        '.rotate-x-180': {transform: 'rotateX(180deg)',},
+        '.style-preserve-3d': {transformStyle: 'preserve-3d'}, // 3d 旋转风格
       })
     })
   ],

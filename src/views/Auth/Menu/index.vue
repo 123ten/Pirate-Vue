@@ -3,17 +3,17 @@
 import * as antIcons from "@ant-design/icons-vue";
 import {provide, watch} from "vue";
 import {useAdminMenuStore} from "@/store/auth";
-import {deepForEach} from "@/utils/common";
+import {treeForEach} from "@/utils/common";
 import {notification} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 import type {AdminMenuDataSource} from "@/store/auth/menu/types";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
-import {AdminRoleTableSettingsType} from "@/views/Auth/Group/types";
+import {AdminRoleFields, AdminRoleTableSettingsType} from "@/views/Auth/Group/types";
 import {adminMenuUpsert, getAdminMenuById, getAdminMenuList, removeAdminMenu} from "@/api/auth/admin";
 
 const {t} = useI18n()
-const store = useAdminMenuStore()
-const {adminMenuStatusRequest} = store
+const adminMenuStore = useAdminMenuStore()
+const {adminMenuStatusRequest} = adminMenuStore
 
 // 规则类型
 const typeEnum = (type: AdminMenuDataSource["type"], key: string) => {
@@ -27,7 +27,7 @@ const typeEnum = (type: AdminMenuDataSource["type"], key: string) => {
       name: "菜单项",
     },
     3: {
-      color: "default",
+      color: "warning",
       name: "页面按钮",
     },
   }
@@ -88,10 +88,13 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
         title: "图标",
         dataIndex: "icon",
         align: "center",
-        width: 50,
-        form: (fields: any) => fields.type !== 3,
+        width: 100,
+        form: (fields: AdminRoleFields) => fields.type !== 3,
         sort: 5,
         type: 'icon',
+        formFieldConfig: {
+          nullOnUnmounted: true
+        }
       },
       {
         title: "名称",
@@ -105,14 +108,14 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
         dataIndex: "path",
         sort: 4,
         hide: true,
-        form: (fields: any) => fields.type !== 3,
+        form: (fields: AdminRoleFields) => fields.type !== 3,
       },
       {
         title: "菜单项类型",
         dataIndex: "frame",
         sort: 6,
         hide: true,
-        form: (fields: any) => fields.type === 2,
+        form: (fields: AdminRoleFields) => fields.type === 2,
         type: 'radio-button',
         options: [
           {label: '选项卡', value: 1},
@@ -128,7 +131,7 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
         dataIndex: "component",
         width: 200,
         sort: 7,
-        form: (fields: any) => fields.type === 2,
+        form: (fields: AdminRoleFields) => fields.type === 2,
       },
       {
         title: "规则描述",
@@ -196,6 +199,7 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
       },
     ],
     i18nPrefix: "admin_permission",
+    // isI18nGlobal: true,
     pagination: false,
     defaultExpandAllRows: true,
   },
@@ -235,10 +239,12 @@ watch(
   }
 )
 
+// 修改状态
 const handleStatusChange = async (record: AdminMenuDataSource) => {
   const ids: (number | undefined)[] = [];
-  deepForEach([record], (item: AdminMenuDataSource) => {
+  treeForEach([record], (item: AdminMenuDataSource) => {
     ids.push(item.id);
+    item.status = record.status
   })
   const params = {
     status: record.status,
@@ -250,7 +256,6 @@ const handleStatusChange = async (record: AdminMenuDataSource) => {
     message: t("message.success"),
     description: t("success.update"),
   })
-  tableSettings.queryAll()
 }
 </script>
 
@@ -260,7 +265,7 @@ const handleStatusChange = async (record: AdminMenuDataSource) => {
       <component v-if="value" :is="antIcons[value]" class="text-[18px]"/>
     </template>
     <template #type="{ record }">
-      <a-tag :color="typeEnum(record.type,'color')">
+      <a-tag :color="typeEnum(record.type,'color')" style="margin-right: 0">
         {{ typeEnum(record.type, 'name') }}
       </a-tag>
     </template>

@@ -1,6 +1,6 @@
 <!-- 图标配置 -->
 <script setup lang="ts">
-import {computed, nextTick, onMounted, ref, unref, watch,} from "vue";
+import {computed, nextTick, onMounted, onUnmounted, ref, unref, watch} from "vue";
 import * as antIcons from "@ant-design/icons-vue";
 import {SyncOutlined} from "@ant-design/icons-vue";
 import {notification} from "ant-design-vue";
@@ -26,7 +26,7 @@ const icons = ref<string[]>([]);
 const iconTabs = ref<string[]>(["line", "fill", "twoTone", 'custom']);
 
 const currentTab = ref<string>("");
-const currentIcon = ref<string>(props.defaultValue); // 默认图标
+const currentIcon = ref<string>(props.value || props.defaultValue); // 默认图标
 
 const visible = ref<boolean>(false);
 //#endregion
@@ -36,13 +36,20 @@ onMounted(() => {
   initIcon();
 });
 
+onUnmounted(() => {
+  if (props.nullOnUnmounted) {
+    emits('update:value', null);
+  }
+  currentIcon.value = props.defaultValue;
+});
+
 watch(
-    () => props.value,
-    (value) => {
-      if (!value) {
-        onLoad()
-      }
+  () => props.value,
+  (value) => {
+    if (value) {
+      currentIcon.value = value;
     }
+  }
 )
 
 // 初始化icon
@@ -91,6 +98,7 @@ const checkIconTab = (type: string) => {
     });
   }
 };
+
 // 选择图标 icon
 const checkIcon = (key: string) => {
   visible.value = false;
@@ -123,21 +131,21 @@ const antIconComputed = computed(() => antIcons[currentIcon.value]);
 
 <template>
   <a-popover
-      v-model:visible="visible"
-      placement="bottom"
-      trigger="click"
-      class="icon"
+    v-model:visible="visible"
+    placement="bottom"
+    trigger="click"
+    class="icon"
   >
     <template #title>
       <div class="icons-title">
         请选择图标
         <div class="icons-tab">
           <span
-              v-for="item in iconTabs"
-              :key="item"
-              class="tab-item"
-              :class="{ active: item === currentTab }"
-              @click="checkIconTab(item)"
+            v-for="item in iconTabs"
+            :key="item"
+            class="tab-item"
+            :class="{ active: item === currentTab }"
+            @click="checkIconTab(item)"
           >
             {{ item }}
           </span>
@@ -147,11 +155,11 @@ const antIconComputed = computed(() => antIcons[currentIcon.value]);
     <template #content>
       <div class="icons-content">
         <div
-            class="icons-item"
-            :class="{active:currentIcon === icon}"
-            v-for="icon in icons"
-            :key="icon"
-            @click="checkIcon(icon)"
+          class="icons-item"
+          :class="{active:currentIcon === icon}"
+          v-for="icon in icons"
+          :key="icon"
+          @click="checkIcon(icon)"
         >
           <component :is="antIcons[icon]" style="font-size: 20px"/>
         </div>

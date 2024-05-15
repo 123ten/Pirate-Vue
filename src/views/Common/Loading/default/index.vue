@@ -1,6 +1,6 @@
 <!-- 默认全屏加载界面 -->
 <script setup lang="ts">
-import { defineExpose, ref } from "vue";
+import {defineExpose, ref} from "vue";
 
 // 是否显示加载界面
 const loading = ref<boolean>(false);
@@ -21,16 +21,19 @@ defineExpose({
 </script>
 
 <template>
-  <div v-if="loading" id="global_loading">
-    <span class="item1"></span>
-    <span class="item2"></span>
-    <span class="item3"></span>
-    <span class="item4"></span>
-    <span class="item5"></span>
-    <span class="item6"></span>
-    <span class="item7"></span>
-    <div class="loading">
-      <img class="img" src="@/assets/images/loading_small-plane.jpg" />
+  <div v-if="loading" id="loading">
+    <div id="loading-center">
+      <div id="loading-center-absolute">
+        <div class="object" id="object_one"></div>
+        <div class="object" id="object_two"></div>
+        <div class="object" id="object_three"></div>
+        <div class="object" id="object_four"></div>
+        <div class="object" id="object_five"></div>
+        <div class="object" id="object_six"></div>
+        <div class="object" id="object_seven"></div>
+        <div class="object" id="object_eight"></div>
+        <div class="object" id="object_big"></div>
+      </div>
     </div>
   </div>
 </template>

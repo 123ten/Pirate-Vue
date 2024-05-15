@@ -115,6 +115,7 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
         title: "密码",
         dataIndex: "password",
         type: 'input-password',
+        hide: true,
         form: true,
         placeholder(fields: AdminTableSettingsType['form']['fields']) {
           return t(fields.id

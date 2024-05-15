@@ -1,17 +1,11 @@
 /**
  * 管理员列表
  */
-import { defineStore } from "pinia";
-import {
-  adminLogin,
-  adminUpsert,
-  getAdminAvatar,
-  getAdminById,
-  getAdminList,
-} from "@/api/auth/admin";
-import { AdminState } from "./types";
-import { $local } from "@/utils/storage";
-import { UserInfo } from "@/api/types/user";
+import {defineStore} from "pinia";
+import {adminLogin, getAdminAvatar, getAdminById,} from "@/api/auth/admin";
+import {AdminState} from "./types";
+import {$local} from "@/utils/storage";
+import {UserInfo} from "@/api/types/user";
 
 export const useAdminStore = defineStore("adminStore", {
   state: (): AdminState => {
@@ -46,7 +40,7 @@ export const useAdminStore = defineStore("adminStore", {
       },
       rawUserInfo: {},
       remark: "",
-      avatar: "",
+      avatar: undefined,
       isTableLoading: false,
       isModalLoading: false,
       isLoginFormLoading: false,
@@ -54,42 +48,17 @@ export const useAdminStore = defineStore("adminStore", {
   },
   getters: {
     userInfo(): UserInfo {
-      return this.userInfo || $local.get("userInfo");
+      return Object.keys(this.rawUserInfo).length === 0 ? $local.get("userInfo") : this.rawUserInfo
     },
   },
   actions: {
-    /**
-     * 获取管理员列表
-     */
-    async getAdminListRequest() {
-      const params = {
-        page: this.pages.page,
-        size: this.pages.size,
-        ...this.queryForm,
-      };
-      this.isTableLoading = true;
-      try {
-        const { data } = await getAdminList(params);
-        console.log(data, "getAdminList");
-        this.remark = data.remark;
-        this.dataSource = data.records;
-
-        this.pages = {
-          size: data.size,
-          page: data.page,
-          total: data.total,
-        };
-      } finally {
-        this.isTableLoading = false;
-      }
-    },
     /**
      * 获取管理员信息
      */
     async getAdminByIdRequest(id?: number) {
       this.isModalLoading = true;
       try {
-        const { data } = await getAdminById(id);
+        const {data} = await getAdminById(id);
         const file = {
           // 按照要求乱填即可
           url: data.avatar,
@@ -105,34 +74,15 @@ export const useAdminStore = defineStore("adminStore", {
       }
     },
     /**
-     * 新增/编辑 管理员信息
-     * @returns
-     */
-    async adminUpsertRequest() {
-      this.isModalLoading = true;
-      const [response] = this.formState.fileList || [];
-      const params = {
-        ...this.formState,
-        fileList: undefined,
-        avatar: response?.path,
-      };
-      try {
-        const { data } = await adminUpsert(params);
-        return data;
-      } finally {
-        this.isModalLoading = false;
-      }
-    },
-    /**
      * 根据用户名获取管理员头像
      * @param username
      */
     async getAdminAvatarRequest(username?: string) {
       try {
-        const { data } = await getAdminAvatar({ username: username });
+        const {data} = await getAdminAvatar({username: username});
         this.avatar = data;
       } catch (error) {
-        this.avatar = "";
+        this.avatar = undefined;
       }
     },
     /**
@@ -145,7 +95,7 @@ export const useAdminStore = defineStore("adminStore", {
       };
       this.isLoginFormLoading = true;
       try {
-        const { data } = await adminLogin(params);
+        const {data} = await adminLogin(params);
         this.rawUserInfo = data.userInfo;
         $local.set("accessToken", data.accessToken);
         $local.set("refreshToken", data.refreshToken);

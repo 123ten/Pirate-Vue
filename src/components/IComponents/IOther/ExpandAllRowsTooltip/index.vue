@@ -1,26 +1,33 @@
 <!--表格头部 展开收缩按钮-->
 <script setup lang="ts">
-import {defineEmits, defineProps} from "vue";
+import {computed, defineEmits, defineProps} from "vue";
+import {MinusSquareOutlined, PlusSquareOutlined} from '@ant-design/icons-vue';
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 const props = defineProps({
   expand: {
     type: Boolean,
     default: false,
   },
-  disabled: {
-    type: Boolean,
-    default: false,
-  }
 });
 const emit = defineEmits(["update:expand"]);
+const title = computed(() => props.expand ? t('title.collapseAll') : t('title.expandAll'));
+const content = computed(() => props.expand ? t('title.collapse') : t('title.expand'));
 </script>
 
 <template>
   <i-tooltip
-      :title="props.expand ? '收缩所有子菜单' : '展开所有子菜单'"
-      :content="props.expand ? '收缩所有' : '展开所有'"
-      :type="props.expand ? 'danger' : 'warning'"
-      :disabled="props.disabled"
-      @click="(e) => emit('update:expand', !props.expand)"
-  />
+    :title="title"
+    :content="content"
+    :type="expand ? 'danger' : 'warning'"
+    @click="(e) => emit('update:expand', !expand)"
+    v-bind="$attrs"
+  >
+    <template #icon>
+      <minus-square-outlined v-if="expand"/>
+      <plus-square-outlined v-else/>
+    </template>
+  </i-tooltip>
 </template>

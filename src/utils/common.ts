@@ -130,13 +130,13 @@ export function setTimeoutPromise(time: number) {
  * @param args 入参
  * @returns
  */
-export function deepChildren<RecordType = DefaultRecordType>(...args: deepArguments<RecordType>) {
+export function recursiveTreeMap<RecordType = DefaultRecordType>(...args: deepArguments<RecordType>) {
   const [list, cb, children = 'children', parent] = args;
   if (!isArray(list)) return list;
   return list.map((item, index) => {
     cb && cb(item, index, list, parent!);
     if (item[children] && item[children].length) {
-      item[children] = deepChildren(item[children], cb, children, item);
+      item[children] = recursiveTreeMap(item[children], cb, children, item);
     } else {
       item[children] = null;
     }
@@ -144,14 +144,14 @@ export function deepChildren<RecordType = DefaultRecordType>(...args: deepArgume
   });
 }
 
-export function deepForEach<RecordType = DefaultRecordType>(...args: deepArguments<RecordType>) {
+export function treeForEach<RecordType = DefaultRecordType>(...args: deepArguments<RecordType>) {
   const [list, cb, children = 'children', parent] = args;
   if (!isArray(list)) return list;
   for (let i = 0, len = list.length; i < len; i++) {
     const item = list[i];
     cb && cb(item, i, list, parent!);
     if (item[children] && item[children].length) {
-      deepForEach(item[children], cb, children, item);
+      treeForEach(item[children], cb, children, item);
     }
   }
 }
@@ -165,7 +165,7 @@ export function deepFilter<RecordType = DefaultRecordType>(...args: deepArgument
   if (!isArray(list)) return list;
   return cloneDeep(list).filter((item, index) => {
     if (item[children] && item[children].length) {
-      item[children] = deepChildren(item[children], cb, children, item);
+      item[children] = recursiveTreeMap(item[children], cb, children, item);
     } else {
       item[children] = null;
     }

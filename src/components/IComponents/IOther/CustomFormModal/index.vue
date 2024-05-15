@@ -46,12 +46,6 @@ const formColumns = computed(() => {
 
 const i18nPrefix = computed(() => tableSettings?.table.i18nPrefix);
 
-const getI18nName = (key: string, column: IColumns) => {
-  return [i18nPrefix.value, "form", key, column.i18nName || valueProp(column)]
-    .filter(Boolean)
-    .join(".");
-};
-
 const valueProp = (column: IColumns) => {
   return column.formValueProp || column.dataIndex;
 };
@@ -95,12 +89,12 @@ defineOptions({
         :columns="formColumns"
         :label-col="{ span: 4 }"
         :default-span="form.defaultSpan"
+        :model="form.fields"
         v-bind="form.formConfig"
       >
         <template #col="{column}">
           <custom-form-item
             :column="column"
-            :form="form"
             :options="getOptions(column)"
             :i18n-prefix="i18nPrefix"
             i18n-prop-prefix="form"

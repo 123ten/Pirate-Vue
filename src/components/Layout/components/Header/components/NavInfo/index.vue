@@ -3,9 +3,9 @@
 import {defineOptions, ref} from "vue";
 import {PoweroffOutlined, UserOutlined} from "@ant-design/icons-vue";
 import {useRouter} from "vue-router";
-import {useUserStore} from '@/store/user'
+import {useAdminStore} from '@/store/auth'
 
-const {userInfo} = useUserStore()
+const {userInfo, rawUserInfo} = useAdminStore()
 
 const router = useRouter();
 const isInfoPopover = ref(false); // 个人资料
@@ -27,9 +27,9 @@ defineOptions({
 
 <template>
   <a-popover
-      v-model:visible="isInfoPopover"
-      placement="bottomRight"
-      trigger="click"
+    v-model:visible="isInfoPopover"
+    placement="bottomRight"
+    trigger="click"
   >
     <template #content>
       <div class="admin-info-base">

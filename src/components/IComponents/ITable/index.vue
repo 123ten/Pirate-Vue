@@ -280,11 +280,16 @@ const onReset = () => {
   emits("reset");
 };
 
-const localesNameFn = (column: IColumns) => {
-  const i18nPrefix = props.i18nPrefix;
-  if (!i18nPrefix) return column.title;
+/**
+ * 获取表格头部名称
+ * @param column
+ */
+const getHeaderCellName = (column: IColumns) => {
+  // 是否开启国际化 默认全局开启 优先级 isI18n > isI18nGlobal
+  const startI18n = typeof column.isI18n !== 'boolean' ? props.isI18nGlobal : column.isI18n
+  if (!startI18n) return column.title;
   const il8nName = (column.i18nName || column.dataIndex) as string;
-  return [i18nPrefix, "table.columns", il8nName].filter(Boolean).join(".");
+  return [props.i18nPrefix, "table.columns", il8nName].filter(Boolean).join(".");
 };
 
 /**
@@ -426,13 +431,9 @@ defineOptions({
         @resize-column="handleResizeColumn"
         @change="handlePageSizeChange"
       >
-        <template #headerCell="{ column }">
-          <slot name="headerCell">
-            <template v-for="col in columnsComputed" :key="col.dataIndex">
-              <template v-if="col.dataIndex === column.dataIndex && col.isI18n">
-                {{ $t(localesNameFn(col)) }}
-              </template>
-            </template>
+        <template #headerCell="{ column,...resetScope }">
+          <slot name="headerCell" :column="column" v-bind="resetScope">
+            {{ $t(getHeaderCellName(column)) }}
           </slot>
         </template>
         <template #bodyCell="score">

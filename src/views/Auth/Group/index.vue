@@ -57,7 +57,6 @@ const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
       {
         title: "组别名称",
         dataIndex: "name",
-        align: "center",
         width: 200,
         form: true,
       },

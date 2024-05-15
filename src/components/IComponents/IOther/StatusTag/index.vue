@@ -4,6 +4,7 @@
 import {TagProps} from "ant-design-vue/es/tag";
 import {toRefs} from "vue";
 import {DefaultStatus} from "@/types/table";
+import {isNumber} from "lodash-es";
 
 interface ProcessingTag extends /* @vue-ignore */ TagProps {
   value?: DefaultStatus;
@@ -24,7 +25,7 @@ defineOptions({
 
 <template>
   <a-tag
-    v-if="value && value >= 0"
+    v-if="isNumber(value) && value >= 0"
     :color="color || (value === 1 ? 'success' : 'error')"
     class="table-tag"
     v-bind="resetProps"

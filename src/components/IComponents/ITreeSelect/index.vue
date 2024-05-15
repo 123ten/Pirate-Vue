@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {computed, CSSProperties, defineProps, ref, toRaw, watch, withDefaults} from "vue";
-import {deepForEach} from "@/utils/common";
+import {computed, CSSProperties, ref, toRaw, watch} from "vue";
+import {treeForEach} from "@/utils/common";
 import {TreeSelect, TreeSelectProps} from "ant-design-vue";
 
 interface FieldNames {
@@ -56,7 +56,7 @@ watch(
       const labelKey = restProps.fieldNames.label!
       const valueKey = restProps.fieldNames.value!
       const labels: string[] = []
-      deepForEach(props.treeData, (item: any) => {
+      treeForEach(props.treeData, (item: any) => {
         if (value.includes(item[valueKey])) {
           labels.push(item[labelKey])
         }
@@ -82,7 +82,7 @@ const calculateTitle = (value: ITreeSelectProps['value'], label?: string[]) => {
       const labelKey = restProps.fieldNames.label!
       const valueKey = restProps.fieldNames.value!
       const labels: string[] = []
-      deepForEach(props.treeData, (item: any, _index, _arr, parent) => {
+      treeForEach(props.treeData, (item: any, _index, _arr, parent) => {
         if ((value as (string | number)[])?.includes(item[valueKey])) {
           item.spliceTitle = [parent?.spliceTitle, item[labelKey]].filter(Boolean).join('-');
           labels.push(item.spliceTitle);
@@ -96,6 +96,10 @@ const calculateTitle = (value: ITreeSelectProps['value'], label?: string[]) => {
 const title = computed(() => {
   return props.multiple && tooltipTitle.value?.join("，");
 });
+
+defineOptions({
+  name: 'ITreeSelect'
+})
 </script>
 
 <template>

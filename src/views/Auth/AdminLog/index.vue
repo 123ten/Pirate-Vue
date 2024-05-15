@@ -124,20 +124,21 @@ const toUrl = (url: string) => {
 <template>
   <div class="box-border p-4">
     <i-table
-        :columns="columns"
-        :data-source="dataSource"
-        :pages="pages"
-        :loading="isTableLoading"
-        @reload="getList"
-        @pages-change="handlePagesChange"
-        @select-change="handleSelectChange"
+      :columns="columns"
+      :data-source="dataSource"
+      :pages="pages"
+      :loading="isTableLoading"
+      :scroll="{x: true}"
+      @reload="getList"
+      @pages-change="handlePagesChange"
+      @select-change="handleSelectChange"
     >
       <template #url="{ record }">
         <a-input-group compact style="display: flex;">
           <a-input
-              v-model:value="record.url"
-              readonly
-              style="text-align: left"
+            v-model:value="record.url"
+            readonly
+            style="text-align: left"
           >
           </a-input>
           <a-button @click="toUrl(record.url)">
@@ -165,13 +166,13 @@ const toUrl = (url: string) => {
     </i-table>
 
     <detail-modal
-        :visible="isDetailModalVisible"
-        @cancel="handleDetailModalCancel"
+      :visible="isDetailModalVisible"
+      @cancel="handleDetailModalCancel"
     />
 
     <i-preview-image
-        :src="avatarPreviewSrc"
-        v-model:visible="isAvatarPreviewSrc"
+      :src="avatarPreviewSrc"
+      v-model:visible="isAvatarPreviewSrc"
     />
   </div>
 </template>

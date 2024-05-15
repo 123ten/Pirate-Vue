@@ -1,21 +1,26 @@
 <script setup lang="ts">
 import {IColumns} from "@/types";
 import useFormInstance from "@/hooks/useFormInstance";
+import {provide} from "vue";
 
 interface QueryFormProps {
   columns: IColumns[][];
   defaultSpan?: number;
   gutter?: number;
+  model?: Record<string, any>;
 }
 
-withDefaults(defineProps<QueryFormProps>(), {
+const props = withDefaults(defineProps<QueryFormProps>(), {
   columns: () => ([]),
   defaultSpan: 24
 })
 
 const [formRef, formInstance] = useFormInstance()
 
+provide('model', props.model)
+
 defineExpose(formInstance)
+
 defineOptions({
   name: 'CustomForm'
 })
@@ -25,6 +30,7 @@ defineOptions({
   <a-form
     ref="formRef"
     autocomplete="off"
+    :model="model"
     v-bind="$attrs"
   >
     <a-row
