@@ -85,12 +85,25 @@ export interface FormReactive<Fields = DefaultFieldsType> {
   name?: string;
   /** 表单布局 */
   defaultSpan?: number;
+  /** 表单弹窗配置 */
+  modal: IModalProps;
 }
+
+export interface InfoReactive<Fields = DefaultFieldsType> {
+  /** 表单数据对象 */
+  fields: Fields;
+  /** 表单布局 */
+  defaultSpan?: number;
+  /** 表单弹窗配置 */
+  modal: IModalProps;
+}
+
 
 /**
  * 对话框
  */
 export interface ModalReactive extends IModalProps {
+  visible?: boolean;
 }
 
 declare type namesType = string | string[];
@@ -131,6 +144,14 @@ export declare interface TableSettingsType<
 
   readonly form: UnwrapNestedRefs<FormReactive<Fields>>;
 
+  /**
+   * 表单数据对象
+   */
+  readonly info: UnwrapNestedRefs<InfoReactive<Fields>>;
+
+  /**
+   * 公共 modal 配置
+   */
   readonly modal: UnwrapNestedRefs<ModalReactive>
 
   formRefs?: FormRefs;

@@ -8,6 +8,7 @@ import {
   DefaultFieldsType,
   FormReactive,
   FormRefs,
+  InfoReactive,
   ModalReactive,
   Operation,
   PrivateApi,
@@ -67,12 +68,21 @@ export default class TableSettings<
     fields: {} as Fields,
     formConfig: undefined,
     rules: undefined,
-    defaultSpan: 24
+    defaultSpan: 24,
+    modal: {
+      visible: false,
+    }
   });
+
+  public readonly info = reactive<InfoReactive<Fields>>({
+    fields: {} as Fields,
+    modal: {
+      visible: false,
+    }
+  })
 
   public readonly modal = reactive<ModalReactive>({
     init: undefined,
-    visible: false,
     loading: false,
     maskClosable: false,
   })
@@ -82,6 +92,15 @@ export default class TableSettings<
   public customParams?: TableSettingsType["customParams"];
 
   constructor(options: any) {
+    /**
+     * Options for configuring the CRUD component.
+     * @typedef {Object} Options
+     * @property {Object} api - The API endpoints and methods for the CRUD operations.
+     * @property {Object} table - The table configuration object.
+     * @property {Object} form - The form configuration object.
+     * @property {Object} modal - The global modal configuration object.
+     * @property {Object} customParams - Custom parameters for additional configurations.
+     */
     const {api, table, form, modal, customParams} = options;
 
     this.api = api;
@@ -91,11 +110,12 @@ export default class TableSettings<
       this.defaultExpandAllRows = table.defaultExpandAllRows
       table.defaultExpandAllRows = false;
     }
-    this.cacheFields = cloneDeep(form.fields)
+    if (form) {
+      this.cacheFields = cloneDeep(form.fields)
+    }
     Object.assign(this.table, table);
     Object.assign(this.form, form);
     Object.assign(this.modal, modal)
-
     this.initFormRefs();
     this.mounted();
   }
@@ -206,14 +226,14 @@ export default class TableSettings<
     if (typeof this.form.rules === "function") {
       this.initFormRefs();
     }
-    this.modal.visible = true;
+    this.form.modal.visible = true;
     if (type === 1 && id) {
       await this.detailById(id);
     }
   };
 
   public cancelForm = () => {
-    this.modal.visible = false;
+    this.form.modal.visible = false;
     this.formRefs?.resetFields();
     this.resetFields()
   };
@@ -236,8 +256,12 @@ export default class TableSettings<
     }
   };
 
+  /**
+   * 打开详情弹窗
+   * @param id
+   */
   public openDetail = async (id: Key) => {
-    this.modal.visible = true;
+    this.info.modal.visible = true;
     await this.detailById(id);
   };
 

@@ -12,7 +12,6 @@ const {detailInfo, isModalLoading} = storeToRefs(store);
 const props = defineProps<DetailModalProps>()
 const emit = defineEmits(['cancel'])
 
-
 const handleCancel = () => {
   emit('cancel')
 }
@@ -21,13 +20,13 @@ const handleCancel = () => {
 
 <template>
   <i-modal
-      title="详情"
-      width="1080px"
-      :visible="props.visible"
-      :loading="isModalLoading"
-      :footer="false"
-      mask-closable
-      @cancel="handleCancel"
+    title="详情"
+    width="1080px"
+    :visible="props.visible"
+    :loading="isModalLoading"
+    :footer="false"
+    mask-closable
+    @cancel="handleCancel"
   >
     <a-descriptions bordered size="middle" :label-style="{width: '150px'}" :column="2">
       <a-descriptions-item label="标题">{{ detailInfo.title }}</a-descriptions-item>
@@ -48,6 +47,3 @@ const handleCancel = () => {
   </i-modal>
 </template>
 
-<style scoped lang="less">
-
-</style>

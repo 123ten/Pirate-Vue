@@ -44,7 +44,7 @@ const labelProp = computed(() => {
 const placeholderProp = computed(() => {
   const il8nName = getI18nName("placeholder");
   return (typeof column.placeholder === 'function' ? column.placeholder(model) : column.placeholder)
-    || (te(il8nName) && t(il8nName));
+    || (te(il8nName) ? t(il8nName) : undefined);
 });
 
 const typeProp = computed(() => (props.typeProp && column[props.typeProp]) || column.type || 'input');

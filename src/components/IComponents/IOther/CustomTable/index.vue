@@ -92,9 +92,7 @@ defineOptions({
             v-if="operations.includes('row-detail')"
             :title="$t('title.detail')"
             size="small"
-            @click="
-              tableSettings?.openDetail(record[table.rowKey!])
-            "
+            @click="tableSettings?.openDetail(record[table.rowKey!])"
           >
             <template #icon>
               <zoom-in-outlined/>
@@ -125,7 +123,7 @@ defineOptions({
       </template>
     </i-table>
     <!--  表单自定义 需要带上 form 前缀  -->
-    <custom-form-modal v-if="table?.fieldModalVisible">
+    <custom-form-modal v-if="!tableSettings?.form || table?.fieldModalVisible">
       <template #formItem="score">
         <slot :name="`form-${score.column.dataIndex}`" v-bind="score"/>
       </template>

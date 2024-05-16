@@ -71,6 +71,11 @@ const formItemAttrs = (column: IColumns) => ({
   ...column.formItemConfig,
 });
 
+const modalProps = computed(() => ({
+  ...modal.value, // 公共弹窗配置
+  ...form.value?.modal, // form 表单弹窗配置
+}))
+
 defineOptions({
   name: 'CustomFormModal'
 })
@@ -79,9 +84,9 @@ defineOptions({
 <template>
   <i-modal
     :title="$t(form?.fields.id ? 'title.update' : 'title.create')"
-    v-bind="modal"
     @cancel="tableSettings?.cancelForm"
     @confirm="tableSettings?.confirmForm"
+    v-bind="modalProps"
   >
     <slot>
       <custom-form
