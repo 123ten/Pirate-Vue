@@ -4,11 +4,12 @@ import {Form, notification} from "ant-design-vue";
 import i18n from "@/locales";
 import type {IPages} from "@/types";
 import {
+  CancelFormType,
   CustomParamsKey,
   DefaultFieldsType,
+  DetailReactive,
   FormReactive,
   FormRefs,
-  InfoReactive,
   ModalReactive,
   Operation,
   PrivateApi,
@@ -71,20 +72,22 @@ export default class TableSettings<
     defaultSpan: 24,
     modal: {
       visible: false,
+      maskClosable: false,
     }
   });
 
-  public readonly info = reactive<InfoReactive<Fields>>({
+  public readonly detail = reactive<DetailReactive<Fields>>({
     fields: {} as Fields,
     modal: {
       visible: false,
+      footer: null,
+      closable: true,
     }
   })
 
   public readonly modal = reactive<ModalReactive>({
     init: undefined,
     loading: false,
-    maskClosable: false,
   })
 
   public formRefs?: FormRefs;
@@ -158,6 +161,7 @@ export default class TableSettings<
 
   // region API请求方法
   public queryAll = async () => {
+    if (!this.api?.find) return;
     const query = {
       ...this.getPagesParams(),
       ...this.transformParams(),
@@ -165,7 +169,7 @@ export default class TableSettings<
     const params = this.getParams("queryAll", query);
     this.table.loading = true;
     try {
-      const {data} = await this.api?.request(params);
+      const {data} = await this.api?.find(params);
       this.table.remark = data.remark;
       this.table.dataSource = data.records;
 
@@ -187,7 +191,7 @@ export default class TableSettings<
     type: Extract<Operation, "delete" | "row-delete">,
     ids: Key[]
   ) => {
-    await this.api?.deleteRequest({ids});
+    await this.api?.delete({ids});
     notification.success({
       message: t("message.success"),
       description: t("success.delete"),
@@ -203,7 +207,7 @@ export default class TableSettings<
   public detailById = async (id: Key) => {
     this.modal.loading = true;
     try {
-      const {data} = await this.api?.detailRequest(id);
+      const {data} = await this.api?.findById(id);
       Object.assign(this.form.fields, data);
     } finally {
       this.modal.loading = false;
@@ -232,10 +236,18 @@ export default class TableSettings<
     }
   };
 
-  public cancelForm = () => {
-    this.form.modal.visible = false;
-    this.formRefs?.resetFields();
-    this.resetFields()
+  /**
+   * 示例函数，使用 CancelFormType。
+   * @param {CancelFormType} type - 取消表单的类型。
+   */
+  public cancelForm = (type: CancelFormType) => {
+    if (type === 1) {
+      this.form.modal.visible = false;
+      this.formRefs?.resetFields();
+      this.resetFields()
+    } else {
+      this.detail.modal.visible = false;
+    }
   };
 
   public confirmForm = async () => {
@@ -244,12 +256,12 @@ export default class TableSettings<
     const params = this.getParams("confirmForm", fields);
     this.modal.loading = true;
     try {
-      await this.api.upsertRequest(params);
+      await this.api.upsert(params);
       notification.success({
         message: t("message.success"),
         description: t(fields.id ? "success.update" : "success.create"),
       });
-      this.cancelForm();
+      this.cancelForm(1);
       await this.queryAll();
     } finally {
       this.modal.loading = false;
@@ -261,7 +273,7 @@ export default class TableSettings<
    * @param id
    */
   public openDetail = async (id: Key) => {
-    this.info.modal.visible = true;
+    this.detail.modal.visible = true;
     await this.detailById(id);
   };
 

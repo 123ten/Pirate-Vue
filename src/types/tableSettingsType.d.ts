@@ -23,6 +23,15 @@ export declare type Operation =
   | "row-delete";
 
 /**
+ * CancelFormType 表示取消表单的类型。
+ * @typedef {1 | 2} CancelFormType
+ *
+ * @property {1} 1 - 新增/编辑
+ * @property {2} 2 - 详情
+ */
+export declare type CancelFormType = 1 | 2
+
+/**
  * 自定义 params 入参
  */
 export declare type CustomParamsKey = "queryAll" | "confirmForm";
@@ -34,10 +43,30 @@ export declare type DefaultFieldsType = {
 };
 
 export interface PrivateApi {
-  request: Function;
-  deleteRequest: Function;
-  detailRequest: Function;
-  upsertRequest: Function;
+  /**
+   * 插入或更新项
+   * @param {Object} itemData - 需要插入或更新的项的数据
+   * @returns {Promise} - 返回插入或更新结果的 Promise
+   */
+  upsert: Function;
+  /**
+   * 查找项列表
+   * @param {Object} query - 查询参数
+   * @returns {Promise} - 返回项列表的 Promise
+   */
+  find: Function;
+  /**
+   * 根据ID查找项
+   * @param {number|string} id - 项的唯一标识符
+   * @returns {Promise} - 返回单个项的 Promise
+   */
+  findById: Function;
+  /**
+   * 删除项
+   * @param {number|string} id - 项的唯一标识符
+   * @returns {Promise} - 返回删除结果的 Promise
+   */
+  delete: Function;
 }
 
 export interface TableReactive<
@@ -89,7 +118,7 @@ export interface FormReactive<Fields = DefaultFieldsType> {
   modal: IModalProps;
 }
 
-export interface InfoReactive<Fields = DefaultFieldsType> {
+export interface DetailReactive<Fields = DefaultFieldsType> {
   /** 表单数据对象 */
   fields: Fields;
   /** 表单布局 */
@@ -147,7 +176,7 @@ export declare interface TableSettingsType<
   /**
    * 表单数据对象
    */
-  readonly info: UnwrapNestedRefs<InfoReactive<Fields>>;
+  readonly detail: UnwrapNestedRefs<DetailReactive<Fields>>;
 
   /**
    * 公共 modal 配置
@@ -203,7 +232,7 @@ export declare interface TableSettingsType<
   /**
    * 关闭表单
    */
-  cancelForm(): Promise<void> | void;
+  cancelForm(type: CancelFormType): Promise<void> | void;
 
   /**
    * 确认表单

@@ -123,10 +123,14 @@ defineOptions({
       </template>
     </i-table>
     <!--  表单自定义 需要带上 form 前缀  -->
-    <custom-form-modal v-if="!tableSettings?.form || table?.fieldModalVisible">
+    <custom-form-modal v-if="tableSettings?.form && table?.fieldModalVisible">
       <template #formItem="score">
         <slot :name="`form-${score.column.dataIndex}`" v-bind="score"/>
       </template>
     </custom-form-modal>
+
+    <custom-detail-modal v-if="tableSettings?.detail">
+
+    </custom-detail-modal>
   </div>
 </template>

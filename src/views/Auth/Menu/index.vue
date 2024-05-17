@@ -44,10 +44,10 @@ const typeEnum = (type: AdminMenuDataSource["type"], key: string) => {
 
 const tableSettings: AdminRoleTableSettingsType = new TableSettings({
   api: {
-    request: getAdminMenuList,
-    detailRequest: getAdminMenuById,
-    deleteRequest: removeAdminMenu,
-    upsertRequest: adminMenuUpsert,
+    find: getAdminMenuList,
+    findById: getAdminMenuById,
+    delete: removeAdminMenu,
+    upsert: adminMenuUpsert,
   },
   table: {
     operations: [

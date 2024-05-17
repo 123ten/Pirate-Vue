@@ -1,14 +1,11 @@
-<!-- 角色组管理 添加/编辑 -->
+<!-- 自定义表单弹窗 -->
 <script setup lang="ts">
 import {computed, inject} from "vue";
 import {tableSettingKey} from "@/utils/tableSettings";
 import {TableSettingsType} from "@/types/tableSettingsType";
-import {useI18n} from "vue-i18n";
 import {IColumns} from "@/types";
 import CustomForm from "@/components/IComponents/IOther/CustomForm/index.vue";
 import CustomFormItem from "@/components/IComponents/IOther/CustomFormItem/index.vue";
-
-const {t, te} = useI18n();
 
 const tableSettings = inject<TableSettingsType>(tableSettingKey, {} as any);
 

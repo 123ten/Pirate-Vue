@@ -78,7 +78,3 @@ withDefaults(defineProps<CustomInputProps>(), {});
     v-bind="$attrs"
   />
 </template>
-
-<style scoped lang="less">
-
-</style>

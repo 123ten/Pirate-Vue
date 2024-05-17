@@ -6,9 +6,11 @@ import type {IDragRect, IModalProps} from "./types";
 
 
 const props = withDefaults(defineProps<IModalProps>(), {
-  visible: false,
-  maskClosable: false,
+  closable: true,
   dragModal: true,
+  keyboard: true,
+  mask: true,
+  maskClosable: true,
   bodyStyle: () => ({
     maxHeight: "60vh",
     overflowY: "auto",
@@ -33,8 +35,8 @@ const preTransformX = ref<number>(0);
 const preTransformY = ref<number>(0);
 const dragRect = ref<IDragRect>({left: 0, right: 0, top: 0, bottom: 0});
 
-watch(() => props.visible, (val) => {
-  if (val) {
+watch(() => props.visible, (visible) => {
+  if (visible) {
     props.init?.();
   } else {
     if (props.dragModal) {
@@ -74,13 +76,13 @@ watch(isDragging, () => {
 watchEffect(() => {
   if (startedDrag.value) {
     transformX.value =
-        unref(preTransformX) +
-        Math.min(Math.max(unref(dragRect).left, x.value), unref(dragRect).right) -
-        unref(startX);
+      unref(preTransformX) +
+      Math.min(Math.max(unref(dragRect).left, x.value), unref(dragRect).right) -
+      unref(startX);
     transformY.value =
-        unref(preTransformY) +
-        Math.min(Math.max(unref(dragRect).top, y.value), unref(dragRect).bottom) -
-        unref(startY);
+      unref(preTransformY) +
+      Math.min(Math.max(unref(dragRect).top, y.value), unref(dragRect).bottom) -
+      unref(startY);
   }
 });
 
@@ -94,17 +96,14 @@ const transformStyle = computed<CSSProperties>(() => {
 
 <template>
   <a-modal
-      :visible="props.visible"
-      :width="props.width"
-      :bodyStyle="props.bodyStyle"
-      :maskClosable="props.maskClosable"
-      @cancel="emits('cancel')"
+    @cancel="emits('cancel')"
+    v-bind="props"
   >
     <template #title>
       <div
-          ref="modalTitleRef"
-          style="width: 100%"
-          :style="{ cursor: props.dragModal ? 'move' : 'auto' }"
+        ref="modalTitleRef"
+        class="w-[100%]"
+        :style="{ cursor: props.dragModal ? 'move' : 'auto' }"
       >
         {{ props.title }}
       </div>

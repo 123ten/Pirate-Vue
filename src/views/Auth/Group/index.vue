@@ -22,10 +22,10 @@ const onInit = async () => {
 
 const tableSettings = new TableSettings<AdminRoleTableSettingsType>({
   api: {
-    request: getAdminRoleList,
-    detailRequest: getAdminRoleById,
-    deleteRequest: removeAdminRole,
-    upsertRequest: adminRoleUpsert,
+    find: getAdminRoleList,
+    findById: getAdminRoleById,
+    delete: removeAdminRole,
+    upsert: adminRoleUpsert,
   },
   table: {
     operations: [

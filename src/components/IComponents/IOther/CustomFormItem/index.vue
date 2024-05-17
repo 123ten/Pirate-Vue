@@ -1,4 +1,5 @@
-<script setup lang="ts" xmlns="">
+<!-- 自定义表单项 -->
+<script setup lang="ts">
 import {IColumns} from "@/types";
 import {useI18n} from "vue-i18n";
 import {computed, inject} from "vue";

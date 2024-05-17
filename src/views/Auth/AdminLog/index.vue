@@ -21,8 +21,8 @@ const toUrl = (url: string) => {
 
 const tableSettings: any = new TableSettings({
   api: {
-    request: getAdminLogList,
-    detailRequest: getAdminLogById,
+    find: getAdminLogList,
+    findById: getAdminLogById,
   },
   table: {
     operations: [
@@ -34,13 +34,15 @@ const tableSettings: any = new TableSettings({
         title: "管理员ID",
         dataIndex: "userId",
         align: "center",
+        width: 100,
+        fixed: 'left',
         search: true,
-        width: 100
       },
       {
         title: "管理员用户名",
         dataIndex: "username",
         align: "center",
+        fixed: 'left',
         width: 120
       },
       {

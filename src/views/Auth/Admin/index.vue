@@ -33,10 +33,10 @@ const openAvatarPreviewImage = (src: string) => {
 
 const tableSettings: AdminTableSettingsType = new TableSettings({
   api: {
-    request: getAdminList,
-    detailRequest: getAdminById,
-    deleteRequest: removeAdmin,
-    upsertRequest: adminUpsert,
+    find: getAdminList,
+    findById: getAdminById,
+    delete: removeAdmin,
+    upsert: adminUpsert,
   },
   table: {
     operations: ["refresh", "create", "delete", "row-update", "row-delete"],
