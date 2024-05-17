@@ -1,18 +1,18 @@
 <!-- 自定义表单项 -->
 <script setup lang="ts">
-import {IColumns} from "@/types";
 import {useI18n} from "vue-i18n";
 import {computed, inject} from "vue";
-
-const {t, te} = useI18n();
+import {TableSettingColumns} from "@/types/tableSettingsType";
 
 interface CustomFormItemProps {
-  column?: IColumns;
+  column?: TableSettingColumns;
   options?: any[];
   i18nPrefix?: string;
   i18nPropPrefix?: string; // form | table.column
   typeProp?: string;
 }
+
+const {t, te} = useI18n();
 
 const props = withDefaults(defineProps<CustomFormItemProps>(), {
   column: () => ({

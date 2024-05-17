@@ -78,34 +78,16 @@ export interface IColumns<RecordType = DefaultRecordType> extends ColumnType<Rec
   searchLabelProp?: string;
   /** 回填到查询表单数据 Value 的属性值，默认是 column 的 dataIndex 值。比如表单展示不同字段，此值可以更换字段。 */
   searchValueProp?: string;
-  /** 查询表单排序 */
-  searchSort?: number;
-
-  /** 是否显示表单 */
-  form?: boolean | ((fields?: Record<string, any>) => boolean)
-  /** 表单内容类型 */
-  formType?: FormType;
-  /** 回填到表单展示的属性名称，默认是 column 的label值。比如表单展示不同名称，此值可以更换名称。 */
-  formLabelProp?: string;
-  /** 回填到表单数据 Value 的属性值，默认是 column 的 dataIndex 值。比如表单展示不同字段，此值可以更换字段。 */
-  formValueProp?: string;
-  /** 表单排序 */
-  formSort?: number;
-
-  /** 表单item配置 */
-  formItemConfig?: any;
-
-  /** 表单内容配置 */
-  formFieldConfig?: FormFieldProps;
-
   /** 是否隐藏 */
   hide?: boolean;
   /** 默认排序 */
   sort?: number;
   /** 表头是否可伸缩 */
   resizable?: boolean;
+  /** 查询表单排序 */
+  querySort?: number;
   /** 搜索框配置项 */
-  queryConfig?: any;
+  queryFieldConfig?: any;
 
   /** 设置头部单元格属性 */
   customHeaderCell?(column: IColumns): CustomHeaderCellType;
@@ -158,8 +140,8 @@ export interface ITableProps {
   pages?: IPages; // 页码
   /** model */
   model?: FormProps["model"];
-  /** a-form 表单配置项 */
-  formOptions?: FormProps;
+  /** a-form 表单查询配置项 */
+  queryConfig?: FormProps;
   /** a-table 表格配置项 */
   tableOptions?: TableProps;
   /** 表格操作列默认字段 */

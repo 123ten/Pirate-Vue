@@ -37,11 +37,10 @@ const dragRect = ref<IDragRect>({left: 0, right: 0, top: 0, bottom: 0});
 
 watch(() => props.visible, (visible) => {
   if (visible) {
-    props.init?.();
-  } else {
     if (props.dragModal) {
       initDrag();
     }
+    props.init?.();
   }
 });
 
@@ -97,12 +96,14 @@ const transformStyle = computed<CSSProperties>(() => {
 <template>
   <a-modal
     @cancel="emits('cancel')"
+    :class="'i-modal'"
     v-bind="props"
+    :title="undefined"
   >
     <template #title>
       <div
         ref="modalTitleRef"
-        class="w-[100%]"
+        class="w-[100%] px-[24px] py-[16px]"
         :style="{ cursor: props.dragModal ? 'move' : 'auto' }"
       >
         {{ props.title }}

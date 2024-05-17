@@ -1,10 +1,12 @@
 <!-- 通用表格 -->
 <script setup lang="ts">
-import {computed, inject} from "vue";
+import {computed, inject, useSlots} from "vue";
 import {DragOutlined, EditOutlined, PlusOutlined, ZoomInOutlined} from "@ant-design/icons-vue";
 import {sortNumber} from "@/utils/common";
 import {TableSettingsType} from "@/types/tableSettingsType";
 import {tableSettingKey} from "@/utils/tableSettings";
+
+const slots = useSlots()
 
 const tableSettings = inject<TableSettingsType>(tableSettingKey, {} as any);
 
@@ -123,14 +125,30 @@ defineOptions({
       </template>
     </i-table>
     <!--  表单自定义 需要带上 form 前缀  -->
-    <custom-form-modal v-if="tableSettings?.form && table?.fieldModalVisible">
-      <template #formItem="score">
-        <slot :name="`form-${score.column.dataIndex}`" v-bind="score"/>
+    <custom-form-modal v-if="table?.displayFormModal">
+      <template #field="score">
+        <template v-if="score.column.formSlot !== false">
+          <slot
+            v-if="!!slots[`form-${score.column.dataIndex}`]"
+            :name="`form-${score.column.dataIndex}`"
+            v-bind="score"
+          />
+          <slot v-else :name="score.column.dataIndex" v-bind="score"/>
+        </template>
       </template>
     </custom-form-modal>
 
-    <custom-detail-modal v-if="tableSettings?.detail">
-
+    <custom-detail-modal v-if="table?.displayDetailModal">
+      <template #field="score">
+        <template v-if="score.column.detailSlot !== false">
+          <slot
+            v-if="!!slots[`detail-${score.column.dataIndex}`]"
+            :name="`detail-${score.column.dataIndex}`"
+            v-bind="score"
+          />
+          <slot v-else :name="score.column.dataIndex" v-bind="score"/>
+        </template>
+      </template>
     </custom-detail-modal>
   </div>
 </template>

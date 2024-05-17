@@ -44,7 +44,7 @@ defineOptions({
         v-model:value="model[valueProp(column)]"
         allow-clear
         :placeholder="column.title || column.placeholder"
-        v-bind="column.queryConfig"
+        v-bind="column.queryFieldConfig"
       />
       <!-- select 下拉框 -->
       <a-select
@@ -52,7 +52,7 @@ defineOptions({
         v-model:value="model[valueProp(column)]"
         allow-clear
         :placeholder="column.title || column.placeholder"
-        v-bind="column.queryConfig"
+        v-bind="column.queryFieldConfig"
       >
         <a-select-option
           v-for="option in getOptions(column)"
@@ -74,7 +74,7 @@ defineOptions({
       <a-radio-group
         v-else-if="typeProp(column) === 'radio'"
         v-model:value="model[valueProp(column)]"
-        v-bind="column.queryConfig"
+        v-bind="column.queryFieldConfig"
       >
         <a-radio
           v-for="option in getOptions(column)"
@@ -89,13 +89,13 @@ defineOptions({
         v-else-if="typeProp(column) === 'date-picker'"
         v-model:value="model[valueProp(column)]"
         :picker="column.picker"
-        v-bind="column.queryConfig"
+        v-bind="column.queryFieldConfig"
       />
       <a-range-picker
         v-else-if="typeProp(column) === 'range-picker'"
         v-model:value="model[valueProp(column)]"
         :picker="column.picker"
-        v-bind="column.queryConfig"
+        v-bind="column.queryFieldConfig"
       />
     </slot>
   </a-form-item>

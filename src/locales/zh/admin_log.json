@@ -1,0 +1,12 @@
+{
+  "table": {
+    "columns": {
+    }
+  },
+  "detail": {
+    "label": {
+      "username": "操作管理员",
+      "ip": "操作人IP"
+    }
+  }
+}

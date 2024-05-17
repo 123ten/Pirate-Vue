@@ -40,7 +40,12 @@ function process() {
   complete.value += Math.floor(Math.random() * 50);
   if (complete.value >= 100) {
     complete.value = 100;
-    router.back();
+    if (window.history.length <= 1) {
+      // 当没有历史记录时 返回首页
+      router.replace('/');
+    } else {
+      router.back();
+    }
   } else {
     processInterval();
   }

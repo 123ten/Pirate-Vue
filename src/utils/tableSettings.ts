@@ -4,13 +4,13 @@ import {Form, notification} from "ant-design-vue";
 import i18n from "@/locales";
 import type {IPages} from "@/types";
 import {
-  CancelFormType,
   CustomParamsKey,
   DefaultFieldsType,
   DetailReactive,
   FormReactive,
   FormRefs,
   ModalReactive,
+  ModalType,
   Operation,
   PrivateApi,
   TableReactive,
@@ -18,7 +18,7 @@ import {
 } from "@/types/tableSettingsType";
 import type {Key} from "ant-design-vue/lib/table/interface";
 import type {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
-import {cloneDeep, isArray} from "lodash-es";
+import {cloneDeep, isArray, merge} from "lodash-es";
 import dayjs from "dayjs";
 import {DateRangeTuple, Rules} from "@/types/form";
 
@@ -62,7 +62,8 @@ export default class TableSettings<
     defaultSpan: 6,
     loading: false,
     defaultExpandAllRows: false,
-    fieldModalVisible: true,
+    displayFormModal: true,
+    displayDetailModal: true,
   });
 
   public readonly form = reactive<FormReactive<Fields>>({
@@ -70,6 +71,7 @@ export default class TableSettings<
     formConfig: undefined,
     rules: undefined,
     defaultSpan: 24,
+    i18nPrefixProp: 'form',
     modal: {
       visible: false,
       maskClosable: false,
@@ -78,11 +80,13 @@ export default class TableSettings<
 
   public readonly detail = reactive<DetailReactive<Fields>>({
     fields: {} as Fields,
+    i18nPrefixProp: 'detail',
+    column: 2,
     modal: {
       visible: false,
       footer: null,
       closable: true,
-    }
+    },
   })
 
   public readonly modal = reactive<ModalReactive>({
@@ -104,7 +108,7 @@ export default class TableSettings<
      * @property {Object} modal - The global modal configuration object.
      * @property {Object} customParams - Custom parameters for additional configurations.
      */
-    const {api, table, form, modal, customParams} = options;
+    const {api, table, form, detail, modal, customParams} = options;
 
     this.api = api;
     this.customParams = customParams;
@@ -116,9 +120,10 @@ export default class TableSettings<
     if (form) {
       this.cacheFields = cloneDeep(form.fields)
     }
-    Object.assign(this.table, table);
-    Object.assign(this.form, form);
-    Object.assign(this.modal, modal)
+    merge(this.table, table);
+    merge(this.form, form);
+    merge(this.detail, detail);
+    merge(this.modal, modal)
     this.initFormRefs();
     this.mounted();
   }
@@ -204,11 +209,15 @@ export default class TableSettings<
     await this.queryAll();
   };
 
-  public detailById = async (id: Key) => {
+  public detailById = async (type: ModalType, id: Key) => {
     this.modal.loading = true;
     try {
       const {data} = await this.api?.findById(id);
-      Object.assign(this.form.fields, data);
+      if (type === 1) {
+        Object.assign(this.form.fields, data);
+      } else {
+        Object.assign(this.detail.fields, data);
+      }
     } finally {
       this.modal.loading = false;
     }
@@ -224,7 +233,7 @@ export default class TableSettings<
     await this.queryAll();
   };
 
-  public openForm = async (type: 0 | 1, id?: Key) => {
+  public openForm = async (type: ModalType, id?: Key) => {
     this.form.fields.id = id;
     // 当 rules 的类型为 function 默认认为需要动态修改校验
     if (typeof this.form.rules === "function") {
@@ -232,15 +241,15 @@ export default class TableSettings<
     }
     this.form.modal.visible = true;
     if (type === 1 && id) {
-      await this.detailById(id);
+      await this.detailById(type, id);
     }
   };
 
   /**
-   * 示例函数，使用 CancelFormType。
-   * @param {CancelFormType} type - 取消表单的类型。
+   * 弹窗关闭事件
+   * @param {ModalType} type - 取消表单的类型。
    */
-  public cancelForm = (type: CancelFormType) => {
+  public cancelForm = (type: ModalType) => {
     if (type === 1) {
       this.form.modal.visible = false;
       this.formRefs?.resetFields();
@@ -274,7 +283,7 @@ export default class TableSettings<
    */
   public openDetail = async (id: Key) => {
     this.detail.modal.visible = true;
-    await this.detailById(id);
+    await this.detailById(2, id);
   };
 
   /**

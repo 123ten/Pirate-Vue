@@ -247,18 +247,33 @@ export function statusCode(value?: number | string) {
 }
 
 /**
- * @description: 时间转换函数
- * @param time
+ * 格式化时间，将毫秒转换为合适的时间单位表示。
+ *
+ * @param {number} [time] - 以毫秒为单位的时间。
+ * @returns {string} 格式化后的时间字符串。
  */
 export function formatTime(time?: number): string {
-  if (!time) return "";
-  if (time < 1000) {
-    return Math.floor(time) + " ms";
-  } else if (time < 60000) {
-    return (time / 1000).toFixed(2) + " s";
-  } else {
-    return (time / 60000).toFixed(2) + " min";
+  if (typeof time !== 'number' || isNaN(time) || time < 0) return "";
+
+  const units = [
+    {name: "ms", factor: 1},
+    {name: "s", factor: 1000},
+    {name: "min", factor: 60},
+    {name: "h", factor: 60},
+    {name: "d", factor: 24},
+  ];
+
+  let unitIndex = 0;
+  let value = time;
+
+  while (unitIndex < units.length - 1 && value >= units[unitIndex + 1].factor) {
+    value /= units[unitIndex + 1].factor;
+    unitIndex++;
   }
+
+  // 保留小数位数，根据不同的单位设置不同的精度
+  const precision = unitIndex === 0 ? 0 : 2;
+  return value.toFixed(precision) + " " + units[unitIndex].name;
 }
 
 /**

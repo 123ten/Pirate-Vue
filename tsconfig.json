@@ -22,7 +22,8 @@
       ]
     },
     "types": [
-      "vite/client"
+      "vite/client",
+      "node"
     ],
     // 允许隐式的any
     "noImplicitAny": false,

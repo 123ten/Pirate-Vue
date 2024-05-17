@@ -1,11 +1,11 @@
-import {IColumns, IPages, ITableProps} from "@/types/table";
+import {FormFieldProps, IColumns, IPages, ITableProps} from "@/types/table";
 import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
 import {Key} from "ant-design-vue/lib/table/interface";
 import {type Ref, UnwrapNestedRefs} from "vue";
 import {FormInstance, FormProps, PaginationProps} from "ant-design-vue";
 import {Props, ValidateInfo, validateOptions,} from "ant-design-vue/lib/form/useForm";
 import type {RuleError} from "ant-design-vue/lib/form/interface";
-import {Rules} from "@/types/form";
+import {FormType, Rules} from "@/types/form";
 import {IModalProps} from "@/components/IComponents/IModal/types";
 
 /**
@@ -24,12 +24,13 @@ export declare type Operation =
 
 /**
  * CancelFormType 表示取消表单的类型。
- * @typedef {1 | 2} CancelFormType
+ * @typedef {0| 1 | 2} ModalType
  *
- * @property {1} 1 - 新增/编辑
+ * @property {0} 0 - 新增
+ * @property {1} 1 - 编辑
  * @property {2} 2 - 详情
  */
-export declare type CancelFormType = 1 | 2
+export declare type ModalType = 0 | 1 | 2
 
 /**
  * 自定义 params 入参
@@ -69,12 +70,50 @@ export interface PrivateApi {
   delete: Function;
 }
 
+export interface TableSettingColumns<RecordType = DefaultRecordType> extends IColumns<RecordType> {
+  /** 是否显示表单 */
+  form?: boolean | ((fields?: Record<string, any>) => boolean)
+  /** 表单内容类型 */
+  formType?: FormType;
+  /** 回填到表单展示的属性名称，默认是 column 的label值。比如表单展示不同名称，此值可以更换名称。 */
+  formLabelProp?: string;
+  /** 回填到表单数据 Value 的属性值，默认是 column 的 dataIndex 值。比如表单展示不同字段，此值可以更换字段。 */
+  formValueProp?: string;
+  /** 表单排序 */
+  formSort?: number;
+  /** 表单位宽度 */
+  formSpan?: number;
+  /** 表单插槽 */
+  formSlot?: boolean;
+
+  /** 表单item配置 */
+  formItemConfig?: any;
+
+  /** 表单内容配置 */
+  formFieldConfig?: FormFieldProps;
+
+  /** 是否在详情中展示此字段 */
+  detail?: boolean | ((fields?: Record<string, any>) => boolean);
+  /** 回填到详情展示的属性名称，默认是 column 的label值。比如表单展示不同名称，此值可以更换名称。 */
+  detailLabelProp?: string;
+  /** 回填到详情数据 Value 的属性值，默认是 column 的 dataIndex 值。比如表单展示不同字段，此值可以更换字段。 */
+  detailValueProp?: string;
+  /** 详情排序 */
+  detailSort?: number;
+  /** 详情占位宽度 */
+  detailSpan?: number;
+  /** 详情插槽 */
+  detailSlot?: boolean;
+  /** 详情自定义渲染 */
+  detailRender?: <V extends keyof RecordType = any, T = any>(value: V, fields: RecordType) => T
+}
+
 export interface TableReactive<
   RecordType = DefaultRecordType,
   QueryForm = DefaultQueryFormType
 > {
   /** 表格列配置 */
-  columns?: IColumns<RecordType>[];
+  columns?: TableSettingColumns<RecordType>[];
   /** 查询表单数据 */
   dataSource?: RecordType[];
   /** 操作按钮 */
@@ -100,7 +139,9 @@ export interface TableReactive<
   /** 初始时，是否展开所有行 */
   defaultExpandAllRows?: boolean;
   /** 控制表格字段下的 form-modal 对话框的可见性，默认为 true */
-  fieldModalVisible?: boolean;
+  displayFormModal?: boolean;
+  /** 控制表格字段下的 detail-modal 对话框的可见性，默认为 true */
+  displayDetailModal?: boolean;
 }
 
 export interface FormReactive<Fields = DefaultFieldsType> {
@@ -112,6 +153,8 @@ export interface FormReactive<Fields = DefaultFieldsType> {
   rules?: Rules;
   /** 表单名称，会作为表单字段 id 前缀使用 */
   name?: string;
+  /** 国际化前缀 */
+  i18nPrefixProp?: string;
   /** 表单布局 */
   defaultSpan?: number;
   /** 表单弹窗配置 */
@@ -121,10 +164,14 @@ export interface FormReactive<Fields = DefaultFieldsType> {
 export interface DetailReactive<Fields = DefaultFieldsType> {
   /** 表单数据对象 */
   fields: Fields;
+  /** 一行的 DescriptionItems 数量，可以写成像素值或支持响应式的对象写法 { xs: 8, sm: 16, md: 24} */
+  column?: number;
   /** 表单布局 */
   defaultSpan?: number;
   /** 表单弹窗配置 */
   modal: IModalProps;
+  /** 国际化前缀 */
+  i18nPrefixProp?: string;
 }
 
 
@@ -204,10 +251,11 @@ export declare interface TableSettingsType<
 
   /**
    * 获取详情接口
+   * @param type {ModalType}
    * @param id {(string | number)[]}
    * @param success {Function}
    */
-  detailById(id: Key, success?: Function): Promise<void> | void;
+  detailById(type: ModalType, id: Key, success?: Function): Promise<void> | void;
 
   /**
    * 分页

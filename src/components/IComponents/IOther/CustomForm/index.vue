@@ -1,11 +1,11 @@
 <!-- 自定义表单 -->
 <script setup lang="ts">
-import {IColumns} from "@/types";
 import useFormInstance from "@/hooks/useFormInstance";
 import {provide} from "vue";
+import {TableSettingColumns} from "@/types/tableSettingsType";
 
 interface QueryFormProps {
-  columns: IColumns[][];
+  columns: TableSettingColumns[][];
   defaultSpan?: number;
   gutter?: number;
   model?: Record<string, any>;

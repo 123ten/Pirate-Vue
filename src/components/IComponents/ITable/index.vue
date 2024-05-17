@@ -229,7 +229,7 @@ const pagination = computed(() => {
 
 // 获取排序字段
 const getSort = (column: IColumns) => {
-  return column.searchSort || column.sort || 0;
+  return column.querySort || column.sort || 0;
 };
 
 // 获取列的 span
@@ -327,7 +327,7 @@ defineOptions({
               @keyup.enter.native="onQuery"
               @query="onQuery"
               @reset="onReset"
-              v-bind="formOptions"
+              v-bind="queryConfig"
             >
               <template #default="scope">
                 <slot v-bind="scope">

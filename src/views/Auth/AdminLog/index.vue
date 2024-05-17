@@ -2,9 +2,9 @@
 <script setup lang="ts">
 import {SendOutlined,} from "@ant-design/icons-vue";
 import {provide, ref} from "vue";
-import DetailModal from "@/views/Auth/AdminLog/components/DetailModal/index.vue";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
 import {getAdminLogById, getAdminLogList} from "@/api/auth/adminLog";
+import {formatTime} from "@/utils/common";
 
 const avatarPreviewSrc = ref("");
 const isAvatarPreviewSrc = ref<boolean>(false);
@@ -18,6 +18,7 @@ const handleDetailModalCancel = () => {
 const toUrl = (url: string) => {
   window.open(url);
 };
+
 
 const tableSettings: any = new TableSettings({
   api: {
@@ -43,44 +44,85 @@ const tableSettings: any = new TableSettings({
         dataIndex: "username",
         align: "center",
         fixed: 'left',
-        width: 120
+        width: 120,
+        detail: true,
+        detailSort: 1,
       },
       {
         title: "标题",
         dataIndex: "title",
         align: "center",
-        width: 120
+        width: 120,
+        detail: true,
+        detailSort: 0,
       },
       {
         title: "URL",
         dataIndex: "url",
         align: "center",
         width: 200,
+        detail: true,
+        detailSort: 6,
+        detailSpan: 2,
+        detailSlot: false,
       },
       {
         title: "IP",
         dataIndex: "ip",
         align: "center",
         width: 120,
+        detail: true,
+        detailSort: 3,
       },
       {
         title: "请求方式",
         dataIndex: "method",
         align: "center",
         width: 100,
+        detail: true,
+        detailSort: 2,
       },
       {
         title: "UserAgent",
         dataIndex: "userAgent",
         align: "center",
         width: 200,
-        ellipsis: true
+        ellipsis: true,
+        detail: true,
+        detailSort: 7,
+        detailSpan: 2,
       },
       {
         title: "创建时间",
         dataIndex: "createTime",
         align: "center",
         width: 150,
+        detail: true,
+        detailSort: 8,
+        detailSpan: 2,
+      },
+      {
+        title: "状态码",
+        dataIndex: "status",
+        hide: true,
+        detail: true,
+        detailSort: 4,
+      },
+      {
+        title: "响应时间",
+        dataIndex: "responseTime",
+        hide: true,
+        detail: true,
+        detailSort: 5,
+        detailRender: (value: number) => formatTime(value),
+      },
+      {
+        title: "请求数据",
+        dataIndex: "params",
+        hide: true,
+        detail: true,
+        detailSort: 9,
+        detailSpan: 2,
       },
       {
         title: "操作",
@@ -92,10 +134,13 @@ const tableSettings: any = new TableSettings({
     ],
     i18nPrefix: "admin_log",
     // isI18nGlobal: true,
-    scroll: {x: true}
+    scroll: {x: true},
+    displayFormModal: false,
   },
-  modal: {
-    width: '600px'
+  detail: {
+    modal: {
+      width: '1080px'
+    }
   }
 });
 
@@ -104,15 +149,15 @@ provide(tableSettingKey, tableSettings);
 
 <template>
   <custom-table>
-    <template #url="{ record }">
+    <template #url="{ value }">
       <a-input-group compact style="display: flex;">
         <a-input
-          :value="record.url"
+          :value="value"
           readonly
           style="text-align: left"
         >
         </a-input>
-        <a-button @click="toUrl(record.url)">
+        <a-button @click="toUrl(value)">
           <template #icon>
             <send-outlined/>
           </template>
@@ -128,10 +173,10 @@ provide(tableSettingKey, tableSettings);
       <method-tag :method="value"/>
     </template>
 
-    <detail-modal
-      :visible="isDetailModalVisible"
-      @cancel="handleDetailModalCancel"
-    />
+    <template #detail-params="{ value }">
+      <pre class="mb-0">{{ value }}</pre>
+    </template>
+
 
     <i-preview-image
       :src="avatarPreviewSrc"
