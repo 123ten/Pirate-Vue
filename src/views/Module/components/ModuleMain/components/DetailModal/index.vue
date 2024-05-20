@@ -1,6 +1,6 @@
 <!-- 详情 -->
 <script lang="ts">
-import {  ref, defineExpose } from "vue";
+import {  ref } from "vue";
 </script>
 <script setup lang="ts">
 import BasicInfo from "./components/BasicInfo/index.vue";

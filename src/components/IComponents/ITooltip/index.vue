@@ -1,6 +1,6 @@
 <!-- a-tooltip 的 常用封装 -->
 <script setup lang="ts">
-import {defineEmits, defineOptions, defineProps, withDefaults} from "vue";
+import {defineOptions, withDefaults} from "vue";
 import {ButtonProps, TooltipProps} from "ant-design-vue";
 import {storeToRefs} from "pinia";
 import {useLayoutStore} from "@/store";
@@ -38,17 +38,17 @@ defineOptions({
 
 <template>
   <a-tooltip
-      :title="!props.disabled && terminalType === 'pc' && props.title"
+    :title="!props.disabled && terminalType === 'pc' && props.title"
   >
     <!-- 自定义内容 -->
     <slot name="content">
       <i-button
-          :type="props.type"
-          :disabled="props.disabled"
-          :size="props.size"
-          :class="props.customButtonClass"
-          :style="props.customButtonStyle"
-          @click="emits('click', $event)"
+        :type="props.type"
+        :disabled="props.disabled"
+        :size="props.size"
+        :class="props.customButtonClass"
+        :style="props.customButtonStyle"
+        @click="emits('click', $event)"
       >
         <template #icon>
           <!-- 图标 可自定义 -->

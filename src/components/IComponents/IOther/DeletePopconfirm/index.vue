@@ -1,6 +1,6 @@
 <!-- 删除_气泡确认框 -->
 <script setup lang="ts">
-import {defineEmits, defineOptions, defineProps, withDefaults} from "vue";
+import {defineOptions, withDefaults} from "vue";
 import {DeleteOutlined} from "@ant-design/icons-vue";
 import {PopconfirmProps} from "ant-design-vue";
 
@@ -58,19 +58,19 @@ defineOptions({
 
 <template>
   <i-popconfirm
-      title="确定删除选中记录？"
-      ok-text="删除"
-      cancel-text="取消"
-      type="danger"
-      :placement="props.placement"
-      :visible="props.visible"
-      :disabled="props.disabled"
-      :size="props.type === 'table-row' ? 'small' : 'middle'"
-      :btn-text="props.type === 'table-row' ? '' : $t('title.delete')"
-      @cancel="onCancel"
-      @confirm="onConfirm"
-      @visibleChange="onVisibleChange"
-      @click="onClick"
+    title="确定删除选中记录？"
+    ok-text="删除"
+    cancel-text="取消"
+    type="danger"
+    :placement="props.placement"
+    :visible="props.visible"
+    :disabled="props.disabled"
+    :size="props.type === 'table-row' ? 'small' : 'middle'"
+    :btn-text="props.type === 'table-row' ? '' : $t('title.delete')"
+    @cancel="onCancel"
+    @confirm="onConfirm"
+    @visibleChange="onVisibleChange"
+    @click="onClick"
   >
     <template #icon>
       <delete-outlined/>

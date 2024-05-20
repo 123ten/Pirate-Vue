@@ -1,7 +1,7 @@
 <!-- 角色组管理 -->
 <script setup lang="ts">
 import {ReloadOutlined, SearchOutlined, TableOutlined,} from "@ant-design/icons-vue";
-import {computed, defineEmits, defineExpose, defineProps, onMounted, ref, toRaw, watch, withDefaults,} from "vue";
+import {computed, onMounted, ref, toRaw, watch, withDefaults,} from "vue";
 import Sortable from "sortablejs";
 import {IColumns, IPagination, RecordType} from "@/types";
 import {useI18n} from "vue-i18n";

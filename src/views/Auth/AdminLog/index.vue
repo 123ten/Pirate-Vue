@@ -174,7 +174,7 @@ provide(tableSettingKey, tableSettings);
     </template>
 
     <template #detail-params="{ value }">
-      <pre class="mb-0">{{ value }}</pre>
+      <pre class="mb-0">{{ value && JSON.parse(value) }}</pre>
     </template>
 
 

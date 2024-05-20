@@ -1,6 +1,6 @@
 <!-- 默认_气泡确认框 -->
 <script setup lang="ts">
-import {defineEmits, defineOptions, defineProps, withDefaults} from "vue";
+import { defineOptions, withDefaults} from "vue";
 import {PopconfirmProps} from "ant-design-vue";
 
 interface IProps extends PopconfirmProps {

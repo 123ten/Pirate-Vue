@@ -4,7 +4,6 @@ import {
   defineOptions,
   onBeforeUnmount,
   onMounted,
-  defineProps,
   withDefaults,
 } from "vue";
 import { CompressOutlined, ExpandOutlined } from "@ant-design/icons-vue";

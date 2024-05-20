@@ -1,6 +1,6 @@
 <!-- 权限按钮 -->
 <script setup lang="ts">
-import {defineEmits, defineOptions, defineProps, withDefaults} from "vue";
+import {defineOptions, withDefaults} from "vue";
 import {TButtonType} from "@/types";
 
 defineOptions({

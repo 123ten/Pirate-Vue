@@ -43,7 +43,7 @@ const getI18nName = (column: Columns, key: string) => {
 
 const getLabelName = (column: Columns) => {
   const il8nName = getI18nName(column, "label");
-  console.log('il8nName', il8nName)
+  // console.log('il8nName', il8nName)
   return column.detailLabelProp || (te(il8nName) ? t(il8nName) : column.title);
 }
 

@@ -1,6 +1,6 @@
 <!-- 默认全屏加载界面 -->
 <script setup lang="ts">
-import {defineExpose, ref} from "vue";
+import {ref} from "vue";
 
 // 是否显示加载界面
 const loading = ref<boolean>(false);

@@ -1,6 +1,6 @@
 <!--表格头部 展开收缩按钮-->
 <script setup lang="ts">
-import {computed, defineEmits, defineProps} from "vue";
+import {computed} from "vue";
 import {MinusSquareOutlined, PlusSquareOutlined} from '@ant-design/icons-vue';
 import {useI18n} from "vue-i18n";
 
