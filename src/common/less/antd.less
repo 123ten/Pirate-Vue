@@ -1,3 +1,18 @@
+// button
+.ant-btn {
+  // refresh
+  &.ant-btn-refresh {
+    background-color: var(--ant-refresh);
+
+    &:hover,
+    &:focus {
+      border-color: var(--ant-refresh);
+      background-color: var(--ant-refresh);
+    }
+  }
+
+}
+
 // table
 .ant-table {
   .ant-table-container {
@@ -5,13 +20,15 @@
       .ant-table-tbody {
         .ant-table-row {
           .ant-table-cell {
-            //@apply whitespace-pre;
+            // @apply whitespace-pre;
           }
         }
       }
     }
   }
 }
+
+// modal
 .ant-modal {
   &.i-modal {
     .ant-modal-header {

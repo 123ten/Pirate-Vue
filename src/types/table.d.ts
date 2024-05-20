@@ -172,8 +172,6 @@ export interface ITableProps {
   defaultExpandAllRows?: boolean;
   /**是否允许拖拽行 搭配 class drop-row-btn */
   draggable?: boolean;
-  /** 是否展示刷新列表按钮 */
-  refresh?: boolean;
 }
 
 /**

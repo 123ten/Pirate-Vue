@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {formatUnit} from '@/utils/common'
+
 interface EllipsisProps {
   value?: string;
   width?: number | string;
@@ -19,14 +21,10 @@ defineOptions({
         {{ props.value }}
       </slot>
     </template>
-    <span class="ellipsis" :style="{width: `${props.width}px`}">
+    <span class="ellipsis" :style="{width: formatUnit(width)}">
       <slot>
         {{ props.value }}
       </slot>
     </span>
   </a-tooltip>
 </template>
-
-<style scoped lang="less">
-
-</style>

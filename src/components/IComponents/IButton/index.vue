@@ -20,7 +20,7 @@ interface IProps {
   disabled?: boolean;
   loading?: boolean;
   ghost?: boolean; // 幽灵属性，使按钮背景透明
-  class?: ""; // 按钮类名
+  class?: string; // 按钮类名
 }
 
 //#endregion

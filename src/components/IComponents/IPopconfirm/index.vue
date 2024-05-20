@@ -1,64 +1,19 @@
 <!-- 默认_气泡确认框 -->
 <script setup lang="ts">
-import { defineOptions, withDefaults} from "vue";
-import {PopconfirmProps} from "ant-design-vue";
+import {defineOptions} from "vue";
+import {ButtonProps} from "ant-design-vue";
 
-interface IProps extends PopconfirmProps {
-  visible?: boolean; // 是否显示
-  title?: string; // 气泡框标题
-  okText?: string; // 确定按钮文字
-  cancelText?: string; // 取消按钮文字
-  btnText?: string; // 按钮文字
-  disabled?: boolean; // 是否禁用
-  type?: "primary" | 'danger' | "dashed" | "link" | "text" | "ghost" | "default"; // 按钮类型
-  size?: "large" | "middle" | "small"; // 按钮大小
+interface IPopconfirmProps {
+  type?: ButtonProps['type']
+  size?: ButtonProps['size']
+  disabled?: ButtonProps['disabled']
+  buttonText?: string; // 按钮文字
+  buttonProps?: ButtonProps
 }
 
-const props = withDefaults(defineProps<IProps>(), {
-  visible: undefined,
-  title: undefined,
-  okText: "确定",
-  cancelText: "取消",
-  btnText: "",
-  disabled: false,
-  type: "default",
-  size: "middle",
-  placement: "top",
-});
-const emits = defineEmits([
-  "click",
-  "confirm",
-  "cancel",
-  "update:visible",
-  "visibleChange",
-]);
+defineProps<IPopconfirmProps>()
 
-/**
- * @description 删除确定
- */
-const onConfirm = () => {
-  emits("confirm");
-};
-/**
- * @description 删除取消
- */
-const onCancel = () => {
-  emits("cancel");
-};
-
-/**
- * @description 显示隐藏
- */
-const onVisibleChange = (visible: boolean) => {
-  // if (props.disabled) return;
-  emits("update:visible", visible);
-  emits("visibleChange", visible);
-};
-
-const onClick = () => {
-  // emits("update:visible", !props.visible);
-  emits('click')
-};
+const emits = defineEmits(['click'])
 
 defineOptions({
   name: "IPopconfirm",
@@ -66,57 +21,43 @@ defineOptions({
 </script>
 
 <template>
-  <template v-if="props.disabled">
+  <template v-if="disabled">
     <slot>
       <!-- 默认展示按钮 -->
-      <a-button
-          :type="props.type"
-          :size="props.size"
-          :disabled="props.disabled"
-          @click="onClick"
-      >
+      <a-button :type="type" :size="size" disabled v-bind="buttonProps">
         <template #icon>
           <slot name="icon"/>
         </template>
-        {{ props.btnText }}
-        <!-- <template v-for="(slot, key) in $slots" v-slot:[key]>
-          <slot :name="key" :slot="slot"></slot>
-        </template> -->
+        {{ buttonText }}
       </a-button>
     </slot>
   </template>
   <a-popconfirm
-      v-else
-      :visible="props.visible"
-      :title="props.title"
-      :ok-text="props.okText"
-      :ok-button="props.type === 'danger'? 'primary' : props.type"
-      :ok-button-props="{danger: props.type === 'danger'}"
-      :cancel-text="props.cancelText"
-      :placement="props.placement"
-      @cancel="onCancel"
-      @confirm="onConfirm"
-      @visible-change="onVisibleChange"
+    v-else
+    placement="top"
+    v-bind="$attrs"
   >
     <slot>
       <!-- 默认展示按钮 -->
       <a-button
-          :type="props.type"
-          :size="props.size"
-          :disabled="props.disabled"
-          @click="onClick"
+        :type="type"
+        :size="size"
+        :disabled="disabled"
+        v-bind="buttonProps"
+        @click="emits('click',$event)"
       >
         <template #icon>
           <slot name="icon"/>
         </template>
-        {{ props.btnText }}
-        <!-- <template v-for="(slot, key) in $slots" v-slot:[key]>
-          <slot :name="key" :slot="slot"></slot>
-        </template> -->
+        {{ buttonText }}
       </a-button>
     </slot>
   </a-popconfirm>
 </template>
+
+<!-- <template v-for="(slot, name) in $slots" v-slot:[name]>
+  <slot :name="name" :slot="slot"></slot>
+</template> -->
 
 <style lang="less">
 @import url("./index.less");

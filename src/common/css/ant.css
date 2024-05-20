@@ -3,7 +3,7 @@
   --ant-success: var(--success-color);
   --ant-error: var(--error-color);
   --ant-warning: #e6a23c;
-  --ant-reload: #40485b;
+  --ant-refresh: #40485b;
   --ant-move: #909399;
 }
 
@@ -41,15 +41,6 @@ button.ant-btn {
 }
 
 /* btn - reload */
-.ant-btn.ant-btn-reload {
-  background-color: var(--ant-reload);
-}
-
-.ant-btn.ant-btn-reload:hover,
-.ant-btn.ant-btn-reload:focus {
-  border-color: var(--ant-reload);
-  background-color: var(--ant-reload);
-}
 
 /* btn - move */
 .ant-btn.ant-btn-move {
@@ -66,9 +57,9 @@ button.ant-btn {
 .ant-btn.ant-btn-warning,
 .ant-btn.ant-btn-warning:hover,
 .ant-btn.ant-btn-warning:focus,
-.ant-btn.ant-btn-reload,
-.ant-btn.ant-btn-reload:hover,
-.ant-btn.ant-btn-reload:focus,
+.ant-btn.ant-btn-refresh,
+.ant-btn.ant-btn-refresh:hover,
+.ant-btn.ant-btn-refresh:focus,
 .ant-btn.ant-btn-move,
 .ant-btn.ant-btn-move:hover,
 .ant-btn.ant-btn-move:focus,
@@ -85,7 +76,7 @@ button.ant-btn {
 
 /* 透明度 */
 .ant-btn.ant-btn-move:hover,
-.ant-btn.ant-btn-reload:hover,
+.ant-btn.ant-btn-refresh:hover,
 .ant-btn.ant-btn-warning:hover,
 .ant-btn.ant-btn-success:hover {
   opacity: 0.8;

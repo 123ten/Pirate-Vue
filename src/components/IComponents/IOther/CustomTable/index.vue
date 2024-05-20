@@ -1,10 +1,11 @@
 <!-- 通用表格 -->
 <script setup lang="ts">
 import {computed, inject, useSlots} from "vue";
-import {DragOutlined, EditOutlined, PlusOutlined, ZoomInOutlined} from "@ant-design/icons-vue";
+import {DragOutlined, EditOutlined, PlusOutlined, ReloadOutlined, ZoomInOutlined} from "@ant-design/icons-vue";
 import {sortNumber} from "@/utils/common";
 import {TableSettingsType} from "@/types/tableSettingsType";
 import {tableSettingKey} from "@/utils/tableSettings";
+import ITooltip from "@/components/IComponents/ITooltip/index.vue";
 
 const slots = useSlots()
 
@@ -12,6 +13,7 @@ const tableSettings = inject<TableSettingsType>(tableSettingKey, {} as any);
 
 const table = computed(() => tableSettings?.table)
 
+/** @param operations {Operation[]} 展示的操作按钮 */
 const operations = computed(() => table.value?.operations || []);
 
 const selectedRowKeys = computed(
@@ -22,6 +24,12 @@ const rowSelection = computed(() => ({
   selectedRowKeys: table.value?.selectedRowKeys,
   onChange: tableSettings?.selectChange,
 }));
+
+/** @param hasTableChild {boolean} 列表数据是否有 children */
+const hasTableChild = computed(() => operations.value.includes('expand') && table.value?.dataSource?.some(item => item.children?.length))
+
+/** @param expandAllRowsDisabled {boolean} 是否禁用 展开/收起 按钮 */
+const expandAllRowsDisabled = computed(() => operations.value.includes('expand') && table.value?.dataSource?.length && hasTableChild.value)
 
 defineOptions({
   name: "CustomTable",
@@ -43,6 +51,16 @@ defineOptions({
     >
       <template #leftActions>
         <i-tooltip
+          v-if="operations.includes('refresh')"
+          :title="$t('title.refresh')"
+          type="refresh"
+          @click="tableSettings?.queryAll"
+        >
+          <template #icon>
+            <reload-outlined :spin="tableSettings.table.loading"/>
+          </template>
+        </i-tooltip>
+        <i-tooltip
           v-if="operations.includes('create')"
           :title="$t('title.create')"
           :content="$t('title.create')"
@@ -56,18 +74,18 @@ defineOptions({
           v-if="operations.includes('delete')"
           :title="$t('title.remove_selected_row')"
         >
-          <template #content>
-            <delete-popconfirm
-              placement="rightTop"
-              :disabled="!selectedRowKeys.length"
-              @confirm="tableSettings?.deleteByIds('delete', selectedRowKeys)"
-            />
-          </template>
+          <delete-popconfirm
+            placement="rightTop"
+            size="middle"
+            :button-text="$t('title.delete')"
+            :disabled="!selectedRowKeys.length"
+            @confirm="tableSettings?.deleteByIds('delete', selectedRowKeys)"
+          />
         </i-tooltip>
         <expand-all-rows-tooltip
           v-if="operations.includes('expand')"
           v-model:expand="table.defaultExpandAllRows"
-          :disabled="!table.dataSource?.length"
+          :disabled="!expandAllRowsDisabled"
         />
       </template>
       <template #number="{ index }">
@@ -84,7 +102,7 @@ defineOptions({
             title="拖动以排序"
             size="small"
             type="move"
-            custom-button-class="drop-row-btn"
+            class="drop-row-btn"
           >
             <template #icon>
               <drag-outlined/>
@@ -114,12 +132,10 @@ defineOptions({
             v-if="operations.includes('row-delete')"
             :title="$t('title.delete')"
           >
-            <template #content>
-              <delete-popconfirm
-                type="table-row"
-                @confirm="tableSettings?.deleteByIds('row-delete', [record.id])"
-              />
-            </template>
+            <delete-popconfirm
+              size="small"
+              @confirm="tableSettings?.deleteByIds('row-delete', [record.id])"
+            />
           </i-tooltip>
         </a-space>
       </template>

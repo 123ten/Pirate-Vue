@@ -95,8 +95,8 @@ const transformStyle = computed<CSSProperties>(() => {
 
 <template>
   <a-modal
-    @cancel="emits('cancel')"
     :class="'i-modal'"
+    @cancel="emits('cancel')"
     v-bind="props"
     :title="undefined"
   >

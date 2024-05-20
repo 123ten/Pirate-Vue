@@ -63,7 +63,9 @@
     "remove": "消除",
     "detail": "查看详情",
     "remove_selected_row": "删除选中行",
-    "loading": "加载中..."
+    "loading": "加载中...",
+    "cancel": "取消",
+    "confirm": "确定"
   },
   "login": {
     "login": "登 录",

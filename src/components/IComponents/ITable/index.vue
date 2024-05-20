@@ -1,12 +1,11 @@
 <!-- 角色组管理 -->
 <script setup lang="ts">
-import {ReloadOutlined, SearchOutlined, TableOutlined,} from "@ant-design/icons-vue";
+import {SearchOutlined, TableOutlined,} from "@ant-design/icons-vue";
 import {computed, onMounted, ref, toRaw, watch, withDefaults,} from "vue";
 import Sortable from "sortablejs";
 import {IColumns, IPagination, RecordType} from "@/types";
 import {useI18n} from "vue-i18n";
-import ITooltip from "@/components/IComponents/ITooltip/index.vue";
-import {cloneDeep, throttle} from "lodash-es";
+import {cloneDeep} from "lodash-es";
 import {ITableProps} from "@/types/table";
 import CloseAlert from "../IOther/CloseAlert/index.vue";
 import QueryForm from "./components/QueryForm/index.vue";
@@ -53,11 +52,9 @@ const props = withDefaults(defineProps<ITableProps>(), {
   loading: false,
   defaultExpandAllRows: false,
   draggable: false,
-  refresh: true,
 });
 const emits = defineEmits([
   "pagesChange", // 页码发生变化时
-  "refresh", // 刷新表格
   "searchBlur", // 表格搜索
   "query",
   "reset",
@@ -88,13 +85,6 @@ onMounted(() => {
 
   props.draggable && rowDrop();
 });
-
-/**
- * @description 节流刷新表格
- */
-const onRefresh = throttle(() => {
-  emits("refresh");
-}, 500);
 
 // 监听 展开收起
 watch(
@@ -339,18 +329,8 @@ defineOptions({
         </div>
       </transition>
       <div class="table-header">
+        <!-- 左侧按钮 可自定义左侧按钮内容 -->
         <a-space>
-          <i-tooltip
-            v-if="refresh"
-            :title="$t('title.refresh')"
-            type="reload"
-            @click="onRefresh"
-          >
-            <template #icon>
-              <reload-outlined :spin="loading" class="w-[1em] h-[1em]"/>
-            </template>
-          </i-tooltip>
-          <!-- 左侧按钮 可自定义左侧按钮内容 -->
           <slot name="leftActions"></slot>
         </a-space>
         <!-- 右侧功能区域 -->
@@ -441,6 +421,7 @@ defineOptions({
           <slot :name="score.column.dataIndex" v-bind="score">
             <ellipsis
               v-if="score.column.ellipsis"
+              :width="score.column.width"
               :value="score.value"
               tooltip
             />

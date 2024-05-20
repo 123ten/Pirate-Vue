@@ -8,12 +8,6 @@ import {formatTime} from "@/utils/common";
 
 const avatarPreviewSrc = ref("");
 const isAvatarPreviewSrc = ref<boolean>(false);
-const isDetailModalVisible = ref<boolean>(false);
-
-// 详情 - 取消
-const handleDetailModalCancel = () => {
-  isDetailModalVisible.value = false
-}
 
 const toUrl = (url: string) => {
   window.open(url);
@@ -133,7 +127,7 @@ const tableSettings: any = new TableSettings({
       },
     ],
     i18nPrefix: "admin_log",
-    // isI18nGlobal: true,
+    isI18nGlobal: true,
     scroll: {x: true},
     displayFormModal: false,
   },

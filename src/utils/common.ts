@@ -307,3 +307,28 @@ export function calculateNextPage(pages: IPages | undefined) {
 
   return Math.ceil(currentPage <= totalPages ? currentPage : totalPages)
 }
+
+/**
+ * 格式化输入的单位，如果没有单位则添加 'px'。
+ *
+ * @param {number|string} value - 输入的值，可以是数字或字符串。
+ * @returns {string} 格式化后的字符串，带有适当的单位。
+ */
+export function formatUnit(value?: number | string) {
+  if (typeof value === 'number') {
+    return value + 'px';
+  } else if (typeof value === 'string') {
+    // 正则表达式检查字符串是否包含单位
+    const units = ['px', 'em', 'rem', '%', 'vh', 'vw'];
+    for (const unit of units) {
+      if (value.endsWith(unit)) {
+        return value;
+      }
+    }
+    // 如果字符串是数字形式的字符串，没有单位，则加上 'px'
+    if (!isNaN(Number(value))) {
+      return value + 'px';
+    }
+  }
+  return value;
+}

@@ -24,7 +24,7 @@ defineOptions({
       </template>
     </a-alert>
     <div class="header-menu-btn">
-      <i-tooltip title="刷新" type="reload" class="mr_8 mtb_4">
+      <i-tooltip title="刷新" type="refresh" class="mr_8 mtb_4">
         <template #icon>
           <sync-outlined
               @click="onReload"
