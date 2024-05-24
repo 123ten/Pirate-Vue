@@ -312,9 +312,9 @@ export function calculateNextPage(pages: IPages | undefined) {
  * 格式化输入的单位，如果没有单位则添加 'px'。
  *
  * @param {number|string} value - 输入的值，可以是数字或字符串。
- * @returns {string} 格式化后的字符串，带有适当的单位。
+ * @returns {string|undefined} 格式化后的字符串，带有适当的单位。
  */
-export function formatUnit(value?: number | string) {
+export function formatUnit(value?: number | string): string | undefined {
   if (typeof value === 'number') {
     return value + 'px';
   } else if (typeof value === 'string') {

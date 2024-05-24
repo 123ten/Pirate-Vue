@@ -10,7 +10,6 @@ import {ITableProps} from "@/types/table";
 import CloseAlert from "../IOther/CloseAlert/index.vue";
 import QueryForm from "./components/QueryForm/index.vue";
 import QueryFormItem from "./components/QueryFormItem/index.vue";
-import Ellipsis from "@/components/IComponents/IOther/Ellipsis/index.vue";
 import useFormInstance from "@/hooks/useFormInstance";
 
 // 国际化
@@ -404,12 +403,12 @@ defineOptions({
         :loading="{ spinning: loading, tip: $t('title.loading') }"
         :columns="columnsComputed"
         :children-column-name="childrenColumnName"
-        :scroll="scroll"
         :size="size"
         :pagination="pagination"
         bordered
         @resize-column="handleResizeColumn"
         @change="handlePageSizeChange"
+        v-bind="$attrs"
       >
         <template #headerCell="{ column,...resetScope }">
           <slot name="headerCell" :column="column" v-bind="resetScope">

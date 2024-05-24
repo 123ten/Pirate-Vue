@@ -19,7 +19,6 @@ declare module 'vue' {
     ACol: typeof import('ant-design-vue/es')['Col']
     AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
     ADatePicker: typeof import('ant-design-vue/es')['DatePicker']
-    AddEditModal: typeof import('./src/components/Modals/TheAdmin/AddEditModal.vue')['default']
     ADescriptions: typeof import('ant-design-vue/es')['Descriptions']
     ADescriptionsItem: typeof import('ant-design-vue/es')['DescriptionsItem']
     ADrawer: typeof import('ant-design-vue/es')['Drawer']

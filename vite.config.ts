@@ -5,6 +5,7 @@ import fs from "fs";
 import Components from "unplugin-vue-components/vite";
 import {AntDesignVueResolver} from "unplugin-vue-components/resolvers";
 import mkcert from "vite-plugin-mkcert";
+import autoExport from 'vite-plugin-auto-export'
 
 export default defineConfig({
   plugins: [
@@ -14,6 +15,10 @@ export default defineConfig({
       resolvers: [AntDesignVueResolver()],
     }),
     mkcert(),
+    autoExport({
+      files: path.resolve(process.cwd(), "src", "locales"),
+      keywords: ['default']
+    }),
   ],
   resolve: {
     alias: {

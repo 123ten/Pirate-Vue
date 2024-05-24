@@ -55,10 +55,6 @@ defineOptions({
   </a-popconfirm>
 </template>
 
-<!-- <template v-for="(slot, name) in $slots" v-slot:[name]>
-  <slot :name="name" :slot="slot"></slot>
-</template> -->
-
 <style lang="less">
 @import url("./index.less");
 </style>
