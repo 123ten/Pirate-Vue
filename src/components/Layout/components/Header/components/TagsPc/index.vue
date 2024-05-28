@@ -1,29 +1,17 @@
 <!-- Tags 标签 -->
 <script setup lang="ts">
-import {
-  CloseOutlined,
-  DownOutlined,
-  SyncOutlined,
-  ExpandOutlined,
-  MinusOutlined,
-  MinusSquareFilled,
-} from "@ant-design/icons-vue";
 import * as antIcons from "@ant-design/icons-vue";
-import {
-  defineOptions,
-  onMounted,
-  reactive,
-  ref,
-  watch,
-  nextTick,
-  unref,
-} from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { storeToRefs } from "pinia";
-import { useLayoutStore } from "@/store";
-import { fullScreen } from "@/utils/dom";
+import {CloseOutlined, DownOutlined} from "@ant-design/icons-vue";
+import {defineOptions, nextTick, onMounted, reactive, ref, unref, watch,} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import {storeToRefs} from "pinia";
+import {useLayoutStore} from "@/store";
+import {fullScreen} from "@/utils/dom";
+import TagOverlay from "./components/Overlay/index.vue";
+
 const store = useLayoutStore();
-const { isLayoutFullScreen, isCurrentPageReload, isAsideMenu } =
+
+const {isLayoutFullScreen, isCurrentPageReload, isAsideMenu} =
   storeToRefs(store);
 const router = useRouter();
 const route = useRoute();
@@ -32,10 +20,20 @@ interface TagDataInterface {
   title: string;
   path: string;
 }
+
 interface MouseRightStateInterface {
   index: number;
   data: TagDataInterface;
 }
+
+enum OverlayEnum {
+  'reload' = 1,
+  'close',
+  'fullScreen',
+  'closeOther',
+  'closeAll',
+}
+
 const tagState = reactive({
   width: 2 * 14 + 32,
   x: 0,
@@ -73,7 +71,7 @@ watch(
       path: newPath,
     };
     // console.log(newPath, "newPathnewPath");
-    console.log(route.meta.title, "newPath");
+    // console.log(route.meta.title, "newPath");
 
     // 判断是否存在重复 tag
     const isRepeatTag = unref(tabList).some(
@@ -204,7 +202,7 @@ const onMouseRightMenu = (status: number) => {
     router.push(mouseRightState.data.path);
   } else if (status === 4) {
     tabList.value = tabList.value.filter(
-      (item, index) => index === mouseRightState.index
+      (_tab: TagDataInterface, index) => index === mouseRightState.index
     );
     currentTabIndex.value = 0;
     router.push(mouseRightState.data.path);
@@ -219,8 +217,8 @@ const onMouseRightMenu = (status: number) => {
 /*
  * 鼠标滚轮滚动
  */
-const onNavTagsWhell = (event) => {
-  onWheelDelta(event, (delta) => {
+const onNavTagsWhell = (event: any) => {
+  onWheelDelta(event, (delta: any) => {
     if (navTagsRef.value === null) return;
     // 最大滚动距离
     const maxScrollLeft =
@@ -247,7 +245,7 @@ const onNavTagsWhell = (event) => {
 /**
  * 鼠标滚轮滚动事件
  */
-const onWheelDelta = (e, cb) => {
+const onWheelDelta = (e: any, cb: any) => {
   if (!window.scrollY) {
     // 禁止页面滚动
     e.preventDefault();
@@ -262,6 +260,16 @@ const onWheelDelta = (e, cb) => {
   }
 };
 
+const overLayDisabled = (type: string): boolean => {
+  if (type === 'reload') {
+    return currentTabIndex.value !== mouseRightState.index
+  }
+  if (['close', 'closeOther', 'closeAll'].includes(type)) {
+    return tabList.value.length === 1
+  }
+  return false
+}
+
 defineOptions({
   name: "TagsPc",
 });
@@ -269,10 +277,10 @@ defineOptions({
 
 <template>
   <!-- isLayoutFullScreen 点击全屏时 去除加载动画-->
-  <nav class="nav d-flex-default" v-if="!isLayoutFullScreen">
+  <nav class="nav flex" v-if="!isLayoutFullScreen">
     <a-dropdown :trigger="['contextmenu']">
       <div
-        class="nav-tags d-flex-default"
+        class="nav-tags flex"
         ref="navTagsRef"
         @wheel="onNavTagsWhell"
       >
@@ -286,7 +294,7 @@ defineOptions({
         <div
           v-for="(item, index) in tabList"
           :key="item.title"
-          class="nav-tag-item d-flex-default"
+          class="nav-tag-item flex"
           :class="{
             active: currentTabIndex === index,
             activeClose: tabList.length !== 1 && currentTabIndex === index,
@@ -296,102 +304,33 @@ defineOptions({
         >
           <component
             :is="antIcons['HomeOutlined']"
-            style="font-size: 12px; margin-right: 6px"
+            class="text-xs mr-1.5"
           />
           {{ item.title }}
           <close-outlined
             v-if="tabList.length !== 1 && currentTabIndex === index"
-            class="nav-tag-close"
-            style="font-size: 10px"
+            class="nav-tag-close text-[10px]"
             @click.stop="delTabItem(index)"
           />
         </div>
       </div>
       <template #overlay>
-        <a-menu>
-          <a-menu-item
-            key="1"
-            @click="onMouseRightMenu(1)"
-            :disabled="currentTabIndex !== mouseRightState.index"
-          >
-            <sync-outlined style="font-size: 12px" />
-            重新加载
-          </a-menu-item>
-          <a-menu-item
-            key="2"
-            @click="onMouseRightMenu(2)"
-            :disabled="tabList.length === 1"
-          >
-            <close-outlined style="font-size: 12px" />
-            关闭标签
-          </a-menu-item>
-          <a-menu-item key="3" @click="onMouseRightMenu(3)">
-            <expand-outlined style="font-size: 12px" />
-            当前标签页全屏
-          </a-menu-item>
-          <a-menu-item
-            key="4"
-            @click="onMouseRightMenu(4)"
-            :disabled="tabList.length === 1"
-          >
-            <minus-outlined style="font-size: 12px" />
-            关闭其他标签页
-          </a-menu-item>
-          <a-menu-item
-            key="5"
-            @click="onMouseRightMenu(5)"
-            :disabled="tabList.length === 1"
-          >
-            <minus-square-filled style="font-size: 12px" />
-            关闭全部标签页
-          </a-menu-item>
-        </a-menu>
+        <tag-overlay
+          :disabled="overLayDisabled"
+          @click="(type:string) => onMouseRightMenu(OverlayEnum[type])"
+        />
       </template>
     </a-dropdown>
     <a-dropdown v-if="isAsideMenu">
       <div class="more c-pointer d-flex-center">
         <span class="more-txt">更多</span>
-        <down-outlined />
+        <down-outlined/>
       </div>
       <template #overlay>
-        <a-menu>
-          <a-menu-item
-            key="1"
-            @click="onMouseRightMenu(1)"
-            :disabled="currentTabIndex !== mouseRightState.index"
-          >
-            <sync-outlined style="font-size: 12px" />
-            重新加载
-          </a-menu-item>
-          <a-menu-item
-            key="2"
-            @click="onMouseRightMenu(2)"
-            :disabled="tabList.length === 1"
-          >
-            <close-outlined style="font-size: 12px" />
-            关闭标签
-          </a-menu-item>
-          <a-menu-item key="3" @click="onMouseRightMenu(3)">
-            <expand-outlined style="font-size: 12px" />
-            当前标签页全屏
-          </a-menu-item>
-          <a-menu-item
-            key="4"
-            @click="onMouseRightMenu(4)"
-            :disabled="tabList.length === 1"
-          >
-            <minus-outlined style="font-size: 12px" />
-            关闭其他标签页
-          </a-menu-item>
-          <a-menu-item
-            key="5"
-            @click="onMouseRightMenu(5)"
-            :disabled="tabList.length === 1"
-          >
-            <minus-square-filled style="font-size: 12px" />
-            关闭全部标签页
-          </a-menu-item>
-        </a-menu>
+        <tag-overlay
+          :disabled="overLayDisabled"
+          @click="(type:string) => onMouseRightMenu(OverlayEnum[type])"
+        />
       </template>
     </a-dropdown>
   </nav>

@@ -98,6 +98,7 @@ declare module 'vue' {
     NavLanguage: typeof import('./src/components/Layout/components/Header/components/NavLanguage/index.vue')['default']
     NavMsg: typeof import('./src/components/Layout/components/Header/components/NavMsg/index.vue')['default']
     NavTheme: typeof import('./src/components/Layout/components/Header/components/NavTheme/index.vue')['default']
+    Overlay: typeof import('./src/components/Layout/components/Header/components/TagsPc/components/Overlay/index.vue')['default']
     ProcessingTag: typeof import('./src/components/IComponents/IOther/ProcessingTag/index.vue')['default']
     QueryForm: typeof import('./src/components/IComponents/ITable/components/QueryForm/index.vue')['default']
     QueryFormItem: typeof import('./src/components/IComponents/ITable/components/QueryFormItem/index.vue')['default']
