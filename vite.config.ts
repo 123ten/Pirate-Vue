@@ -16,7 +16,12 @@ export default defineConfig({
     }),
     mkcert(),
     autoExport({
-      files: path.resolve(process.cwd(), "src", "locales"),
+      files: [
+        {
+          directory: resolve(process.cwd(), "src", "locales"),
+          defaultDir: ['zh', 'en'],
+        }
+      ],
       keywords: ['default']
     }),
   ],

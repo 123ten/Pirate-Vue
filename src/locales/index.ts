@@ -6,6 +6,7 @@ const messages = {
   en,
   zh,
 }
+
 const language = (navigator.language || 'en').toLocaleLowerCase() // 这是获取浏览器的语言
 const i18n = createI18n({
   legacy: false, // 设置为 false，启用 composition API 模式
