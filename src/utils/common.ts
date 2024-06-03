@@ -1,7 +1,7 @@
 // 获取时间状态
 import {deepArguments, IPages} from "@/types";
 import {TagProps} from "ant-design-vue";
-import {cloneDeep, isArray} from "lodash-es";
+import {cloneDeep, isArray, round} from "lodash-es";
 import dayjs, {Dayjs} from "dayjs";
 import {DateRangeTuple} from "@/types/form";
 import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
@@ -193,17 +193,15 @@ export function sortNumber(index: number, pages?: IPages) {
 export function formatFileSize(size?: number, fixed = 2) {
   if (!size) return "";
 
-  if (size < 1024) {
-    return size + ' byte';
-  } else if (size < Math.pow(1024, 2)) {
-    return (size / 1024).toFixed(fixed) + ' KB';
-  } else if (size < Math.pow(1024, 3)) {
-    return (size / Math.pow(1024, 2)).toFixed(fixed) + ' MB';
-  } else if (size < Math.pow(1024, 4)) {
-    return (size / Math.pow(1024, 3)).toFixed(fixed) + ' GB';
-  } else {
-    return (size / Math.pow(1024, 4)).toFixed(fixed) + ' TB';
+  const units = ['byte', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB'];
+  let index = 0;
+
+  while (size >= 1024 && index < units.length - 1) {
+    size /= 1024;
+    index++;
   }
+
+  return `${round(size, fixed)} ${units[index]}`;
 }
 
 /**

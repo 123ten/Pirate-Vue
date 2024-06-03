@@ -1,11 +1,7 @@
 .menu-mobile {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  @apply whitespace-nowrap overflow-hidden overflow-ellipsis;
   :deep(.ant-breadcrumb) {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @apply whitespace-nowrap overflow-hidden overflow-ellipsis;
     a {
       color: var(--primary-text-color-sub);
     }

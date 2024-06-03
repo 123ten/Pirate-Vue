@@ -8,6 +8,7 @@ import {storeToRefs} from "pinia";
 import {useLayoutStore} from "@/store";
 import {fullScreen} from "@/utils/dom";
 import TagOverlay from "./components/Overlay/index.vue";
+import {type OverlayType} from './components/Overlay/interface'
 
 const store = useLayoutStore();
 
@@ -122,6 +123,7 @@ const handleTabItem = (data: TagDataInterface, index: number) => {
     if (i === index) break;
     if (i < index) {
       count += curLength * 14 + 32 + 18; // 标题文字数量 * 字体大小 + 左右内边距 + 路由图标宽度
+      // count += curLength * 14 + 49 + 18; // 标题文字数量 * 字体大小 + 左右内边距 + 路由图标宽度
     }
   }
   tagState.x = count;
@@ -260,7 +262,7 @@ const onWheelDelta = (e: any, cb: any) => {
   }
 };
 
-const overLayDisabled = (type: string): boolean => {
+const overLayDisabled = (type: OverlayType): boolean => {
   if (type === 'reload') {
     return currentTabIndex.value !== mouseRightState.index
   }
@@ -280,8 +282,8 @@ defineOptions({
   <nav class="nav flex" v-if="!isLayoutFullScreen">
     <a-dropdown :trigger="['contextmenu']">
       <div
-        class="nav-tags flex"
         ref="navTagsRef"
+        class="nav-tags flex"
         @wheel="onNavTagsWhell"
       >
         <div
@@ -306,18 +308,21 @@ defineOptions({
             :is="antIcons['HomeOutlined']"
             class="text-xs mr-1.5"
           />
+          <span>
           {{ item.title }}
+          </span>
           <close-outlined
-            v-if="tabList.length !== 1 && currentTabIndex === index"
-            class="nav-tag-close text-[10px]"
+            v-if="tabList.length !== 1"
+            class="nav-tag-close"
             @click.stop="delTabItem(index)"
           />
+          <!--          :class="{active: tabList.length !== 1 && currentTabIndex === index}"-->
         </div>
       </div>
       <template #overlay>
         <tag-overlay
           :disabled="overLayDisabled"
-          @click="(type:string) => onMouseRightMenu(OverlayEnum[type])"
+          @click="(type:OverlayType) => onMouseRightMenu(OverlayEnum[type])"
         />
       </template>
     </a-dropdown>
@@ -329,7 +334,7 @@ defineOptions({
       <template #overlay>
         <tag-overlay
           :disabled="overLayDisabled"
-          @click="(type:string) => onMouseRightMenu(OverlayEnum[type])"
+          @click="(type:OverlayType) => onMouseRightMenu(OverlayEnum[type])"
         />
       </template>
     </a-dropdown>

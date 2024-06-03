@@ -1,13 +1,8 @@
 <script setup lang="ts">
 import {CloseOutlined, ExpandOutlined, MinusOutlined, MinusSquareFilled, SyncOutlined} from "@ant-design/icons-vue";
+import {OverlayProps, type OverlayType} from './interface'
 
-type OverlayType = 'reload' | 'close' | 'fullScreen' | 'closeOther' | 'closeAll'
-
-interface OverlayProps {
-  disabled?: (type: OverlayType) => boolean
-}
-
-const props = defineProps<OverlayProps>()
+defineProps<OverlayProps>()
 
 const emits = defineEmits([
   'click',
