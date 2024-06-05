@@ -80,9 +80,9 @@ export function debounce(func: Function, wait: number, immediate?: boolean) {
 /**
  * @description 获取访问终端
  * @example getTerminal()
- * @returns {string} 返回终端类型 mobile pc
+ * @returns {mobile pc} 返回终端类型 mobile pc
  */
-export function getTerminal() {
+export function getTerminal(): "mobile" | "pc" {
   const terminal = navigator.userAgent.toLowerCase();
 
   const ipad = terminal.match(/ipad/i);

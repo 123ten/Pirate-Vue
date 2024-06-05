@@ -21,8 +21,8 @@ defineOptions({
   <a-menu>
     <a-menu-item
       key="1"
-      :disabled="disabled?.('reload')"
-      @click="handleItemClick('reload')"
+      :disabled="disabled?.('refresh')"
+      @click="handleItemClick('refresh')"
     >
       <sync-outlined class="text-xs"/>
       重新加载
@@ -61,7 +61,3 @@ defineOptions({
     </a-menu-item>
   </a-menu>
 </template>
-
-<style scoped lang="less">
-
-</style>

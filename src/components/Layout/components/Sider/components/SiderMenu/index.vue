@@ -23,10 +23,10 @@ onMounted(() => {
 });
 
 watch(
-    () => route.path,
-    () => {
-      currentOpenMenu();
-    }
+  () => route.path,
+  () => {
+    currentOpenMenu();
+  }
 );
 
 const getMenus = () => {
@@ -51,17 +51,17 @@ defineOptions({
 </script>
 
 <template>
-  <div class="menu-logo d-flex-center">
+  <div class="menu-logo flex items-center">
     <template v-if="!isMenuOutIn || isAsideMenu">
-      <div class="logo-name d-flex-center">
-        <img class="logo-img" src="@/assets/images/logo_piece.png" alt=""/>
+      <div class="logo-name flex items-center">
+        <img class="logo-img" src="@/assets/images/logo_piece.png" alt="Pirate Admin"/>
         <div class="website-name">Pirate Admin</div>
       </div>
     </template>
     <!-- 点击展开收起菜单 -->
     <div
-        class="d-flex-center menu-icon c-pointer"
-        @click="isMenuOutIn = !isMenuOutIn"
+      class="flex items-center menu-icon cursor-pointer text-xl"
+      @click="isMenuOutIn = !isMenuOutIn"
     >
       <!-- 展开 -->
       <menu-unfold-outlined v-show="isMenuOutIn" v-if="!isAsideMenu"/>
@@ -70,7 +70,7 @@ defineOptions({
     </div>
   </div>
   <div class="i-menu-content">
-    <a-menu mode="inline"  :open-keys="openKeys" :selected-keys="selectedKeys">
+    <a-menu mode="inline" :open-keys="openKeys" :selected-keys="selectedKeys">
       <sider-item :menu="menus"/>
     </a-menu>
   </div>

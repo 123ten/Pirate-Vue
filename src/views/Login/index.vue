@@ -1,29 +1,29 @@
 <!-- 登录 -->
 <script setup lang="ts">
-import { LockOutlined, UserOutlined } from "@ant-design/icons-vue";
-import { onBeforeUnmount, onMounted, reactive } from "vue";
+import {LockOutlined, UserOutlined} from "@ant-design/icons-vue";
+import {onBeforeUnmount, onMounted, reactive} from "vue";
 import * as pageBubble from "@/utils/pageBubble";
-import { setTimeoutPromise } from "@/utils/common";
+import {setTimeoutPromise} from "@/utils/common";
 import avatar_default from "@/assets/images/avatar.png";
-import { useI18n } from "vue-i18n";
-import { debounce } from "lodash-es";
-import { notification } from "ant-design-vue";
+import {useI18n} from "vue-i18n";
+import {debounce} from "lodash-es";
+import {notification} from "ant-design-vue";
 import router from "@/router";
-import { useCaptchaStore, useAdminStore } from "@/store";
-import { storeToRefs } from "pinia";
+import {useAdminStore, useCaptchaStore} from "@/store";
+import {storeToRefs} from "pinia";
 
-const { t } = useI18n();
+const {t} = useI18n();
 const captchaStore = useCaptchaStore();
 const adminStore = useAdminStore();
-const { svgCaptchaRequest } = captchaStore;
-const { getAdminAvatarRequest, adminLoginRequest } = adminStore;
-const { svgCaptcha } = storeToRefs(captchaStore);
-const { avatar, loginFormState, isLoginFormLoading } = storeToRefs(adminStore);
+const {svgCaptchaRequest} = captchaStore;
+const {getAdminAvatarRequest, adminLoginRequest} = adminStore;
+const {svgCaptcha} = storeToRefs(captchaStore);
+const {avatar, loginFormState, isLoginFormLoading} = storeToRefs(adminStore);
 
 const rules = reactive({
-  username: [{ required: true, message: t("error.userName") }],
-  password: [{ required: true, message: t("error.password") }],
-  captcha: [{ required: true, message: t("error.captcha") }],
+  username: [{required: true, message: t("error.userName")}],
+  password: [{required: true, message: t("error.password")}],
+  captcha: [{required: true, message: t("error.captcha")}],
 });
 
 onMounted(async () => {
@@ -67,7 +67,7 @@ const handleUserNameInput = debounce(async () => {
           class="head img-placeholder"
           style="--img-placeholder-rate: 35.11%"
         >
-          <img src="@/assets/images/login-header.png" alt="avatar" v-cloak />
+          <img src="@/assets/images/login-header.png" alt="avatar" v-cloak/>
         </div>
         <div class="form">
           <a-avatar
@@ -90,7 +90,7 @@ const handleUserNameInput = debounce(async () => {
                   @input="handleUserNameInput"
                 >
                   <template #prefix>
-                    <user-outlined class="site-form-item-icon" />
+                    <user-outlined class="site-form-item-icon"/>
                   </template>
                 </a-input>
               </a-form-item>
@@ -101,7 +101,7 @@ const handleUserNameInput = debounce(async () => {
                   :placeholder="$t('placeholder.password')"
                 >
                   <template #prefix>
-                    <lock-outlined class="site-form-item-icon" />
+                    <lock-outlined class="site-form-item-icon"/>
                   </template>
                 </a-input-password>
               </a-form-item>
