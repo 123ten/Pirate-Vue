@@ -2,38 +2,42 @@
 <script setup lang="ts">
 import * as antIcons from "@ant-design/icons-vue";
 import {CloseOutlined, DownOutlined} from "@ant-design/icons-vue";
-import {defineOptions, nextTick, onMounted, reactive, ref, unref, watch,} from "vue";
-import {useRoute, useRouter} from "vue-router";
+import {defineOptions, nextTick, onMounted, reactive, ref,} from "vue";
+import {onBeforeRouteUpdate, RouteLocationNormalized, useRoute, useRouter} from "vue-router";
 import {storeToRefs} from "pinia";
 import {useLayoutStore} from "@/store";
+import useNavTabs from "@/store/hooks/useNavTabs";
 import {fullScreen} from "@/utils/dom";
 import TagOverlay from "./components/Overlay/index.vue";
 import {type OverlayType} from './components/Overlay/interface'
 
-const store = useLayoutStore();
+const layoutStore = useLayoutStore();
+const {isLayoutFullScreen, isCurrentPageReload, isAsideMenu} = storeToRefs(layoutStore);
+const navTabs = useNavTabs()
 
-const {isLayoutFullScreen, isCurrentPageReload, isAsideMenu} =
-  storeToRefs(store);
 const router = useRouter();
 const route = useRoute();
 
-interface TagDataInterface {
+interface ITagItem {
   title: string;
   path: string;
 }
 
 interface MouseRightStateInterface {
   index: number;
-  data: TagDataInterface;
+  data: ITagItem;
 }
 
 enum OverlayEnum {
-  'reload' = 1,
+  'refresh' = 1,
   'close',
   'fullScreen',
   'closeOther',
   'closeAll',
 }
+
+const tabsRefs = ref();
+const tabItemRefs = ref<HTMLDivElement[]>([])
 
 const tagState = reactive({
   width: 2 * 14 + 32,
@@ -46,138 +50,67 @@ const mouseRightState = reactive<MouseRightStateInterface>({
     path: "",
   },
 });
-const tabList = ref<TagDataInterface[]>([]);
-const currentTabIndex = ref<number>(0);
-const isDelete = ref<boolean>(false); // 是否删除
-const navTagsRef = ref<HTMLElement | null>(null);
 
-onMounted(() => {
-  // 默认初始化宽度
-  unref(tabList).unshift({
-    title: route.meta.title as string,
-    path: route.path,
-  });
-  resetTagWidth(unref(tabList)[0].title.length);
+const hoverIndex = ref<number>(-1);
+
+onMounted(async () => {
+  // 这里的数据不需要被响应式包裹
+  // navTabs.set(cloneDeep(route))
+  await updateTab(router.currentRoute.value)
 });
-watch(
-  () => route.path,
-  (newPath) => {
-    // 删除标签时 不再执行路由监听
-    if (isDelete.value) {
-      isDelete.value = false;
-      return;
-    }
-    const params: TagDataInterface = {
-      title: route.meta.title as string,
-      path: newPath,
-    };
-    // console.log(newPath, "newPathnewPath");
-    // console.log(route.meta.title, "newPath");
 
-    // 判断是否存在重复 tag
-    const isRepeatTag = unref(tabList).some(
-      (item) => item.path === params.path
-    );
-    // console.log(isRepeatTag, "isRepeatTag");
-    if (!isRepeatTag) unref(tabList).unshift(params);
+onBeforeRouteUpdate(async to => {
+  await updateTab(to)
+})
 
-    // 获取下标 跳转到该下标
-    const newTagIndex = unref(tabList).findIndex(
-      (item) => item.path === params.path
-    );
-    // console.log(newTagIndex, "newTagIndex");
+const updateTab = async (to: RouteLocationNormalized) => {
+  navTabs.addTab(to)
+  navTabs.setActiveRoute(to)
+  await nextTick()
+  selectNavTab(tabItemRefs.value[navTabs.activeIndex])
+}
 
-    handleTabItem(params, newTagIndex);
-  }
-);
+
 /**
- * 重置 tag 背景宽度
- * @param length {number} 字体长度
+ * 修改x轴偏移量
+ * @param index
  */
-const resetTagWidth = (length: number) => {
-  // 背景宽度 = 字体长度 * 字号大小 + (内外边距 + close 内外边距) + 路由图标宽度
-  // 加上 x(icon) 49，不加上 x(icon) 32
-  tagState.width = length * 14 + (unref(tabList).length !== 1 ? 49 : 32) + 18;
-};
-/**
- * @description 点击tab-item
- * @param data 跳转到的路由数据
- * @param index 点击 tab 下标
- */
-const handleTabItem = (data: TagDataInterface, index: number) => {
-  currentTabIndex.value = index;
-
-  // 当小于1200px时
-  if (isAsideMenu.value) {
-    mouseRightState.index = index;
-    mouseRightState.data = data;
+const changeOffsetLeft = async (index: number, type?: 'enter' | 'level') => {
+  if (type === 'enter') {
+    hoverIndex.value = index
+  } else {
+    hoverIndex.value = -1
   }
-  // console.log(isDel, "isDelisDel");
-
-  // console.log(length, index, isDel, "handleTabItem - index");
-  // 偏移量 = 不包括自身 前面所有的宽度相加
-  let count = 0;
-  for (let i = 0; i < unref(tabList).length; i++) {
-    const curLength = unref(tabList)[i].title.length;
-    // console.log(curLength, i, "item");
-    if (i === index) break;
-    if (i < index) {
-      count += curLength * 14 + 32 + 18; // 标题文字数量 * 字体大小 + 左右内边距 + 路由图标宽度
-      // count += curLength * 14 + 49 + 18; // 标题文字数量 * 字体大小 + 左右内边距 + 路由图标宽度
-    }
-  }
-  tagState.x = count;
-
-  if (data.path) {
-    router.push(data.path);
-  }
-
-  resetTagWidth(data.title.length);
-};
+  await nextTick()
+  selectNavTab(tabItemRefs.value[navTabs.activeIndex])
+}
 /**
  * @description 删除tab-item
  * @param index
  */
-const delTabItem = (index: number) => {
-  const _currentTabIndex = unref(currentTabIndex);
+const closeTab = (index: number) => {
+  const activeIndex = navTabs.activeIndex
 
-  // 删除当前标签时，不再执行路由监听
-  if (_currentTabIndex === index) {
-    isDelete.value = true;
-  }
+  navTabs.tabList.splice(index, 1);
 
-  // console.log(currentTabIndex.value, index, "currentTabIndex.value");
-  // console.log("unref(tabList) -->", unref(tabList));
+  if (activeIndex !== index) return
+  console.log('closeTab --> index', index)
 
-  unref(tabList).splice(index, 1);
-  // 如点击最后一个 没有长度时 默认首页
-  if (!unref(tabList).length) {
-    unref(tabList).push({
-      title: "首页",
-      path: "/home",
-    });
-    return;
-  }
-
-  if (index === 0 && _currentTabIndex === index) {
-    // 如点击下标为 0 的tab
-    handleTabItem(unref(tabList)[index], index);
-  } else if (_currentTabIndex === index && index !== 0) {
-    // 如点击自身
-    // 拿到上一位的长度
-    handleTabItem(unref(tabList)[index - 1], index - 1);
-  } else if (_currentTabIndex > index) {
-    handleTabItem(unref(tabList)[_currentTabIndex - 1], _currentTabIndex - 1);
+  if (navTabs.tabList[index]) {
+    router.push(navTabs.tabList[index])
+  } else if (navTabs.tabList[index - 1]) {
+    router.push(navTabs.tabList[index - 1])
+  } else if (navTabs.tabList[index + 1]) {
+    router.push(navTabs.tabList[index + 1])
   } else {
-    // 关闭非选中标签
-    handleTabItem(unref(tabList)[index - 1], index - 1);
+    router.push("/home");
   }
 };
+
 // 鼠标右键点击时
 const onMouseRight = (index: number, data: any) => {
   mouseRightState.index = index;
   mouseRightState.data = data;
-  // console.log(mouseRightState, unref(currentTabIndex), 12312321);
 };
 /**
  * @description 鼠标右键菜单点击
@@ -189,29 +122,23 @@ const onMouseRight = (index: number, data: any) => {
  * 5.关闭全部标签
  */
 const onMouseRightMenu = (status: number) => {
-  // console.log(status, mouseRightState, "type");
-  const length = mouseRightState.data.title.length;
   if (status === 1) {
     isCurrentPageReload.value = true;
     nextTick(() => {
       isCurrentPageReload.value = false;
     });
   } else if (status === 2) {
-    delTabItem(mouseRightState.index);
+    closeTab(mouseRightState.index);
   } else if (status === 3) {
     fullScreen();
     isLayoutFullScreen.value = true;
     router.push(mouseRightState.data.path);
   } else if (status === 4) {
-    tabList.value = tabList.value.filter(
-      (_tab: TagDataInterface, index) => index === mouseRightState.index
-    );
-    currentTabIndex.value = 0;
+    const tabs = navTabs.tabList.filter((_tab: RouteLocationNormalized, index) => index === mouseRightState.index);
+    navTabs.assign(tabs)
     router.push(mouseRightState.data.path);
-    resetTagWidth(length);
-    tagState.x = 0;
   } else if (status === 5) {
-    tabList.value = [];
+    navTabs.assign([])
     router.push("/home");
   }
 };
@@ -219,26 +146,26 @@ const onMouseRightMenu = (status: number) => {
 /*
  * 鼠标滚轮滚动
  */
-const onNavTagsWhell = (event: any) => {
+const handleTabsWheel = (event: any) => {
   onWheelDelta(event, (delta: any) => {
-    if (navTagsRef.value === null) return;
+    if (tabsRefs.value === null) return;
     // 最大滚动距离
     const maxScrollLeft =
-      navTagsRef.value.scrollWidth - navTagsRef.value.offsetWidth;
+      tabsRefs.value.scrollWidth - tabsRefs.value.offsetWidth;
     // 当最大滚动距离小于等于0时，不再滚动 减少性能消耗
     if (maxScrollLeft <= 0) return;
-    // console.log("onNavTagsWhell", maxScrollLeft, event);
+    // console.log("handleTabsWheel", maxScrollLeft, event);
     if (delta > 0) {
       // 滚轮向上滚动
-      navTagsRef.value.scrollLeft -= 50;
-      if (navTagsRef.value.scrollLeft <= 0) {
-        navTagsRef.value.scrollLeft = 0;
+      tabsRefs.value.scrollLeft -= 50;
+      if (tabsRefs.value.scrollLeft <= 0) {
+        tabsRefs.value.scrollLeft = 0;
       }
     } else {
       // 滚轮向下滚动
-      navTagsRef.value.scrollLeft += 50;
-      if (navTagsRef.value.scrollLeft >= maxScrollLeft) {
-        navTagsRef.value.scrollLeft = maxScrollLeft;
+      tabsRefs.value.scrollLeft += 50;
+      if (tabsRefs.value.scrollLeft >= maxScrollLeft) {
+        tabsRefs.value.scrollLeft = maxScrollLeft;
       }
     }
   });
@@ -262,15 +189,51 @@ const onWheelDelta = (e: any, cb: any) => {
   }
 };
 
+/**
+ * 禁用右键的menu选项
+ * @param type
+ */
 const overLayDisabled = (type: OverlayType): boolean => {
-  if (type === 'reload') {
-    return currentTabIndex.value !== mouseRightState.index
+  if (type === 'refresh') {
+    return navTabs.activeIndex !== mouseRightState.index
   }
   if (['close', 'closeOther', 'closeAll'].includes(type)) {
-    return tabList.value.length === 1
+    return navTabs.tabList.length === 1
   }
   return false
 }
+
+const handleTagOverlay = (type: OverlayType) => onMouseRightMenu(OverlayEnum[type])
+
+const handleTabTo = (route: RouteLocationNormalized) => {
+  router.push(route)
+}
+
+const selectNavTab = (dom: HTMLDivElement) => {
+  if (!dom) return
+  // console.log('dom -->', dom.offsetLeft, dom.clientWidth)
+
+  tagState.x = dom.offsetLeft
+  tagState.width = dom.clientWidth
+
+  let scrollLeft = dom.offsetLeft + dom.clientWidth - tabsRefs.value.clientWidth
+  if (dom.offsetLeft < tabsRefs.value.scrollLeft) {
+    tabsRefs.value.scrollTo(dom.offsetLeft, 0)
+  } else if (scrollLeft > tabsRefs.value.scrollLeft) {
+    tabsRefs.value.scrollTo(scrollLeft, 0)
+  }
+}
+
+/**
+ * 手动设置 ref
+ * @param el
+ * @param index
+ */
+const setItemRefs = (el: HTMLDivElement | null, index: number) => {
+  if (el) {
+    tabItemRefs.value[index] = el;
+  }
+};
 
 defineOptions({
   name: "TagsPc",
@@ -282,9 +245,8 @@ defineOptions({
   <nav class="nav flex" v-if="!isLayoutFullScreen">
     <a-dropdown :trigger="['contextmenu']">
       <div
-        ref="navTagsRef"
-        class="nav-tags flex"
-        @wheel="onNavTagsWhell"
+        ref="tabsRefs"
+        class="nav-tags flex overflow-hidden"
       >
         <div
           class="nav-tabs-active-box"
@@ -294,35 +256,41 @@ defineOptions({
           }"
         ></div>
         <div
-          v-for="(item, index) in tabList"
-          :key="item.title"
+          v-for="(item, index) in navTabs.tabList"
+          :key="item.meta.title"
+          :ref="el => setItemRefs(el as HTMLDivElement,index)"
           class="nav-tag-item flex"
           :class="{
-            active: currentTabIndex === index,
-            activeClose: tabList.length !== 1 && currentTabIndex === index,
+            active: navTabs.activeIndex === index,
+            activeClose: navTabs.tabList.length !== 1 && navTabs.activeIndex === index,
           }"
           @contextmenu.prevent="onMouseRight(index, item)"
-          @click="handleTabItem(item, index)"
+          @click="handleTabTo(item)"
+          @mouseenter="changeOffsetLeft(index,'enter')"
+          @mouseleave="changeOffsetLeft(index,'level')"
         >
           <component
             :is="antIcons['HomeOutlined']"
             class="text-xs mr-1.5"
           />
-          <span>
-          {{ item.title }}
-          </span>
-          <close-outlined
-            v-if="tabList.length !== 1"
-            class="nav-tag-close"
-            @click.stop="delTabItem(index)"
-          />
-          <!--          :class="{active: tabList.length !== 1 && currentTabIndex === index}"-->
+          {{ item.meta.title }}
+          <transition
+            name="fade"
+            @after-leave="selectNavTab(tabItemRefs[navTabs.activeIndex])"
+            @after-enter="selectNavTab(tabItemRefs[navTabs.activeIndex])"
+          >
+            <close-outlined
+              v-if="navTabs.tabList.length !== 1 && (navTabs.activeIndex === index || hoverIndex === index)"
+              class="nav-tag-close"
+              @click.stop="closeTab(index)"
+            />
+          </transition>
         </div>
       </div>
       <template #overlay>
         <tag-overlay
           :disabled="overLayDisabled"
-          @click="(type:OverlayType) => onMouseRightMenu(OverlayEnum[type])"
+          @click="handleTagOverlay"
         />
       </template>
     </a-dropdown>
@@ -334,7 +302,7 @@ defineOptions({
       <template #overlay>
         <tag-overlay
           :disabled="overLayDisabled"
-          @click="(type:OverlayType) => onMouseRightMenu(OverlayEnum[type])"
+          @click="handleTagOverlay"
         />
       </template>
     </a-dropdown>

@@ -6,7 +6,7 @@ import "nprogress/nprogress.css"; // nprogress 样式文件
 import GlobalLoading from "@/views/Common/Loading";
 import http from "@/utils/request";
 
-let timer: null | number;
+let timer: null | NodeJS.Timeout;
 
 // const history = createWebHashHistory(); // hash history
 const history = createWebHistory(); // hash history

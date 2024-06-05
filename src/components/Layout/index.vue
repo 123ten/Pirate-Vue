@@ -13,7 +13,7 @@ const {isLayoutFullScreen, isCurrentPageReload} = storeToRefs(store);
 
     <a-layout class="layout">
       <Header v-if="!isLayoutFullScreen"/>
-      <a-layout-content class="overflow-y-auto">
+      <a-layout-content class="overflow-y-auto overflow-x-hidden">
         <router-view
           class="layout-view"
           :class="{fullScreen: isLayoutFullScreen}"

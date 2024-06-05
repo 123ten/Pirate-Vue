@@ -8,6 +8,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
     meta: {
       name: "home",
       title: "首页",
+      showNav: true,
     },
     component: () => import("@/views/Home/Index/index.vue"),
   },
@@ -17,6 +18,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
     meta: {
       name: "auth",
       title: "权限管理",
+      showNav: true,
     },
     children: [
       {
@@ -25,6 +27,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
         meta: {
           parentName: "auth",
           title: "角色组管理",
+          showNav: true,
         },
         component: () => import("@/views/Auth/Group/index.vue"),
       },
@@ -34,6 +37,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
         meta: {
           parentName: "auth",
           title: "管理员管理",
+          showNav: true,
         },
         component: () => import("@/views/Auth/Admin/index.vue"),
       },
@@ -43,6 +47,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
         meta: {
           parentName: "auth",
           title: "菜单规则管理",
+          showNav: true,
         },
         component: () => import("@/views/Auth/Menu/index.vue"),
       },
@@ -52,6 +57,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
         meta: {
           parentName: "auth",
           title: "管理员日志管理",
+          showNav: true,
         },
         component: () => import("@/views/Auth/AdminLog/index.vue"),
       },
@@ -63,6 +69,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
     meta: {
       name: "userIndex",
       title: "会员管理",
+      showNav: true,
     },
     children: [
       {
@@ -72,6 +79,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
           name: "user_index",
           parentName: "user",
           title: "会员管理",
+          showNav: true,
         },
         component: () => import("@/views/User/Index/index.vue"),
       },
@@ -81,6 +89,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
         meta: {
           parentName: "user",
           title: "会员分组管理",
+          showNav: true,
         },
         component: () => import("@/views/User/Group/index.vue"),
       },
@@ -90,6 +99,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
         meta: {
           parentName: "user",
           title: "会员规则管理",
+          showNav: true,
         },
         component: () => import("@/views/User/UserRule/index.vue"),
       },
@@ -99,6 +109,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
         meta: {
           parentName: "user",
           title: "会员日志管理",
+          showNav: true,
         },
         component: () => import("@/views/User/UserLog/index.vue"),
       },
@@ -110,6 +121,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
     meta: {
       name: "routineConfig",
       title: "常规管理",
+      showNav: true,
     },
     children: [
       {
@@ -118,6 +130,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
         meta: {
           parentName: "routine",
           title: "系统配置",
+          showNav: true,
         },
         component: () => import("@/views/Routine/Config/index.vue"),
       },
@@ -127,6 +140,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
         meta: {
           parentName: "routine",
           title: "附件管理",
+          showNav: true,
         },
         component: () => import("@/views/Routine/Annex/index.vue"),
       },
@@ -136,6 +150,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
         meta: {
           parentName: "routine",
           title: "个人资料",
+          showNav: true,
         },
         component: () => import("@/views/Routine/Info/index.vue"),
       },
@@ -146,6 +161,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
     name: "module",
     meta: {
       title: "模块市场",
+      showNav: true,
     },
     component: () => import("@/views/Module/Index/index.vue"),
   },

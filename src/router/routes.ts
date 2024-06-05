@@ -35,6 +35,7 @@ export const routes: Array<RouteRecordRaw> = [
     meta: {
       name: "layout",
       title: "首页",
+      showNav: true,
     },
     component: () => import("@components/Layout/index.vue"),
     children: dynamicRouter,
