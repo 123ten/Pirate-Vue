@@ -247,6 +247,7 @@ defineOptions({
       <div
         ref="tabsRefs"
         class="nav-tags flex overflow-hidden"
+        @wheel="handleTabsWheel"
       >
         <div
           class="nav-tabs-active-box"
