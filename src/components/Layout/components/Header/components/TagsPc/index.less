@@ -6,6 +6,7 @@
     position: relative;
     align-items: start;
     margin-right: 16px;
+    scroll-behavior: smooth; /* 平滑滚动 */
 
     .nav-tag-item {
       box-sizing: border-box;
@@ -20,19 +21,23 @@
       user-select: none;
       white-space: nowrap;
       color: var(--primary-text-color);
+      transition: all var(--transition-duration_dot3);
 
-      //&.active,
-      //&:hover {
-      //  .nav-tag-close {
-      //    opacity: 1;
-      //    font-size: 12px;
-      //  }
-      //}
+      &.active,
+      &:hover {
+        .nav-tag-close {
+          opacity: 1;
+          font-size: 12px;
+        }
+      }
 
       &.active {
+        border-radius: 4px;
+        background-color: var(--primary-color);
+        box-shadow: var(--box-shadow-light);
+
         .nav-tag-close {
           padding: 2px;
-          //color: #fff;
 
           &:hover {
             background-color: @error-color;
@@ -44,34 +49,15 @@
 
       .nav-tag-close {
         margin-left: 5px;
-        font-size: 12px;
+        opacity: 0;
+        font-size: 0;
         transition: all var(--transition-duration_dot3);
 
         &:hover {
           color: @error-color;
         }
       }
-
-      .fade-enter-active, .fade-leave-active {
-        transition: all 0.3s;
-      }
-
-      .fade-enter-from, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-        opacity: 0;
-        font-size: 0;
-      }
     }
-  }
-
-  .nav-tabs-active-box {
-    position: absolute;
-    z-index: 0;
-    height: 40px;
-    border-radius: 4px;
-    background-color: var(--primary-color);
-    box-shadow: var(--box-shadow-light);
-    transition: all var(--transition-duration_dot3);
-    -webkit-transition: all var(--transition-duration_dot3);
   }
 }
 
