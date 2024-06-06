@@ -16,6 +16,24 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/Login/index.vue"),
   },
   {
+    path: "/admin/config",
+    meta: {
+      name: "config",
+      title: "数据库配置",
+    },
+    component: () => import("@/views/Config/index.vue"),
+  },
+  {
+    path: "/home",
+    meta: {
+      name: "layout",
+      title: "首页",
+      showNav: true,
+    },
+    component: () => import("@components/Layout/index.vue"),
+    children: dynamicRouter,
+  },
+  {
     // 404
     path: "/404",
     name: "notFound",
@@ -29,15 +47,5 @@ export const routes: Array<RouteRecordRaw> = [
     // 404 其他不存在的页面都重定向到404
     path: "/:pathMatch(.*)",
     redirect: "/404",
-  },
-  {
-    path: "/home",
-    meta: {
-      name: "layout",
-      title: "首页",
-      showNav: true,
-    },
-    component: () => import("@components/Layout/index.vue"),
-    children: dynamicRouter,
   },
 ];

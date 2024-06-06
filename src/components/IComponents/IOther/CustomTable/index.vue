@@ -42,7 +42,6 @@ defineOptions({
       v-bind="table"
       :model="table.queryForm"
       :row-selection="rowSelection"
-      :refresh="operations.includes('refresh')"
       :default-span="table.defaultSpan"
       @refresh="tableSettings?.queryAll"
       @query="tableSettings?.queryAll"

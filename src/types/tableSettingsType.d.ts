@@ -2,7 +2,7 @@ import {FormFieldProps, IColumns, IPages, ITableProps} from "@/types/table";
 import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
 import {Key} from "ant-design-vue/lib/table/interface";
 import {type Ref, UnwrapNestedRefs} from "vue";
-import {FormInstance, FormProps, PaginationProps} from "ant-design-vue";
+import {FormInstance, FormProps, PaginationProps, TableProps} from "ant-design-vue";
 import {Props, ValidateInfo, validateOptions,} from "ant-design-vue/lib/form/useForm";
 import type {RuleError} from "ant-design-vue/lib/form/interface";
 import {FormType, Rules} from "@/types/form";
@@ -111,7 +111,7 @@ export interface TableSettingColumns<RecordType = DefaultRecordType> extends ICo
 export interface TableReactive<
   RecordType = DefaultRecordType,
   QueryForm = DefaultQueryFormType
-> {
+> extends TableProps<RecordType> {
   /** 表格列配置 */
   columns?: TableSettingColumns<RecordType>[];
   /** 查询表单数据 */

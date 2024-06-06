@@ -401,7 +401,7 @@ div.ant-tabs-top > .ant-tabs-nav::before, .ant-tabs-bottom > .ant-tabs-nav::befo
     margin-bottom: 8px;
   }
 
-  .ant-form-item .ant-form-item-label {
+  div.ant-form-item .ant-form-item-label {
     padding-bottom: 0;
   }
 }

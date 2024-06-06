@@ -4,7 +4,7 @@ import plugin from "tailwindcss/plugin";
 export default {
   content: [
     "./index.html",
-    './src/**/*.{vue,js,ts,jsx,tsx}'
+    './src/**/*.{vue,js,ts,jsx,tsx,html}'
   ],
   theme: {
     extend: {
@@ -16,8 +16,8 @@ export default {
       xs: '480px',
       sm: '576px',
       md: '768px',
-      lg: '992px',
-      xl: '1200px',
+      lg: '1024px',
+      xl: '1280px',
       "2xl": '1600px',
     }
   },

@@ -56,6 +56,7 @@ export default class TableSettings<
       total: 0,
     },
     queryForm: {} as QueryForm,
+    scroll: {x: true},
     rowKey: "id",
     i18nPrefix: undefined,
     remark: undefined,

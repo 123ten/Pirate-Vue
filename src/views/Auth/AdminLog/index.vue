@@ -37,8 +37,8 @@ const tableSettings: any = new TableSettings({
         title: "管理员用户名",
         dataIndex: "username",
         align: "center",
-        fixed: 'left',
         width: 120,
+        fixed: 'left',
         detail: true,
         detailSort: 1,
       },
@@ -144,11 +144,11 @@ provide(tableSettingKey, tableSettings);
 <template>
   <custom-table>
     <template #url="{ value }">
-      <a-input-group compact style="display: flex;">
+      <a-input-group compact class="!flex">
         <a-input
           :value="value"
           readonly
-          style="text-align: left"
+          class="!text-left"
         >
         </a-input>
         <a-button @click="toUrl(value)">
