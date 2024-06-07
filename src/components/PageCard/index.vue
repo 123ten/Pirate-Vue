@@ -17,18 +17,20 @@ defineOptions({
       <div
         class="img-placeholder bg-[#ccccff] relative"
         style="--img-placeholder-rate: 35.11%"
+        v-cloak
       >
         <a-typography-title
-          class="absolute left-1/2 top-1/2 transform-gpu -translate-x-1/2 -translate-y-1/2 text-white z-10"
+          class="absolute left-1/2 top-1/2 transform-gpu -translate-x-1/2 -translate-y-1/2 text-white z-10 user-select-none"
           :level="2"
         >
-          {{ title }}
+          <slot name="title">
+            {{ title }}
+          </slot>
         </a-typography-title>
         <img
           class="block w-[430px] m-auto user-select-none"
           src="@/assets/images/login-header.png"
           alt="card-bg"
-          v-cloak
         />
       </div>
       <div class="p-5">

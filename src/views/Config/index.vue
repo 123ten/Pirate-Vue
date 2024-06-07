@@ -1,19 +1,15 @@
 <!-- 配置文件 数据库/Redis 配置文件 -->
 <script setup lang="ts">
-import {DatabaseOutlined, LockOutlined, UserOutlined} from "@ant-design/icons-vue";
+import {ApiOutlined, CloudServerOutlined, DatabaseOutlined, LockOutlined, UserOutlined} from "@ant-design/icons-vue";
 import {onBeforeUnmount, onMounted, reactive, ref} from "vue";
 import * as pageBubble from "@/utils/pageBubble";
 import {useI18n} from "vue-i18n";
+import QuestionTooltip from "@/components/IComponents/IOther/QuestionTooltip/index.vue";
 
 const {t} = useI18n();
 
-const rules = reactive({
-  username: [{required: true, message: t("error.userName")}],
-  password: [{required: true, message: t("error.password")}],
-  captcha: [{required: true, message: t("error.captcha")}],
-});
 const configState = reactive({
-  host: '127.0.0.1',
+  host: '',
   port: 3306,
   username: '',
   password: '',
@@ -39,12 +35,17 @@ const onFinish = async () => {
     <canvas id="bubble-canvas" class="bubble-canvas"></canvas>
   </div>
   <div class="config">
-    <page-card title="数据库配置" :loading="loading">
+    <page-card :loading="loading">
+      <template #title>
+        <question-tooltip
+          content="数据库配置"
+          title="本项目使用 Docker 部署，当不填写时，使用默认数据库配置"
+          icon-class-name="text-base"
+        />
+      </template>
       <a-form
         :model="configState"
-        :rules="rules"
         layout="vertical"
-        name="basic"
         @finish="onFinish"
       >
         <a-form-item label="Host" name="host">
@@ -54,7 +55,7 @@ const onFinish = async () => {
             :placeholder="$t('placeholder.host')"
           >
             <template #prefix>
-              <user-outlined/>
+              <cloud-server-outlined/>
             </template>
           </a-input>
         </a-form-item>
@@ -68,7 +69,7 @@ const onFinish = async () => {
             :placeholder="$t('placeholder.port')"
           >
             <template #prefix>
-              <lock-outlined/>
+              <api-outlined/>
             </template>
           </a-input-number>
         </a-form-item>
@@ -87,6 +88,7 @@ const onFinish = async () => {
           <a-input-password
             v-model:value="configState.password"
             allow-clear
+            autocomplete="new-password"
             :placeholder="$t('placeholder.password')"
           >
             <template #prefix>
@@ -107,7 +109,7 @@ const onFinish = async () => {
         </a-form-item>
         <a-form-item>
           <a-button
-            class="w-full !rounded-full"
+            class="w-full !rounded-full !h-[40px]"
             type="primary"
             html-type="submit"
           >

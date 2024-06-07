@@ -104,6 +104,7 @@ declare module 'vue' {
     ProcessingTag: typeof import('./src/components/IComponents/IOther/ProcessingTag/index.vue')['default']
     QueryForm: typeof import('./src/components/IComponents/ITable/components/QueryForm/index.vue')['default']
     QueryFormItem: typeof import('./src/components/IComponents/ITable/components/QueryFormItem/index.vue')['default']
+    QuestionTooltip: typeof import('./src/components/IComponents/IOther/QuestionTooltip/index.vue')['default']
     Rocket: typeof import('./src/components/SvgIcon/rocket.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
