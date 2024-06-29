@@ -2,20 +2,18 @@ header.nav-bar {
   padding: 0 16px;
   height: 50px;
   min-height: 50px;
-  // background-color: var(--bgColor) !important;
-  // transition: all var(--default-transition-delay);
 
   .nav-menus {
     min-width: 300px;
     justify-content: space-around;
     height: 100%;
-    box-shadow: var(--box-shadow-light);
-    background-color: var(--primary-color);
+    box-shadow: @boxShadowSecondary;
     border-radius: 8px;
     overflow: hidden;
     font-size: 18px;
-    background-color: var(--primary-color);
-    color: var(--primary-text-color);
+    color: @colorText;
+    background-color: @colorBgContainer;
+    border: 1px solid @border-inline-color;
 
     .nav-menu-item {
       display: flex;
@@ -35,7 +33,7 @@ header.nav-bar {
       }
 
       &:hover {
-        background: var(--primary-bg-color);
+        background-color: @colorBgTextHover;
 
         .anticon {
           animation: smallToLast 0.3s ease-out forwards;
@@ -125,6 +123,8 @@ header.nav-bar {
 @media screen and (max-width: 1200px) {
   header.nav-bar {
     padding-right: 0;
+    border-bottom: 1px solid @border-inline-color;
+
     .nav-menus {
       box-shadow: none;
       overflow: inherit;
@@ -132,7 +132,7 @@ header.nav-bar {
   }
 
   .nav-bar {
-    background-color: var(--primary-color);
-    color: var(--primary-text-color);
+    background-color: @colorBgContainer;
+    color: @colorText;
   }
 }

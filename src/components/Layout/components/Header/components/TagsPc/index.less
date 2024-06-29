@@ -20,8 +20,8 @@
       opacity: 0.7;
       user-select: none;
       white-space: nowrap;
-      color: var(--primary-text-color);
-      transition: all var(--transition-duration_dot3);
+      color: @colorText;
+      transition: all calc(var(--motionUnit) * 1s);
 
       &.active,
       &:hover {
@@ -33,8 +33,10 @@
 
       &.active {
         border-radius: 4px;
-        background-color: var(--primary-color);
-        box-shadow: var(--box-shadow-light);
+        background-color: @colorBgContainer;
+        box-shadow: @boxShadow;
+        transition: none;
+        border: 1px solid @border-inline-color;
 
         .nav-tag-close {
           padding: 2px;
@@ -51,7 +53,7 @@
         margin-left: 5px;
         opacity: 0;
         font-size: 0;
-        transition: all var(--transition-duration_dot3);
+        transition: all calc(@motionUnit * 1s);
 
         &:hover {
           color: @error-color;
@@ -71,9 +73,10 @@
     line-height: 12px;
     justify-content: space-between;
     width: 100%;
-    background-color: var(--primary-color);
-    color: var(--primary-text-color);
+    background-color: @colorBgContainer;
+    color: @colorText;
     box-shadow: 1px 0 4px 0 rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid @border-inline-color;
 
     .nav-tags {
       margin-right: 0;
@@ -82,7 +85,6 @@
       .nav-tag-item {
         align-items: center;
         margin-right: 12px;
-        //padding: 0 20px 0 16px;
         padding: 0 12px;
         height: 28px;
         opacity: 1;
@@ -94,12 +96,12 @@
         }
 
         &:hover {
-          background-color: var(--primary-bg-color);
+          background-color: @colorBgContainer;
         }
 
         &.active {
           color: #fff;
-          background-color: @ant-primary-color;
+          background-color: @colorPrimary;
 
           .nav-tag-close {
             color: #fff;

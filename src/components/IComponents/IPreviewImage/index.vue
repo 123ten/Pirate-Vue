@@ -4,17 +4,17 @@ import {withDefaults,} from "vue";
 
 interface IPropsPreviewImage {
   src: string; // 图片地址
-  visible: boolean; // visible
+  open: boolean; // open
 }
 
 const props = withDefaults(defineProps<IPropsPreviewImage>(), {
   src: "",
-  visible: false,
+  open: false,
 });
-const emits = defineEmits(["update:visible"]);
+const emits = defineEmits(["update:open"]);
 
 const onVisibleChange = (flag: boolean) => {
-  emits("update:visible", flag);
+  emits("update:open", flag);
 };
 
 defineOptions({
@@ -24,12 +24,12 @@ defineOptions({
 
 <template>
   <a-image
-      :style="{ display: 'none' }"
-      :preview="{
-      visible,
+    :style="{ display: 'none' }"
+    :preview="{
+      visible:open,
       onVisibleChange: onVisibleChange,
     }"
-      :src="props.src"
+    :src="props.src"
   />
 </template>
 

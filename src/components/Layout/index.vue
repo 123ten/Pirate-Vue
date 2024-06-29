@@ -28,6 +28,6 @@ const {isLayoutFullScreen, isCurrentPageReload} = storeToRefs(store);
   </a-layout>
 </template>
 
-<style lang="less" scoped>
+<style lang="less">
 @import "./index.less";
 </style>

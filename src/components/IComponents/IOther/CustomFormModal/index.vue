@@ -24,18 +24,27 @@ const getSpan = (column: TableSettingColumns) => {
 // 24 / span
 const formColumns = computed(() => {
   if (!tableSettings?.table.columns) return [];
-  const rowColumns: TableSettingColumns[][] = [];
+  const rowColumns: TableSettingColumns[][] = [[]];
   let count = 0;
+  let idx: number = 0;
   tableSettings?.table.columns
-    .filter((column: TableSettingColumns) => typeof column.form === 'function' ? column.form(form.value!.fields) : column.form)
+    .filter((column: TableSettingColumns) => column.form && (typeof column.form === 'function' ? column.form(form.value!.fields) : column.form))
     .sort((a, b) => getSort(a) - getSort(b))
     .forEach((column: TableSettingColumns, index: number) => {
-      const _span: number = getSpan(column);
-      if (index % (24 / _span) === 0) {
-        rowColumns[count] = [];
-        count++;
+      // const _span: number = getSpan(column);
+      // if (index % (24 / _span) === 0) {
+      //   rowColumns[count] = [];
+      //   count++;
+      // }
+      // rowColumns[count - 1].push(column);
+      const _span = getSpan(column);
+      count += _span;
+      if (24 % count !== 0 && count > 24) {
+        rowColumns.push([]);
+        idx++;
+        count = _span;
       }
-      rowColumns[count - 1].push(column);
+      rowColumns[idx].push(column);
     })
   return rowColumns
 });

@@ -98,7 +98,7 @@ const onFileModalConfirm = () => {
   </div>
   <!-- 选择文件 modal -->
   <select-file-modal
-      :visible="isOpenFileModal"
+      :open="isOpenFileModal"
       @confirm="onFileModalConfirm"
       @cancel="onFileModalCancel"
   />

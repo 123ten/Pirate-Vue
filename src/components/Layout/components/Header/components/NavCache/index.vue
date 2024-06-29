@@ -4,11 +4,11 @@ import { ref, defineOptions } from "vue";
 import { notification } from "ant-design-vue";
 import { DeleteOutlined } from "@ant-design/icons-vue";
 
-const isCachePopover = ref(false); // 缓存
+const open = ref(false); // 缓存
 
 // 清楚缓存
 const putCache = (type: number) => {
-  isCachePopover.value = false;
+  open.value = false;
   notification.success({
     message: "操作成功",
   });
@@ -21,7 +21,7 @@ defineOptions({
 
 <template>
   <a-popover
-    v-model:visible="isCachePopover"
+    v-model:open="open"
     trigger="click"
     overlayClassName="i-popover-menu"
   >

@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 import plugin from "tailwindcss/plugin";
+import defaultTheme from 'tailwindcss/defaultTheme'
 
 export default {
   content: [
@@ -13,12 +14,13 @@ export default {
       }
     },
     screens: {
+      ...defaultTheme.screens,
       xs: '480px',
       sm: '576px',
       md: '768px',
       lg: '1024px',
       xl: '1280px',
-      "2xl": '1600px',
+      "2xl": '1536px',
     }
   },
   corePlugins: {
@@ -34,4 +36,3 @@ export default {
     })
   ],
 }
-

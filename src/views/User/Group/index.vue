@@ -163,7 +163,7 @@ const onSelectChange = (rowKeys: string[]) => {
                 cancel-text="取消"
                 @cancel="onDeleteAllCancel"
                 @visibleChange="onDeleteVisibleChange"
-                v-model:visible="isDeleteAllVisible"
+                v-model:open="isDeleteAllVisible"
             >
               <template #okButton>
                 <a-button
@@ -229,7 +229,7 @@ const onSelectChange = (rowKeys: string[]) => {
       </template>
     </i-table>
     <add-edit-modal
-        v-model:visible="isAddEditModal"
+        v-model:open="isAddEditModal"
         @cancel="onAddEditCancel"
         @confirm="onAddEditConfirm"
     />

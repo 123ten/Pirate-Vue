@@ -1,7 +1,9 @@
 <!-- i-table 表格头部的 alert 提示 -->
 <script setup lang="ts">
-import {InfoCircleFilled} from "@ant-design/icons-vue";
-import {AlertProps} from "ant-design-vue";
+import {InfoCircleFilled} from "@ant-design/icons-vue"
+import {AlertProps} from "ant-design-vue"
+import {useTheme} from '@/store/hooks'
+const theme = useTheme();
 
 defineProps<AlertProps>()
 
@@ -12,12 +14,12 @@ defineOptions({
 
 <template>
   <a-alert
-      v-if="message"
-      :message="message"
-      type="gray"
-      show-icon
-      closable
-      v-bind="$attrs"
+    v-if="message"
+    :message="message"
+    type="default"
+    show-icon
+    closable
+    v-bind="$attrs"
   >
     <template #icon>
       <slot name="icon">
@@ -27,6 +29,15 @@ defineOptions({
   </a-alert>
 </template>
 
-<style scoped lang="less">
+<style lang="less">
+@opacity: v-bind("theme.isDartTheme ? 0.1 : 1");
 
+.ant-alert-default {
+  @apply border border-solid;
+  background-color: rgba(230,232,235, @opacity);
+  border-color: rgba(223,223,223, @opacity);
+  .ant-alert-message {
+    @apply text-[@info-color];
+  }
+}
 </style>

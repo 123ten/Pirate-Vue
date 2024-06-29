@@ -164,9 +164,9 @@ provide(tableSettingKey, tableSettings);
       <status-tag :value="value"/>
     </template>
     <!--  表单自定义  -->
-    <template #form-permissionIds="{fields,field,placeholder}">
+    <template #form-permissionIds="{record,field,placeholder}">
       <i-tree-select
-        v-model:value="fields[field]"
+        v-model:value="record[field]"
         tree-checkable
         allow-clear
         multiple

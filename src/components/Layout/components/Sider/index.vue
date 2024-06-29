@@ -17,27 +17,27 @@ defineOptions({
 
 <template>
   <a-drawer
-      v-if="isAsideMenu"
-      placement="left"
-      :closable="false"
-      :visible="isMenuOutIn"
-      @close="onClose"
-      class="i-menu-mobile"
-      width="200"
+    v-if="isAsideMenu"
+    root-class-name="i-menu-mobile"
+    placement="left"
+    width="200"
+    :open="isMenuOutIn"
+    :closable="false"
+    @close="onClose"
   >
     <sider-menu/>
   </a-drawer>
   <a-layout-sider
-      v-else
-      v-model:collapsed="isMenuOutIn"
-      collapsible
-      class="i-menu"
-      collapsedWidth="64"
+    v-else
+    v-model:collapsed="isMenuOutIn"
+    class="i-menu"
+    collapsedWidth="64"
+    collapsible
   >
     <sider-menu/>
   </a-layout-sider>
 </template>
 
-<style lang="less" scoped>
+<style lang="less">
 @import "./index.less";
 </style>

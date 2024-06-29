@@ -1,16 +1,16 @@
 <!-- 首页 -->
 <script setup lang="ts">
-import { ref, defineOptions } from "vue";
-import { TranslationOutlined } from "@ant-design/icons-vue";
-import { useI18n } from "vue-i18n";
+import {defineOptions, ref} from "vue";
+import {TranslationOutlined} from "@ant-design/icons-vue";
+import {useI18n} from "vue-i18n";
 
-const { locale } = useI18n();
+const {locale} = useI18n();
 
-const isLanguagePopover = ref(false); // 语言
+const open = ref(false); // 语言
 
 // 设置语言
 const putLanguage = (lang: string) => {
-  isLanguagePopover.value = false;
+  open.value = false;
   locale.value = lang;
   localStorage.setItem("lang", lang);
 };
@@ -22,7 +22,7 @@ defineOptions({
 
 <template>
   <a-popover
-    v-model:visible="isLanguagePopover"
+    v-model:open="open"
     :trigger="['click']"
     overlayClassName="i-popover-menu"
   >
@@ -43,7 +43,7 @@ defineOptions({
       </div>
     </template>
     <div class="nav-menu-item" title="切换语言">
-      <translation-outlined />
+      <translation-outlined/>
     </div>
   </a-popover>
 </template>

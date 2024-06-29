@@ -1,18 +1,27 @@
-import {defineConfig} from "vite";
-import vue from "@vitejs/plugin-vue";
-import {join, resolve} from "path";
-import fs from "fs";
-import Components from "unplugin-vue-components/vite";
-import {AntDesignVueResolver} from "unplugin-vue-components/resolvers";
-import mkcert from "vite-plugin-mkcert";
+import {defineConfig} from "vite"
+import vue from "@vitejs/plugin-vue"
+import {join, resolve} from "path"
+import fs from "fs"
+import Components from "unplugin-vue-components/vite"
+import {AntDesignVueResolver} from "unplugin-vue-components/resolvers"
+import mkcert from "vite-plugin-mkcert"
 import autoExport from 'vite-plugin-auto-export'
+import {theme} from 'ant-design-vue'
+
+const {defaultAlgorithm, defaultSeed} = theme
+
+const mapToken = defaultAlgorithm(defaultSeed)
 
 export default defineConfig({
   plugins: [
     vue(),
     Components({
       dirs: ["src/components"],
-      resolvers: [AntDesignVueResolver()],
+      resolvers: [
+        AntDesignVueResolver({
+          importStyle: 'less', // css in js
+        })
+      ],
     }),
     mkcert(),
     autoExport({
@@ -59,7 +68,12 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       less: {
-        modifyVars: {hack: 'true; @import "@/common/less/theme.less"'},
+        // modifyVars: mapToken,
+        // modifyVars: {hack: 'true; @import "@/assets/styles/less/theme.less"'},
+        // modifyVars: {hack: 'true; @import "@/assets/styles/less/variables.less"'},
+        modifyVars: {
+          hack: 'true; @import "@/assets/styles/less/variables.less"',
+        },
         javascriptEnabled: true,
         fileAsync: true,
       },

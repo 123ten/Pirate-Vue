@@ -257,6 +257,10 @@ const handleStatusChange = async (record: AdminMenuDataSource) => {
     description: t("success.update"),
   })
 }
+
+const test = (record) => {
+  console.log('test --> ', record)
+}
 </script>
 
 <template>
@@ -264,9 +268,9 @@ const handleStatusChange = async (record: AdminMenuDataSource) => {
     <template #icon="{value}">
       <component v-if="value" :is="antIcons[value]" class="text-[18px]"/>
     </template>
-    <template #type="{ record }">
-      <a-tag :color="typeEnum(record.type,'color')" style="margin-right: 0">
-        {{ typeEnum(record.type, 'name') }}
+    <template #type="{ value }">
+      <a-tag :color="typeEnum(value,'color')" style="margin-right: 0">
+        {{ typeEnum(value, 'name') }}
       </a-tag>
     </template>
     <template #cache="{ record }">
@@ -276,7 +280,7 @@ const handleStatusChange = async (record: AdminMenuDataSource) => {
         :unCheckedValue="0"
       />
     </template>
-    <template #status="{ record }">
+    <template #status="{record}">
       <a-switch
         v-model:checked="record.status"
         :checkedValue="1"

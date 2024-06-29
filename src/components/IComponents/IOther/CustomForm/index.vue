@@ -41,7 +41,7 @@ defineOptions({
       :gutter="gutter"
     >
       <a-col
-        v-for="column in _columns"
+        v-for="(column) in _columns"
         :key="column.dataIndex"
         :span="column.span || defaultSpan"
       >

@@ -6,7 +6,6 @@ import {ButtonProps} from "ant-design-vue";
 interface IPopconfirmProps {
   type?: ButtonProps['type']
   size?: ButtonProps['size']
-  disabled?: ButtonProps['disabled']
   buttonText?: string; // 按钮文字
   buttonProps?: ButtonProps
 }
@@ -21,7 +20,7 @@ defineOptions({
 </script>
 
 <template>
-  <template v-if="disabled">
+  <template v-if="$attrs.disabled">
     <slot>
       <!-- 默认展示按钮 -->
       <a-button :type="type" :size="size" disabled v-bind="buttonProps">
@@ -32,27 +31,28 @@ defineOptions({
       </a-button>
     </slot>
   </template>
-  <a-popconfirm
-    v-else
-    placement="top"
-    v-bind="$attrs"
-  >
-    <slot>
-      <!-- 默认展示按钮 -->
-      <a-button
-        :type="type"
-        :size="size"
-        :disabled="disabled"
-        v-bind="buttonProps"
-        @click="emits('click',$event)"
-      >
-        <template #icon>
-          <slot name="icon"/>
-        </template>
-        {{ buttonText }}
-      </a-button>
-    </slot>
-  </a-popconfirm>
+  <template v-else>
+    <a-popconfirm
+      placement="top"
+      v-bind="$attrs"
+    >
+      <slot>
+        <!-- 默认展示按钮 -->
+        <a-button
+          :type="type"
+          :size="size"
+          :disabled="$attrs.disabled"
+          v-bind="buttonProps"
+          @click="emits('click',$event)"
+        >
+          <template #icon>
+            <slot name="icon"/>
+          </template>
+          {{ buttonText }}
+        </a-button>
+      </slot>
+    </a-popconfirm>
+  </template>
 </template>
 
 <style lang="less">

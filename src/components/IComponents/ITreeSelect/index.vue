@@ -41,7 +41,7 @@ const props = withDefaults(defineProps<ITreeSelectProps>(), {
   dropdownStyle: () => ({maxHeight: "400px", overflow: "auto"}),
   fieldNames: () => ({label: "label", value: "value", children: "children"}),
 });
-console.log('props', props)
+// console.log('props', props)
 
 const emits = defineEmits(["update:value", 'change']);
 

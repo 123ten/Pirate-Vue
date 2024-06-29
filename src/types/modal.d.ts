@@ -2,7 +2,7 @@ export interface DefaultModalProps<Options = any> {
   /**
    * 显示与隐藏
    */
-  visible: boolean;
+  open: boolean;
   /**
    * 父级传入数据
    */

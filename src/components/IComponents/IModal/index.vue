@@ -35,8 +35,8 @@ const preTransformX = ref<number>(0);
 const preTransformY = ref<number>(0);
 const dragRect = ref<IDragRect>({left: 0, right: 0, top: 0, bottom: 0});
 
-watch(() => props.visible, (visible) => {
-  if (visible) {
+watch(() => props.open, (open) => {
+  if (open) {
     if (props.dragModal) {
       initDrag();
     }
@@ -94,9 +94,9 @@ const transformStyle = computed<CSSProperties>(() => {
 </script>
 
 <template>
+  <!--    @cancel="emits('cancel')"-->
   <a-modal
-    :class="'i-modal'"
-    @cancel="emits('cancel')"
+    class="i-modal"
     v-bind="props"
     :title="undefined"
   >

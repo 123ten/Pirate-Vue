@@ -9,5 +9,5 @@ export type TButtonType =
   | "success"
   | "refresh"
   | "warning"
-  | "move";
+  | "info";
 

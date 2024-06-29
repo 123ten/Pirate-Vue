@@ -1,28 +1,36 @@
 .nav-msg-popover {
   width: 300px;
+
   .ant-popover-content {
     .ant-popover-inner {
       .ant-popover-title {
         font-weight: bold;
         font-size: 16px;
       }
+
       .ant-popover-inner-content {
         padding: 0;
       }
     }
   }
+
   .nav-msg-content {
     max-height: 300px;
     overflow-y: auto;
-    .nav-msg-item {
+
+    :deep(.nav-msg-item) {
       padding: 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-size: 13px;
+      border-radius: @border-radius;
+      transition: all calc(@motionUnit * 1s);
+
       &:hover {
-        background: var(--primary-bg-color);
+        background-color: @colorBgTextHover;
       }
+
       .nav-msg-icon {
         margin-right: 10px;
         width: 40px;
@@ -36,16 +44,20 @@
         background-color: @error-color-sub;
         border-radius: 50%;
       }
+
       .nav-msg-desc {
-        color: @text-color-default;
+        color: inherit;
+
         .title,
         .time {
           margin-bottom: 0;
         }
+
         .title {
           margin-bottom: 6px;
           line-height: 18px;
         }
+
         .time {
           font-size: 10px;
         }
@@ -53,11 +65,14 @@
     }
   }
 }
+
 .nav-menu-item {
   .msg-icon {
     position: relative;
+
     &.active {
       padding: 4px;
+
       &::after {
         content: "";
         position: absolute;

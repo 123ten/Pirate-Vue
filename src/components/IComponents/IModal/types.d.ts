@@ -1,7 +1,6 @@
 import {ModalProps} from "ant-design-vue";
-import {CSSProperties} from "vue";
 
-interface IDragRect {
+export interface IDragRect {
   left: number;
   right: number;
   top: number;
@@ -14,5 +13,3 @@ export interface IModalProps extends ModalProps {
   loading?: boolean; // modal 加载loading 包括 body 和 确定按钮
   init?: () => void; // 初始化
 }
-
-export {IDragRect};

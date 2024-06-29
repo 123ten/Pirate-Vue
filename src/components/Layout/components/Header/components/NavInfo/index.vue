@@ -8,11 +8,11 @@ import {useAdminStore} from '@/store/auth'
 const {userInfo, rawUserInfo} = useAdminStore()
 
 const router = useRouter();
-const isInfoPopover = ref(false); // 个人资料
+const open = ref(false); // 个人资料
 
 // 注销
 const onLogout = () => {
-  isInfoPopover.value = false;
+  open.value = false;
   const lang = localStorage.getItem("lang") || "zh";
   localStorage.clear();
   localStorage.setItem("lang", lang);
@@ -27,27 +27,27 @@ defineOptions({
 
 <template>
   <a-popover
-    v-model:visible="isInfoPopover"
+    v-model:open="open"
     placement="bottomRight"
     trigger="click"
   >
     <template #content>
       <div class="admin-info-base">
-        <a-avatar :size="70" :src="userInfo.avatar" class="avatar-turn">
+        <a-avatar :size="70" :src="userInfo.avatar" class="mb-4 avatar-turn">
           <template #icon v-if="!userInfo.avatar">
             <user-outlined style="font-size: 70px"/>
           </template>
         </a-avatar>
-        <div class="admin-info-other">
-          <div class="admin-info-name">{{ userInfo.nickname }}</div>
+        <div class="mb-4  admin-info-other">
+          <div class="mb-2 admin-info-name">{{ userInfo.nickname }}</div>
           <div class="admin-info-lastTime">{{ userInfo.lastLoginTime }}</div>
         </div>
       </div>
-      <div class="d-flex-sb">
-        <a-button type="primary" ghost @click="isInfoPopover = false">
+      <div class="flex justify-between">
+        <a-button class="mr-1.5" type="primary" ghost @click="open = false">
           <router-link to="/routine/info">个人资料</router-link>
         </a-button>
-        <a-button type="primary" danger ghost @click="onLogout">
+        <a-button class="ml-1.5" type="primary" danger ghost @click="onLogout">
           <template #icon>
             <poweroff-outlined/>
           </template>

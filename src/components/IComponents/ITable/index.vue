@@ -343,10 +343,14 @@ defineOptions({
             @blur="handleSearchBlur"
           />
           <a-radio-group v-model:value="operationRadio" class="flex">
-            <a-popover trigger="click" overlayClassName="i-popover-menu">
+            <a-popover
+              trigger="click"
+              placement="bottomRight"
+              overlay-class-name="i-popover-menu"
+            >
               <template #content>
                 <!--  全选  -->
-                <label class="i-popover-item block" style="text-align: left">
+                <label class="i-popover-item block !text-left">
                   <a-checkbox
                     v-model:checked="menuCheckAll"
                     class="whitespace-nowrap"
@@ -360,8 +364,7 @@ defineOptions({
                   <label
                     v-for="item in menuCheckList"
                     :key="item.key || item.dataIndex"
-                    class="i-popover-item block"
-                    style="text-align: left"
+                    class="i-popover-item block !text-left"
                   >
                     <a-checkbox
                       :value="item.key || item.dataIndex"
@@ -380,12 +383,11 @@ defineOptions({
                 <table-outlined/>
               </a-radio-button>
             </a-popover>
-            <a-tooltip placement="bottomRight">
+            <a-tooltip v-if="formColumns.length" placement="bottomRight">
               <template #title v-if="!isOpenSearch">
                 {{ $t("title.expandUniversalSearch") }}
               </template>
               <a-radio-button
-                v-if="formColumns.length"
                 value="search"
                 @click="handleMenuOrSearchRadio('search')"
               >
@@ -417,14 +419,6 @@ defineOptions({
         </template>
         <template #bodyCell="score">
           <slot name="bodyCell" v-bind="score"/>
-          <slot :name="score.column.dataIndex" v-bind="score">
-            <ellipsis
-              v-if="score.column.ellipsis"
-              :width="score.column.width"
-              :value="score.value"
-              tooltip
-            />
-          </slot>
         </template>
       </a-table>
     </div>

@@ -24,7 +24,7 @@ defineOptions({
 </script>
 
 <template>
-  <div class="flex justify-between p-3 border border-solid border-[#f0f0f0]">
+  <div class="flex justify-between p-3 border border-solid query-form">
     <custom-form
       ref="formRef"
       layout="inline"
@@ -43,3 +43,7 @@ defineOptions({
     </a-space>
   </div>
 </template>
+
+<style lang="less" scoped>
+@import "./index.less";
+</style>

@@ -8,11 +8,11 @@ import {cloneDeep, debounce} from 'lodash-es'
 import type {IconProps} from "@/types/icon";
 
 const props = withDefaults(defineProps<IconProps>(), {
-  visible: false,
+  open: false,
   defaultValue: 'LineOutlined'
 })
 
-const emits = defineEmits(["update:visible", "update:value"]);
+const emits = defineEmits(["update:open", "update:value"]);
 
 defineOptions({
   name: 'IIcon'
@@ -28,7 +28,7 @@ const iconTabs = ref<string[]>(["line", "fill", "twoTone", 'custom']);
 const currentTab = ref<string>("");
 const currentIcon = ref<string>(props.value || props.defaultValue); // 默认图标
 
-const visible = ref<boolean>(false);
+const open = ref<boolean>(false);
 //#endregion
 
 onMounted(() => {
@@ -101,7 +101,7 @@ const checkIconTab = (type: string) => {
 
 // 选择图标 icon
 const checkIcon = (key: string) => {
-  visible.value = false;
+  open.value = false;
   nextTick(() => {
     currentIcon.value = key;
     emits('update:value', key);
@@ -131,7 +131,7 @@ const antIconComputed = computed(() => antIcons[currentIcon.value]);
 
 <template>
   <a-popover
-    v-model:visible="visible"
+    v-model:open="open"
     placement="bottom"
     trigger="click"
     class="icon"

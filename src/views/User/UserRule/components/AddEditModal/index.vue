@@ -29,7 +29,7 @@ const onClick = () => {
 
 <template>
   <i-modal
-      :visible="props.visible"
+      :open="props.visible"
       :title="props.title"
       width="1000px"
       :maskClosable="false"

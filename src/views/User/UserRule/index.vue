@@ -243,7 +243,7 @@ const ruleTypeStatus = (type: IDataSource["ruleType"]) => {
                 cancel-text="取消"
                 @cancel="onDeleteAllCancel"
                 @visibleChange="onDeleteVisibleChange"
-                v-model:visible="isDeleteAllVisible"
+                v-model:open="isDeleteAllVisible"
             >
               <template #okButton>
                 <a-button
@@ -306,7 +306,7 @@ const ruleTypeStatus = (type: IDataSource["ruleType"]) => {
                   ok-text="删除"
                   cancel-text="取消"
                   placement="left"
-                  v-model:visible="record.isDeleteVisible"
+                  v-model:open="record.isDeleteVisible"
               >
                 <template #okButton>
                   <a-button
@@ -330,7 +330,7 @@ const ruleTypeStatus = (type: IDataSource["ruleType"]) => {
     </i-table>
 
     <add-edit-modal
-        :visible="isAddEditModal"
+        :open="isAddEditModal"
         :title="isEdit ? '编辑' : '添加'"
         @cancel="onAddEditCancel"
         @confirm="onAddEditConfirm"

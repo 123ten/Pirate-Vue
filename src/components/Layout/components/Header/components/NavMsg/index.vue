@@ -1,9 +1,9 @@
 <!-- 消息 -->
 <script setup lang="ts">
-import { defineOptions, ref } from "vue";
-import { BellOutlined } from "@ant-design/icons-vue";
+import {defineOptions, ref} from "vue";
+import {BellOutlined} from "@ant-design/icons-vue";
 
-const visible = ref<boolean>(false);
+const open = ref<boolean>(false);
 
 defineOptions({
   name: "NavMsg",
@@ -12,11 +12,11 @@ defineOptions({
 
 <template>
   <a-popover
-    v-model:visible="visible"
+    v-model:open="open"
     placement="bottom"
     title="消息提醒"
     trigger="click"
-    overlayClassName="nav-msg-popover"
+    overlay-class-name="nav-msg-popover"
   >
     <template #content>
       <div class="nav-msg-content">
@@ -24,10 +24,10 @@ defineOptions({
           <div class="nav-msg-icon">
             <!-- <warning-outlined />
             <CodeOutlined /> -->
-            <source-code-outlined />
+            <source-code-outlined/>
           </div>
           <!-- 路由跳转 -->
-          <router-link to="/" class="nav-msg-desc" @click="visible = false">
+          <router-link to="/" class="nav-msg-desc" @click="open = false">
             <p class="title ellipsis_more">
               您的套餐即将到期，请及时到商店续费或购买套餐。
             </p>
@@ -37,11 +37,11 @@ defineOptions({
       </div>
     </template>
     <div class="nav-menu-item" title="消息">
-      <bell-outlined class="msg-icon active" />
+      <bell-outlined class="msg-icon active"/>
     </div>
   </a-popover>
 </template>
 
-<style lang="less">
+<style lang="less" scoped>
 @import "./index.less";
 </style>

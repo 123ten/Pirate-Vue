@@ -179,7 +179,7 @@ export interface DetailReactive<Fields = DefaultFieldsType> {
  * 对话框
  */
 export interface ModalReactive extends IModalProps {
-  visible?: boolean;
+  open?: boolean;
 }
 
 declare type namesType = string | string[];

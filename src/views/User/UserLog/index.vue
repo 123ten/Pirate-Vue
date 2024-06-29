@@ -159,7 +159,7 @@ const toUrl = (url: string) => {
     </i-table>
     <i-preview-image
         :src="avatarPreviewSrc"
-        v-model:visible="isAvatarPreviewSrc"
+        v-model:open="isAvatarPreviewSrc"
     />
   </div>
 </template>

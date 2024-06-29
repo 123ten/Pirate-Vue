@@ -1,40 +1,34 @@
 <!-- App.vue -->
 <script setup lang="ts">
+import {ref, watch} from "vue";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import enGB from "ant-design-vue/es/locale/en_GB";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
-import { useI18n } from "vue-i18n";
-import { onMounted, ref, watch } from "vue";
-const { locale } = useI18n();
+import {useI18n} from "vue-i18n";
+import {useTheme} from '@/store/hooks'
 
-const aLocale = ref(zhCN);
+const {theme} = useTheme()
+const {locale} = useI18n();
 
-onMounted(() => {
-  const theme = localStorage.getItem("theme");
-  // 设置主题
-  window.document.documentElement.setAttribute("data-theme", theme || "light");
-  window.document.documentElement.setAttribute("data-animation", "default");
-});
+const localeRef = ref(zhCN);
 
 watch(
   () => locale.value,
   (val) => {
     if (val === "en") {
       dayjs.locale("en");
-      aLocale.value = enGB;
+      localeRef.value = enGB;
     } else {
       dayjs.locale("zh-cn");
-      aLocale.value = zhCN;
+      localeRef.value = zhCN;
     }
   }
 );
 </script>
 
 <template>
-  <a-config-provider :locale="aLocale">
-    <router-view />
+  <a-config-provider :theme="theme" :locale="localeRef">
+    <router-view/>
   </a-config-provider>
 </template>
-
-<style lang="less"></style>

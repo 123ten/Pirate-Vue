@@ -84,7 +84,7 @@ const handleCancel = (): void => {
 
 <template>
   <i-modal
-      :visible="props.visible"
+      :open="props.visible"
       :title="'添加'"
       width="450px"
       :init="init"

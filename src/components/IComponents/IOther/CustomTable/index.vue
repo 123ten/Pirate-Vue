@@ -100,7 +100,7 @@ defineOptions({
             v-if="operations.includes('row-sortable')"
             title="拖动以排序"
             size="small"
-            type="move"
+            type="info"
             class="drop-row-btn"
           >
             <template #icon>
@@ -139,29 +139,21 @@ defineOptions({
         </a-space>
       </template>
     </i-table>
+
     <!--  表单自定义 需要带上 form 前缀  -->
     <custom-form-modal v-if="table?.displayFormModal">
       <template #field="score">
         <template v-if="score.column.formSlot !== false">
-          <slot
-            v-if="!!slots[`form-${score.column.dataIndex}`]"
-            :name="`form-${score.column.dataIndex}`"
-            v-bind="score"
-          />
-          <slot v-else :name="score.column.dataIndex" v-bind="score"/>
+          <slot :name="`form-${score.column.dataIndex}`" v-bind="score"/>
         </template>
       </template>
     </custom-form-modal>
 
+    <!--  详情自定义 需要带上 detail 前缀  -->
     <custom-detail-modal v-if="table?.displayDetailModal">
       <template #field="score">
         <template v-if="score.column.detailSlot !== false">
-          <slot
-            v-if="!!slots[`detail-${score.column.dataIndex}`]"
-            :name="`detail-${score.column.dataIndex}`"
-            v-bind="score"
-          />
-          <slot v-else :name="score.column.dataIndex" v-bind="score"/>
+          <slot :name="`detail-${score.column.dataIndex}`" v-bind="score"/>
         </template>
       </template>
     </custom-detail-modal>

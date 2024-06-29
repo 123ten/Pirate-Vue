@@ -25,7 +25,7 @@ defineExpose({
   <i-modal
     title="详细信息"
     width="900px"
-    :visible="isDetailModal"
+    :open="isDetailModal"
     maskClosable
     :footer="null"
     @cancel="handleCancel"

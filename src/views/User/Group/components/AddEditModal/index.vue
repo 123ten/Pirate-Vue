@@ -12,16 +12,13 @@ const props = withDefaults(defineProps<IProps>(), {
   title: "",
   visible: false,
 });
-const emits = defineEmits(["update:visible", "onClick"]);
+const emits = defineEmits(["onClick"]);
 
 const formState = reactive<IFormState>({
   ruletype: 1,
   menutype: 1,
 });
 
-const onVisibleChange = (flag: boolean) => {
-  emits("update:visible", flag);
-};
 // 确定
 const onClick = () => {
   const _data = toRaw(formState);
@@ -31,7 +28,7 @@ const onClick = () => {
 
 <template>
   <i-modal
-      v-model:visible="props.visible"
+      v-model:open="props.visible"
       :title="props.title"
       @confirm="onClick"
       width="1000px"

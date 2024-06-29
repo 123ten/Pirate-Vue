@@ -68,7 +68,7 @@ defineOptions({
         :options="column.options"
         :placeholder="column.title || column.placeholder"
         allow-clear
-        v-bind="column.formFieldConfig"
+        v-bind="column.queryFieldConfig"
       />
       <!-- radio 单选框 -->
       <a-radio-group

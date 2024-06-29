@@ -293,7 +293,7 @@ const rowSelection = computed(() => {
     </i-table>
 
     <form-modal
-        v-model:visible="isAddOrEditModalVisible"
+        v-model:open="isAddOrEditModalVisible"
         :title="isEdit ? '编辑' : '添加'"
         @cancel="onAddEditCancel"
         @confirm="onAddEditConfirm"

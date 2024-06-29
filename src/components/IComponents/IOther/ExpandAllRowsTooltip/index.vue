@@ -21,7 +21,8 @@ const content = computed(() => props.expand ? t('title.collapse') : t('title.exp
   <i-tooltip
     :title="title"
     :content="content"
-    :type="expand ? 'danger' : 'warning'"
+    :type="expand ? 'primary' : 'warning'"
+    :button-props="{danger:expand}"
     @click="(e) => emit('update:expand', !expand)"
     v-bind="$attrs"
   >

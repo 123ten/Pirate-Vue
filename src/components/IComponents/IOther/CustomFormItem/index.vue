@@ -63,7 +63,8 @@ defineOptions({
   >
     <slot
       :column="column"
-      :fields="model"
+      :record="model"
+      :value="model[valueProp]"
       :field="valueProp"
       :placeholder="placeholderProp"
     >

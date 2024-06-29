@@ -1,11 +1,12 @@
 <!-- header 头部 -->
 <script setup lang="ts">
-import {defineOptions, onBeforeMount} from "vue";
-import {storeToRefs} from "pinia";
-import {useLayoutStore} from "@/store";
+import {defineOptions, onBeforeMount} from "vue"
+import {storeToRefs} from "pinia"
+import {useLayoutStore} from "@/store"
 
 const store = useLayoutStore();
 const {isMenuOutIn, isAsideMenu, isLayoutFullScreen} = storeToRefs(store);
+
 
 onBeforeMount(() => {
   init();
@@ -26,14 +27,14 @@ defineOptions({
 
 <template>
   <header
-      v-if="!isLayoutFullScreen"
-      class="nav-bar d-flex-sb"
-      :style="{ left: `${isMenuOutIn ? 96 : 232}px` }"
+    v-if="!isLayoutFullScreen"
+    class="flex justify-between nav-bar"
+    :style="{ left: `${isMenuOutIn ? 96 : 232}px` }"
   >
     <tags-mobile v-if="isAsideMenu"/>
     <tags-pc v-else/>
 
-    <div class="nav-menus d-flex-center">
+    <div class="flex items-center justify-center nav-menus">
       <!-- 首页 -->
       <nav-home/>
       <!-- 切换主题 -->

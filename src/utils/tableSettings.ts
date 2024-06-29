@@ -74,7 +74,7 @@ export default class TableSettings<
     defaultSpan: 24,
     i18nPrefixProp: 'form',
     modal: {
-      visible: false,
+      open: false,
       maskClosable: false,
     }
   });
@@ -84,7 +84,7 @@ export default class TableSettings<
     i18nPrefixProp: 'detail',
     column: 2,
     modal: {
-      visible: false,
+      open: false,
       footer: null,
       closable: true,
     },
@@ -240,7 +240,7 @@ export default class TableSettings<
     if (typeof this.form.rules === "function") {
       this.initFormRefs();
     }
-    this.form.modal.visible = true;
+    this.form.modal.open = true;
     if (type === 1 && id) {
       await this.detailById(type, id);
     }
@@ -252,11 +252,11 @@ export default class TableSettings<
    */
   public cancelForm = (type: ModalType) => {
     if (type === 1) {
-      this.form.modal.visible = false;
+      this.form.modal.open = false;
       this.formRefs?.resetFields();
       this.resetFields()
     } else {
-      this.detail.modal.visible = false;
+      this.detail.modal.open = false;
     }
   };
 
@@ -283,7 +283,7 @@ export default class TableSettings<
    * @param id
    */
   public openDetail = async (id: Key) => {
-    this.detail.modal.visible = true;
+    this.detail.modal.open = true;
     await this.detailById(2, id);
   };
 

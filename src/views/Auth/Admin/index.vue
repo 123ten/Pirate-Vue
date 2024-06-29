@@ -1,6 +1,5 @@
 <!-- 管理员管理 -->
 <script setup lang="ts">
-import {UserOutlined} from "@ant-design/icons-vue";
 import {provide, ref, watch} from "vue";
 import {adminUpsert, getAdminById, getAdminList, removeAdmin} from "@/api/auth/admin";
 import ProcessingTag from "@/components/IComponents/IOther/ProcessingTag/index.vue";
@@ -19,7 +18,7 @@ const {dataSource: roleOptions} = storeToRefs(roleStore)
 const {getRoleListRequest} = roleStore
 
 const avatarPreviewSrc = ref("");
-const isAvatarPreviewSrcVisible = ref<boolean>(false);
+const isAvatarPreviewSrcOpen = ref<boolean>(false);
 
 const onInit = async () => {
   await getRoleListRequest();
@@ -27,7 +26,7 @@ const onInit = async () => {
 // 显示预览图片
 const openAvatarPreviewImage = (src: string) => {
   if (!src) return;
-  isAvatarPreviewSrcVisible.value = true;
+  isAvatarPreviewSrcOpen.value = true;
   avatarPreviewSrc.value = src;
 };
 
@@ -222,11 +221,11 @@ watch(
     <template #roles="{ value }">
       <processing-tag v-for="text in value" :key="text" :value="text"/>
     </template>
-    <template #avatar="{ record }">
+    <template #avatar="{ value }">
       <a-avatar
         size="large"
-        :src="record.avatar"
-        @click="openAvatarPreviewImage(record.avatar)"
+        :src="value"
+        @click="openAvatarPreviewImage(value)"
       >
         <template #icon>
           <user-outlined/>
@@ -241,7 +240,7 @@ watch(
     </template>
 
     <i-preview-image
-      v-model:visible="isAvatarPreviewSrcVisible"
+      v-model:open="isAvatarPreviewSrcOpen"
       :src="avatarPreviewSrc"
     />
   </custom-table>

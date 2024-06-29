@@ -1,5 +1,3 @@
-import useNavTabs from './useNavTabs';
+export * from './useNavTabs';
+export * from './useTheme'
 
-export default {
-  useNavTabs
-};

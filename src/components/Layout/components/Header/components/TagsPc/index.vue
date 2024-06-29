@@ -6,10 +6,10 @@ import {defineOptions, nextTick, onMounted, reactive, ref,} from "vue";
 import {onBeforeRouteUpdate, RouteLocationNormalized, useRouter} from "vue-router";
 import {storeToRefs} from "pinia";
 import {useLayoutStore} from "@/store";
-import useNavTabs from "@/store/hooks/useNavTabs";
 import {fullScreen} from "@/utils/dom";
 import TagOverlay from "./components/Overlay/index.vue";
 import {type OverlayType} from './components/Overlay/interface'
+import {useNavTabs} from '@/store/hooks'
 
 const layoutStore = useLayoutStore();
 const {isLayoutFullScreen, isCurrentPageReload, isAsideMenu} = storeToRefs(layoutStore);
@@ -40,7 +40,6 @@ const contextMenuState = reactive<MouseRightStateInterface>({
 
 onMounted(async () => {
   // 这里的数据不需要被响应式包裹
-  // navTabs.set(cloneDeep(route))
   await updateTab(router.currentRoute.value)
 });
 

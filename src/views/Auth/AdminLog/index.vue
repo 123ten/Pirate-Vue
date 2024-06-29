@@ -174,7 +174,7 @@ provide(tableSettingKey, tableSettings);
 
     <i-preview-image
       :src="avatarPreviewSrc"
-      v-model:visible="isAvatarPreviewSrc"
+      v-model:open="isAvatarPreviewSrc"
     />
   </custom-table>
 </template>

@@ -1,11 +1,16 @@
 .default-main {
   .container-table {
+    @apply border border-solid overflow-hidden rounded-t-[@border-radius]; // 如果后面出现样式问题 可能是这部 hidden 隐藏导致的
+    border-color: @border-inline-color;
+
+    :deep(.ant-alert) {
+      @apply rounded-b-none;
+    }
 
     .i-table-form,
     .table-header,
     .ant-table-wrapper {
-      @apply box-border p-4;
-      background-color: var(--primary-color);
+      @apply box-border p-4 bg-[@colorBgContainer];
     }
 
     .i-table-form {

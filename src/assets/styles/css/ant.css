@@ -69,11 +69,6 @@ button.ant-btn {
   color: #fff;
 }
 
-/* .ant-btn-primary.lock-active {
-  border-color: #096dd9;
-  background: #096dd9;
-} */
-
 /* 透明度 */
 .ant-btn.ant-btn-move:hover,
 .ant-btn.ant-btn-refresh:hover,
@@ -139,26 +134,26 @@ button.ant-btn {
 /* menu 卡片 */
 .ant-menu,
 .ant-menu .ant-menu-sub.ant-menu-inline {
-  background-color: var(--primary-color) !important;
+  /*background-color: var(--primary-color) !important;*/
 }
 
 ul.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
-  background-color: var(--primary-bg-color-selected);
+  /*background-color: var(--primary-bg-color-selected);*/
 }
 
 /*侧边栏选中 默认主题色*/
 .ant-menu .ant-menu-item.ant-menu-item-selected {
-  color: #1890ff;
+  /*color: #1890ff;*/
 }
 
 .ant-menu .ant-menu-item,
 .ant-menu .ant-menu-submenu,
 .ant-menu .ant-menu-submenu .ant-menu-submenu-arrow {
-  color: var(--primary-text-color);
+  /*color: var(--primary-text-color);*/
 }
 
 .ant-menu-title-content {
-  user-select: none;
+  /*user-select: none;*/
 }
 
 /* alert */
